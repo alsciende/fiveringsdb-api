@@ -1,2 +1,4 @@
-# fiveringsdb
-Deckbuilder for Legend of the Five Rings
+fiveringsdb
+===========
+
+A Symfony project created on February 6, 2017, 8:36 pm.
