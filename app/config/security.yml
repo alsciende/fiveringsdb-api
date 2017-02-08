@@ -1,24 +1,58 @@
-# To get started with security, check out the documentation:
-# http://symfony.com/doc/current/security.html
 security:
 
-    # http://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
-    providers:
-        in_memory:
-            memory: ~
+    encoders:
+        AppBundle\Entity\User: bcrypt
 
+    providers:
+        your_db_provider:
+            entity:
+                class: AppBundle:User
+                property: username
+            
     firewalls:
-        # disables authentication for assets and the profiler, adapt it according to your needs
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        main:
+        private_api:
+            context: my_security_context
+            pattern: ^/api/private/
+            anonymous: false
+            guard:
+                provider:
+                    your_db_provider
+                authenticators:
+                    - app.form_login_authenticator
+                    - app.token_authenticator
+                entry_point: app.token_authenticator
+
+        public_api:
+            context: my_security_context
+            pattern: ^/api/public/
             anonymous: ~
-            # activate different ways to authenticate
+            guard:
+                provider:
+                    your_db_provider
+                authenticators:
+                    - app.token_authenticator
+                    - app.form_login_authenticator
+                entry_point: app.token_authenticator
 
-            # http_basic: ~
-            # http://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
+        private_html:
+            context: my_security_context
+            pattern: ^/(profile|login_check)
+            anonymous: false
+            guard:
+                provider:
+                    your_db_provider
+                authenticators:
+                    - app.form_login_authenticator
 
-            # form_login: ~
-            # http://symfony.com/doc/current/cookbook/security/form_login_setup.html
+        public_html:
+            context: my_security_context
+            anonymous: ~
+            guard:
+                provider:
+                    your_db_provider
+                authenticators:
+                    - app.form_login_authenticator

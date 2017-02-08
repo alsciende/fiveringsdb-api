@@ -1,7 +1,7 @@
 services:
-#    app.json_encoder:
-#        class: AppBundle\Service\JsonEncoder
-#        arguments: ["%kernel.root_dir%", "%json_data%"]
-#    app.association_normalizer:
-#        class: AppBundle\Service\AssociationNormalizer
-#        arguments: ["@doctrine.orm.entity_manager"]
+    app.token_authenticator:
+        class: AppBundle\Security\TokenAuthenticator
+        arguments: ["@doctrine.orm.entity_manager"]
+    app.form_login_authenticator:
+        class: AppBundle\Security\FormLoginAuthenticator
+        arguments: ["@security.password_encoder","@router","@logger"]
