@@ -14,19 +14,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Pack
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
 
     /**
      * @var string
      *
      * @ORM\Column(name="code", type="string", length=255, unique=true)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
      */
     private $code;
 
@@ -79,16 +73,13 @@ class Pack
      */
     private $ffgId;
 
-
     /**
-     * Get id
+     * @var \AppBundle\Entity\Cycle
      *
-     * @return int
+     * @ORM\ManyToOne(targetEntity="Cycle", fetch="EAGER")
+     * @ORM\JoinColumn(name="cycle_code", referencedColumnName="code")
      */
-    public function getId()
-    {
-        return $this->id;
-    }
+    private $cycle;
 
     /**
      * Set code
@@ -97,7 +88,7 @@ class Pack
      *
      * @return Pack
      */
-    public function setCode($code)
+    public function setCode ($code)
     {
         $this->code = $code;
 
@@ -109,7 +100,7 @@ class Pack
      *
      * @return string
      */
-    public function getCode()
+    public function getCode ()
     {
         return $this->code;
     }
@@ -121,7 +112,7 @@ class Pack
      *
      * @return Pack
      */
-    public function setName($name)
+    public function setName ($name)
     {
         $this->name = $name;
 
@@ -133,7 +124,7 @@ class Pack
      *
      * @return string
      */
-    public function getName()
+    public function getName ()
     {
         return $this->name;
     }
@@ -145,7 +136,7 @@ class Pack
      *
      * @return Pack
      */
-    public function setPosition($position)
+    public function setPosition ($position)
     {
         $this->position = $position;
 
@@ -157,7 +148,7 @@ class Pack
      *
      * @return int
      */
-    public function getPosition()
+    public function getPosition ()
     {
         return $this->position;
     }
@@ -169,7 +160,7 @@ class Pack
      *
      * @return Pack
      */
-    public function setSize($size)
+    public function setSize ($size)
     {
         $this->size = $size;
 
@@ -181,7 +172,7 @@ class Pack
      *
      * @return int
      */
-    public function getSize()
+    public function getSize ()
     {
         return $this->size;
     }
@@ -193,7 +184,7 @@ class Pack
      *
      * @return Pack
      */
-    public function setDateCreation($dateCreation)
+    public function setDateCreation ($dateCreation)
     {
         $this->dateCreation = $dateCreation;
 
@@ -205,7 +196,7 @@ class Pack
      *
      * @return \DateTime
      */
-    public function getDateCreation()
+    public function getDateCreation ()
     {
         return $this->dateCreation;
     }
@@ -217,7 +208,7 @@ class Pack
      *
      * @return Pack
      */
-    public function setDateUpdate($dateUpdate)
+    public function setDateUpdate ($dateUpdate)
     {
         $this->dateUpdate = $dateUpdate;
 
@@ -229,7 +220,7 @@ class Pack
      *
      * @return \DateTime
      */
-    public function getDateUpdate()
+    public function getDateUpdate ()
     {
         return $this->dateUpdate;
     }
@@ -241,7 +232,7 @@ class Pack
      *
      * @return Pack
      */
-    public function setDateRelease($dateRelease)
+    public function setDateRelease ($dateRelease)
     {
         $this->dateRelease = $dateRelease;
 
@@ -253,7 +244,7 @@ class Pack
      *
      * @return \DateTime
      */
-    public function getDateRelease()
+    public function getDateRelease ()
     {
         return $this->dateRelease;
     }
@@ -265,7 +256,7 @@ class Pack
      *
      * @return Pack
      */
-    public function setFfgId($ffgId)
+    public function setFfgId ($ffgId)
     {
         $this->ffgId = $ffgId;
 
@@ -277,9 +268,33 @@ class Pack
      *
      * @return int
      */
-    public function getFfgId()
+    public function getFfgId ()
     {
         return $this->ffgId;
     }
-}
 
+    /**
+     * Get cycle
+     * 
+     * @return Cycle
+     */
+    function getCycle ()
+    {
+        return $this->cycle;
+    }
+
+    /**
+     * Set cycle
+     * 
+     * @param \AppBundle\Entity\Cycle $cycle
+     * 
+     * @return Pack
+     */
+    function setCycle (\AppBundle\Entity\Cycle $cycle)
+    {
+        $this->cycle = $cycle;
+
+        return $this;
+    }
+
+}

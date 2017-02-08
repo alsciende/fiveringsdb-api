@@ -1,9 +1,7 @@
-# Learn more about services, parameters and containers at
-# http://symfony.com/doc/current/service_container.html
-parameters:
-#    parameter_name: value
-
 services:
-#    service_name:
-#        class: AppBundle\Directory\ClassName
-#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+#    app.json_encoder:
+#        class: AppBundle\Service\JsonEncoder
+#        arguments: ["%kernel.root_dir%", "%json_data%"]
+#    app.association_normalizer:
+#        class: AppBundle\Service\AssociationNormalizer
+#        arguments: ["@doctrine.orm.entity_manager"]

@@ -37,6 +37,7 @@ class PackSlot implements SlotInterface
      * @var Card
      *
      * @ORM\ManyToOne(targetEntity="Card", fetch="EAGER")
+     * @ORM\JoinColumn(name="card_code", referencedColumnName="code")
      */
     private $card;
 
@@ -44,6 +45,7 @@ class PackSlot implements SlotInterface
      * @var Pack
      *
      * @ORM\ManyToOne(targetEntity="Pack", fetch="EAGER")
+     * @ORM\JoinColumn(name="pack_code", referencedColumnName="code")
      */
     private $pack;
 
