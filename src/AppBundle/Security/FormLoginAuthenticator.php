@@ -19,7 +19,7 @@ class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
 
     /** @var Router */
     private $router;
-    
+
     public function __construct (UserPasswordEncoder $passwordEncoder, Router $router, \Symfony\Bridge\Monolog\Logger $logger)
     {
         $this->passwordEncoder = $passwordEncoder;
@@ -54,11 +54,11 @@ class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
         $this->logger->debug("checkCredentials");
         return true;
         /*
-        $plainPassword = $credentials['password'];
-        if(!$this->encoder->isPasswordValid($user, $plainPassword)) {
-            throw new BadCredentialsException();
-        }
-        */
+          $plainPassword = $credentials['password'];
+          if(!$this->encoder->isPasswordValid($user, $plainPassword)) {
+          throw new BadCredentialsException();
+          }
+         */
     }
 
     protected function getLoginUrl ()

@@ -25,15 +25,15 @@ class UserCreateCommand extends \Symfony\Bundle\FrameworkBundle\Command\Containe
         $em = $this->getContainer()->get('doctrine')->getEntityManager();
 
         $helper = $this->getHelper('question');
-        
+
         $question = new \Symfony\Component\Console\Question\Question("Username: ");
         $username = $helper->ask($input, $output, $question);
-        
+
         $user = new \AppBundle\Entity\User($username, md5(uniqid()));
-        
+
         $em->persist($user);
         $em->flush();
-        
+
         $output->writeln("Done");
     }
 

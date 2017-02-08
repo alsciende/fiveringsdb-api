@@ -14,41 +14,17 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        private_api:
+        api:
             context: my_security_context
-            pattern: ^/api/private/
-            anonymous: false
-            guard:
-                provider:
-                    your_db_provider
-                authenticators:
-                    - app.form_login_authenticator
-                    - app.token_authenticator
-                entry_point: app.token_authenticator
-
-        public_api:
-            context: my_security_context
-            pattern: ^/api/public/
+            pattern: ^/api
             anonymous: ~
             guard:
                 provider:
                     your_db_provider
                 authenticators:
                     - app.token_authenticator
-                    - app.form_login_authenticator
-                entry_point: app.token_authenticator
 
-        private_html:
-            context: my_security_context
-            pattern: ^/(profile|login_check)
-            anonymous: false
-            guard:
-                provider:
-                    your_db_provider
-                authenticators:
-                    - app.form_login_authenticator
-
-        public_html:
+        main:
             context: my_security_context
             anonymous: ~
             guard:
@@ -56,3 +32,4 @@ security:
                     your_db_provider
                 authenticators:
                     - app.form_login_authenticator
+        

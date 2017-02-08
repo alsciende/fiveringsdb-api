@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,6 +27,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/profile")
+     * @Security("has_role('ROLE_USER')")
      * 
      */
     public function profileAction ()
@@ -35,6 +37,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/deckbuilder")
+     * @Security("has_role('ROLE_USER')")
      * 
      */
     public function deckbuilderAction ()
@@ -57,6 +60,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/api/private/test")
+     * @Security("has_role('ROLE_USER')")
      * 
      */
     public function privateApiTestAction ()

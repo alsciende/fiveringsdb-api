@@ -13,21 +13,22 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class TokenAuthenticator extends AbstractGuardAuthenticator
 {
+
     /** @var \Doctrine\ORM\EntityManager */
     private $entityManager;
-    
+
     function __construct (\Doctrine\ORM\EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
     }
 
-        /**
+    /**
      * Called on every request. Return whatever credentials you want,
      * or null to stop authentication.
      */
     public function getCredentials (Request $request)
     {
-        if (!$token = $request->headers->get('X-AUTH-TOKEN')) {
+        if(!$token = $request->query->get('access_token')) {
             // no token? Return null and no other methods will be called
             return;
         }
