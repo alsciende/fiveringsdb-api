@@ -4,7 +4,7 @@ security:
         AppBundle\Entity\User: bcrypt
 
     providers:
-        your_db_provider:
+        my_user_provider:
             entity:
                 class: AppBundle:User
                 property: username
@@ -14,22 +14,27 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
+        oauth_token:
+            pattern: ^/oauth/v2/token
+            security: false
+
         api:
             context: my_security_context
             pattern: ^/api
             anonymous: ~
             guard:
                 provider:
-                    your_db_provider
+                    my_user_provider
                 authenticators:
-                    - app.token_authenticator
+                    - alsciende_security.token_authenticator
 
         main:
             context: my_security_context
             anonymous: ~
+            logout: ~ 
             guard:
                 provider:
-                    your_db_provider
+                    my_user_provider
                 authenticators:
-                    - app.form_login_authenticator
-        
+                    - alsciende_security.form_login_authenticator
+            

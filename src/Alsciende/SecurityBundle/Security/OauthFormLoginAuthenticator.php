@@ -1,17 +1,16 @@
 <?php
 
-namespace AppBundle\Security;
+namespace Alsciende\SecurityBundle\Security;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
-use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticator;
 
-class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
+class OauthFormLoginAuthenticator extends AbstractFormLoginAuthenticator
 {
 
     /** @var UserPasswordEncoder */
@@ -30,7 +29,7 @@ class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
     public function getCredentials (Request $request)
     {
         $this->logger->debug("getCredentials");
-        if($request->getPathInfo() != '/login_check') {
+        if($request->getPathInfo() != '/oauth/v2/login_check') {
             return null;
         }
         $username = $request->request->get('_username');
@@ -63,12 +62,12 @@ class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
 
     protected function getLoginUrl ()
     {
-        return $this->router->generate('security_login');
+        return $this->router->generate('oauth_login');
     }
 
     protected function getDefaultSuccessRedirectUrl ()
     {
-        return $this->router->generate('app_default_index');
+        return $this->router->generate('oauth_auth');
     }
 
 }

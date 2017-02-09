@@ -17,7 +17,7 @@ class DefaultController extends Controller
 {
 
     /**
-     * @Route("/test")
+     * @Route("/")
      * 
      */
     public function indexAction ()
@@ -32,7 +32,8 @@ class DefaultController extends Controller
      */
     public function profileAction ()
     {
-        return new Response("<h1>Profile</h1>");
+        $user = $this->getUser();
+        return new Response("<h1>Profile of ".$user->getUsername()."</h1>");
     }
 
     /**
@@ -46,7 +47,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/api/public/test")
+     * @Route("/api/public")
      * 
      */
     public function publicApiTestAction ()
@@ -59,7 +60,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/api/private/test")
+     * @Route("/api/private")
      * @Security("has_role('ROLE_USER')")
      * 
      */

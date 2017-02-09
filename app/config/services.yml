@@ -1,7 +1,13 @@
 services:
-    app.token_authenticator:
-        class: AppBundle\Security\TokenAuthenticator
+
+    alsciende_security.oauth_authenticator:
+        class: Alsciende\SecurityBundle\Security\OauthAuthenticator
+        arguments: ["@doctrine.orm.entity_manager","@logger"]
+    
+    alsciende_security.token_authenticator:
+        class: Alsciende\SecurityBundle\Security\TokenAuthenticator
         arguments: ["@doctrine.orm.entity_manager"]
-    app.form_login_authenticator:
-        class: AppBundle\Security\FormLoginAuthenticator
+    
+    alsciende_security.form_login_authenticator:
+        class: Alsciende\SecurityBundle\Security\FormLoginAuthenticator
         arguments: ["@security.password_encoder","@router","@logger"]

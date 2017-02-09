@@ -73,3 +73,14 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+# FOSOAuthServerBundle Configuration
+fos_oauth_server:
+    db_driver:           orm
+    client_class:        Alsciende\SecurityBundle\Entity\Client
+    access_token_class:  Alsciende\SecurityBundle\Entity\AccessToken
+    refresh_token_class: Alsciende\SecurityBundle\Entity\RefreshToken
+    auth_code_class:     Alsciende\SecurityBundle\Entity\AuthCode
+    authorize: ~
+    service:
+        user_provider:   my_user_provider

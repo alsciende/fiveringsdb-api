@@ -20,3 +20,8 @@ parameters:
 
     # Path of the JSON data directory, either absolute or relative to the root
     json_data_path:          ../fiveringsdb-json-data
+
+    # Oauth2 credentials for the test app
+    oauth_test_client_id: ~
+    oauth_test_client_secret: ~
+    oauth_test_redirect_uri: ~
