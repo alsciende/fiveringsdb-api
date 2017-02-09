@@ -9,57 +9,20 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGenerator;
-use Symfony\Component\Security\Core\Security;
 
 /**
- * Connects a user via oauth2 
+ * Connects a user via oauth2 - Sandbox
  *
  * @author Alsciende <alsciende@icloud.com>
  * 
- * @Route("/oauth/v2")
+ * @Route("/api_sandbox")
  */
-class OauthController extends Controller
+class ApiSandboxController extends Controller
 {
 
     /**
-     * @Route("/login", name="oauth_login")
-     */
-    public function loginAction (Request $request)
-    {
-        $session = $request->getSession();
-
-        if($request->attributes->has(Security::AUTHENTICATION_ERROR)) {
-            $error = $request->attributes->get(Security::AUTHENTICATION_ERROR);
-        } elseif(null !== $session && $session->has(Security::AUTHENTICATION_ERROR)) {
-            $error = $session->get(Security::AUTHENTICATION_ERROR);
-            $session->remove(Security::AUTHENTICATION_ERROR);
-        } else {
-            $error = '';
-        }
-
-        if($error) {
-            $error = $error->getMessage();
-        }
-
-        $lastUsername = (null === $session) ? '' : $session->get(Security::LAST_USERNAME);
-
-        return $this->render('security/login.html.twig', [
-                    'last_username' => $lastUsername,
-                    'error' => $error,
-        ]);
-    }
-
-    /**
-     * @Route("/login_check", name="oauth_login_check")
-     */
-    public function loginCheckAction (Request $request)
-    {
-        
-    }
-
-    /**
      * Display the API explorer
-     * @Route("/explorer", name="oauth_explorer")
+     * @Route("/explorer", name="api_sandbox_explorer")
      * @Method("GET")
      * @Template
      */
@@ -67,12 +30,12 @@ class OauthController extends Controller
     {
         // we check if we have an access-token in session
         $session = $request->getSession();
-        if(!$session->has('oauth_token_response')) {
+        if(!$session->has('api_sandbox_token_response')) {
             // no token, we redirect to a login page
-            return $this->redirectToRoute('oauth_initiate');
+            return $this->redirectToRoute('api_sandbox_initiate');
         }
 
-        $oauthTokenResponse = $session->get('oauth_token_response');
+        $oauthTokenResponse = $session->get('api_sandbox_token_response');
 
         return [
             'token' => $oauthTokenResponse
@@ -82,7 +45,7 @@ class OauthController extends Controller
     /**
      * Display a page with "Connect to FiveRingsDB" button
      * @param Request $request
-     * @Route("/initiate", name="oauth_initiate")
+     * @Route("/initiate", name="api_sandbox_initiate")
      * @Method("GET")
      * @Template
      */
@@ -97,7 +60,7 @@ class OauthController extends Controller
     /**
      * Receive the authorization code and request an access token
      * @param Request $request
-     * @Route("/callback", name="oauth_callback")
+     * @Route("/callback", name="api_sandbox_callback")
      * @Method("GET")
      */
     public function callbackAction (Request $request)
@@ -128,10 +91,10 @@ class OauthController extends Controller
         $response['expiration_date'] = $now->format('c');
 
         // store the response
-        $request->getSession()->set('oauth_token_response', $response);
+        $request->getSession()->set('api_sandbox_token_response', $response);
 
         // redirect to the explorer
-        return $this->redirectToRoute('oauth_explorer');
+        return $this->redirectToRoute('api_sandbox_explorer');
     }
 
 }

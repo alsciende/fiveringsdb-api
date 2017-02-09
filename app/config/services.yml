@@ -2,12 +2,12 @@ services:
 
     alsciende_security.oauth_authenticator:
         class: Alsciende\SecurityBundle\Security\OauthAuthenticator
-        arguments: ["@doctrine.orm.entity_manager","@logger"]
-    
-    alsciende_security.token_authenticator:
-        class: Alsciende\SecurityBundle\Security\TokenAuthenticator
-        arguments: ["@doctrine.orm.entity_manager"]
+        arguments: ["@fos_oauth_server.access_token_manager"]
     
     alsciende_security.form_login_authenticator:
         class: Alsciende\SecurityBundle\Security\FormLoginAuthenticator
-        arguments: ["@security.password_encoder","@router","@logger"]
+        arguments: ["@security.password_encoder","@router"]
+
+    alsciende_security.client_manager:
+        class: Alsciende\SecurityBundle\Service\ClientManager
+        arguments: ["@fos_oauth_server.entity_manager","%fos_oauth_server.model.client.class%"]

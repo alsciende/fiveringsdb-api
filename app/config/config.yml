@@ -84,3 +84,4 @@ fos_oauth_server:
     authorize: ~
     service:
         user_provider:   my_user_provider
+        client_manager:  fos_oauth_server.client_manager.default

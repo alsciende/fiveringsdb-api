@@ -1,4 +1,4 @@
-<h2>{{ user.username}}, the application "{{ client.name }}" would like to connect to your account</h2>
+<h2>{{ app.user.username}}, the application "{{ client.name }}" would like to connect to your account</h2>
 
 {{ form_start(form, {'method': 'POST', 'action': path('fos_oauth_server_authorize'), 'label_attr': {'class': 'fos_oauth_server_authorize'} }) }}
     <input type="submit" name="accepted" value="{{ 'authorize.accept'|trans({}, 'FOSOAuthServerBundle') }}" />

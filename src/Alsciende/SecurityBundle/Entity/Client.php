@@ -18,8 +18,8 @@ class Client extends BaseClient
 
     /**
      * @ORM\Id
-     * @ORM\Column(type="string")
-     * @ORM\GeneratedValue(strategy="UUID")
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
@@ -64,11 +64,6 @@ class Client extends BaseClient
     function getEmail ()
     {
         return $this->email;
-    }
-
-    function setId ($id)
-    {
-        $this->id = $id;
     }
 
     function setName ($name)

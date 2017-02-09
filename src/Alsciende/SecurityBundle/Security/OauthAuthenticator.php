@@ -2,8 +2,7 @@
 
 namespace Alsciende\SecurityBundle\Security;
 
-use Doctrine\ORM\EntityManager;
-use Symfony\Bridge\Monolog\Logger;
+use FOS\OAuthServerBundle\Entity\AccessTokenManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,17 +19,13 @@ use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
  */
 class OauthAuthenticator extends AbstractGuardAuthenticator
 {
-
-    /** @var EntityManager */
-    private $entityManager;
-
-    /** @var Logger */
-    private $logger;
     
-    function __construct (EntityManager $entityManager, Logger $logger)
+    /** @var AccessTokenManager */
+    private $accessTokenManager;
+    
+    function __construct (AccessTokenManager $accessTokenManager)
     {
-        $this->entityManager = $entityManager;
-        $this->logger = $logger;
+        $this->accessTokenManager = $accessTokenManager;
     }
 
     /**
@@ -52,11 +47,16 @@ class OauthAuthenticator extends AbstractGuardAuthenticator
 
     public function getUser ($credentials, UserProviderInterface $userProvider)
     {
-        $apiKey = $credentials['token'];
+        $token = $credentials['token'];
 
+        $accessToken = $this->accessTokenManager->findTokenByToken($token);
+        if(!$accessToken) {
+            return null;
+        }
+        
         // if null, authentication will fail
         // if a User object, checkCredentials() is called
-        return $this->entityManager->getRepository('AppBundle:User')->findOneBy(['apiKey' => $apiKey]);
+        return $accessToken->getUser();
     }
 
     public function checkCredentials ($credentials, UserInterface $user)

@@ -2,11 +2,8 @@
 
 namespace Alsciende\SecurityBundle\Security;
 
-use Symfony\Bridge\Monolog\Logger;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -29,16 +26,14 @@ class FormLoginAuthenticator extends AbstractGuardAuthenticator
     /** @var Router */
     private $router;
 
-    public function __construct (UserPasswordEncoder $passwordEncoder, Router $router, Logger $logger)
+    public function __construct (UserPasswordEncoder $passwordEncoder, Router $router)
     {
         $this->passwordEncoder = $passwordEncoder;
         $this->router = $router;
-        $this->logger = $logger;
     }
 
     public function getCredentials (Request $request)
     {
-        $this->logger->debug("getCredentials");
         if($request->getPathInfo() != '/login_check') {
             return null;
         }
@@ -53,14 +48,12 @@ class FormLoginAuthenticator extends AbstractGuardAuthenticator
 
     public function getUser ($credentials, UserProviderInterface $userProvider)
     {
-        $this->logger->debug("getUser");
         $username = $credentials['username'];
         return $userProvider->loadUserByUsername($username);
     }
 
     public function checkCredentials ($credentials, UserInterface $user)
     {
-        $this->logger->debug("checkCredentials");
         return true;
         /*
           $plainPassword = $credentials['password'];
@@ -73,9 +66,6 @@ class FormLoginAuthenticator extends AbstractGuardAuthenticator
     public function onAuthenticationSuccess (Request $request, TokenInterface $token, $providerKey)
     {
         $targetPath = null;
-
-        $this->logger->debug("onAuthenticationSuccess");
-        $this->logger->debug($request->hasSession() ? "has session" : "doesn't have session");
 
         // if the user hit a secure page and start() was called, this was
         // the URL they were on, and probably where you want to redirect to
@@ -92,9 +82,6 @@ class FormLoginAuthenticator extends AbstractGuardAuthenticator
 
     public function onAuthenticationFailure (Request $request, AuthenticationException $exception)
     {
-        $this->logger->debug("onAuthenticationFailure");
-        $this->logger->debug($request->hasSession() ? "has session" : "doesn't have session");
-
         if($request->getSession() instanceof SessionInterface) {
             $request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);
         }
