@@ -48,12 +48,12 @@ class DataImportCommand extends ContainerAwareCommand
 
         foreach($types as $className) {
 
-            /* @var $cereal \Alsciende\CerealBundle\Cereal */
-            $cereal = new \Alsciende\CerealBundle\Cereal($em, $jsonDataPath, $className);
+            /* @var $cereal \Alsciende\CerealBundle\Service\Cereal */
+            $cereal = new \Alsciende\CerealBundle\Service\Cereal($em, $jsonDataPath, $className);
 
             try {
                 $entities = $cereal->import();
-            } catch (\Alsciende\CerealBundle\InvalidForeignKeyException $ex) {
+            } catch (\Alsciende\CerealBundle\Exception\InvalidForeignKeyException $ex) {
                 $output->writeln("<error>Invalid value for foreign keys [".implode(",",$ex->getInvalidForeignKeys())."] in data of type $className</error>");
                 dump($ex->getDecodedData());
                 die;

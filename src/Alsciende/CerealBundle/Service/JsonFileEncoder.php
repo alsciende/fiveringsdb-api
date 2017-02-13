@@ -1,6 +1,6 @@
 <?php
 
-namespace Alsciende\CerealBundle;
+namespace Alsciende\CerealBundle\Service;
 
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;

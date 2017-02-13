@@ -1,6 +1,6 @@
 <?php
 
-namespace Alsciende\CerealBundle;
+namespace Alsciende\CerealBundle\Service;
 
 /**
  * Description of RepositorySerializer

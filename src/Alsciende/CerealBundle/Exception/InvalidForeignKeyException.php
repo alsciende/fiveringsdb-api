@@ -1,6 +1,6 @@
 <?php
 
-namespace Alsciende\CerealBundle;
+namespace Alsciende\CerealBundle\Exception;
 
 /**
  * Description of InvalidForeignKeyException

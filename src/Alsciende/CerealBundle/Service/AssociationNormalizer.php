@@ -1,6 +1,13 @@
 <?php
 
-namespace Alsciende\CerealBundle;
+namespace Alsciende\CerealBundle\Service;
+
+use Alsciende\CerealBundle\Exception\InvalidForeignKeyException;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\NoResultException;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * Normalizer service that normalizes associations as ${field}_${referencedColumnName} => ${referencedValue}
@@ -15,11 +22,11 @@ class AssociationNormalizer
      */
     private $em;
 
-    public function __construct (\Doctrine\ORM\EntityManager $em)
+    public function __construct (EntityManager $em)
     {
         $this->em = $em;
-        $this->serializer = new \Symfony\Component\Serializer\Serializer(
-                array(new \Symfony\Component\Serializer\Normalizer\PropertyNormalizer()), array(new \Symfony\Component\Serializer\Encoder\JsonEncoder())
+        $this->serializer = new Serializer(
+                array(new PropertyNormalizer()), array(new JsonEncoder())
         );
     }
 
@@ -32,7 +39,7 @@ class AssociationNormalizer
      * 
      * @return object
      * 
-     * @throw InvalidForeignKeyException
+     * @throw \Alsciende\CerealBundle\Exception\InvalidForeignKeyException
      */
     public function denormalize ($data, $className)
     {
@@ -58,7 +65,7 @@ class AssociationNormalizer
 
             try {
                 $result = $qb->getQuery()->getSingleResult();
-            } catch(\Doctrine\ORM\NoResultException $ex) {
+            } catch(NoResultException $ex) {
                 throw new InvalidForeignKeyException($data, $keys);
             }
 
