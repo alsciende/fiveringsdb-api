@@ -28,6 +28,9 @@ class DataImportCommand extends ContainerAwareCommand
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->getContainer()->get('doctrine')->getEntityManager();
 
+        /* @var $validator \Symfony\Component\Validator\Validator\RecursiveValidator */
+        $validator = $this->getContainer()->get('validator');
+
         $rootDir = $this->getContainer()->get('kernel')->getRootDir();
         $jsonPath = $this->getContainer()->getParameter('json_data_path');
 
@@ -51,18 +54,17 @@ class DataImportCommand extends ContainerAwareCommand
             /* @var $cereal \Alsciende\CerealBundle\Service\Cereal */
             $cereal = new \Alsciende\CerealBundle\Service\Cereal($em, $jsonDataPath, $className);
 
-            try {
-                $entities = $cereal->import();
-            } catch (\Alsciende\CerealBundle\Exception\InvalidForeignKeyException $ex) {
-                $output->writeln("<error>Invalid value for foreign keys [".implode(",",$ex->getInvalidForeignKeys())."] in data of type $className</error>");
-                dump($ex->getDecodedData());
-                die;
-            }
-            
+            $entities = $cereal->import();
+
             dump($entities);
-            
+
             foreach($entities as $entity) {
                 // @TODO validate
+                $errors = $validator->validate($entity);
+                if(count($errors) > 0) {
+                    $errorsString = (string) $errors;
+                    throw new \Exception($errorsString);
+                }
                 $em->merge($entity);
             }
 

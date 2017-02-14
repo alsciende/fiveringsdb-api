@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Card
@@ -19,6 +20,9 @@ class Card
 
     /**
      * @var string
+     * 
+     * @Assert\NotBlank()
+     * @Assert\Length(min=5,max=5)
      *
      * @ORM\Column(name="code", type="string", length=255, unique=true)
      * @ORM\Id
@@ -28,6 +32,8 @@ class Card
 
     /**
      * @var string
+     * 
+     * @Assert\NotBlank()
      *
      * @ORM\Column(name="name", type="string", length=255)
      */

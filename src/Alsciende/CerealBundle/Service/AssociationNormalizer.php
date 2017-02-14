@@ -66,7 +66,7 @@ class AssociationNormalizer
             try {
                 $result = $qb->getQuery()->getSingleResult();
             } catch(NoResultException $ex) {
-                throw new InvalidForeignKeyException($data, $keys);
+                throw new InvalidForeignKeyException($data, $keys, $className);
             }
 
             $associations[$mapping['fieldName']] = $result;

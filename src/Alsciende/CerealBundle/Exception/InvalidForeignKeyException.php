@@ -16,10 +16,17 @@ class InvalidForeignKeyException extends \Exception
     /** @var array */
     public $decodedData;
 
-    function __construct ($decodedData, $invalidForeignKeys, $message = '')
+    /** @var string * */
+    public $className;
+
+    function __construct ($decodedData, $invalidForeignKeys, $className)
     {
         $this->decodedData = $decodedData;
         $this->invalidForeignKeys = $invalidForeignKeys;
+        $message = "Object($className):\n    These foreign keys have invalid values:";
+        foreach($invalidForeignKeys as $key) {
+            $message .= "\n    - $key => " . $decodedData[$key];
+        }
         parent::__construct($message);
     }
 
@@ -41,6 +48,16 @@ class InvalidForeignKeyException extends \Exception
     function setInvalidForeignKeys ($invalidForeignKeys)
     {
         $this->invalidForeignKeys = $invalidForeignKeys;
+    }
+
+    function getClassName ()
+    {
+        return $this->className;
+    }
+
+    function setClassName ($className)
+    {
+        $this->className = $className;
     }
 
 }
