@@ -3,6 +3,8 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Cycle
@@ -21,6 +23,8 @@ class Cycle
      * @ORM\Column(name="code", type="string", length=255, unique=true)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
+     * 
+     * @Groups({"json"})
      */
     private $code;
 
@@ -28,6 +32,8 @@ class Cycle
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255, unique=true)
+     * 
+     * @Groups({"json"})
      */
     private $name;
 

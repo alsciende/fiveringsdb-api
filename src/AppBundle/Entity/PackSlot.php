@@ -5,6 +5,8 @@ namespace AppBundle\Entity;
 use AppBundle\Model\SlotInterface;
 use AppBundle\Repository\PackSlotRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * PackSlot

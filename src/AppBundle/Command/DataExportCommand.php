@@ -51,8 +51,8 @@ class DataExportCommand extends ContainerAwareCommand
         ];
         
         foreach($types as $className => $outputType) {
-            $entities = $cereal->import($jsonDataPath, $className);
-            dump($entities);
+            $files = $cereal->export($jsonDataPath, $className, $outputType);
+            dump($files);
         }
         
     }

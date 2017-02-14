@@ -58,18 +58,25 @@ class Cereal
         return $entities;
     }
 
-    public function export ($jsonDataPath, $className)
+    public function export ($jsonDataPath, $className, $outputType)
     {
-        
         $repository = $this->em->getRepository($className);
         if(!$repository) {
             throw new \Exception("Cannot find repository for class $className");
         }
-        /*
-        $list = $repository->findAll();
-        dump($list);
-         * 
-         */
+
+        $entities = $repository->findAll();
+        $arrays = [];
+
+        foreach($entities as $entity) {
+            $arrays[] = $this->normalizer->normalize($entity, $className);
+        }
+        
+        dump($arrays);
+
+//        $files = $this->encoder->encode($jsonDataPath, $className, $array, $outputType);
+
+//        return $files;
     }
 
 }

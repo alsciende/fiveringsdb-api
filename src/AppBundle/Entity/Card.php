@@ -3,8 +3,9 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * Card
@@ -27,6 +28,8 @@ class Card
      * @ORM\Column(name="code", type="string", length=255, unique=true)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
+     * 
+     * @Groups({"json"})
      */
     private $code;
 
@@ -36,6 +39,8 @@ class Card
      * @Assert\NotBlank()
      *
      * @ORM\Column(name="name", type="string", length=255)
+     * 
+     * @Groups({"json"})
      */
     private $name;
 
@@ -43,6 +48,8 @@ class Card
      * @var int
      *
      * @ORM\Column(name="cost", type="integer", nullable=true)
+     * 
+     * @Groups({"json"})
      */
     private $cost;
 
@@ -50,6 +57,8 @@ class Card
      * @var string
      *
      * @ORM\Column(name="text", type="text", nullable=true)
+     * 
+     * @Groups({"json"})
      */
     private $text;
 

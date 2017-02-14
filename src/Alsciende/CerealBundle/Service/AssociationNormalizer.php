@@ -19,9 +19,34 @@ class AssociationNormalizer
      */
     private $em;
 
+    /** @var \Symfony\Component\Serializer\Serializer */
+    private $serializer;
+
     public function __construct (EntityManager $em)
     {
         $this->em = $em;
+
+        $classMetadataFactory = new \Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory(new \Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader(new \Doctrine\Common\Annotations\AnnotationReader()));
+        $normalizer = new \Symfony\Component\Serializer\Normalizer\ObjectNormalizer($classMetadataFactory);
+        $this->serializer = new \Symfony\Component\Serializer\Serializer(array($normalizer));
+    }
+
+    /**
+     * Transform an entity into an array
+     * Associations are inlined as foreign_key => value
+     * 
+     * @param type $entity
+     * 
+     * @return array
+     */
+    public function normalize ($entity, $className)
+    {
+        $metadata = $this->em->getClassMetadata($className);
+
+        $data = $this->serializer->normalize($entity, null, ['groups' => ['json']]);
+        $this->normalizeAssociations($entity, $data, $metadata);
+        
+        return $data;
     }
 
     /**
@@ -48,17 +73,37 @@ class AssociationNormalizer
             }
         }
 
-        $this->setAssociations($entity, $data, $metadata);
+        $this->denormalizeAssociations($entity, $data, $metadata);
 
         return $entity;
     }
 
-    public function setAssociations ($entity, $data, \Doctrine\ORM\Mapping\ClassMetadata $metadata)
+    public function getSingleIdentifier (\Doctrine\ORM\Mapping\ClassMetadata $metadata)
+    {
+        $identifierFieldNames = $metadata->getIdentifierFieldNames();
+        if(count($identifierFieldNames) > 1) {
+            throw new InvalidArgumentException('Too many identifiers for ' . $metadata->getName());
+        }
+        return $identifierFieldNames[0];
+    }
+
+    public function normalizeAssociations ($entity, &$data, \Doctrine\ORM\Mapping\ClassMetadata $metadata)
+    {
+        foreach($metadata->getAssociationMappings() as $mapping) {
+            $target = $metadata->getFieldValue($entity, $mapping['fieldName']);
+            $targetMetadata = $this->em->getClassMetadata($mapping['targetEntity']);
+            $identifier = $this->getSingleIdentifier($targetMetadata);
+            $value = $targetMetadata->getFieldValue($target, $identifier);
+            $compositeField = $mapping['fieldName'] . '_' . $identifier;
+            $data[$compositeField] = $value;
+        }
+    }
+
+    public function denormalizeAssociations ($entity, $data, \Doctrine\ORM\Mapping\ClassMetadata $metadata)
     {
         foreach($metadata->getAssociationMappings() as $mapping) {
             $qb = $this->em->createQueryBuilder();
-            $qb->select($mapping['fieldName'])
-                    ->from($mapping['targetEntity'], $mapping['fieldName']);
+            $qb->select($mapping['fieldName'])->from($mapping['targetEntity'], $mapping['fieldName']);
 
             $keys = [];
             foreach($mapping['joinColumns'] as $index => $joinColumn) {
@@ -66,8 +111,7 @@ class AssociationNormalizer
                     $keys[] = $key = $joinColumn['name'];
                     $value = $data[$key];
                     $condition = sprintf("%s.%s = ?%d", $mapping['fieldName'], $joinColumn['referencedColumnName'], $index);
-                    $qb->andWhere($condition)
-                            ->setParameter($index, $value);
+                    $qb->andWhere($condition)->setParameter($index, $value);
                 } else {
                     continue 2; // next $mapping
                 }
@@ -87,25 +131,20 @@ class AssociationNormalizer
     {
         $id = [];
         $className = $metadata->getName();
+        $identifier = $this->getSingleIdentifier($metadata);
 
-        foreach($metadata->getIdentifierFieldNames() as $identifier) {
-            if(!isset($data[$identifier])) {
-                throw new InvalidArgumentException('Missing identifier');
-            }
-            $id[$identifier] = $data[$identifier];
+        if(!isset($data[$identifier])) {
+            throw new InvalidArgumentException('Missing identifier');
         }
+        $id[$identifier] = $data[$identifier];
 
         $entity = $this->em->find($className, $id);
         if(!$entity) {
             $entity = new $className();
-            foreach($metadata->getIdentifierFieldNames() as $identifier) {
-                $metadata->setFieldValue($entity, $identifier, $data[$identifier]);
-            }
+            $metadata->setFieldValue($entity, $identifier, $data[$identifier]);
         }
 
-        foreach($metadata->getIdentifierFieldNames() as $identifier) {
-            unset($data[$identifier]);
-        }
+        unset($data[$identifier]);
 
         return $entity;
     }
