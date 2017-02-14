@@ -25,50 +25,30 @@ class DataImportCommand extends ContainerAwareCommand
     protected function execute (InputInterface $input, OutputInterface $output)
     {
 
-        /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->getContainer()->get('doctrine')->getEntityManager();
-
-        /* @var $validator \Symfony\Component\Validator\Validator\RecursiveValidator */
-        $validator = $this->getContainer()->get('validator');
+        /* @var $cereal \Alsciende\CerealBundle\Service\Cereal */
+        $cereal = $this->getContainer()->get('alsciende_cereal.cereal');
 
         $rootDir = $this->getContainer()->get('kernel')->getRootDir();
         $jsonPath = $this->getContainer()->getParameter('json_data_path');
 
         $fs = new \Symfony\Component\Filesystem\Filesystem();
         if(!$fs->isAbsolutePath($jsonPath)) {
-            $jsonDataPath = $rootDir . '/../' . $jsonPath;
+            $jsonDataPath = $rootDir . '/' . $jsonPath;
         } else {
             $jsonDataPath = $jsonPath;
         }
 
         $types = [
-            \AppBundle\Entity\Type::class,
-            \AppBundle\Entity\Clan::class,
-            \AppBundle\Entity\Cycle::class,
-            \AppBundle\Entity\Pack::class,
-            \AppBundle\Entity\Card::class
+            \AppBundle\Entity\Type::class => \Alsciende\CerealBundle\AlsciendeCerealBundle::OUTPUT_COMBINED,
+            \AppBundle\Entity\Clan::class => \Alsciende\CerealBundle\AlsciendeCerealBundle::OUTPUT_COMBINED,
+            \AppBundle\Entity\Cycle::class => \Alsciende\CerealBundle\AlsciendeCerealBundle::OUTPUT_COMBINED,
+            \AppBundle\Entity\Pack::class => \Alsciende\CerealBundle\AlsciendeCerealBundle::OUTPUT_COMBINED,
+            \AppBundle\Entity\Card::class => \Alsciende\CerealBundle\AlsciendeCerealBundle::OUTPUT_SPLIT
         ];
 
-        foreach($types as $className) {
-
-            /* @var $cereal \Alsciende\CerealBundle\Service\Cereal */
-            $cereal = new \Alsciende\CerealBundle\Service\Cereal($em, $jsonDataPath, $className);
-
-            $entities = $cereal->import();
-
-            dump($entities);
-
-            foreach($entities as $entity) {
-                // @TODO validate
-                $errors = $validator->validate($entity);
-                if(count($errors) > 0) {
-                    $errorsString = (string) $errors;
-                    throw new \Exception($errorsString);
-                }
-                $em->merge($entity);
-            }
-
-            $em->flush();
+        foreach($types as $className => $outputType) {
+            $entities = $cereal->import($jsonDataPath, $className);
+            $output->writeln("Imported <info>" . count($entities) . "</info> objects of type <info>$className</info>");
         }
     }
 

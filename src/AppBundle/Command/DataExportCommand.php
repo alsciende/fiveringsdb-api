@@ -22,25 +22,39 @@ class DataExportCommand extends ContainerAwareCommand
         $this
                 ->setName('app:data:export')
                 ->setDescription("Export data from the database to JSON files")
-                ->addOption('separate', 's', InputOption::VALUE_NONE, "Create one JSON file per entity")
-                ->addArgument('entity', InputArgument::REQUIRED, "Name of the entity to export")
         ;
     }
 
     protected function execute (InputInterface $input, OutputInterface $output)
     {
-        $entityName = $input->getArgument('entity');
-        $separate = $input->getOption('separate');
         
-        /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->getContainer()->get('doctrine')->getEntityManager();
-        $repository = $em->getRepository($entityName);
-        if(!$repository) {
-            throw new Exception("Invalid Entity name $entityName");
+
+        /* @var $cereal \Alsciende\CerealBundle\Service\Cereal */
+        $cereal = $this->getContainer()->get('alsciende_cereal.cereal');
+
+        $rootDir = $this->getContainer()->get('kernel')->getRootDir();
+        $jsonPath = $this->getContainer()->getParameter('json_data_path');
+
+        $fs = new \Symfony\Component\Filesystem\Filesystem();
+        if(!$fs->isAbsolutePath($jsonPath)) {
+            $jsonDataPath = $rootDir . '/' . $jsonPath;
+        } else {
+            $jsonDataPath = $jsonPath;
+        }
+
+        $types = [
+            \AppBundle\Entity\Type::class => \Alsciende\CerealBundle\AlsciendeCerealBundle::OUTPUT_COMBINED,
+            \AppBundle\Entity\Clan::class => \Alsciende\CerealBundle\AlsciendeCerealBundle::OUTPUT_COMBINED,
+            \AppBundle\Entity\Cycle::class => \Alsciende\CerealBundle\AlsciendeCerealBundle::OUTPUT_COMBINED,
+            \AppBundle\Entity\Pack::class => \Alsciende\CerealBundle\AlsciendeCerealBundle::OUTPUT_COMBINED,
+            \AppBundle\Entity\Card::class => \Alsciende\CerealBundle\AlsciendeCerealBundle::OUTPUT_SPLIT
+        ];
+        
+        foreach($types as $className => $outputType) {
+            $entities = $cereal->import($jsonDataPath, $className);
+            dump($entities);
         }
         
-        $list = $repository->findAll();
-        dump($list);
     }
 
 }

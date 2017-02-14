@@ -5,9 +5,6 @@ namespace Alsciende\CerealBundle\Service;
 use Alsciende\CerealBundle\Exception\InvalidForeignKeyException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NoResultException;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
 /**
  * Normalizer service that normalizes associations as ${field}_${referencedColumnName} => ${referencedValue}
@@ -25,9 +22,6 @@ class AssociationNormalizer
     public function __construct (EntityManager $em)
     {
         $this->em = $em;
-        $this->serializer = new Serializer(
-                array(new PropertyNormalizer()), array(new JsonEncoder())
-        );
     }
 
     /**
@@ -44,10 +38,24 @@ class AssociationNormalizer
     public function denormalize ($data, $className)
     {
 
-        $classMetadata = $this->em->getClassMetadata($className);
-        $associations = [];
-        
-        foreach($classMetadata->getAssociationMappings() as $mapping) {
+        $metadata = $this->em->getClassMetadata($className);
+
+        $entity = $this->findOrCreate($data, $metadata);
+
+        foreach($metadata->getFieldNames() as $field) {
+            if(isset($data[$field])) {
+                $metadata->setFieldValue($entity, $field, $data[$field]);
+            }
+        }
+
+        $this->setAssociations($entity, $data, $metadata);
+
+        return $entity;
+    }
+
+    public function setAssociations ($entity, $data, \Doctrine\ORM\Mapping\ClassMetadata $metadata)
+    {
+        foreach($metadata->getAssociationMappings() as $mapping) {
             $qb = $this->em->createQueryBuilder();
             $qb->select($mapping['fieldName'])
                     ->from($mapping['targetEntity'], $mapping['fieldName']);
@@ -60,19 +68,44 @@ class AssociationNormalizer
                     $condition = sprintf("%s.%s = ?%d", $mapping['fieldName'], $joinColumn['referencedColumnName'], $index);
                     $qb->andWhere($condition)
                             ->setParameter($index, $value);
+                } else {
+                    continue 2; // next $mapping
                 }
             }
 
             try {
                 $result = $qb->getQuery()->getSingleResult();
             } catch(NoResultException $ex) {
-                throw new InvalidForeignKeyException($data, $keys, $className);
+                throw new InvalidForeignKeyException($data, $keys, $metadata->getName());
             }
 
-            $associations[$mapping['fieldName']] = $result;
+            $metadata->setFieldValue($entity, $mapping['fieldName'], $result);
         }
-        
-        $entity = $this->serializer->denormalize(array_merge($data, $associations), $className);
+    }
+
+    public function findOrCreate (&$data, \Doctrine\ORM\Mapping\ClassMetadata $metadata)
+    {
+        $id = [];
+        $className = $metadata->getName();
+
+        foreach($metadata->getIdentifierFieldNames() as $identifier) {
+            if(!isset($data[$identifier])) {
+                throw new InvalidArgumentException('Missing identifier');
+            }
+            $id[$identifier] = $data[$identifier];
+        }
+
+        $entity = $this->em->find($className, $id);
+        if(!$entity) {
+            $entity = new $className();
+            foreach($metadata->getIdentifierFieldNames() as $identifier) {
+                $metadata->setFieldValue($entity, $identifier, $data[$identifier]);
+            }
+        }
+
+        foreach($metadata->getIdentifierFieldNames() as $identifier) {
+            unset($data[$identifier]);
+        }
 
         return $entity;
     }

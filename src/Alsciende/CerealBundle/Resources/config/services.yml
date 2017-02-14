@@ -1,4 +1,4 @@
 services:
-#    alsciende_cereal.example:
-#        class: Alsciende\CerealBundle\Example
-#        arguments: ["@service_id", "plain_value", "%parameter%"]
+    alsciende_cereal.cereal:
+        class: Alsciende\CerealBundle\Service\Cereal
+        arguments: ["@doctrine.orm.entity_manager", "@validator"]
