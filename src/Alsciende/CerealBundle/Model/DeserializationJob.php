@@ -38,24 +38,27 @@ class DeserializationJob
     private $incoming;
 
     /* @var array */
-    private $differences;
+    private $changes;
 
     /* @var array */
     private $renamedKeys;
 
-    function __construct (\Doctrine\ORM\EntityManager $em, \Symfony\Component\Validator\Validator\RecursiveValidator $validator, DecodedJsonFile $decodedJsonFile, $classname)
+    function __construct (DecodedJsonFile $decodedJsonFile, $classname)
+    {
+        $this->filepath = $decodedJsonFile->getFilepath();
+        $this->incoming = $decodedJsonFile->getData();
+        $this->classname = $classname;
+    }
+
+    function run (\Doctrine\ORM\EntityManager $em, \Symfony\Component\Validator\Validator\RecursiveValidator $validator)
     {
         $this->em = $em;
+        $this->validator = $validator;
 
         $classMetadataFactory = new \Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory(new \Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader(new \Doctrine\Common\Annotations\AnnotationReader()));
         $normalizer = new \Symfony\Component\Serializer\Normalizer\ObjectNormalizer($classMetadataFactory);
         $this->serializer = new \Symfony\Component\Serializer\Serializer(array($normalizer));
 
-        $this->validator = $validator;
-
-        $this->filepath = $decodedJsonFile->getFilepath();
-        $this->incoming = $decodedJsonFile->getData();
-        $this->classname = $classname;
         $this->metadata = $this->em->getClassMetadata($this->classname);
 
         // find the entity based on the incoming identifier
@@ -65,14 +68,14 @@ class DeserializationJob
         $this->original = $this->serializer->normalize($this->entity, null, ['groups' => ['json']]);
         $this->normalizeOriginalAssociations();
 
-        // compute differences between the normalized data
-        $this->differences = array_diff($this->incoming, $this->original);
+        // compute changes between the normalized data
+        $this->changes = array_diff($this->incoming, $this->original);
 
         // denormalize the associations in the incoming data
         $this->denormalizeIncomingAssociations();
 
         // update the entity with the field updated in incoming
-        foreach($this->differences as $field => $value) {
+        foreach($this->changes as $field => $value) {
             if(isset($this->renamedKeys[$field])) {
                 $field = $this->renamedKeys[$field];
                 $value = $this->incoming[$field];
@@ -195,9 +198,9 @@ class DeserializationJob
         return $this->entity;
     }
 
-    function getDifferences ()
+    function getChanges ()
     {
-        return $this->differences;
+        return $this->changes;
     }
 
     function getOriginal ()

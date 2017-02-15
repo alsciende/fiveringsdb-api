@@ -10,19 +10,11 @@ namespace Alsciende\CerealBundle\Service;
 class DeserializationJobFactory
 {
 
-    /** @var \Doctrine\ORM\EntityManager */
-    private $em;
-
-    /** @var  \Symfony\Component\Validator\Validator\RecursiveValidator */
-    private $validator;
-
     /** @var Alsciende\CerealBundle\Service\JsonFileEncoder */
     private $encoder;
     
-    function __construct (\Doctrine\ORM\EntityManager $em, \Symfony\Component\Validator\Validator\RecursiveValidator $validator)
+    function __construct ()
     {
-        $this->em = $em;
-        $this->validator = $validator;
         $this->encoder = new JsonFileEncoder();
     }
     
@@ -32,7 +24,7 @@ class DeserializationJobFactory
         
         $decodeJsonFiles = $this->encoder->decode($jsonDataPath, $classname);
         foreach($decodeJsonFiles as $decodedJsonFile) {
-            $jobs[] = new \Alsciende\CerealBundle\Model\DeserializationJob($this->em, $this->validator, $decodedJsonFile, $classname);
+            $jobs[] = new \Alsciende\CerealBundle\Model\DeserializationJob($decodedJsonFile, $classname);
         }
         
         return $jobs;

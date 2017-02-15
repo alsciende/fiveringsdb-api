@@ -24,9 +24,14 @@ class DataImportCommand extends ContainerAwareCommand
 
     protected function execute (InputInterface $input, OutputInterface $output)
     {
-
+        /* @var $em \Doctrine\ORM\EntityManager */
+        $em = $this->getContainer()->get('doctrine')->getEntityManager();
+        
+        /* @var $validator \Symfony\Component\Validator\Validator\RecursiveValidator */
+        $validator = $this->getContainer()->get('validator');
+        
         /* @var $factory \Alsciende\CerealBundle\Service\DeserializationJobFactory */
-        $factory = $this->getContainer()->get('alsciende_cereal.deserialization_job_factory');
+        $factory = new \Alsciende\CerealBundle\Service\DeserializationJobFactory();
 
         $helper = $this->getHelper('question');
 
@@ -52,11 +57,14 @@ class DataImportCommand extends ContainerAwareCommand
 
             $jobs = $factory->create($jsonDataPath, $classname);
             foreach($jobs as $job) {
-                if(!empty($job->getDifferences())) {
+                
+                $job->run($em, $validator);
+                
+                if(!empty($job->getChanges())) {
                     $output->writeln("Currently the data is:");
                     dump($job->getOriginal());
                     $output->writeln("The incoming changes are:");
-                    dump($job->getDifferences());
+                    dump($job->getChanges());
                     $question = new \Symfony\Component\Console\Question\ConfirmationQuestion("Continue with these changes (Y/n)? ", true);
                     if(!$helper->ask($input, $output, $question)) {
                         $output->writeln("Operation aborted.");
@@ -65,7 +73,7 @@ class DataImportCommand extends ContainerAwareCommand
                 }
             }
 
-            $this->getContainer()->get('doctrine')->getEntityManager()->flush();
+            $em->flush();
         }
     }
 
