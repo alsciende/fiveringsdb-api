@@ -1,4 +1,4 @@
 services:
-    alsciende_cereal.cereal:
-        class: Alsciende\CerealBundle\Service\Cereal
+    alsciende_cereal.deserialization_job_factory:
+        class: Alsciende\CerealBundle\Service\DeserializationJobFactory
         arguments: ["@doctrine.orm.entity_manager", "@validator"]

@@ -21,7 +21,6 @@ class InvalidForeignKeyException extends \Exception
 
     function __construct ($decodedData, $invalidForeignKeys, $className)
     {
-        $this->decodedData = $decodedData;
         $this->invalidForeignKeys = $invalidForeignKeys;
         $message = "Object($className):\n    These foreign keys have invalid values:";
         foreach($invalidForeignKeys as $key) {

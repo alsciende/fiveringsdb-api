@@ -25,8 +25,10 @@ class DataImportCommand extends ContainerAwareCommand
     protected function execute (InputInterface $input, OutputInterface $output)
     {
 
-        /* @var $cereal \Alsciende\CerealBundle\Service\Cereal */
-        $cereal = $this->getContainer()->get('alsciende_cereal.cereal');
+        /* @var $factory \Alsciende\CerealBundle\Service\DeserializationJobFactory */
+        $factory = $this->getContainer()->get('alsciende_cereal.deserialization_job_factory');
+
+        $helper = $this->getHelper('question');
 
         $rootDir = $this->getContainer()->get('kernel')->getRootDir();
         $jsonPath = $this->getContainer()->getParameter('json_data_path');
@@ -46,9 +48,24 @@ class DataImportCommand extends ContainerAwareCommand
             \AppBundle\Entity\Card::class => \Alsciende\CerealBundle\AlsciendeCerealBundle::OUTPUT_SPLIT
         ];
 
-        foreach($types as $className => $outputType) {
-            $entities = $cereal->import($jsonDataPath, $className);
-            $output->writeln("Imported <info>" . count($entities) . "</info> objects of type <info>$className</info>");
+        foreach($types as $classname => $outputType) {
+
+            $jobs = $factory->create($jsonDataPath, $classname);
+            foreach($jobs as $job) {
+                if(!empty($job->getDifferences())) {
+                    $output->writeln("Currently the data is:");
+                    dump($job->getOriginal());
+                    $output->writeln("The incoming changes are:");
+                    dump($job->getDifferences());
+                    $question = new \Symfony\Component\Console\Question\ConfirmationQuestion("Continue with these changes (Y/n)? ", true);
+                    if(!$helper->ask($input, $output, $question)) {
+                        $output->writeln("Operation aborted.");
+                        return;
+                    }
+                }
+            }
+
+            $this->getContainer()->get('doctrine')->getEntityManager()->flush();
         }
     }
 
