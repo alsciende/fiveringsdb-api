@@ -54,7 +54,6 @@ class DeserializationJob
     {
         $this->em = $em;
         $this->validator = $validator;
-        
         $this->normalizer = new AssociationNormalizer($em);
 
         $this->metadata = $this->em->getClassMetadata($this->classname);

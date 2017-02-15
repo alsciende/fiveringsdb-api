@@ -28,6 +28,13 @@ class AssociationNormalizerTest extends \Symfony\Bundle\FrameworkBundle\Test\Ker
                 ->get('doctrine')
                 ->getManager();
     }
+    
+    function testGetSingleIdentifier()
+    {
+        $normalizer = new \Alsciende\CerealBundle\AssociationNormalizer($this->em);
+        $identifier = $normalizer->getSingleIdentifier($this->em->getClassMetadata(\AppBundle\Entity\Card::class));
+        $this->assertEquals('code', $identifier);
+    }
 
     function testNormalizeClan ()
     {
