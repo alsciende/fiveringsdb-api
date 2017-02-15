@@ -30,8 +30,8 @@ class DataImportCommand extends ContainerAwareCommand
         /* @var $validator \Symfony\Component\Validator\Validator\RecursiveValidator */
         $validator = $this->getContainer()->get('validator');
         
-        /* @var $factory \Alsciende\CerealBundle\Service\DeserializationJobFactory */
-        $factory = new \Alsciende\CerealBundle\Service\DeserializationJobFactory();
+        /* @var $factory \Alsciende\CerealBundle\DeserializationJobFactory */
+        $factory = new \Alsciende\CerealBundle\DeserializationJobFactory();
 
         $helper = $this->getHelper('question');
 
@@ -56,6 +56,7 @@ class DataImportCommand extends ContainerAwareCommand
         foreach($types as $classname => $outputType) {
 
             $jobs = $factory->create($jsonDataPath, $classname);
+            
             foreach($jobs as $job) {
                 
                 $job->run($em, $validator);

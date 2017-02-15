@@ -1,6 +1,6 @@
 <?php
 
-namespace Alsciende\CerealBundle\Model;
+namespace Alsciende\CerealBundle;
 
 /**
  * Deserialization Job for exactly one entity
@@ -13,9 +13,9 @@ class DeserializationJob
     /** @var \Doctrine\ORM\EntityManager */
     private $em;
 
-    /** @var \Symfony\Component\Serializer\Serializer */
-    private $serializer;
-
+    /** @var AssociationNormalizer */
+    private $normalizer;
+    
     /** @var  \Symfony\Component\Validator\Validator\RecursiveValidator */
     private $validator;
 
@@ -43,10 +43,10 @@ class DeserializationJob
     /* @var array */
     private $renamedKeys;
 
-    function __construct (DecodedJsonFile $decodedJsonFile, $classname)
+    function __construct ($filepath, $incoming, $classname)
     {
-        $this->filepath = $decodedJsonFile->getFilepath();
-        $this->incoming = $decodedJsonFile->getData();
+        $this->filepath = $filepath;
+        $this->incoming = $incoming;
         $this->classname = $classname;
     }
 
@@ -54,10 +54,8 @@ class DeserializationJob
     {
         $this->em = $em;
         $this->validator = $validator;
-
-        $classMetadataFactory = new \Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory(new \Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader(new \Doctrine\Common\Annotations\AnnotationReader()));
-        $normalizer = new \Symfony\Component\Serializer\Normalizer\ObjectNormalizer($classMetadataFactory);
-        $this->serializer = new \Symfony\Component\Serializer\Serializer(array($normalizer));
+        
+        $this->normalizer = new AssociationNormalizer($em);
 
         $this->metadata = $this->em->getClassMetadata($this->classname);
 
@@ -65,8 +63,7 @@ class DeserializationJob
         $this->entity = $this->findEntity();
 
         // normalize the entity in its original state
-        $this->original = $this->serializer->normalize($this->entity, null, ['groups' => ['json']]);
-        $this->normalizeOriginalAssociations();
+        $this->original = $this->normalizer->normalize($this->entity);
 
         // compute changes between the normalized data
         $this->changes = array_diff($this->incoming, $this->original);
@@ -90,29 +87,6 @@ class DeserializationJob
         }
 
         $this->em->merge($this->entity);
-    }
-
-    /**
-     * Finds all the associations in $metadata and add them to $original as a 
-     * foreign key
-     * 
-     * eg "article" => (object Article) becomes "article_id" => 2134
-     * 
-     */
-    protected function normalizeOriginalAssociations ()
-    {
-        foreach($this->metadata->getAssociationMappings() as $mapping) {
-            $targetMetadata = $this->em->getClassMetadata($mapping['targetEntity']);
-            $identifier = $this->getSingleIdentifier($targetMetadata);
-            $target = $this->metadata->getFieldValue($this->entity, $mapping['fieldName']);
-            if($target === null) {
-                $value = null;
-            } else {
-                $value = $targetMetadata->getFieldValue($target, $identifier);
-            }
-            $compositeField = $mapping['fieldName'] . '_' . $identifier;
-            $this->original[$compositeField] = $value;
-        }
     }
 
     /**
@@ -172,26 +146,19 @@ class DeserializationJob
 
         return $entity;
     }
-
-    protected function getSingleIdentifier (\Doctrine\ORM\Mapping\ClassMetadata $metadata)
+    
+    
+    function getIdentifierPair (\Doctrine\ORM\Mapping\ClassMetadata $metadata)
     {
-        $identifierFieldNames = $metadata->getIdentifierFieldNames();
-        if(count($identifierFieldNames) > 1) {
-            throw new InvalidArgumentException('Too many identifiers for ' . $metadata->getName());
-        }
-        return $identifierFieldNames[0];
-    }
-
-    protected function getIdentifierPair (\Doctrine\ORM\Mapping\ClassMetadata $metadata)
-    {
-        $identifier = $this->getSingleIdentifier($metadata);
+        $identifier = $this->normalizer->getSingleIdentifier($metadata);
 
         if(!isset($this->incoming[$identifier])) {
-            throw new InvalidArgumentException('Missing identifier');
+            throw new \InvalidArgumentException('Missing identifier');
         }
 
         return array($identifier, $this->incoming[$identifier]);
     }
+
 
     function getEntity ()
     {

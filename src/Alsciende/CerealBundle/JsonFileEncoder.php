@@ -1,6 +1,6 @@
 <?php
 
-namespace Alsciende\CerealBundle\Service;
+namespace Alsciende\CerealBundle;
 
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;
@@ -29,71 +29,71 @@ class JsonFileEncoder
      * 
      * @param type $path
      * @param type $className
-     * @return \Alsciende\CerealBundle\Model\DecodedJsonFile[]
+     * @return array
      */
     public function decode($path, $className)
     {
         $parts = explode('\\', $className);
         $file = strtolower(array_pop($parts));
         
-        $jobs = [];
+        $files = [];
         
-        if(file_exists("${path}/${file}s.json") and is_file("${path}/${file}s.json")) {
-            $jobs = $this->decodeCombinedFile("${path}/${file}s.json");
-        } else if(file_exists("${path}/${file}s") and is_dir("${path}/${file}s")) {
-            $jobs = $this->decodeDirectory("${path}/${file}s");
+        if(file_exists("$path/$file.json") and is_file("$path/$file.json")) {
+            $files = $this->decodeCombinedFile("$path/$file.json");
+        } else if(file_exists("$path/$file") and is_dir("$path/$file")) {
+            $files = $this->decodeDirectory("$path/$file");
         }
         
-        return $jobs;
+        return $files;
     }
     
     /**
      * 
      * @param type $path
      * @param type $className
-     * @return \Alsciende\CerealBundle\Model\DecodedJsonFile[]
+     * @return array
      */
     public function decodeDirectory($path)
     {
-        $files = glob("$path/*.json");
+        $filenames = glob("$path/*.json");
         
-        $jobs = [];
-        foreach($files as $file) {
-            $jobs[] = $this->decodeExplodedFile($file);
+        $files = [];
+        foreach($filenames as $filename) {
+            $files[] = $this->decodeExplodedFile($filename);
         }        
-        return $jobs;
+        return $files;
     }
     
     /**
      * 
      * @param type $path
      * @param type $className
-     * @return \Alsciende\CerealBundle\Model\DecodedJsonFile
+     * @return array
      */
     public function decodeExplodedFile($path)
     {
         $contents = file_get_contents($path);
         $data = $this->serializer->decode($contents, 'json');
         
-        return new \Alsciende\CerealBundle\Model\DecodedJsonFile($path, $data);
+        return array($path, $data);
     }
     
     /**
      * 
      * @param type $path
      * @param type $className
-     * @return \Alsciende\CerealBundle\Model\DecodedJsonFile[]
+     * @return array
      */
     public function decodeCombinedFile($path)
     {
         $contents = file_get_contents($path);
         $list = $this->serializer->decode($contents, 'json');
         
-        $jobs = [];
+        $files = [];
         foreach($list as $data) {
-            $jobs[] = new \Alsciende\CerealBundle\Model\DecodedJsonFile($path, $data);
+            $files[] = array($path, $data);
         }
-        return $jobs;
+        return $files;
     }
     
 }
