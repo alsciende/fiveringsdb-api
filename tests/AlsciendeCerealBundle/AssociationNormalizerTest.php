@@ -2,8 +2,6 @@
 
 namespace Tests\AlsciendeCerealBundle;
 
-use Doctrine\Common\Persistence\ObjectManager;
-
 /**
  * Description of AssociationNormalizerTest
  *
@@ -11,6 +9,8 @@ use Doctrine\Common\Persistence\ObjectManager;
  */
 class AssociationNormalizerTest extends \Symfony\Bundle\FrameworkBundle\Test\KernelTestCase
 {
+
+    use DomainFixtures;
 
     /**
      * @var \Doctrine\ORM\EntityManager
@@ -27,9 +27,11 @@ class AssociationNormalizerTest extends \Symfony\Bundle\FrameworkBundle\Test\Ker
         $this->em = static::$kernel->getContainer()
                 ->get('doctrine')
                 ->getManager();
+
+        $this->clearDatabase();
     }
-    
-    function testGetSingleIdentifier()
+
+    function testGetSingleIdentifier ()
     {
         $normalizer = new \Alsciende\CerealBundle\AssociationNormalizer($this->em);
         $identifier = $normalizer->getSingleIdentifier($this->em->getClassMetadata(\AppBundle\Entity\Card::class));
@@ -80,6 +82,69 @@ class AssociationNormalizerTest extends \Symfony\Bundle\FrameworkBundle\Test\Ker
         $this->assertEquals('stronghold', $data['type_code']);
     }
 
+    function testFindReferenceMetadata ()
+    {
+        //setup
+        $data = [
+            'clan_code' => 'crab',
+            'type_code' => 'stronghold'
+        ];
+        $associationMapping = $this->em->getClassMetadata(\AppBundle\Entity\Card::class)->getAssociationMapping('clan');
+        //work
+        $normalizer = new \Alsciende\CerealBundle\AssociationNormalizer($this->em);
+        $reference = $normalizer->findReferenceMetadata($data, $associationMapping);
+        $this->assertArrayHasKey('joinColumns', $reference);
+        $this->assertArrayHasKey('className', $reference);
+        $this->assertArrayHasKey('clan_code', $reference['joinColumns']);
+        $this->assertArrayHasKey('referencedColumnName', $reference['joinColumns']['clan_code']);
+        $this->assertArrayHasKey('referencedValue', $reference['joinColumns']['clan_code']);
+    }
+
+    function testFindReferencedEntity ()
+    {
+        //setup
+        $reference = [
+            'joinColumns' => [
+                'clan_code' => [
+                    'referencedColumnName' => 'code',
+                    'referencedValue' => 'crab'
+                ]
+            ],
+            'className' => \AppBundle\Entity\Clan::class
+        ];
+        $this->createCrab();
+        //work
+        $normalizer = new \Alsciende\CerealBundle\AssociationNormalizer($this->em);
+        $entity = $normalizer->findReferencedEntity('clan', $reference, $this->em);
+        //assert
+        $this->assertNotNull($entity);
+        $this->assertEquals('crab', $entity->getCode());
+    }
+
+    function testFindReferences ()
+    {
+        //setup
+        $this->createStronghold();
+        $this->createCrab();
+
+        $data = [
+            'clan_code' => 'crab',
+            'type_code' => 'stronghold'
+        ];
+        //work
+        $normalizer = new \Alsciende\CerealBundle\AssociationNormalizer($this->em);
+        $associations = $normalizer->findReferences($data, \AppBundle\Entity\Card::class);
+        //assert
+        $this->assertEquals(2, count($associations));
+        $this->assertArrayHasKey('clan', $associations);
+        $this->assertArrayHasKey('type', $associations);
+        $this->assertArrayHasKey('joinColumns', $associations['clan']);
+        $this->assertArrayHasKey('className', $associations['clan']);
+        $this->assertArrayHasKey('clan_code', $associations['clan']['joinColumns']);
+        $this->assertArrayHasKey('referencedColumnName', $associations['clan']['joinColumns']['clan_code']);
+        $this->assertArrayHasKey('referencedValue', $associations['clan']['joinColumns']['clan_code']);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -87,6 +152,7 @@ class AssociationNormalizerTest extends \Symfony\Bundle\FrameworkBundle\Test\Ker
     {
         parent::tearDown();
 
+        $this->clearDatabase();
         $this->em->close();
         $this->em = null; // avoid memory leaks
     }

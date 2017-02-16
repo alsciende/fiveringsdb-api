@@ -20,15 +20,16 @@ class AssociationNormalizer
     {
         $this->factory = new \Doctrine\ORM\Mapping\ClassMetadataFactory();
         $this->factory->setEntityManager($em);
-        
+
         $classMetadataFactory = new \Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory(new \Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader(new \Doctrine\Common\Annotations\AnnotationReader()));
         $normalizer = new \Symfony\Component\Serializer\Normalizer\ObjectNormalizer($classMetadataFactory);
         $this->serializer = new \Symfony\Component\Serializer\Serializer(array($normalizer));
     }
 
     /**
-     * Finds all the associations in $metadata and add them to $data as a 
-     * foreign key
+     * Turn $entity into an array $data, then
+     * find all the associations in $entity 
+     * and add them to $data as a foreign key
      * 
      * eg "article" => (object Article) becomes "article_id" => 2134
      * 
@@ -52,6 +53,60 @@ class AssociationNormalizer
         }
 
         return $data;
+    }
+
+    /**
+     * Return an array listing the associations in $metadata that exist in $data,
+     * with the relevant information to find the referenced entity
+     * 
+     * @param array $data
+     * @param string $className
+     * @return array
+     */
+    function findReferences ($data, $className)
+    {
+        $references = [];
+        foreach($this->factory->getMetadataFor($className)->getAssociationMappings() as $mapping) {
+            $reference = $this->findReferenceMetadata($data, $mapping);
+            if($reference) {
+                $references[$mapping['fieldName']] = $reference;
+            }
+        }
+        return $references;
+    }
+
+    function findReferenceMetadata ($data, $associationMapping)
+    {
+        $reference = [
+            'joinColumns' => [],
+            'className' => $associationMapping['targetEntity']
+        ];
+        foreach($associationMapping['sourceToTargetKeyColumns'] as $foreignKey => $referencedColumnName) {
+            if(!key_exists($foreignKey, $data)) {
+                return;
+            }
+            $reference['joinColumns'][$foreignKey] = [
+                'referencedColumnName' => $referencedColumnName,
+                'referencedValue' => $data[$foreignKey]
+            ];
+        }
+        return $reference;
+    }
+
+    function findReferencedEntity ($field, $reference, \Doctrine\ORM\EntityManager $em)
+    {
+        $qb = $em->createQueryBuilder();
+        $qb->select($field)->from($reference['className'], $field);
+        foreach($reference['joinColumns'] as $foreignKey => $condition) {
+            $conditionString = sprintf("%s.%s = :%s", $field, $condition['referencedColumnName'], $foreignKey);
+            $qb->andWhere($conditionString)->setParameter($foreignKey, $condition['referencedValue']);
+        }
+
+        try {
+            return $qb->getQuery()->getSingleResult();
+        } catch(\Doctrine\ORM\NoResultException $ex) {
+            throw new \Alsciende\CerealBundle\Exception\InvalidForeignKeyException($reference);
+        }
     }
 
     function getSingleIdentifier (\Doctrine\ORM\Mapping\ClassMetadata $metadata)

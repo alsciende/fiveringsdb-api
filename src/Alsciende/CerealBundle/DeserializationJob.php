@@ -98,38 +98,19 @@ class DeserializationJob
      */
     protected function denormalizeIncomingAssociations ()
     {
-        $associations = [];
+        $references = $this->normalizer->findReferences($this->incoming, $this->classname);
 
-        foreach($this->metadata->getAssociationMappings() as $mapping) {
-            $qb = $this->em->createQueryBuilder();
-            $qb->select($mapping['fieldName'])->from($mapping['targetEntity'], $mapping['fieldName']);
-
-            $keys = [];
-            foreach($mapping['joinColumns'] as $index => $joinColumn) {
-                if(key_exists($joinColumn['name'], $this->incoming)) {
-                    $keys[] = $key = $joinColumn['name'];
-                    $value = $this->incoming[$key];
-                    $condition = sprintf("%s.%s = ?%d", $mapping['fieldName'], $joinColumn['referencedColumnName'], $index);
-                    $qb->andWhere($condition)->setParameter($index, $value);
-                } else {
-                    continue 2; // next $mapping
-                }
+        foreach($references as $field => $reference) {
+            $entity = $this->normalizer->findReferencedEntity($field, $reference, $this->em);
+            if(!$entity) {
+                throw new \InvalidArgumentException("Invalid reference ".json_encode($reference));
             }
-
-            try {
-                $result = $qb->getQuery()->getSingleResult();
-            } catch(\Doctrine\ORM\NoResultException $ex) {
-                throw new \Alsciende\CerealBundle\Exception\InvalidForeignKeyException($this->incoming, $keys, $this->classname);
-            }
-
-            $associations[$mapping['fieldName']] = $result;
-            foreach($keys as $key) {
-                $this->renamedKeys[$key] = $mapping['fieldName'];
-                unset($this->incoming[$key]);
+            $this->incoming[$field] = $entity;
+            foreach(array_keys($reference['joinColumns']) as $foreignKey) {
+                unset($this->incoming[$foreignKey]);
+                $this->renamedKeys[$foreignKey] = $field;
             }
         }
-
-        $this->incoming = array_merge($this->incoming, $associations);
     }
 
     protected function findEntity ()
@@ -152,7 +133,7 @@ class DeserializationJob
         $identifier = $this->normalizer->getSingleIdentifier($metadata);
 
         if(!isset($this->incoming[$identifier])) {
-            throw new \InvalidArgumentException('Missing identifier');
+            throw new \InvalidArgumentException('Missing identifier for entity '.$metadata->getName().' in data '.json_encode($this->incoming));
         }
 
         return array($identifier, $this->incoming[$identifier]);
