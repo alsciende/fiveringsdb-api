@@ -26,10 +26,10 @@ class DataImportCommand extends ContainerAwareCommand
     {
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->getContainer()->get('doctrine')->getEntityManager();
-        
+
         /* @var $validator \Symfony\Component\Validator\Validator\RecursiveValidator */
         $validator = $this->getContainer()->get('validator');
-        
+
         /* @var $factory \Alsciende\CerealBundle\DeserializationJobFactory */
         $factory = new \Alsciende\CerealBundle\DeserializationJobFactory();
 
@@ -39,11 +39,10 @@ class DataImportCommand extends ContainerAwareCommand
         $jsonPath = $this->getContainer()->getParameter('json_data_path');
 
         $fs = new \Symfony\Component\Filesystem\Filesystem();
-        if(!$fs->isAbsolutePath($jsonPath)) {
-            $jsonDataPath = $rootDir . '/' . $jsonPath;
-        } else {
-            $jsonDataPath = $jsonPath;
+        if (!$fs->isAbsolutePath($jsonPath)) {
+            $jsonPath = $rootDir . '/' . $jsonPath;
         }
+        $jsonDataPath = realpath($jsonPath);
 
         $types = [
             \AppBundle\Entity\Type::class => \Alsciende\CerealBundle\AlsciendeCerealBundle::OUTPUT_COMBINED,
@@ -53,27 +52,24 @@ class DataImportCommand extends ContainerAwareCommand
             \AppBundle\Entity\Card::class => \Alsciende\CerealBundle\AlsciendeCerealBundle::OUTPUT_SPLIT
         ];
 
-        foreach($types as $classname => $outputType) {
+        $output->writeln("Loading data from " . $jsonDataPath);
 
+        foreach ($types as $classname => $outputType) {
             $jobs = $factory->create($jsonDataPath, $classname);
-            
-            foreach($jobs as $job) {
-                
+            foreach ($jobs as $job) {
                 $job->run($em, $validator);
-                
-                if(!empty($job->getChanges())) {
+                if (!empty($job->getChanges())) {
                     $output->writeln("Currently the data is:");
                     dump($job->getOriginal());
                     $output->writeln("The incoming changes are:");
                     dump($job->getChanges());
                     $question = new \Symfony\Component\Console\Question\ConfirmationQuestion("Continue with these changes (Y/n)? ", true);
-                    if(!$helper->ask($input, $output, $question)) {
+                    if (!$helper->ask($input, $output, $question)) {
                         $output->writeln("Operation aborted.");
                         return;
                     }
                 }
             }
-
             $em->flush();
         }
     }
