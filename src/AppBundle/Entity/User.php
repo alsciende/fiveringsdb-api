@@ -17,9 +17,9 @@ class User implements UserInterface
 {
 
     /**
+     * @ORM\Column(name="id", type="string", length=255, unique=true)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="UUID")
      */
     private $id;
 
@@ -37,6 +37,11 @@ class User implements UserInterface
     {
         $this->username = $username;
         $this->apiKey = $apiKey;
+    }
+    
+    function getId ()
+    {
+        return $this->id;
     }
 
     public function getUsername ()

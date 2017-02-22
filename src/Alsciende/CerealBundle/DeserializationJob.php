@@ -117,8 +117,11 @@ class DeserializationJob
     {
         list($identifierField, $uniqueValue) = $this->getIdentifierPair($this->metadata);
 
-        $entity = $this->em->find($this->classname, [$identifierField => $uniqueValue]);
-        if(!$entity) {
+        if($uniqueValue) {
+            $entity = $this->em->find($this->classname, [$identifierField => $uniqueValue]);
+        }
+        
+        if(!isset($entity)) {
             $classname = $this->classname;
             $entity = new $classname();
             $this->metadata->setFieldValue($entity, $identifierField, $uniqueValue);
@@ -133,7 +136,11 @@ class DeserializationJob
         $identifier = $this->normalizer->getSingleIdentifier($metadata);
 
         if(!isset($this->incoming[$identifier])) {
-            throw new \InvalidArgumentException('Missing identifier for entity '.$metadata->getName().' in data '.json_encode($this->incoming));
+            if(empty($metadata->idGenerator)) {
+                throw new \InvalidArgumentException('Missing identifier for entity '.$metadata->getName().' in data '.json_encode($this->incoming));
+            } else {
+                return array($identifier, null);
+            }
         }
 
         return array($identifier, $this->incoming[$identifier]);
@@ -153,6 +160,11 @@ class DeserializationJob
     function getOriginal ()
     {
         return $this->original;
+    }
+
+    function getFilepath ()
+    {
+        return $this->filepath;
     }
 
 }

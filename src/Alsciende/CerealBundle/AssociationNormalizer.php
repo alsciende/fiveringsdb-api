@@ -40,19 +40,27 @@ class AssociationNormalizer
         $data = $this->serializer->normalize($entity, null, ['groups' => ['json']]);
 
         foreach($metadata->getAssociationMappings() as $mapping) {
-            $targetMetadata = $this->factory->getMetadataFor($mapping['targetEntity']);
-            $identifier = $this->getSingleIdentifier($targetMetadata);
-            $target = $metadata->getFieldValue($entity, $mapping['fieldName']);
-            if($target === null) {
-                $value = null;
-            } else {
-                $value = $targetMetadata->getFieldValue($target, $identifier);
+            if($mapping['isOwningSide']) {
+                list($compositeField, $value) = $this->normalizeOwningSideAssociation($entity, $metadata, $mapping);
             }
-            $compositeField = $mapping['fieldName'] . '_' . $identifier;
             $data[$compositeField] = $value;
         }
 
         return $data;
+    }
+
+    function normalizeOwningSideAssociation ($entity, $metadata, $mapping)
+    {
+        $targetMetadata = $this->factory->getMetadataFor($mapping['targetEntity']);
+        $identifier = $this->getSingleIdentifier($targetMetadata);
+        $target = $metadata->getFieldValue($entity, $mapping['fieldName']);
+        if($target === null) {
+            $value = null;
+        } else {
+            $value = $targetMetadata->getFieldValue($target, $identifier);
+        }
+        $compositeField = $mapping['fieldName'] . '_' . $identifier;
+        return array($compositeField, $value);
     }
 
     /**
@@ -77,6 +85,9 @@ class AssociationNormalizer
 
     function findReferenceMetadata ($data, $associationMapping)
     {
+        if(!$associationMapping['isOwningSide']) {
+            return;
+        }
         $reference = [
             'joinColumns' => [],
             'className' => $associationMapping['targetEntity']

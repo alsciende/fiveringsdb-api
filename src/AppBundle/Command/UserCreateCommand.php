@@ -34,7 +34,7 @@ class UserCreateCommand extends \Symfony\Bundle\FrameworkBundle\Command\Containe
         $em->persist($user);
         $em->flush();
 
-        $output->writeln("Done");
+        $output->write("Created user <info>".$user->getId()."</info>\n");
     }
 
 }

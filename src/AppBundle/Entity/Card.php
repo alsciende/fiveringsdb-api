@@ -17,6 +17,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
  */
 class Card
 {
+
     use TimestampableEntity;
 
     /**
@@ -77,6 +78,14 @@ class Card
      * @ORM\JoinColumn(name="clan_code", referencedColumnName="code")
      */
     private $clan;
+
+    /**
+     * @var Pack
+     *
+     * @ORM\ManyToOne(targetEntity="Pack", fetch="EAGER")
+     * @ORM\JoinColumn(name="pack_code", referencedColumnName="code")
+     */
+    private $pack;
 
     /**
      * Set code
@@ -218,6 +227,30 @@ class Card
     function setClan (\AppBundle\Entity\Clan $clan)
     {
         $this->clan = $clan;
+
+        return $this;
+    }
+
+    /**
+     * Get pack
+     * 
+     * @return Pack
+     */
+    function getPack ()
+    {
+        return $this->pack;
+    }
+
+    /**
+     * Set pack
+     * 
+     * @param \AppBundle\Entity\Pack $pack
+     * 
+     * @return Card
+     */
+    function setPack (Pack $pack)
+    {
+        $this->pack = $pack;
 
         return $this;
     }

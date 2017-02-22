@@ -6,7 +6,7 @@ namespace AppBundle\Model;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-interface SlotInterface
+interface CardSlotInterface
 {
 
     /**

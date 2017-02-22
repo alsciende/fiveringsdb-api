@@ -48,9 +48,6 @@ class AssociationNormalizerTest extends \Symfony\Bundle\FrameworkBundle\Test\Ker
         $normalizer = new \Alsciende\CerealBundle\AssociationNormalizer($this->em);
         $data = $normalizer->normalize($clan);
         //assert
-        $this->assertTrue(is_array($data));
-        $this->assertArrayHasKey('code', $data);
-        $this->assertArrayHasKey('name', $data);
         $this->assertEquals('crab', $data['code']);
         $this->assertEquals("Crab", $data['name']);
     }
@@ -71,15 +68,25 @@ class AssociationNormalizerTest extends \Symfony\Bundle\FrameworkBundle\Test\Ker
         $normalizer = new \Alsciende\CerealBundle\AssociationNormalizer($this->em);
         $data = $normalizer->normalize($card);
         //assert
-        $this->assertTrue(is_array($data));
-        $this->assertArrayHasKey('code', $data);
-        $this->assertArrayHasKey('name', $data);
-        $this->assertArrayHasKey('clan_code', $data);
-        $this->assertArrayHasKey('type_code', $data);
         $this->assertEquals('01001', $data['code']);
         $this->assertEquals("The Impregnable Fortress of the Crab", $data['name']);
         $this->assertEquals('crab', $data['clan_code']);
         $this->assertEquals('stronghold', $data['type_code']);
+    }
+
+    function testNormalizePack ()
+    {
+        //setup
+        $cycle = new \AppBundle\Entity\Cycle();
+        $cycle->setCode('core');
+        $pack = new \AppBundle\Entity\Pack();
+        $pack->setCode('core');
+        $pack->setCycle($cycle);
+        //work
+        $normalizer = new \Alsciende\CerealBundle\AssociationNormalizer($this->em);
+        $data = $normalizer->normalize($pack);
+        //assert
+        $this->assertEquals('core', $data['code']);
     }
 
     function testFindReferenceMetadata ()

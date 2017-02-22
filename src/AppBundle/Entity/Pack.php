@@ -2,8 +2,11 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Model\CardSlotCollection;
+use AppBundle\Repository\PackRepository;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
@@ -16,6 +19,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 class Pack
 {
+    use TimestampableEntity;
 
     /**
      * @var string
@@ -41,6 +45,8 @@ class Pack
      * @var int
      *
      * @ORM\Column(name="position", type="integer")
+     * 
+     * @Groups({"json"})
      */
     private $position;
 
@@ -48,29 +54,17 @@ class Pack
      * @var int
      *
      * @ORM\Column(name="size", type="integer", nullable=true)
+     * 
+     * @Groups({"json"})
      */
     private $size;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
-     * @ORM\Column(name="dateCreation", type="datetime")
+     * @ORM\Column(name="release_at", type="datetime", nullable=true)
      */
-    private $dateCreation;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="dateUpdate", type="datetime")
-     */
-    private $dateUpdate;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="dateRelease", type="datetime", nullable=true)
-     */
-    private $dateRelease;
+    private $releaseAt;
 
     /**
      * @var int
@@ -80,12 +74,24 @@ class Pack
     private $ffgId;
 
     /**
-     * @var \AppBundle\Entity\Cycle
+     * @var Cycle
      *
      * @ORM\ManyToOne(targetEntity="Cycle", fetch="EAGER")
      * @ORM\JoinColumn(name="cycle_code", referencedColumnName="code")
      */
     private $cycle;
+
+    /**
+     * @var Cards[]
+     * 
+     * @ORM\OneToMany(targetEntity="Card", mappedBy="pack", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
+     */
+    private $cards;
+
+    function __construct ()
+    {
+        $this->cards = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Set code
@@ -182,77 +188,25 @@ class Pack
     {
         return $this->size;
     }
+    
+    /**
+     * 
+     * @return DateTime
+     */
+    function getReleaseAt ()
+    {
+        return $this->releaseAt;
+    }
 
     /**
-     * Set dateCreation
-     *
-     * @param \DateTime $dateCreation
-     *
-     * @return Pack
+     * 
+     * @param DateTime $releaseAt
      */
-    public function setDateCreation ($dateCreation)
+    function setReleaseAt (DateTime $releaseAt)
     {
-        $this->dateCreation = $dateCreation;
-
+        $this->releaseAt = $releaseAt;
+        
         return $this;
-    }
-
-    /**
-     * Get dateCreation
-     *
-     * @return \DateTime
-     */
-    public function getDateCreation ()
-    {
-        return $this->dateCreation;
-    }
-
-    /**
-     * Set dateUpdate
-     *
-     * @param \DateTime $dateUpdate
-     *
-     * @return Pack
-     */
-    public function setDateUpdate ($dateUpdate)
-    {
-        $this->dateUpdate = $dateUpdate;
-
-        return $this;
-    }
-
-    /**
-     * Get dateUpdate
-     *
-     * @return \DateTime
-     */
-    public function getDateUpdate ()
-    {
-        return $this->dateUpdate;
-    }
-
-    /**
-     * Set dateRelease
-     *
-     * @param \DateTime $dateRelease
-     *
-     * @return Pack
-     */
-    public function setDateRelease ($dateRelease)
-    {
-        $this->dateRelease = $dateRelease;
-
-        return $this;
-    }
-
-    /**
-     * Get dateRelease
-     *
-     * @return \DateTime
-     */
-    public function getDateRelease ()
-    {
-        return $this->dateRelease;
     }
 
     /**
@@ -292,14 +246,52 @@ class Pack
     /**
      * Set cycle
      * 
-     * @param \AppBundle\Entity\Cycle $cycle
+     * @param Cycle $cycle
      * 
      * @return Pack
      */
-    function setCycle (\AppBundle\Entity\Cycle $cycle)
+    function setCycle (Cycle $cycle)
     {
         $this->cycle = $cycle;
 
+        return $this;
+    }
+
+    /**
+     * Get cards
+     * 
+     * @return Card[]
+     */
+    function getCards ()
+    {
+        return $this->cards;
+    }
+
+    /**
+     * Set cards
+     * 
+     * @param Card[] $cards
+     * 
+     * return Pack
+     */
+    function setCards (array $cards)
+    {
+        $this->cards = $cards;
+        
+        return $this;
+    }
+    
+    /**
+     * Add card
+     * 
+     * @param \AppBundle\Entity\Card $card
+     * 
+     * @return Pack
+     */
+    function addCard (Card $card)
+    {
+        $this->cards[] = $card;
+        
         return $this;
     }
 

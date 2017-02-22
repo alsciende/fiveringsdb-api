@@ -35,10 +35,10 @@ class DeserializationJobTest extends \Symfony\Bundle\FrameworkBundle\Test\Kernel
         $this->clearDatabase();
     }
 
-    function testRunSimple ()
+    function testRunClan ()
     {
         //setup
-        $filepath = __DIR__ . "/DataFixtures/clan.json";
+        $filepath = __DIR__ . "/DataFixtures/Clan.json";
         $data = json_decode(file_get_contents($filepath), true);
         $incoming = $data[0];
         $classname = \AppBundle\Entity\Clan::class;
@@ -60,13 +60,13 @@ class DeserializationJobTest extends \Symfony\Bundle\FrameworkBundle\Test\Kernel
         $this->assertNull($original['name']);
     }
 
-    function testRunComplex ()
+    function testRunCard ()
     {
         //setup
         $this->createStronghold();
         $this->createCrab();
 
-        $filepath = __DIR__ . "/DataFixtures/card/01001.json";
+        $filepath = __DIR__ . "/DataFixtures/Card/01001.json";
         $incoming = json_decode(file_get_contents($filepath), true);
         $classname = \AppBundle\Entity\Card::class;
         $job = new \Alsciende\CerealBundle\DeserializationJob($filepath, $incoming, $classname);
@@ -82,11 +82,9 @@ class DeserializationJobTest extends \Symfony\Bundle\FrameworkBundle\Test\Kernel
         $this->assertNotNull($entity);
         $this->assertEquals('01001', $entity->getCode());
         $this->assertEquals("The Impregnable Fortress of the Crab", $entity->getName());
-        $this->assertEquals(3, count($changes));
         $this->assertEquals("The Impregnable Fortress of the Crab", $changes['name']);
         $this->assertEquals('crab', $changes['clan_code']);
         $this->assertEquals('stronghold', $changes['type_code']);
-        $this->assertEquals(6, count($original));
         $this->assertEquals('01001', $original['code']);
         $this->assertNull($original['name']);
     }

@@ -2,19 +2,26 @@
 
 namespace Tests\AlsciendeCerealBundle;
 
+use Alsciende\CerealBundle\AlsciendeCerealBundle;
+use Alsciende\CerealBundle\JsonFileEncoder;
+use AppBundle\Entity\Card;
+use AppBundle\Entity\Clan;
+use AppBundle\Entity\Type;
+use PHPUnit_Framework_TestCase;
+
 /**
  * Description of JsonFileEncoderTest
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class JsonFileEncoderTest extends \PHPUnit_Framework_TestCase
+class JsonFileEncoderTest extends PHPUnit_Framework_TestCase
 {
 
     public function testDecodeCombinedFile ()
     {
-        $path = __DIR__ . "/DataFixtures/clan.json";
+        $path = __DIR__ . "/DataFixtures/Clan.json";
 
-        $encoder = new \Alsciende\CerealBundle\JsonFileEncoder();
+        $encoder = new JsonFileEncoder();
         $files = $encoder->decodeCombinedFile($path);
 
         $this->assertEquals(2, count($files));
@@ -22,9 +29,9 @@ class JsonFileEncoderTest extends \PHPUnit_Framework_TestCase
 
     public function testDecodeExplodedFile ()
     {
-        $path = __DIR__ . "/DataFixtures/card/01001.json";
+        $path = __DIR__ . "/DataFixtures/Card/01001.json";
 
-        $encoder = new \Alsciende\CerealBundle\JsonFileEncoder();
+        $encoder = new JsonFileEncoder();
         $file = $encoder->decodeExplodedFile($path);
 
         $this->assertNotNull($file);
@@ -32,10 +39,10 @@ class JsonFileEncoderTest extends \PHPUnit_Framework_TestCase
     
     public function testDecodeDirectory()
     {
-        $path = __DIR__ . "/DataFixtures/card";
+        $path = __DIR__ . "/DataFixtures/Card";
 
-        $encoder = new \Alsciende\CerealBundle\JsonFileEncoder();
-        $files = $encoder->decodeDirectory($path);
+        $encoder = new JsonFileEncoder();
+        $files = $encoder->decodeDirectory($path, true);
 
         $this->assertEquals(2, count($files));
     }
@@ -44,8 +51,8 @@ class JsonFileEncoderTest extends \PHPUnit_Framework_TestCase
     {
         $path = __DIR__ . "/DataFixtures";
 
-        $encoder = new \Alsciende\CerealBundle\JsonFileEncoder();
-        $files = $encoder->decode($path, \AppBundle\Entity\Clan::class);
+        $encoder = new JsonFileEncoder();
+        $files = $encoder->decode($path, Clan::class, AlsciendeCerealBundle::SINGLE_FILE | AlsciendeCerealBundle::MULTIPLE_DATA);
 
         $this->assertEquals(2, count($files));
     }
@@ -54,8 +61,8 @@ class JsonFileEncoderTest extends \PHPUnit_Framework_TestCase
     {
         $path = __DIR__ . "/DataFixtures";
 
-        $encoder = new \Alsciende\CerealBundle\JsonFileEncoder();
-        $files = $encoder->decode($path, \AppBundle\Entity\Type::class);
+        $encoder = new JsonFileEncoder();
+        $files = $encoder->decode($path, Type::class, AlsciendeCerealBundle::SINGLE_FILE | AlsciendeCerealBundle::MULTIPLE_DATA);
 
         $this->assertEquals(1, count($files));
     }
@@ -64,8 +71,8 @@ class JsonFileEncoderTest extends \PHPUnit_Framework_TestCase
     {
         $path = __DIR__ . "/DataFixtures";
 
-        $encoder = new \Alsciende\CerealBundle\JsonFileEncoder();
-        $files = $encoder->decode($path, \AppBundle\Entity\Card::class);
+        $encoder = new JsonFileEncoder();
+        $files = $encoder->decode($path, Card::class, AlsciendeCerealBundle::MULTIPLE_FILES | AlsciendeCerealBundle::SINGLE_DATA);
 
         $this->assertEquals(2, count($files));
     }

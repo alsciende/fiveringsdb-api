@@ -2,8 +2,9 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Repository\CycleRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
@@ -16,6 +17,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 class Cycle
 {
+    use TimestampableEntity;
 
     /**
      * @var string
@@ -41,6 +43,8 @@ class Cycle
      * @var int
      *
      * @ORM\Column(name="position", type="integer")
+     * 
+     * @Groups({"json"})
      */
     private $position;
 
@@ -48,22 +52,10 @@ class Cycle
      * @var int
      *
      * @ORM\Column(name="size", type="integer", nullable=true)
+     * 
+     * @Groups({"json"})
      */
     private $size;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="dateCreation", type="datetime")
-     */
-    private $dateCreation;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="dateUpdate", type="datetime")
-     */
-    private $dateUpdate;
 
     /**
      * Set code
@@ -159,54 +151,6 @@ class Cycle
     public function getSize ()
     {
         return $this->size;
-    }
-
-    /**
-     * Set dateCreation
-     *
-     * @param \DateTime $dateCreation
-     *
-     * @return Cycle
-     */
-    public function setDateCreation ($dateCreation)
-    {
-        $this->dateCreation = $dateCreation;
-
-        return $this;
-    }
-
-    /**
-     * Get dateCreation
-     *
-     * @return \DateTime
-     */
-    public function getDateCreation ()
-    {
-        return $this->dateCreation;
-    }
-
-    /**
-     * Set dateUpdate
-     *
-     * @param \DateTime $dateUpdate
-     *
-     * @return Cycle
-     */
-    public function setDateUpdate ($dateUpdate)
-    {
-        $this->dateUpdate = $dateUpdate;
-
-        return $this;
-    }
-
-    /**
-     * Get dateUpdate
-     *
-     * @return \DateTime
-     */
-    public function getDateUpdate ()
-    {
-        return $this->dateUpdate;
     }
 
 }
