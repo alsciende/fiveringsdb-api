@@ -15,7 +15,7 @@ class DeserializationJob
 
     /** @var AssociationNormalizer */
     private $normalizer;
-    
+
     /** @var  \Symfony\Component\Validator\Validator\RecursiveValidator */
     private $validator;
 
@@ -71,8 +71,8 @@ class DeserializationJob
         $this->denormalizeIncomingAssociations();
 
         // update the entity with the field updated in incoming
-        foreach($this->changes as $field => $value) {
-            if(isset($this->renamedKeys[$field])) {
+        foreach ($this->changes as $field => $value) {
+            if (isset($this->renamedKeys[$field])) {
                 $field = $this->renamedKeys[$field];
                 $value = $this->incoming[$field];
             }
@@ -80,7 +80,7 @@ class DeserializationJob
         }
 
         $errors = $this->validator->validate($this->entity);
-        if(count($errors) > 0) {
+        if (count($errors) > 0) {
             $errorsString = (string) $errors;
             throw new \Exception($errorsString);
         }
@@ -100,13 +100,13 @@ class DeserializationJob
     {
         $references = $this->normalizer->findReferences($this->incoming, $this->classname);
 
-        foreach($references as $field => $reference) {
+        foreach ($references as $field => $reference) {
             $entity = $this->normalizer->findReferencedEntity($field, $reference, $this->em);
-            if(!$entity) {
-                throw new \InvalidArgumentException("Invalid reference ".json_encode($reference));
+            if (!$entity) {
+                throw new \InvalidArgumentException("Invalid reference " . json_encode($reference));
             }
             $this->incoming[$field] = $entity;
-            foreach(array_keys($reference['joinColumns']) as $foreignKey) {
+            foreach (array_keys($reference['joinColumns']) as $foreignKey) {
                 unset($this->incoming[$foreignKey]);
                 $this->renamedKeys[$foreignKey] = $field;
             }
@@ -115,37 +115,59 @@ class DeserializationJob
 
     protected function findEntity ()
     {
-        list($identifierField, $uniqueValue) = $this->getIdentifierPair($this->metadata);
+        $identifierPairs = $this->getIdentifierPairs($this->metadata);
 
-        if($uniqueValue) {
-            $entity = $this->em->find($this->classname, [$identifierField => $uniqueValue]);
-        }
-        
-        if(!isset($entity)) {
+        $entity = $this->em->find($this->classname, $identifierPairs);
+
+        if (!isset($entity)) {
             $classname = $this->classname;
             $entity = new $classname();
-            $this->metadata->setFieldValue($entity, $identifierField, $uniqueValue);
+            foreach ($identifierPairs as $identifierField => $uniqueValue) {
+                $this->metadata->setFieldValue($entity, $identifierField, $uniqueValue);
+            }
         }
 
         return $entity;
     }
-    
-    
-    function getIdentifierPair (\Doctrine\ORM\Mapping\ClassMetadata $metadata)
-    {
-        $identifier = $this->normalizer->getSingleIdentifier($metadata);
 
-        if(!isset($this->incoming[$identifier])) {
-            if(empty($metadata->idGenerator)) {
-                throw new \InvalidArgumentException('Missing identifier for entity '.$metadata->getName().' in data '.json_encode($this->incoming));
+    /**
+     * Returns the array of identifier keys/values that can be used with find()
+     * to find the entity described by $incoming
+     * 
+     * If an identifier is a foreignIdentifier, find the foreign entity
+     * 
+     * @param \Doctrine\ORM\Mapping\ClassMetadata $metadata
+     * @return array
+     * @throws \InvalidArgumentException
+     */
+    function getIdentifierPairs (\Doctrine\ORM\Mapping\ClassMetadata $metadata)
+    {
+        // isIdentifierComposite
+        // containsForeignIdentifier
+        
+        $pairs = [];
+
+        $identifierFieldNames = $metadata->getIdentifierFieldNames();
+        $fieldNames = $metadata->getFieldNames();
+        foreach ($identifierFieldNames as $identifier) {
+            if(in_array($identifier, $fieldNames)) {
+                if (!isset($this->incoming[$identifier])) {
+                    throw new \InvalidArgumentException('Missing identifier for entity ' . $metadata->getName() . ' in data ' . json_encode($this->incoming));
+                }
+                $pairs[$identifier] = $this->incoming[$identifier];
             } else {
-                return array($identifier, null);
+                $associationMapping = $metadata->getAssociationMapping($identifier);
+                $referenceMetadata = $this->normalizer->findReferenceMetadata($this->incoming, $associationMapping);
+                $entity = $this->normalizer->findReferencedEntity($identifier, $referenceMetadata, $this->em);
+                if(!$entity) {
+                    throw new \InvalidArgumentException("Cannot find entity referenced by $identifier in data " . json_encode($this->incoming));
+                }
+                $pairs[$identifier] = $entity;
             }
         }
 
-        return array($identifier, $this->incoming[$identifier]);
+        return $pairs;
     }
-
 
     function getEntity ()
     {

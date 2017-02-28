@@ -89,6 +89,32 @@ class DeserializationJobTest extends \Symfony\Bundle\FrameworkBundle\Test\Kernel
         $this->assertNull($original['name']);
     }
 
+    function testRunPackSlot ()
+    {
+        //setup
+        $this->createCrabFortress();
+        $this->createPackCore();
+
+        $filepath = __DIR__ . "/DataFixtures/PackSlot/core.json";
+        $data = json_decode(file_get_contents($filepath), true);
+        $incoming = $data[0];
+        $classname = \AppBundle\Entity\PackSlot::class;
+        $job = new \Alsciende\CerealBundle\DeserializationJob($filepath, $incoming, $classname);
+
+        //work
+        $job->run($this->em, $this->validator);
+
+        //assert
+        /* @var $entity \AppBundle\Entity\Card */
+        $entity = $job->getEntity();
+        $changes = $job->getChanges();
+        $original = $job->getOriginal();
+        $this->assertNotNull($entity);
+        $this->assertEquals('01001', $entity->getCard()->getCode());
+        $this->assertEquals('core', $entity->getPack()->getCode());
+        $this->assertEquals(3, $entity->getQuantity());
+    }
+
     /**
      * {@inheritDoc}
      */

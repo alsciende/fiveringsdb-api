@@ -6,6 +6,7 @@ use Alsciende\CerealBundle\AlsciendeCerealBundle;
 use Alsciende\CerealBundle\JsonFileEncoder;
 use AppBundle\Entity\Card;
 use AppBundle\Entity\Clan;
+use AppBundle\Entity\PackSlot;
 use AppBundle\Entity\Type;
 use PHPUnit_Framework_TestCase;
 
@@ -75,5 +76,15 @@ class JsonFileEncoderTest extends PHPUnit_Framework_TestCase
         $files = $encoder->decode($path, Card::class, AlsciendeCerealBundle::MULTIPLE_FILES | AlsciendeCerealBundle::SINGLE_DATA);
 
         $this->assertEquals(2, count($files));
+    }
+    
+    public function testDecodePackSlot()
+    {
+        $path = __DIR__ . "/DataFixtures";
+
+        $encoder = new JsonFileEncoder();
+        $files = $encoder->decode($path, PackSlot::class, AlsciendeCerealBundle::MULTIPLE_FILES | AlsciendeCerealBundle::MULTIPLE_DATA);
+
+        $this->assertEquals(1, count($files));
     }
 }

@@ -89,6 +89,27 @@ class AssociationNormalizerTest extends \Symfony\Bundle\FrameworkBundle\Test\Ker
         $this->assertEquals('core', $data['code']);
     }
 
+    function testNormalizePackSlot ()
+    {
+        //setup
+        $pack = new \AppBundle\Entity\Pack();
+        $pack->setCode('core');
+        
+        $card = new \AppBundle\Entity\Card();
+        $card->setCode('01001');
+        
+        $packslot = new \AppBundle\Entity\PackSlot();
+        $packslot->setCard($card);
+        $packslot->setPack($pack);
+        $packslot->setQuantity(3);
+        //work
+        $normalizer = new \Alsciende\CerealBundle\AssociationNormalizer($this->em);
+        $data = $normalizer->normalize($packslot);
+        //assert
+        $this->assertEquals('core', $data['pack_code']);
+        $this->assertEquals('01001', $data['card_code']);
+    }
+
     function testFindReferenceMetadata ()
     {
         //setup

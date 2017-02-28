@@ -7,25 +7,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * Description of DeckSlot
+ * Description of PackSlot
  *
- * @ORM\Table(name="deck_slots")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\DeckSlotRepository")
+ * @ORM\Table(name="pack_slots")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\PackSlotRepository")
  * 
  * @author Alsciende <alsciende@icloud.com>
  */
-class DeckSlot implements \AppBundle\Model\CardSlotInterface
+class PackSlot implements \AppBundle\Model\CardSlotInterface
 {
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
-
+    
     /**
      * @var int
      *
@@ -36,23 +27,20 @@ class DeckSlot implements \AppBundle\Model\CardSlotInterface
     /**
      * @var \AppBundle\Entity\Card
      *
+     * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Card", fetch="EAGER")
      * @ORM\JoinColumn(name="card_code", referencedColumnName="code")
      */
     private $card;
 
     /**
-     * @var \AppBundle\Entity\Deck
+     * @var \AppBundle\Entity\Pack
      *
-     * @ORM\ManyToOne(targetEntity="Deck", fetch="EAGER", inversedBy="slots")
-     * @ORM\JoinColumn(name="deck_id", referencedColumnName="id")
+     * @ORM\Id
+     * @ORM\ManyToOne(targetEntity="Pack", fetch="EAGER", inversedBy="slots")
+     * @ORM\JoinColumn(name="pack_code", referencedColumnName="code")
      */
-    private $deck;
-
-    function getId ()
-    {
-        return $this->id;
-    }
+    private $pack;
 
     function getQuantity ()
     {
@@ -64,9 +52,9 @@ class DeckSlot implements \AppBundle\Model\CardSlotInterface
         return $this->card;
     }
 
-    function getDeck ()
+    function getPack ()
     {
-        return $this->deck;
+        return $this->pack;
     }
 
     function setQuantity ($quantity)
@@ -79,9 +67,10 @@ class DeckSlot implements \AppBundle\Model\CardSlotInterface
         $this->card = $card;
     }
 
-    function setDeck (\AppBundle\Entity\Deck $deck)
+    function setPack (\AppBundle\Entity\Pack $pack)
     {
-        $this->deck = $deck;
+        $this->pack = $pack;
     }
 
+    
 }

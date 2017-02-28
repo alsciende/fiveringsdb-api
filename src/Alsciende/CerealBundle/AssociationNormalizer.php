@@ -83,6 +83,14 @@ class AssociationNormalizer
         return $references;
     }
 
+    /**
+     * Returns a description of the association, including the foreign key value
+     * as found in $data
+     * 
+     * @param type $data an array where the value of the foreign key can be found
+     * @param type $associationMapping
+     * @return array
+     */
     function findReferenceMetadata ($data, $associationMapping)
     {
         if(!$associationMapping['isOwningSide']) {
@@ -104,6 +112,15 @@ class AssociationNormalizer
         return $reference;
     }
 
+    /**
+     * Finds the entity described by $reference. $field is a unique identifier.
+     * 
+     * @param type $field
+     * @param type $reference
+     * @param \Doctrine\ORM\EntityManager $em
+     * @return object
+     * @throws \Alsciende\CerealBundle\Exception\InvalidForeignKeyException
+     */
     function findReferencedEntity ($field, $reference, \Doctrine\ORM\EntityManager $em)
     {
         $qb = $em->createQueryBuilder();
