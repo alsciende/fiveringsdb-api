@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\AlsciendeCerealBundle;
+namespace Tests\AlsciendeDoctrineSerializerBundle;
 
 /**
  * Description of DeserializationJobTest
@@ -43,7 +43,7 @@ class DeserializationJobTest extends \Symfony\Bundle\FrameworkBundle\Test\Kernel
         $incoming = $data[0];
         $classname = \AppBundle\Entity\Clan::class;
         //work
-        $job = new \Alsciende\CerealBundle\DeserializationJob($filepath, $incoming, $classname);
+        $job = new \Alsciende\DoctrineSerializerBundle\DeserializationJob($filepath, $incoming, $classname);
         $job->run($this->em, $this->validator);
         //assert
         /* @var $entity \AppBundle\Entity\Clan */
@@ -69,7 +69,7 @@ class DeserializationJobTest extends \Symfony\Bundle\FrameworkBundle\Test\Kernel
         $filepath = __DIR__ . "/DataFixtures/Card/01001.json";
         $incoming = json_decode(file_get_contents($filepath), true);
         $classname = \AppBundle\Entity\Card::class;
-        $job = new \Alsciende\CerealBundle\DeserializationJob($filepath, $incoming, $classname);
+        $job = new \Alsciende\DoctrineSerializerBundle\DeserializationJob($filepath, $incoming, $classname);
 
         //work
         $job->run($this->em, $this->validator);
@@ -99,7 +99,7 @@ class DeserializationJobTest extends \Symfony\Bundle\FrameworkBundle\Test\Kernel
         $data = json_decode(file_get_contents($filepath), true);
         $incoming = $data[0];
         $classname = \AppBundle\Entity\PackSlot::class;
-        $job = new \Alsciende\CerealBundle\DeserializationJob($filepath, $incoming, $classname);
+        $job = new \Alsciende\DoctrineSerializerBundle\DeserializationJob($filepath, $incoming, $classname);
 
         //work
         $job->run($this->em, $this->validator);

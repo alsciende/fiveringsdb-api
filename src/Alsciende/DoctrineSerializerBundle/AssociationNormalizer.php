@@ -1,6 +1,6 @@
 <?php
 
-namespace Alsciende\CerealBundle;
+namespace Alsciende\DoctrineSerializerBundle;
 
 /**
  * Description of AssociationNormalizer
@@ -119,7 +119,6 @@ class AssociationNormalizer
      * @param type $reference
      * @param \Doctrine\ORM\EntityManager $em
      * @return object
-     * @throws \Alsciende\CerealBundle\Exception\InvalidForeignKeyException
      */
     function findReferencedEntity ($field, $reference, \Doctrine\ORM\EntityManager $em)
     {
@@ -133,7 +132,7 @@ class AssociationNormalizer
         try {
             return $qb->getQuery()->getSingleResult();
         } catch(\Doctrine\ORM\NoResultException $ex) {
-            throw new \Alsciende\CerealBundle\Exception\InvalidForeignKeyException($reference);
+            throw new \InvalidArgumentException("Foreign key cannot be matched to a record");
         }
     }
 

@@ -5,12 +5,15 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Alsciende\DoctrineSerializerBundle\Annotation\Source;
 
 /**
  * Clan
  *
  * @ORM\Table(name="clans")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ClanRepository")
+ * 
+ * @Source(multipleFiles=false,multipleRecords=true,groupBy=null)
  * 
  * @author Alsciende <alsciende@icloud.com>
  */

@@ -1,6 +1,6 @@
 <?php
 
-namespace Alsciende\CerealBundle;
+namespace Alsciende\DoctrineSerializerBundle;
 
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;
@@ -29,18 +29,19 @@ class JsonFileEncoder
      * 
      * @param type $path
      * @param type $className
-     * @param int $outputType
+     * @param boolean $multipleFiles
+     * @param boolean $multipleRecordsPerFile
      * @return array
      */
-    public function decode ($path, $className, $outputType)
+    public function decode ($path, $className, $multipleFiles, $multipleRecordsPerFile)
     {
         $parts = explode('\\', $className);
         $file = array_pop($parts);
 
         $files = [];
 
-        $isSingleFile = $outputType & AlsciendeCerealBundle::SINGLE_FILE;
-        $isSingleData = $outputType & AlsciendeCerealBundle::SINGLE_DATA;
+        $isSingleFile = !$multipleFiles;
+        $isSingleData = !$multipleRecordsPerFile;
 
         if($isSingleFile) {
             if(file_exists("$path/$file.json") and is_file("$path/$file.json")) {

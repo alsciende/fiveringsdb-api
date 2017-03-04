@@ -1,6 +1,6 @@
 <?php
 
-namespace Alsciende\CerealBundle;
+namespace Alsciende\DoctrineSerializerBundle;
 
 /**
  * Deserialization Job for exactly one entity
@@ -93,8 +93,6 @@ class DeserializationJob
      * a proper Doctrine association
      * 
      * eg "article_id" => 2134 becomes "article" => (object Article)
-     * 
-     * @throws \Alsciende\CerealBundle\Exception\InvalidForeignKeyException
      */
     protected function denormalizeIncomingAssociations ()
     {

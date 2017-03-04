@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\AlsciendeCerealBundle;
+namespace Tests\AlsciendeDoctrineSerializerBundle;
 
-use Alsciende\CerealBundle\AlsciendeCerealBundle;
-use Alsciende\CerealBundle\JsonFileEncoder;
+use Alsciende\DoctrineSerializerBundle\AlsciendeDoctrineSerializerBundle;
+use Alsciende\DoctrineSerializerBundle\JsonFileEncoder;
 use AppBundle\Entity\Card;
 use AppBundle\Entity\Clan;
 use AppBundle\Entity\PackSlot;
@@ -53,7 +53,7 @@ class JsonFileEncoderTest extends PHPUnit_Framework_TestCase
         $path = __DIR__ . "/DataFixtures";
 
         $encoder = new JsonFileEncoder();
-        $files = $encoder->decode($path, Clan::class, AlsciendeCerealBundle::SINGLE_FILE | AlsciendeCerealBundle::MULTIPLE_DATA);
+        $files = $encoder->decode($path, Clan::class, false, true);
 
         $this->assertEquals(2, count($files));
     }
@@ -63,7 +63,7 @@ class JsonFileEncoderTest extends PHPUnit_Framework_TestCase
         $path = __DIR__ . "/DataFixtures";
 
         $encoder = new JsonFileEncoder();
-        $files = $encoder->decode($path, Type::class, AlsciendeCerealBundle::SINGLE_FILE | AlsciendeCerealBundle::MULTIPLE_DATA);
+        $files = $encoder->decode($path, Type::class, false, true);
 
         $this->assertEquals(1, count($files));
     }
@@ -73,7 +73,7 @@ class JsonFileEncoderTest extends PHPUnit_Framework_TestCase
         $path = __DIR__ . "/DataFixtures";
 
         $encoder = new JsonFileEncoder();
-        $files = $encoder->decode($path, Card::class, AlsciendeCerealBundle::MULTIPLE_FILES | AlsciendeCerealBundle::SINGLE_DATA);
+        $files = $encoder->decode($path, Card::class, true, false);
 
         $this->assertEquals(2, count($files));
     }
@@ -83,7 +83,7 @@ class JsonFileEncoderTest extends PHPUnit_Framework_TestCase
         $path = __DIR__ . "/DataFixtures";
 
         $encoder = new JsonFileEncoder();
-        $files = $encoder->decode($path, PackSlot::class, AlsciendeCerealBundle::MULTIPLE_FILES | AlsciendeCerealBundle::MULTIPLE_DATA);
+        $files = $encoder->decode($path, PackSlot::class, true, true);
 
         $this->assertEquals(1, count($files));
     }

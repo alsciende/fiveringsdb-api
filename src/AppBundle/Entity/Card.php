@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Alsciende\DoctrineSerializerBundle\Annotation\Source;
 
 /**
  * Card
@@ -13,6 +14,8 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
  * @ORM\Table(name="cards")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\CardRepository")
  * 
+ * @Source(multipleFiles=true,multipleRecords=false,groupBy=null)
+ *
  * @author Alsciende <alsciende@icloud.com>
  */
 class Card

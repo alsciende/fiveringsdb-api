@@ -1,6 +1,6 @@
 <?php
 
-namespace Alsciende\CerealBundle\DependencyInjection;
+namespace Alsciende\DoctrineSerializerBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\Loader;
  *
  * @link http://symfony.com/doc/current/cookbook/bundles/extension.html
  */
-class AlsciendeCerealExtension extends Extension
+class AlsciendeDoctrineSerializerExtension extends Extension
 {
     /**
      * {@inheritdoc}
@@ -22,6 +22,8 @@ class AlsciendeCerealExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        $container->setParameter('alsciende.doctrine_serializer.path', realpath($config['path']));
+        
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
     }

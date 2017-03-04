@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\AlsciendeCerealBundle;
+namespace Tests\AlsciendeDoctrineSerializerBundle;
 
 /**
  * Description of DomainFixtures
