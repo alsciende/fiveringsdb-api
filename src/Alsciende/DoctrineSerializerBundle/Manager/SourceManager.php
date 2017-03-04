@@ -16,15 +16,21 @@ class SourceManager
     /* @var array */
     private $ordered;
 
-    public function __construct ()
+    private $group;
+    
+    private $path;
+    
+    public function __construct ($group, $path)
     {
         $this->sources = [];
+        $this->group = $group;
+        $this->path = $path;
     }
 
     /**
      * Return all sources
      * 
-     * @return array
+     * @return \Alsciende\DoctrineSerializerBundle\Annotation\Source[]
      */
     public function getSources ()
     {
@@ -38,19 +44,17 @@ class SourceManager
     /**
      * Add one source
      *
-     * @param string $class
-     * @param \Alsciende\DoctrineSerializerBundle\Annotation\Source $annotation
-     * @param \Doctrine\ORM\Mapping\ClassMetadata $classMetadata
-     * @param \Doctrine\ORM\EntityManager  $entityManager
+     * @param \Alsciende\DoctrineSerializerBundle\Annotation\Source $source
      */
-    public function addSource ($class, $annotation, $classMetadata, $entityManager)
+    public function addSource (\Alsciende\DoctrineSerializerBundle\Annotation\Source $source)
     {
-        $this->sources[$class] = [
-            "class" => $class,
-            "annotation" => $annotation,
-            "classMetadata" => $classMetadata,
-            "entityManager" => $entityManager
-        ];
+        if(!isset($source->path)) {
+            $source->path = $this->path;
+        }
+        if(!isset($source->group)) {
+            $source->group = $this->group;
+        }
+        $this->sources[] = $source;
     }
 
     /**
@@ -59,34 +63,37 @@ class SourceManager
      */
     public function orderSources ()
     {
-        $sourcesOrdered = [];
-        $classesOrdered = [];
+        $sources = [];
+        $classes = [];
         
         while (count($this->sources)) {
-            $next = $this->findNextResolvedSource($this->sources, $classesOrdered);
-            if (!$next) {
-                throw new \InvalidArgumentException("Data sources contain a cycle of dependencies in [" . implode(", ", array_keys($this->sources)) . "]");
+            $next = $this->findNextResolvedSource($this->sources, $classes);
+            if ($next === null) {
+                throw new \InvalidArgumentException("Data sources contain a cycle of dependencies.");
             }
-            
-            $classesOrdered[] = $next;
-            $sourcesOrdered[] = $this->sources[$next];
-            unset($this->sources[$next]);
+
+            $source = $this->sources[$next];
+            $sources[] = $source;
+            $classes[] = $source->className;
+            array_splice($this->sources, $next, 1);
         }
         
-        return $sourcesOrdered;
+        return $sources;
     }
 
     /**
-     * Find the first class in $toDo that only depends on classes in $done
+     * Find the first class in $sources that only depends on classes in $classes
      * 
-     * @return string
+     * @param \Alsciende\DoctrineSerializerBundle\Annotation\Source[] $sources
+     * @param string[] $classes
+     * @return integer
      */
-    public function findNextResolvedSource ($toDo, $done)
+    public function findNextResolvedSource ($sources, $classes)
     {
-        foreach ($toDo as $source) {
-            $resolved = $this->allTargetEntitiesAreKnown($source['classMetadata'], $done);
+        foreach ($sources as $index => $source) {
+            $resolved = $this->allTargetEntitiesAreKnown($source->classMetadata, $classes);
             if($resolved) {
-                return $source['class'];
+                return $index;
             }
         }
         
@@ -97,7 +104,7 @@ class SourceManager
      * Return true if all target entities of the association mappings of $classMetadata are listed in $classes
      * 
      * @param \Doctrine\ORM\Mapping\ClassMetadata $classMetadata
-     * @param array $classes
+     * @param string[] $classes
      * @return boolean
      */
     public function allTargetEntitiesAreKnown (\Doctrine\ORM\Mapping\ClassMetadata $classMetadata, $classes)

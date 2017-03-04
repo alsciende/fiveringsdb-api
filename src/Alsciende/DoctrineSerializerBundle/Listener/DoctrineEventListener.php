@@ -26,11 +26,15 @@ class DoctrineEventListener
     public function loadClassMetadata (LoadClassMetadataEventArgs $args)
     {
         $classMetadata = $args->getClassMetadata();
-        $class = $classMetadata->getName();
+        $className = $classMetadata->getName();
 
-        $annotation = $this->reader->getClassAnnotation(new \ReflectionClass($class), 'Alsciende\DoctrineSerializerBundle\Annotation\Source');
-        if ($annotation) {
-            $this->manager->addSource($class, $annotation, $classMetadata, $args->getEntityManager());
+        /* @var $source \Alsciende\DoctrineSerializerBundle\Annotation\Source */
+        $source = $this->reader->getClassAnnotation(new \ReflectionClass($className), 'Alsciende\DoctrineSerializerBundle\Annotation\Source');
+        if ($source) {
+            $source->classMetadata = $classMetadata;
+            $source->entityManager = $args->getEntityManager();
+            $source->className = $className;
+            $this->manager->addSource($source);
         }
         
     }

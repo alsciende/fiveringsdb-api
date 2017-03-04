@@ -23,6 +23,7 @@ class AlsciendeDoctrineSerializerExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter('alsciende.doctrine_serializer.path', realpath($config['path']));
+        $container->setParameter('alsciende.doctrine_serializer.group', $config['group']);
         
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');

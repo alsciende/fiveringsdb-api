@@ -22,8 +22,8 @@ class DeserializationJob
     /* @var string */
     private $filepath;
 
-    /* @var string */
-    private $classname;
+    /* @var Annotation\Source */
+    private $source;
 
     /* @var \Doctrine\ORM\Mapping\ClassMetadata */
     private $metadata;
@@ -43,11 +43,11 @@ class DeserializationJob
     /* @var array */
     private $renamedKeys;
 
-    function __construct ($filepath, $incoming, $classname)
+    function __construct ($filepath, $incoming, Annotation\Source $source)
     {
         $this->filepath = $filepath;
         $this->incoming = $incoming;
-        $this->classname = $classname;
+        $this->source = $source;
     }
 
     function run (\Doctrine\ORM\EntityManager $em, \Symfony\Component\Validator\Validator\RecursiveValidator $validator)
@@ -56,13 +56,13 @@ class DeserializationJob
         $this->validator = $validator;
         $this->normalizer = new AssociationNormalizer($em);
 
-        $this->metadata = $this->em->getClassMetadata($this->classname);
+        $this->metadata = $this->em->getClassMetadata($this->source->className);
 
         // find the entity based on the incoming identifier
         $this->entity = $this->findEntity();
 
         // normalize the entity in its original state
-        $this->original = $this->normalizer->normalize($this->entity);
+        $this->original = $this->normalizer->normalize($this->entity, $this->source->group);
 
         // compute changes between the normalized data
         $this->changes = array_diff($this->incoming, $this->original);
@@ -96,7 +96,7 @@ class DeserializationJob
      */
     protected function denormalizeIncomingAssociations ()
     {
-        $references = $this->normalizer->findReferences($this->incoming, $this->classname);
+        $references = $this->normalizer->findReferences($this->incoming, $this->source->className);
 
         foreach ($references as $field => $reference) {
             $entity = $this->normalizer->findReferencedEntity($field, $reference, $this->em);
@@ -115,10 +115,10 @@ class DeserializationJob
     {
         $identifierPairs = $this->getIdentifierPairs($this->metadata);
 
-        $entity = $this->em->find($this->classname, $identifierPairs);
+        $entity = $this->em->find($this->source->className, $identifierPairs);
 
         if (!isset($entity)) {
-            $classname = $this->classname;
+            $classname = $this->source->className;
             $entity = new $classname();
             foreach ($identifierPairs as $identifierField => $uniqueValue) {
                 $this->metadata->setFieldValue($entity, $identifierField, $uniqueValue);

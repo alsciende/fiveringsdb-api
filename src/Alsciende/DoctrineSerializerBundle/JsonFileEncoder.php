@@ -27,60 +27,42 @@ class JsonFileEncoder
 
     /**
      * 
-     * @param type $path
-     * @param type $className
-     * @param boolean $multipleFiles
-     * @param boolean $multipleRecordsPerFile
+     * @param Annotation\Source $source
      * @return array
      */
-    public function decode ($path, $className, $multipleFiles, $multipleRecordsPerFile)
+    public function decode (Annotation\Source $source)
     {
-        $parts = explode('\\', $className);
-        $file = array_pop($parts);
+        
+        $parts = explode('\\', $source->className);
+        $path = $source->path . "/" . array_pop($parts);
 
-        $files = [];
-
-        $isSingleFile = !$multipleFiles;
-        $isSingleData = !$multipleRecordsPerFile;
-
-        if($isSingleFile) {
-            if(file_exists("$path/$file.json") and is_file("$path/$file.json")) {
-                if($isSingleData) {
-                    $files = $this->decodeExplodedFile("$path/$file.json");
-                } else {
-                    $files = $this->decodeCombinedFile("$path/$file.json");
-                }
+        if(isset($source->break)) {
+            if(file_exists("$path") and is_dir("$path")) {
+                return $this->decodeDirectory("$path");
             } else {
-                throw new \Exception("File $path/$file.json not found");
+                throw new \Exception("Directory $path not found");
             }
         } else {
-            if(file_exists("$path/$file") and is_dir("$path/$file")) {
-                $files = $this->decodeDirectory("$path/$file", $isSingleData);
+            if(file_exists("$path.json") and is_file("$path.json")) {
+                return $this->decodeFile("$path.json");
             } else {
-                throw new \Exception("Directory $path/$file not found");
+                throw new \Exception("File $path.json not found");
             }
         }
-
-        return $files;
     }
 
     /**
      * 
      * @param type $path
-     * @param boolean $isSingleData
      * @return array
      */
-    public function decodeDirectory ($path, $isSingleData)
+    public function decodeDirectory ($path)
     {
         $filenames = glob("$path/*.json");
 
         $files = [];
         foreach($filenames as $filename) {
-            if($isSingleData) {
-                $files[] = $this->decodeExplodedFile($filename);
-            } else {
-                $files = array_merge($files, $this->decodeCombinedFile($filename));
-            }
+            $files = array_merge($files, $this->decodeFile($filename));
         }
         return $files;
     }
@@ -90,20 +72,7 @@ class JsonFileEncoder
      * @param type $path
      * @return array
      */
-    public function decodeExplodedFile ($path)
-    {
-        $contents = file_get_contents($path);
-        $data = $this->serializer->decode($contents, 'json');
-
-        return array($path, $data);
-    }
-
-    /**
-     * 
-     * @param type $path
-     * @return array
-     */
-    public function decodeCombinedFile ($path)
+    public function decodeFile ($path)
     {
         $contents = file_get_contents($path);
         $list = $this->serializer->decode($contents, 'json');

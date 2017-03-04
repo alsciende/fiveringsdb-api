@@ -20,10 +20,10 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('alsciende_doctrine_serializer');
 
-        
         $rootNode
             ->children()
-                ->scalarNode('path')->end()
+                ->scalarNode('path')->isRequired()->cannotBeEmpty()->end()
+                ->scalarNode('group')->defaultValue(null)->end()
             ->end()
         ;
         

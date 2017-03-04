@@ -34,10 +34,14 @@ class AssociationNormalizer
      * eg "article" => (object Article) becomes "article_id" => 2134
      * 
      */
-    function normalize ($entity)
+    function normalize ($entity, $group = null)
     {
         $metadata = $this->factory->getMetadataFor(get_class($entity));
-        $data = $this->serializer->normalize($entity, null, ['groups' => ['json']]);
+        $context = [];
+        if(isset($group)) {
+            $context['groups'] = array($group);
+        }
+        $data = $this->serializer->normalize($entity, null, $context);
 
         foreach($metadata->getAssociationMappings() as $mapping) {
             if($mapping['isOwningSide']) {

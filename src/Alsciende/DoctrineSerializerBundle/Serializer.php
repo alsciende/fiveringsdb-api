@@ -18,15 +18,11 @@ class Serializer
     /* @var \Symfony\Component\Validator\Validator\RecursiveValidator */
     private $validator;
     
-    /* @var string */
-    private $path;
-    
-    public function __construct (\Doctrine\ORM\EntityManager $entityManager, Manager\SourceManager $sourceManager, \Symfony\Component\Validator\Validator\RecursiveValidator $validator, $path)
+    public function __construct (\Doctrine\ORM\EntityManager $entityManager, Manager\SourceManager $sourceManager, \Symfony\Component\Validator\Validator\RecursiveValidator $validator)
     {
         $this->entityManager = $entityManager;
         $this->sourceManager = $sourceManager;
         $this->validator = $validator;
-        $this->path = $path;
     }
     
     public function import()
@@ -41,24 +37,19 @@ class Serializer
         $allJobs = [];
         
         foreach($sources as $source) {
-            /* @var $annotation Annotation\Source */
-            $annotation = $source['annotation'];
-            
-            /* @var $entityManager \Doctrine\ORM\EntityManager */
-            $entityManager = $source['entityManager'];
 
-            $files = $encoder->decode($this->path, $source['class'], $annotation->isMultipleFiles(), $annotation->isMultipleRecords());
+            $files = $encoder->decode($source);
             
             $jobs = [];
             foreach($files as $file) {
-                $jobs[] = new DeserializationJob($file[0], $file[1], $source['class']);
+                $jobs[] = new DeserializationJob($file[0], $file[1], $source);
             }
 
             foreach ($jobs as $job) {
-                $job->run($entityManager, $this->validator);
+                $job->run($source->entityManager, $this->validator);
             }
             
-            $entityManager->flush();
+            $source->entityManager->flush();
             
             $allJobs = array_merge($allJobs, $jobs);
         }

@@ -14,7 +14,7 @@ use Alsciende\DoctrineSerializerBundle\Annotation\Source;
  * @ORM\Table(name="cards")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\CardRepository")
  * 
- * @Source(multipleFiles=true,multipleRecords=false,groupBy=null)
+ * @Source(break="code")
  *
  * @author Alsciende <alsciende@icloud.com>
  */
@@ -33,7 +33,7 @@ class Card
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      * 
-     * @Groups({"json"})
+     * @Groups({"doctrine_serializer"})
      */
     private $code;
 
@@ -44,7 +44,7 @@ class Card
      *
      * @ORM\Column(name="name", type="string", length=255)
      * 
-     * @Groups({"json"})
+     * @Groups({"doctrine_serializer"})
      */
     private $name;
 
@@ -53,7 +53,7 @@ class Card
      *
      * @ORM\Column(name="cost", type="integer", nullable=true)
      * 
-     * @Groups({"json"})
+     * @Groups({"doctrine_serializer"})
      */
     private $cost;
 
@@ -62,7 +62,7 @@ class Card
      *
      * @ORM\Column(name="text", type="text", nullable=true)
      * 
-     * @Groups({"json"})
+     * @Groups({"doctrine_serializer"})
      */
     private $text;
 

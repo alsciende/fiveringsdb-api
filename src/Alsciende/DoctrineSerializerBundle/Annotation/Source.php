@@ -14,50 +14,23 @@ use Doctrine\Common\Annotations\Annotation;
  */
 class Source extends Annotation
 {
-    /**
-     *
-     * @var boolean
-     */
-    public $multipleFiles;
     
-    /**
-     *
-     * @var boolean
-     */
-    public $multipleRecords;
-    
-    /**
-     *
-     * @var string
-     */
-    public $groupBy;
-    
-    /**
-     * 
-     * @return boolean
-     */
-    function isMultipleFiles ()
-    {
-        return $this->multipleFiles;
-    }
+    /* @var string */
+    public $break;
 
-    /**
-     * 
-     * @return boolean
-     */
-    function isMultipleRecords ()
-    {
-        return $this->multipleRecords;
-    }
+    /* @var string */
+    public $group;
 
-    /**
-     * 
-     * @return string
-     */
-    function getGroupBy ()
-    {
-        return $this->groupBy;
-    }
+    /* @var string */
+    public $path;
 
+    /* @var string */
+    public $className;
+
+    /* @var \Doctrine\ORM\EntityManager */
+    public $entityManager;
+
+    /* @var Doctrine\ORM\Mapping\ClassMetadata */
+    public $classMetadata;
 
 }
