@@ -1,6 +1,6 @@
 <?php
 
-namespace Alsciende\DoctrineSerializerBundle\Annotation;
+namespace Alsciende\DoctrineSerializerBundle\Model;
 
 use Doctrine\Common\Annotations\Annotation;
 

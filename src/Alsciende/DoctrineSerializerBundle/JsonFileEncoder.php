@@ -27,10 +27,10 @@ class JsonFileEncoder
 
     /**
      * 
-     * @param Annotation\Source $source
-     * @return array
+     * @param Model\Source $source
+     * @return Model\Fragment[]
      */
-    public function decode (Annotation\Source $source)
+    public function decode (Model\Source $source)
     {
         
         $parts = explode('\\', $source->className);
@@ -38,13 +38,13 @@ class JsonFileEncoder
 
         if(isset($source->break)) {
             if(file_exists("$path") and is_dir("$path")) {
-                return $this->decodeDirectory("$path");
+                return $this->decodeDirectory($source, "$path");
             } else {
                 throw new \Exception("Directory $path not found");
             }
         } else {
             if(file_exists("$path.json") and is_file("$path.json")) {
-                return $this->decodeFile("$path.json");
+                return $this->decodeFile($source, "$path.json");
             } else {
                 throw new \Exception("File $path.json not found");
             }
@@ -54,34 +54,35 @@ class JsonFileEncoder
     /**
      * 
      * @param type $path
-     * @return array
+     * @return Model\Fragment[]
      */
-    public function decodeDirectory ($path)
+    public function decodeDirectory (Model\Source $source, string $path)
     {
         $filenames = glob("$path/*.json");
 
-        $files = [];
+        $fragments = [];
         foreach($filenames as $filename) {
-            $files = array_merge($files, $this->decodeFile($filename));
+            $fragments = array_merge($fragments, $this->decodeFile($source, $filename));
         }
-        return $files;
+        return $fragments;
     }
 
     /**
      * 
      * @param type $path
-     * @return array
+     * @return Model\Fragment[]
      */
-    public function decodeFile ($path)
+    public function decodeFile (Model\Source $source, string $path)
     {
         $contents = file_get_contents($path);
         $list = $this->serializer->decode($contents, 'json');
 
-        $files = [];
+        $fragments = [];
         foreach($list as $data) {
-            $files[] = array($path, $data);
+            $fragments[] = new Model\Fragment($source, $path, $data);
         }
-        return $files;
+        
+        return $fragments;
     }
 
 }

@@ -1,13 +1,3 @@
-alsciende_doctrine_serializer:
-    resource: "@AlsciendeDoctrineSerializerBundle/Controller/"
-    type:     annotation
-    prefix:   /
-
-alsciende_cereal:
-    resource: "@AlsciendeCerealBundle/Controller/"
-    type:     annotation
-    prefix:   /
-
 alsciende_security:
     resource: "@AlsciendeSecurityBundle/Controller/"
     type:     annotation

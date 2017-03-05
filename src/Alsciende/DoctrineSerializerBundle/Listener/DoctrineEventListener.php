@@ -28,8 +28,8 @@ class DoctrineEventListener
         $classMetadata = $args->getClassMetadata();
         $className = $classMetadata->getName();
 
-        /* @var $source \Alsciende\DoctrineSerializerBundle\Annotation\Source */
-        $source = $this->reader->getClassAnnotation(new \ReflectionClass($className), 'Alsciende\DoctrineSerializerBundle\Annotation\Source');
+        /* @var $source \Alsciende\DoctrineSerializerBundle\Model\Source */
+        $source = $this->reader->getClassAnnotation(new \ReflectionClass($className), 'Alsciende\DoctrineSerializerBundle\Model\Source');
         if ($source) {
             $source->classMetadata = $classMetadata;
             $source->entityManager = $args->getEntityManager();

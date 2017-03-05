@@ -9,15 +9,18 @@ namespace Alsciende\DoctrineSerializerBundle;
  */
 class AssociationNormalizer
 {
-
-    /** @var \Doctrine\ORM\Mapping\ClassMetadataFactory */
+    /* @var \Doctrine\ORM\EntityManager */
+    private $em;
+    
+    /* @var \Doctrine\ORM\Mapping\ClassMetadataFactory */
     private $factory;
 
-    /** @var \Symfony\Component\Serializer\Serializer */
+    /* @var \Symfony\Component\Serializer\Serializer */
     private $serializer;
 
     function __construct (\Doctrine\ORM\EntityManager $em)
     {
+        $this->em = $em;
         $this->factory = new \Doctrine\ORM\Mapping\ClassMetadataFactory();
         $this->factory->setEntityManager($em);
 
@@ -121,12 +124,11 @@ class AssociationNormalizer
      * 
      * @param type $field
      * @param type $reference
-     * @param \Doctrine\ORM\EntityManager $em
      * @return object
      */
-    function findReferencedEntity ($field, $reference, \Doctrine\ORM\EntityManager $em)
+    function findReferencedEntity ($field, $reference)
     {
-        $qb = $em->createQueryBuilder();
+        $qb = $this->em->createQueryBuilder();
         $qb->select($field)->from($reference['className'], $field);
         foreach($reference['joinColumns'] as $foreignKey => $condition) {
             $conditionString = sprintf("%s.%s = :%s", $field, $condition['referencedColumnName'], $foreignKey);

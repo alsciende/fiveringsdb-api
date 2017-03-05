@@ -30,7 +30,7 @@ class SourceManager
     /**
      * Return all sources
      * 
-     * @return \Alsciende\DoctrineSerializerBundle\Annotation\Source[]
+     * @return \Alsciende\DoctrineSerializerBundle\Model\Source[]
      */
     public function getSources ()
     {
@@ -44,9 +44,9 @@ class SourceManager
     /**
      * Add one source
      *
-     * @param \Alsciende\DoctrineSerializerBundle\Annotation\Source $source
+     * @param \Alsciende\DoctrineSerializerBundle\Model\Source $source
      */
-    public function addSource (\Alsciende\DoctrineSerializerBundle\Annotation\Source $source)
+    public function addSource (\Alsciende\DoctrineSerializerBundle\Model\Source $source)
     {
         if(!isset($source->path)) {
             $source->path = $this->path;
@@ -84,7 +84,7 @@ class SourceManager
     /**
      * Find the first class in $sources that only depends on classes in $classes
      * 
-     * @param \Alsciende\DoctrineSerializerBundle\Annotation\Source[] $sources
+     * @param \Alsciende\DoctrineSerializerBundle\Model\Source[] $sources
      * @param string[] $classes
      * @return integer
      */

@@ -24,17 +24,18 @@ class DataImportCommand extends ContainerAwareCommand
 
     protected function execute (InputInterface $input, OutputInterface $output)
     {
+        /* @var $serializer \Alsciende\DoctrineSerializerBundle\Serializer */
         $serializer = $this->getContainer()->get('alsciende.doctrine_serializer.serializer');
         $result = $serializer->import();
 
-        foreach ($result as $changeSet) {
-            if (!empty($changeSet->getChanges())) {
+        foreach ($result as $fragment) {
+            if (!empty($fragment->changes)) {
                 $output->writeln("The data was:");
-                dump($changeSet->getOriginal());
+                dump($fragment->original);
                 $output->writeln("The changes that were applied are:");
-                dump($changeSet->getChanges());
+                dump($fragment->changes);
             } else {
-                $output->writeln("No change found in " . $changeSet->getFilepath());
+                $output->writeln("No change found in " . $fragment->path);
             }
         }
     }
