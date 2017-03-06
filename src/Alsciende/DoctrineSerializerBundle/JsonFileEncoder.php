@@ -56,7 +56,7 @@ class JsonFileEncoder
      * @param type $path
      * @return Model\Fragment[]
      */
-    public function decodeDirectory (Model\Source $source, string $path)
+    public function decodeDirectory (Model\Source $source, $path)
     {
         $filenames = glob("$path/*.json");
 
@@ -72,7 +72,7 @@ class JsonFileEncoder
      * @param type $path
      * @return Model\Fragment[]
      */
-    public function decodeFile (Model\Source $source, string $path)
+    public function decodeFile (Model\Source $source, $path)
     {
         $contents = file_get_contents($path);
         $list = $this->serializer->decode($contents, 'json');

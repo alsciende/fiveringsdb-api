@@ -69,7 +69,10 @@ class SourceManager
         while (count($this->sources)) {
             $next = $this->findNextResolvedSource($this->sources, $classes);
             if ($next === null) {
-                throw new \InvalidArgumentException("Data sources contain a cycle of dependencies.");
+                $unresolvedClasses = array_map(function (\Alsciende\DoctrineSerializerBundle\Model\Source $source) {
+                    return $source->className;
+                }, $this->sources);
+                throw new \InvalidArgumentException("Sources contain a cycle of dependencies, or a dependency is not configured as a Source.\nUnresolved classes are: " . implode(", ", $unresolvedClasses). ".\nResolved classes are : ". implode(", ", $classes).".");
             }
 
             $source = $this->sources[$next];
@@ -110,6 +113,9 @@ class SourceManager
     public function allTargetEntitiesAreKnown (\Doctrine\ORM\Mapping\ClassMetadata $classMetadata, $classes)
     {
         foreach ($classMetadata->getAssociationMappings() as $mapping) {
+            if(!$mapping['isOwningSide']) {
+                continue;
+            }
             if (!in_array($mapping['targetEntity'], $classes)) {
                 return false;
             }

@@ -8,12 +8,15 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Alsciende\DoctrineSerializerBundle\Model\Source;
 
 /**
  * Pack
  *
  * @ORM\Table(name="packs")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\PackRepository")
+ * 
+ * @Source()
  * 
  * @author Alsciende <alsciende@icloud.com>
  */

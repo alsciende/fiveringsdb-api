@@ -6,12 +6,15 @@ use AppBundle\Repository\CycleRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Alsciende\DoctrineSerializerBundle\Model\Source;
 
 /**
  * Cycle
  *
  * @ORM\Table(name="cycles")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\CycleRepository")
+ * 
+ * @Source()
  * 
  * @author Alsciende <alsciende@icloud.com>
  */

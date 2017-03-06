@@ -5,12 +5,15 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Alsciende\DoctrineSerializerBundle\Model\Source;
 
 /**
  * Description of PackSlot
  *
  * @ORM\Table(name="pack_slots")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\PackSlotRepository")
+ * 
+ * @Source(break="pack_code")
  * 
  * @author Alsciende <alsciende@icloud.com>
  */

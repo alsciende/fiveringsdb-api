@@ -171,7 +171,7 @@ class Serializer
         return $pairs;
     }
 
-    function getIdentifierValue (Model\Fragment $fragment, string $identifierFieldName, array $fieldNames)
+    function getIdentifierValue (Model\Fragment $fragment, $identifierFieldName, $fieldNames)
     {
         if (in_array($identifierFieldName, $fieldNames)) {
             if (!isset($fragment->incoming[$identifierFieldName])) {

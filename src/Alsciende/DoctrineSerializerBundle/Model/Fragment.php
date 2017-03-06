@@ -27,7 +27,7 @@ class Fragment
     /* @var array */
     public $changes;
 
-    function __construct (Source $source, string $path, array $incoming)
+    function __construct (Source $source, $path, $incoming)
     {
         $this->source = $source;
         $this->path = $path;
