@@ -40,7 +40,7 @@ class SourceManager
 
         return $this->ordered;
     }
-
+    
     /**
      * Add one source
      *

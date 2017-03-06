@@ -2,7 +2,6 @@
 
 namespace Tests\AlsciendeDoctrineSerializerBundle;
 
-use Alsciende\DoctrineSerializerBundle\AlsciendeDoctrineSerializerBundle;
 use Alsciende\DoctrineSerializerBundle\JsonFileEncoder;
 use AppBundle\Entity\Card;
 use AppBundle\Entity\Clan;
@@ -18,32 +17,50 @@ use PHPUnit_Framework_TestCase;
 class JsonFileEncoderTest extends PHPUnit_Framework_TestCase
 {
 
-    public function testDecodeCombinedFile ()
+    public function testDecodeFile1 ()
     {
-        $path = __DIR__ . "/DataFixtures/Clan.json";
+        $path = __DIR__ . "/DataFixtures";
+        
+        $source = new \Alsciende\DoctrineSerializerBundle\Model\Source([
+            "break" => null,
+            "path" => $path,
+            "className" => Clan::class
+        ]);
 
         $encoder = new JsonFileEncoder();
-        $files = $encoder->decodeCombinedFile($path);
+        $files = $encoder->decodeFile($source, "$path/Clan.json");
 
         $this->assertEquals(2, count($files));
     }
 
-    public function testDecodeExplodedFile ()
+    public function testDecodeFile2 ()
     {
-        $path = __DIR__ . "/DataFixtures/Card/01001.json";
+        $path = __DIR__ . "/DataFixtures";
+
+        $source = new \Alsciende\DoctrineSerializerBundle\Model\Source([
+            "break" => "code",
+            "path" => $path,
+            "className" => Card::class
+        ]);
 
         $encoder = new JsonFileEncoder();
-        $file = $encoder->decodeExplodedFile($path);
+        $files = $encoder->decodeFile($source, "$path/Card/01001.json");
 
-        $this->assertNotNull($file);
+        $this->assertEquals(1, count($files));
     }
     
     public function testDecodeDirectory()
     {
-        $path = __DIR__ . "/DataFixtures/Card";
+        $path = __DIR__ . "/DataFixtures";
+
+        $source = new \Alsciende\DoctrineSerializerBundle\Model\Source([
+            "break" => "code",
+            "path" => $path,
+            "className" => Card::class
+        ]);
 
         $encoder = new JsonFileEncoder();
-        $files = $encoder->decodeDirectory($path, true);
+        $files = $encoder->decodeDirectory($source, "$path/Card");
 
         $this->assertEquals(2, count($files));
     }
@@ -52,8 +69,14 @@ class JsonFileEncoderTest extends PHPUnit_Framework_TestCase
     {
         $path = __DIR__ . "/DataFixtures";
 
+        $source = new \Alsciende\DoctrineSerializerBundle\Model\Source([
+            "break" => null,
+            "path" => $path,
+            "className" => Clan::class
+        ]);
+
         $encoder = new JsonFileEncoder();
-        $files = $encoder->decode($path, Clan::class, false, true);
+        $files = $encoder->decode($source);
 
         $this->assertEquals(2, count($files));
     }
@@ -62,8 +85,14 @@ class JsonFileEncoderTest extends PHPUnit_Framework_TestCase
     {
         $path = __DIR__ . "/DataFixtures";
 
+        $source = new \Alsciende\DoctrineSerializerBundle\Model\Source([
+            "break" => null,
+            "path" => $path,
+            "className" => Type::class
+        ]);
+
         $encoder = new JsonFileEncoder();
-        $files = $encoder->decode($path, Type::class, false, true);
+        $files = $encoder->decode($source);
 
         $this->assertEquals(1, count($files));
     }
@@ -72,8 +101,14 @@ class JsonFileEncoderTest extends PHPUnit_Framework_TestCase
     {
         $path = __DIR__ . "/DataFixtures";
 
+        $source = new \Alsciende\DoctrineSerializerBundle\Model\Source([
+            "break" => "code",
+            "path" => $path,
+            "className" => Card::class
+        ]);
+
         $encoder = new JsonFileEncoder();
-        $files = $encoder->decode($path, Card::class, true, false);
+        $files = $encoder->decode($source);
 
         $this->assertEquals(2, count($files));
     }
@@ -82,8 +117,14 @@ class JsonFileEncoderTest extends PHPUnit_Framework_TestCase
     {
         $path = __DIR__ . "/DataFixtures";
 
+        $source = new \Alsciende\DoctrineSerializerBundle\Model\Source([
+            "break" => "pack_code",
+            "path" => $path,
+            "className" => PackSlot::class
+        ]);
+
         $encoder = new JsonFileEncoder();
-        $files = $encoder->decode($path, PackSlot::class, true, true);
+        $files = $encoder->decode($source);
 
         $this->assertEquals(1, count($files));
     }

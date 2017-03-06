@@ -2,17 +2,15 @@
 
 namespace Alsciende\DoctrineSerializerBundle\Model;
 
-use Doctrine\Common\Annotations\Annotation;
-
 /**
- * @Source Annotation for the bundle
+ * Represents a data source, a table to be serialized/deserialized
  * 
  * @Annotation
  * @Target("CLASS")
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class Source extends Annotation
+class Source extends \Doctrine\Common\Annotations\Annotation
 {
     
     /* @var string */

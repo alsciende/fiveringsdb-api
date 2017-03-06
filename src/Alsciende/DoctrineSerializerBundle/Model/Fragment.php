@@ -3,12 +3,13 @@
 namespace Alsciende\DoctrineSerializerBundle\Model;
 
 /**
- * Fragment of Source: one individual record and the file where it's serialized
+ * Represents a data fragment, a record to be serialized/deserialized
  *
  * @author Alsciende <alsciende@icloud.com>
  */
 class Fragment
 {
+    
     /* @var Source */
     public $source;
     

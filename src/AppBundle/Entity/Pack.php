@@ -260,14 +260,4 @@ class Pack
         return $this;
     }
 
-    function getPackSlots ()
-    {
-        return $this->packSlots;
-    }
-
-    function setPackSlots (array $packSlots)
-    {
-        $this->packSlots = $packSlots;
-    }
-
 }

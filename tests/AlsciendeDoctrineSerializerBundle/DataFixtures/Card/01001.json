@@ -1,6 +1,8 @@
-{
-    "code": "01001",
-    "name": "The Impregnable Fortress of the Crab",
-    "clan_code": "crab",
-    "type_code": "stronghold"
-}
+[
+    {
+        "code": "01001",
+        "name": "The Impregnable Fortress of the Crab",
+        "clan_code": "crab",
+        "type_code": "stronghold"
+    }
+]

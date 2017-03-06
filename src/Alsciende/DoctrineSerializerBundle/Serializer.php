@@ -9,8 +9,8 @@ namespace Alsciende\DoctrineSerializerBundle;
  */
 class Serializer
 {
-    /* @var \Doctrine\ORM\EntityManager */
 
+    /* @var \Doctrine\ORM\EntityManager */
     private $entityManager;
 
     /* @var Manager\SourceManager */
