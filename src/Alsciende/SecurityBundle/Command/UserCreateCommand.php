@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Command;
+namespace Alsciende\SecurityBundle\Command;
 
 /**
  * Description of UserCreateCommand
@@ -13,7 +13,7 @@ class UserCreateCommand extends \Symfony\Bundle\FrameworkBundle\Command\Containe
     protected function configure ()
     {
         $this
-                ->setName('app:user:create')
+                ->setName('alsciende_security:user:create')
                 ->setDescription("Create a new user")
         ;
     }

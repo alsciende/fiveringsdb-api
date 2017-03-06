@@ -29,16 +29,11 @@ class User implements UserInterface
     private $username;
 
     /**
-     * @ORM\Column(type="string", unique=true)
+     *
+     * @ORM\Column(name="password",type="string",length=255)
      */
-    private $apiKey;
+    private $password;
 
-    function __construct ($username, $apiKey)
-    {
-        $this->username = $username;
-        $this->apiKey = $apiKey;
-    }
-    
     function getId ()
     {
         return $this->id;
@@ -56,7 +51,7 @@ class User implements UserInterface
 
     public function getPassword ()
     {
-        
+        return $this->password;
     }
 
     public function getSalt ()
@@ -67,6 +62,16 @@ class User implements UserInterface
     public function eraseCredentials ()
     {
         
+    }
+
+    function setUsername ($username)
+    {
+        $this->username = $username;
+    }
+
+    function setPassword ($password)
+    {
+        $this->password = $password;
     }
 
 }

@@ -11,3 +11,7 @@ services:
     alsciende_security.client_manager:
         class: Alsciende\SecurityBundle\Service\ClientManager
         arguments: ["@fos_oauth_server.entity_manager","%fos_oauth_server.model.client.class%"]
+
+    alsciende_security.user_manager:
+        class: Alsciende\SecurityBundle\Service\UserManager
+        arguments: ["@doctrine.orm.entity_manager","@security.password_encoder","%secret%"]
