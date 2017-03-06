@@ -2,18 +2,28 @@
 
 namespace Tests\AlsciendeDoctrineSerializerBundle;
 
+use Alsciende\DoctrineSerializerBundle\AssociationNormalizer;
+use AppBundle\Entity\Card;
+use AppBundle\Entity\Clan;
+use AppBundle\Entity\Cycle;
+use AppBundle\Entity\Pack;
+use AppBundle\Entity\PackSlot;
+use AppBundle\Entity\Type;
+use Doctrine\ORM\EntityManager;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+
 /**
  * Description of AssociationNormalizerTest
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class AssociationNormalizerTest extends \Symfony\Bundle\FrameworkBundle\Test\KernelTestCase
+class AssociationNormalizerTest extends KernelTestCase
 {
 
     use DomainFixtures;
 
     /**
-     * @var \Doctrine\ORM\EntityManager
+     * @var EntityManager
      */
     private $em;
 
@@ -33,19 +43,19 @@ class AssociationNormalizerTest extends \Symfony\Bundle\FrameworkBundle\Test\Ker
 
     function testGetSingleIdentifier ()
     {
-        $normalizer = new \Alsciende\DoctrineSerializerBundle\AssociationNormalizer($this->em);
-        $identifier = $normalizer->getSingleIdentifier($this->em->getClassMetadata(\AppBundle\Entity\Card::class));
+        $normalizer = new AssociationNormalizer($this->em);
+        $identifier = $normalizer->getSingleIdentifier($this->em->getClassMetadata(Card::class));
         $this->assertEquals('code', $identifier);
     }
 
     function testNormalizeClan ()
     {
         //setup
-        $clan = new \AppBundle\Entity\Clan();
+        $clan = new Clan();
         $clan->setCode('crab');
         $clan->setName("Crab");
         //work
-        $normalizer = new \Alsciende\DoctrineSerializerBundle\AssociationNormalizer($this->em);
+        $normalizer = new AssociationNormalizer($this->em);
         $data = $normalizer->normalize($clan);
         //assert
         $this->assertEquals('crab', $data['code']);
@@ -55,17 +65,17 @@ class AssociationNormalizerTest extends \Symfony\Bundle\FrameworkBundle\Test\Ker
     function testNormalizeCard ()
     {
         //setup
-        $clan = new \AppBundle\Entity\Clan();
+        $clan = new Clan();
         $clan->setCode('crab');
-        $type = new \AppBundle\Entity\Type();
+        $type = new Type();
         $type->setCode('stronghold');
-        $card = new \AppBundle\Entity\Card();
+        $card = new Card();
         $card->setCode('01001');
         $card->setClan($clan);
         $card->setName("The Impregnable Fortress of the Crab");
         $card->setType($type);
         //work
-        $normalizer = new \Alsciende\DoctrineSerializerBundle\AssociationNormalizer($this->em);
+        $normalizer = new AssociationNormalizer($this->em);
         $data = $normalizer->normalize($card);
         //assert
         $this->assertEquals('01001', $data['code']);
@@ -77,13 +87,13 @@ class AssociationNormalizerTest extends \Symfony\Bundle\FrameworkBundle\Test\Ker
     function testNormalizePack ()
     {
         //setup
-        $cycle = new \AppBundle\Entity\Cycle();
+        $cycle = new Cycle();
         $cycle->setCode('core');
-        $pack = new \AppBundle\Entity\Pack();
+        $pack = new Pack();
         $pack->setCode('core');
         $pack->setCycle($cycle);
         //work
-        $normalizer = new \Alsciende\DoctrineSerializerBundle\AssociationNormalizer($this->em);
+        $normalizer = new AssociationNormalizer($this->em);
         $data = $normalizer->normalize($pack);
         //assert
         $this->assertEquals('core', $data['code']);
@@ -92,18 +102,18 @@ class AssociationNormalizerTest extends \Symfony\Bundle\FrameworkBundle\Test\Ker
     function testNormalizePackSlot ()
     {
         //setup
-        $pack = new \AppBundle\Entity\Pack();
+        $pack = new Pack();
         $pack->setCode('core');
         
-        $card = new \AppBundle\Entity\Card();
+        $card = new Card();
         $card->setCode('01001');
         
-        $packslot = new \AppBundle\Entity\PackSlot();
+        $packslot = new PackSlot();
         $packslot->setCard($card);
         $packslot->setPack($pack);
         $packslot->setQuantity(3);
         //work
-        $normalizer = new \Alsciende\DoctrineSerializerBundle\AssociationNormalizer($this->em);
+        $normalizer = new AssociationNormalizer($this->em);
         $data = $normalizer->normalize($packslot);
         //assert
         $this->assertEquals('core', $data['pack_code']);
@@ -117,9 +127,9 @@ class AssociationNormalizerTest extends \Symfony\Bundle\FrameworkBundle\Test\Ker
             'clan_code' => 'crab',
             'type_code' => 'stronghold'
         ];
-        $associationMapping = $this->em->getClassMetadata(\AppBundle\Entity\Card::class)->getAssociationMapping('clan');
+        $associationMapping = $this->em->getClassMetadata(Card::class)->getAssociationMapping('clan');
         //work
-        $normalizer = new \Alsciende\DoctrineSerializerBundle\AssociationNormalizer($this->em);
+        $normalizer = new AssociationNormalizer($this->em);
         $reference = $normalizer->findReferenceMetadata($data, $associationMapping);
         $this->assertArrayHasKey('joinColumns', $reference);
         $this->assertArrayHasKey('className', $reference);
@@ -138,11 +148,11 @@ class AssociationNormalizerTest extends \Symfony\Bundle\FrameworkBundle\Test\Ker
                     'referencedValue' => 'crab'
                 ]
             ],
-            'className' => \AppBundle\Entity\Clan::class
+            'className' => Clan::class
         ];
         $this->createCrab();
         //work
-        $normalizer = new \Alsciende\DoctrineSerializerBundle\AssociationNormalizer($this->em);
+        $normalizer = new AssociationNormalizer($this->em);
         $entity = $normalizer->findReferencedEntity('clan', $reference, $this->em);
         //assert
         $this->assertNotNull($entity);
@@ -160,8 +170,9 @@ class AssociationNormalizerTest extends \Symfony\Bundle\FrameworkBundle\Test\Ker
             'type_code' => 'stronghold'
         ];
         //work
-        $normalizer = new \Alsciende\DoctrineSerializerBundle\AssociationNormalizer($this->em);
-        $associations = $normalizer->findReferences($data, \AppBundle\Entity\Card::class);
+        $normalizer = new AssociationNormalizer($this->em);
+        $classMetadata = $this->em->getClassMetadata(Card::class);
+        $associations = $normalizer->findReferences($data, $classMetadata);
         //assert
         $this->assertEquals(2, count($associations));
         $this->assertArrayHasKey('clan', $associations);
@@ -171,6 +182,26 @@ class AssociationNormalizerTest extends \Symfony\Bundle\FrameworkBundle\Test\Ker
         $this->assertArrayHasKey('clan_code', $associations['clan']['joinColumns']);
         $this->assertArrayHasKey('referencedColumnName', $associations['clan']['joinColumns']['clan_code']);
         $this->assertArrayHasKey('referencedValue', $associations['clan']['joinColumns']['clan_code']);
+    }
+    
+    function testFindForeignKeyValues()
+    {
+        //setup
+        $this->createCycleCore();
+
+        $data = [
+            "cycle_code" => "core"
+        ];
+        //work
+        $normalizer = new AssociationNormalizer($this->em);
+        $references = $normalizer->findReferences($data, Pack::class);
+        $foreignKeyValues = $normalizer->findForeignKeyValues($references);
+        //assert
+        $this->assertEquals(1, count($foreignKeyValues));
+        $foreignKeyValue = $foreignKeyValues[0];
+        $this->assertEquals('cycle', $foreignKeyValue['foreignKey']);
+        $this->assertArrayHasKey('foreignValue', $foreignKeyValue);
+        $this->assertEquals('cycle_code', $foreignKeyValue['joinColumns'][0]);
     }
 
     /**

@@ -22,11 +22,15 @@ class Serializer
     /* @var AssociationNormalizer */
     private $normalizer;
 
-    public function __construct (\Doctrine\ORM\EntityManager $entityManager, Manager\SourceManager $sourceManager, \Symfony\Component\Validator\Validator\RecursiveValidator $validator)
+    /* @var \Doctrine\Common\Annotations\Reader */
+    private $reader;
+
+    public function __construct (\Doctrine\ORM\EntityManager $entityManager, Manager\SourceManager $sourceManager, \Symfony\Component\Validator\Validator\RecursiveValidator $validator, \Doctrine\Common\Annotations\Reader $reader)
     {
         $this->entityManager = $entityManager;
         $this->sourceManager = $sourceManager;
         $this->validator = $validator;
+        $this->reader = $reader;
         $this->normalizer = new AssociationNormalizer($entityManager);
     }
 
@@ -40,7 +44,18 @@ class Serializer
         /* @var $encoder JsonFileEncoder */
         $encoder = new JsonFileEncoder();
 
-        $this->entityManager->getMetadataFactory()->getAllMetadata();
+        $allMetadata = $this->entityManager->getMetadataFactory()->getAllMetadata();
+        foreach($allMetadata as $metadata) {
+            $className = $metadata->getName();
+            /* @var $source \Alsciende\DoctrineSerializerBundle\Model\Source */
+            $source = $this->reader->getClassAnnotation(new \ReflectionClass($className), 'Alsciende\DoctrineSerializerBundle\Model\Source');
+            if ($source) {
+                $source->classMetadata = $metadata;
+                $source->entityManager = $this->entityManager;
+                $source->className = $className;
+                $this->sourceManager->addSource($source);
+            }
+        }
         $sources = $this->sourceManager->getSources();
 
         $result = [];
@@ -102,27 +117,23 @@ class Serializer
     /**
      * Finds all the foreign keys in $incoming and replaces them with
      * a proper Doctrine association
-     * 
-     * eg "article_id" => 2134 becomes "article" => (object Article)
      */
     protected function denormalizeIncomingAssociations (Model\Fragment $fragment)
     {
-        $references = $this->normalizer->findReferences($fragment->incoming, $fragment->source->className);
-
         $renamedKeys = [];
+               
+        $references = $this->normalizer->findReferences($fragment->incoming, $fragment->source->classMetadata);
+        
+        $findForeignKeyValues = $this->normalizer->findForeignKeyValues($references);
 
-        foreach ($references as $field => $reference) {
-            $entity = $this->normalizer->findReferencedEntity($field, $reference);
-            if (!$entity) {
-                throw new \InvalidArgumentException("Invalid reference " . json_encode($reference));
+        foreach($findForeignKeyValues as $findForeignKeyValue) {
+            foreach($findForeignKeyValue['joinColumns'] as $joinColumn) {
+                unset($fragment->incoming[$joinColumn]);
+                $renamedKeys[$joinColumn] = $findForeignKeyValue['foreignKey'];
             }
-            $fragment->incoming[$field] = $entity;
-            foreach (array_keys($reference['joinColumns']) as $foreignKey) {
-                unset($fragment->incoming[$foreignKey]);
-                $renamedKeys[$foreignKey] = $field;
-            }
+            $fragment->incoming[$findForeignKeyValue['foreignKey']] = $findForeignKeyValue['foreignValue'];
         }
-
+        
         return $renamedKeys;
     }
 

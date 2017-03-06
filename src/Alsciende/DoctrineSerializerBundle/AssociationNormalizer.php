@@ -75,13 +75,13 @@ class AssociationNormalizer
      * with the relevant information to find the referenced entity
      * 
      * @param array $data
-     * @param string $className
+     * @param \Doctrine\ORM\Mapping\ClassMetadata $classMetadata
      * @return array
      */
-    function findReferences ($data, $className)
+    function findReferences ($data, \Doctrine\ORM\Mapping\ClassMetadata $classMetadata)
     {
         $references = [];
-        foreach($this->factory->getMetadataFor($className)->getAssociationMappings() as $mapping) {
+        foreach($classMetadata->getAssociationMappings() as $mapping) {
             $reference = $this->findReferenceMetadata($data, $mapping);
             if($reference) {
                 $references[$mapping['fieldName']] = $reference;
@@ -149,6 +149,33 @@ class AssociationNormalizer
             throw new InvalidArgumentException('Too many identifiers for ' . $metadata->getName());
         }
         return $identifierFieldNames[0];
+    }
+
+    /**
+     * Finds all the foreign keys in $data and the entity associated
+     * 
+     * eg ["article_id" => 2134] returns 
+     * array([ "foreignKey" => "article", "foreignValue" => (object Article), "joinColumns" => [ "article_id"] ])
+     * 
+     * @return array
+     */
+    public function findForeignKeyValues ($references)
+    {
+        $result = [];
+
+        foreach ($references as $field => $reference) {
+            $entity = $this->findReferencedEntity($field, $reference);
+            if (!$entity) {
+                throw new \InvalidArgumentException("Invalid reference " . json_encode($reference));
+            }
+            $result[] = [
+                "foreignKey" => $field,
+                "foreignValue" => $entity,
+                "joinColumns" => array_keys($reference['joinColumns'])
+            ];
+        }
+
+        return $result;
     }
 
 }
