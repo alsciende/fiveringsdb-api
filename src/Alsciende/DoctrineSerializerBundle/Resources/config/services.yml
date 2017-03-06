@@ -1,0 +1,15 @@
+services:
+    alsciende.doctrine_serializer.source_manager:
+        class: Alsciende\DoctrineSerializerBundle\Manager\SourceManager
+        arguments: ["%alsciende.doctrine_serializer.group%","%alsciende.doctrine_serializer.path%"]
+        
+    alsciende.doctrine_serializer.doctrine_event_listener:
+        class: Alsciende\DoctrineSerializerBundle\Listener\DoctrineEventListener
+        arguments: ["@annotation_reader","@alsciende.doctrine_serializer.source_manager","@logger"]
+        tags:
+            - { name: doctrine.event_listener, event: loadClassMetadata }
+
+    alsciende.doctrine_serializer.serializer:
+        class: Alsciende\DoctrineSerializerBundle\Serializer
+        arguments: ["@doctrine.orm.entity_manager","@alsciende.doctrine_serializer.source_manager","@validator"]
+        

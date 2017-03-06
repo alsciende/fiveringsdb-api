@@ -5,12 +5,15 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Alsciende\DoctrineSerializerBundle\Model\Source;
 
 /**
  * Clan
  *
  * @ORM\Table(name="clans")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ClanRepository")
+ * 
+ * @Source()
  * 
  * @author Alsciende <alsciende@icloud.com>
  */
@@ -24,7 +27,7 @@ class Clan
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      * 
-     * @Groups({"json"})
+     * @Groups({"doctrine_serializer"})
      */
     private $code;
 
@@ -33,7 +36,7 @@ class Clan
      *
      * @ORM\Column(name="name", type="string", length=255, unique=true)
      * 
-     * @Groups({"json"})
+     * @Groups({"doctrine_serializer"})
      */
     private $name;
 

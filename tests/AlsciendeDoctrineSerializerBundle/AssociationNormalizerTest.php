@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\AlsciendeCerealBundle;
+namespace Tests\AlsciendeDoctrineSerializerBundle;
 
 /**
  * Description of AssociationNormalizerTest
@@ -33,7 +33,7 @@ class AssociationNormalizerTest extends \Symfony\Bundle\FrameworkBundle\Test\Ker
 
     function testGetSingleIdentifier ()
     {
-        $normalizer = new \Alsciende\CerealBundle\AssociationNormalizer($this->em);
+        $normalizer = new \Alsciende\DoctrineSerializerBundle\AssociationNormalizer($this->em);
         $identifier = $normalizer->getSingleIdentifier($this->em->getClassMetadata(\AppBundle\Entity\Card::class));
         $this->assertEquals('code', $identifier);
     }
@@ -45,7 +45,7 @@ class AssociationNormalizerTest extends \Symfony\Bundle\FrameworkBundle\Test\Ker
         $clan->setCode('crab');
         $clan->setName("Crab");
         //work
-        $normalizer = new \Alsciende\CerealBundle\AssociationNormalizer($this->em);
+        $normalizer = new \Alsciende\DoctrineSerializerBundle\AssociationNormalizer($this->em);
         $data = $normalizer->normalize($clan);
         //assert
         $this->assertEquals('crab', $data['code']);
@@ -65,7 +65,7 @@ class AssociationNormalizerTest extends \Symfony\Bundle\FrameworkBundle\Test\Ker
         $card->setName("The Impregnable Fortress of the Crab");
         $card->setType($type);
         //work
-        $normalizer = new \Alsciende\CerealBundle\AssociationNormalizer($this->em);
+        $normalizer = new \Alsciende\DoctrineSerializerBundle\AssociationNormalizer($this->em);
         $data = $normalizer->normalize($card);
         //assert
         $this->assertEquals('01001', $data['code']);
@@ -83,10 +83,31 @@ class AssociationNormalizerTest extends \Symfony\Bundle\FrameworkBundle\Test\Ker
         $pack->setCode('core');
         $pack->setCycle($cycle);
         //work
-        $normalizer = new \Alsciende\CerealBundle\AssociationNormalizer($this->em);
+        $normalizer = new \Alsciende\DoctrineSerializerBundle\AssociationNormalizer($this->em);
         $data = $normalizer->normalize($pack);
         //assert
         $this->assertEquals('core', $data['code']);
+    }
+
+    function testNormalizePackSlot ()
+    {
+        //setup
+        $pack = new \AppBundle\Entity\Pack();
+        $pack->setCode('core');
+        
+        $card = new \AppBundle\Entity\Card();
+        $card->setCode('01001');
+        
+        $packslot = new \AppBundle\Entity\PackSlot();
+        $packslot->setCard($card);
+        $packslot->setPack($pack);
+        $packslot->setQuantity(3);
+        //work
+        $normalizer = new \Alsciende\DoctrineSerializerBundle\AssociationNormalizer($this->em);
+        $data = $normalizer->normalize($packslot);
+        //assert
+        $this->assertEquals('core', $data['pack_code']);
+        $this->assertEquals('01001', $data['card_code']);
     }
 
     function testFindReferenceMetadata ()
@@ -98,7 +119,7 @@ class AssociationNormalizerTest extends \Symfony\Bundle\FrameworkBundle\Test\Ker
         ];
         $associationMapping = $this->em->getClassMetadata(\AppBundle\Entity\Card::class)->getAssociationMapping('clan');
         //work
-        $normalizer = new \Alsciende\CerealBundle\AssociationNormalizer($this->em);
+        $normalizer = new \Alsciende\DoctrineSerializerBundle\AssociationNormalizer($this->em);
         $reference = $normalizer->findReferenceMetadata($data, $associationMapping);
         $this->assertArrayHasKey('joinColumns', $reference);
         $this->assertArrayHasKey('className', $reference);
@@ -121,7 +142,7 @@ class AssociationNormalizerTest extends \Symfony\Bundle\FrameworkBundle\Test\Ker
         ];
         $this->createCrab();
         //work
-        $normalizer = new \Alsciende\CerealBundle\AssociationNormalizer($this->em);
+        $normalizer = new \Alsciende\DoctrineSerializerBundle\AssociationNormalizer($this->em);
         $entity = $normalizer->findReferencedEntity('clan', $reference, $this->em);
         //assert
         $this->assertNotNull($entity);
@@ -139,7 +160,7 @@ class AssociationNormalizerTest extends \Symfony\Bundle\FrameworkBundle\Test\Ker
             'type_code' => 'stronghold'
         ];
         //work
-        $normalizer = new \Alsciende\CerealBundle\AssociationNormalizer($this->em);
+        $normalizer = new \Alsciende\DoctrineSerializerBundle\AssociationNormalizer($this->em);
         $associations = $normalizer->findReferences($data, \AppBundle\Entity\Card::class);
         //assert
         $this->assertEquals(2, count($associations));

@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Alsciende\DoctrineSerializerBundle\Model\Source;
 
 /**
  * Card
@@ -13,6 +14,8 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
  * @ORM\Table(name="cards")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\CardRepository")
  * 
+ * @Source(break="code")
+ *
  * @author Alsciende <alsciende@icloud.com>
  */
 class Card
@@ -30,7 +33,7 @@ class Card
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      * 
-     * @Groups({"json"})
+     * @Groups({"doctrine_serializer"})
      */
     private $code;
 
@@ -41,7 +44,7 @@ class Card
      *
      * @ORM\Column(name="name", type="string", length=255)
      * 
-     * @Groups({"json"})
+     * @Groups({"doctrine_serializer"})
      */
     private $name;
 
@@ -50,7 +53,7 @@ class Card
      *
      * @ORM\Column(name="cost", type="integer", nullable=true)
      * 
-     * @Groups({"json"})
+     * @Groups({"doctrine_serializer"})
      */
     private $cost;
 
@@ -59,7 +62,7 @@ class Card
      *
      * @ORM\Column(name="text", type="text", nullable=true)
      * 
-     * @Groups({"json"})
+     * @Groups({"doctrine_serializer"})
      */
     private $text;
 
@@ -78,14 +81,6 @@ class Card
      * @ORM\JoinColumn(name="clan_code", referencedColumnName="code")
      */
     private $clan;
-
-    /**
-     * @var Pack
-     *
-     * @ORM\ManyToOne(targetEntity="Pack", fetch="EAGER")
-     * @ORM\JoinColumn(name="pack_code", referencedColumnName="code")
-     */
-    private $pack;
 
     /**
      * Set code
@@ -227,30 +222,6 @@ class Card
     function setClan (\AppBundle\Entity\Clan $clan)
     {
         $this->clan = $clan;
-
-        return $this;
-    }
-
-    /**
-     * Get pack
-     * 
-     * @return Pack
-     */
-    function getPack ()
-    {
-        return $this->pack;
-    }
-
-    /**
-     * Set pack
-     * 
-     * @param \AppBundle\Entity\Pack $pack
-     * 
-     * @return Card
-     */
-    function setPack (Pack $pack)
-    {
-        $this->pack = $pack;
 
         return $this;
     }

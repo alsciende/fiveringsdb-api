@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\AlsciendeCerealBundle;
+namespace Tests\AlsciendeDoctrineSerializerBundle;
 
 /**
  * Description of DeserializationJobTest
@@ -43,7 +43,7 @@ class DeserializationJobTest extends \Symfony\Bundle\FrameworkBundle\Test\Kernel
         $incoming = $data[0];
         $classname = \AppBundle\Entity\Clan::class;
         //work
-        $job = new \Alsciende\CerealBundle\DeserializationJob($filepath, $incoming, $classname);
+        $job = new \Alsciende\DoctrineSerializerBundle\DeserializationJob($filepath, $incoming, $classname);
         $job->run($this->em, $this->validator);
         //assert
         /* @var $entity \AppBundle\Entity\Clan */
@@ -69,7 +69,7 @@ class DeserializationJobTest extends \Symfony\Bundle\FrameworkBundle\Test\Kernel
         $filepath = __DIR__ . "/DataFixtures/Card/01001.json";
         $incoming = json_decode(file_get_contents($filepath), true);
         $classname = \AppBundle\Entity\Card::class;
-        $job = new \Alsciende\CerealBundle\DeserializationJob($filepath, $incoming, $classname);
+        $job = new \Alsciende\DoctrineSerializerBundle\DeserializationJob($filepath, $incoming, $classname);
 
         //work
         $job->run($this->em, $this->validator);
@@ -87,6 +87,32 @@ class DeserializationJobTest extends \Symfony\Bundle\FrameworkBundle\Test\Kernel
         $this->assertEquals('stronghold', $changes['type_code']);
         $this->assertEquals('01001', $original['code']);
         $this->assertNull($original['name']);
+    }
+
+    function testRunPackSlot ()
+    {
+        //setup
+        $this->createCrabFortress();
+        $this->createPackCore();
+
+        $filepath = __DIR__ . "/DataFixtures/PackSlot/core.json";
+        $data = json_decode(file_get_contents($filepath), true);
+        $incoming = $data[0];
+        $classname = \AppBundle\Entity\PackSlot::class;
+        $job = new \Alsciende\DoctrineSerializerBundle\DeserializationJob($filepath, $incoming, $classname);
+
+        //work
+        $job->run($this->em, $this->validator);
+
+        //assert
+        /* @var $entity \AppBundle\Entity\Card */
+        $entity = $job->getEntity();
+        $changes = $job->getChanges();
+        $original = $job->getOriginal();
+        $this->assertNotNull($entity);
+        $this->assertEquals('01001', $entity->getCard()->getCode());
+        $this->assertEquals('core', $entity->getPack()->getCode());
+        $this->assertEquals(3, $entity->getQuantity());
     }
 
     /**

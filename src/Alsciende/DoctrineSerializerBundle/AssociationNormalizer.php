@@ -1,6 +1,6 @@
 <?php
 
-namespace Alsciende\CerealBundle;
+namespace Alsciende\DoctrineSerializerBundle;
 
 /**
  * Description of AssociationNormalizer
@@ -9,15 +9,18 @@ namespace Alsciende\CerealBundle;
  */
 class AssociationNormalizer
 {
-
-    /** @var \Doctrine\ORM\Mapping\ClassMetadataFactory */
+    /* @var \Doctrine\ORM\EntityManager */
+    private $em;
+    
+    /* @var \Doctrine\ORM\Mapping\ClassMetadataFactory */
     private $factory;
 
-    /** @var \Symfony\Component\Serializer\Serializer */
+    /* @var \Symfony\Component\Serializer\Serializer */
     private $serializer;
 
     function __construct (\Doctrine\ORM\EntityManager $em)
     {
+        $this->em = $em;
         $this->factory = new \Doctrine\ORM\Mapping\ClassMetadataFactory();
         $this->factory->setEntityManager($em);
 
@@ -34,10 +37,14 @@ class AssociationNormalizer
      * eg "article" => (object Article) becomes "article_id" => 2134
      * 
      */
-    function normalize ($entity)
+    function normalize ($entity, $group = null)
     {
         $metadata = $this->factory->getMetadataFor(get_class($entity));
-        $data = $this->serializer->normalize($entity, null, ['groups' => ['json']]);
+        $context = [];
+        if(isset($group)) {
+            $context['groups'] = array($group);
+        }
+        $data = $this->serializer->normalize($entity, null, $context);
 
         foreach($metadata->getAssociationMappings() as $mapping) {
             if($mapping['isOwningSide']) {
@@ -83,6 +90,14 @@ class AssociationNormalizer
         return $references;
     }
 
+    /**
+     * Returns a description of the association, including the foreign key value
+     * as found in $data
+     * 
+     * @param type $data an array where the value of the foreign key can be found
+     * @param type $associationMapping
+     * @return array
+     */
     function findReferenceMetadata ($data, $associationMapping)
     {
         if(!$associationMapping['isOwningSide']) {
@@ -104,9 +119,16 @@ class AssociationNormalizer
         return $reference;
     }
 
-    function findReferencedEntity ($field, $reference, \Doctrine\ORM\EntityManager $em)
+    /**
+     * Finds the entity described by $reference. $field is a unique identifier.
+     * 
+     * @param type $field
+     * @param type $reference
+     * @return object
+     */
+    function findReferencedEntity ($field, $reference)
     {
-        $qb = $em->createQueryBuilder();
+        $qb = $this->em->createQueryBuilder();
         $qb->select($field)->from($reference['className'], $field);
         foreach($reference['joinColumns'] as $foreignKey => $condition) {
             $conditionString = sprintf("%s.%s = :%s", $field, $condition['referencedColumnName'], $foreignKey);
@@ -116,7 +138,7 @@ class AssociationNormalizer
         try {
             return $qb->getQuery()->getSingleResult();
         } catch(\Doctrine\ORM\NoResultException $ex) {
-            throw new \Alsciende\CerealBundle\Exception\InvalidForeignKeyException($reference);
+            throw new \InvalidArgumentException("Foreign key cannot be matched to a record");
         }
     }
 

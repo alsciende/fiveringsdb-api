@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\AlsciendeCerealBundle;
+namespace Tests\AlsciendeDoctrineSerializerBundle;
 
 /**
  * Description of DomainFixtures
@@ -84,5 +84,15 @@ trait DomainFixtures
         $this->em->persist($pack);
         $this->em->flush();
         return $pack;
+    }
+    
+    function createPackSlotCrabFortress ()
+    {
+        $packslot = new \AppBundle\Entity\PackSlot();
+        $packslot->setCard($this->createCrabFortress());
+        $packslot->setPack($this->createPackCore());
+        $this->em->persist($packslot);
+        $this->em->flush();
+        return $packslot;
     }
 }

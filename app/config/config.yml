@@ -85,3 +85,8 @@ fos_oauth_server:
     service:
         user_provider:   my_user_provider
         client_manager:  fos_oauth_server.client_manager.default
+
+# AlsciendeDoctrineSerializerBundle Configuration
+alsciende_doctrine_serializer:
+    path: "%kernel.root_dir%/../../fiveringsdb-json-data"
+    group: doctrine_serializer

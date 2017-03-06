@@ -1,6 +1,6 @@
 <?php
 
-namespace Alsciende\CerealBundle\DependencyInjection;
+namespace Alsciende\DoctrineSerializerBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -18,12 +18,15 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('alsciende_cereal');
+        $rootNode = $treeBuilder->root('alsciende_doctrine_serializer');
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
-
+        $rootNode
+            ->children()
+                ->scalarNode('path')->isRequired()->cannotBeEmpty()->end()
+                ->scalarNode('group')->defaultValue(null)->end()
+            ->end()
+        ;
+        
         return $treeBuilder;
     }
 }

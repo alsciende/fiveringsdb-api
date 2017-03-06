@@ -28,7 +28,7 @@ class Pack
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      * 
-     * @Groups({"json"})
+     * @Groups({"doctrine_serializer"})
      */
     private $code;
 
@@ -37,7 +37,7 @@ class Pack
      *
      * @ORM\Column(name="name", type="string", length=255, unique=true)
      * 
-     * @Groups({"json"})
+     * @Groups({"doctrine_serializer"})
      */
     private $name;
 
@@ -46,7 +46,7 @@ class Pack
      *
      * @ORM\Column(name="position", type="integer")
      * 
-     * @Groups({"json"})
+     * @Groups({"doctrine_serializer"})
      */
     private $position;
 
@@ -55,7 +55,7 @@ class Pack
      *
      * @ORM\Column(name="size", type="integer", nullable=true)
      * 
-     * @Groups({"json"})
+     * @Groups({"doctrine_serializer"})
      */
     private $size;
 
@@ -82,11 +82,11 @@ class Pack
     private $cycle;
 
     /**
-     * @var Cards[]
+     * @var PackSlots[]
      * 
-     * @ORM\OneToMany(targetEntity="Card", mappedBy="pack", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="PackSlot", mappedBy="pack", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
      */
-    private $cards;
+    private $slots;
 
     function __construct ()
     {
@@ -257,42 +257,14 @@ class Pack
         return $this;
     }
 
-    /**
-     * Get cards
-     * 
-     * @return Card[]
-     */
-    function getCards ()
+    function getPackSlots ()
     {
-        return $this->cards;
+        return $this->packSlots;
     }
 
-    /**
-     * Set cards
-     * 
-     * @param Card[] $cards
-     * 
-     * return Pack
-     */
-    function setCards (array $cards)
+    function setPackSlots (array $packSlots)
     {
-        $this->cards = $cards;
-        
-        return $this;
-    }
-    
-    /**
-     * Add card
-     * 
-     * @param \AppBundle\Entity\Card $card
-     * 
-     * @return Pack
-     */
-    function addCard (Card $card)
-    {
-        $this->cards[] = $card;
-        
-        return $this;
+        $this->packSlots = $packSlots;
     }
 
 }
