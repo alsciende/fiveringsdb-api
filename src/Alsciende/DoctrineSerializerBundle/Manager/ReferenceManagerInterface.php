@@ -17,7 +17,8 @@ interface ReferenceManagerInterface
 
     
     /**
-     * Returns a list of all classes that this class depends on
+     * Returns an array of foreign key => foreign entity class 
+     * for all classes that this class depends on
      * 
      * @param string $className
      * @return string[]
@@ -25,17 +26,33 @@ interface ReferenceManagerInterface
     function getDependingClassNames($className);
 
     /**
+     * Returns the single identifier of a class. Throws an exception if the class
+     * using a composite key
+     * 
+     * @param string $className
+     */
+    function getSingleIdentifier ($className);
+    
+    /**
      * Commits all modifications made to managed entities
      */
     function flush();
     
     /**
-     * Updates a field in the entity
+     * Updates some fields in the entity
      * 
      * @param object $entity
      * @param array $update
      */
     function updateEntity($entity, $update);
+
+    /**
+     * Returns the value of a field of the entity
+     * 
+     * @param object $entity
+     * @param string $field
+     */
+    function readEntity($entity, $field);
     
     /**
      * Find the entity referenced by the identifiers in $data

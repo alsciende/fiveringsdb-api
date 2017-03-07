@@ -27,7 +27,7 @@ class ReferenceManager implements \Alsciende\DoctrineSerializerBundle\Manager\Re
         $classMetadata = $this->entityManager->getClassMetadata($className);
         foreach ($classMetadata->getAssociationMappings() as $mapping) {
             if($mapping['isOwningSide']) {
-                $result[] = $mapping['targetEntity'];
+                $result[$mapping['fieldName']] = $mapping['targetEntity'];
             }
         }
         return $result;
@@ -49,6 +49,19 @@ class ReferenceManager implements \Alsciende\DoctrineSerializerBundle\Manager\Re
     /**
      * {@inheritDoc}
      */
+    function getSingleIdentifier ($className)
+    {
+        $classMetadata = $this->entityManager->getClassMetadata($className);
+        $identifierFieldNames = $classMetadata->getIdentifierFieldNames();
+        if(count($identifierFieldNames) > 1) {
+            throw new InvalidArgumentException('Too many identifiers for ' . $metadata->getName());
+        }
+        return $identifierFieldNames[0];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     function flush()
     {
         $this->entityManager->flush();
@@ -64,6 +77,15 @@ class ReferenceManager implements \Alsciende\DoctrineSerializerBundle\Manager\Re
             $classMetadata->setFieldValue($entity, $field, $value);
         }
         $this->entityManager->merge($entity);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    function readEntity($entity, $field)
+    {
+        $classMetadata = $this->entityManager->getClassMetadata(get_class($entity));
+        return $classMetadata->getFieldValue($entity, $field);
     }
     
     /**
