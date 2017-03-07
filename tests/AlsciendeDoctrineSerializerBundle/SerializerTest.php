@@ -37,6 +37,9 @@ class SerializerTest extends \Symfony\Bundle\FrameworkBundle\Test\KernelTestCase
         $this->reader = static::$kernel->getContainer()
                 ->get('annotation_reader');
         
+        $this->normalizer = static::$kernel->getContainer()
+                ->get('alsciende.doctrine_serializer.normalizer');
+        
         $this->clearDatabase();
     }
 
@@ -44,7 +47,7 @@ class SerializerTest extends \Symfony\Bundle\FrameworkBundle\Test\KernelTestCase
     {
         $path = __DIR__ . "/DataFixtures";
         $sourceManager = new \Alsciende\DoctrineSerializerBundle\Manager\SourceManager($this->referenceManager, 'doctrine_serializer', $path);
-        $serializer = new \Alsciende\DoctrineSerializerBundle\Serializer($this->em, $sourceManager, $this->validator, $this->reader);
+        $serializer = new \Alsciende\DoctrineSerializerBundle\Serializer($this->em, $sourceManager, $this->validator, $this->reader, $this->normalizer, $this->referenceManager);
         
         $result = $serializer->import();
     }

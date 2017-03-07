@@ -25,13 +25,17 @@ class Serializer
     /* @var \Doctrine\Common\Annotations\Reader */
     private $reader;
 
-    public function __construct (\Doctrine\ORM\EntityManager $entityManager, Manager\SourceManager $sourceManager, \Symfony\Component\Validator\Validator\RecursiveValidator $validator, \Doctrine\Common\Annotations\Reader $reader)
+    /* @var Manager\ReferenceManagerInterface */
+    private $referenceManager;
+
+    public function __construct (\Doctrine\ORM\EntityManager $entityManager, Manager\SourceManager $sourceManager, \Symfony\Component\Validator\Validator\RecursiveValidator $validator, \Doctrine\Common\Annotations\Reader $reader, \Alsciende\DoctrineSerializerBundle\AssociationNormalizer $normalizer, Manager\ReferenceManagerInterface $referenceManager)
     {
         $this->entityManager = $entityManager;
         $this->sourceManager = $sourceManager;
         $this->validator = $validator;
         $this->reader = $reader;
-        $this->normalizer = new AssociationNormalizer($entityManager);
+        $this->normalizer = $normalizer;
+        $this->referenceManager = $referenceManager;
     }
 
     /**
@@ -84,7 +88,7 @@ class Serializer
         $classMetadata = $this->entityManager->getClassMetadata($fragment->getSource()->getClassName());
 
         // find the entity based on the incoming identifier
-        $fragment->setEntity($this->findEntity($fragment));
+        $fragment->setEntity($this->referenceManager->findEntity($fragment->getSource()->getClassName(), $fragment->getIncoming()));
 
         // normalize the entity in its original state
         $fragment->setOriginal($this->normalizer->normalize($fragment->getEntity(), $fragment->getSource()->getGroup()));
@@ -93,7 +97,7 @@ class Serializer
         $fragment->setChanges(array_diff($fragment->getIncoming(), $fragment->getOriginal()));
 
         // denormalize the associations in the incoming data
-        $references = $this->normalizer->findReferences($fragment->getIncoming(), $classMetadata);
+        $references = $this->referenceManager->findReferences($fragment->getSource()->getClassName(), $fragment->getIncoming());
         $findForeignKeyValues = $this->normalizer->findForeignKeyValues($references);
 
         $renamedKeys = [];
@@ -128,73 +132,5 @@ class Serializer
         $this->entityManager->merge($fragment->getEntity());
     }
 
-    /**
-     * Find the entity referenced by the identifiers in $fragment->incoming
-     * 
-     * @param \Alsciende\DoctrineSerializerBundle\Model\Fragment $fragment
-     * @return \Alsciende\DoctrineSerializerBundle\classname
-     */
-    protected function findEntity (Model\Fragment $fragment)
-    {
-        $classMetadata = $this->entityManager->getClassMetadata($fragment->getSource()->getClassName());
-
-        $identifierPairs = $this->getIdentifierPairs($fragment);
-
-        $entity = $this->entityManager->find($fragment->getSource()->getClassName(), $identifierPairs);
-
-        if (!isset($entity)) {
-            $classname = $fragment->getSource()->getClassName();
-            $entity = new $classname();
-            foreach ($identifierPairs as $identifierField => $uniqueValue) {
-                $classMetadata->setFieldValue($entity, $identifierField, $uniqueValue);
-            }
-        }
-
-        return $entity;
-    }
-
-    /**
-     * Returns the array of identifier keys/values that can be used with find()
-     * to find the entity described by $incoming
-     * 
-     * If an identifier is a foreignIdentifier, find the foreign entity
-     * 
-     * @return array
-     * @throws \InvalidArgumentException
-     */
-    function getIdentifierPairs (Model\Fragment $fragment)
-    {
-        $classMetadata = $this->entityManager->getClassMetadata($fragment->getSource()->getClassName());
-
-        $pairs = [];
-
-        $identifierFieldNames = $classMetadata->getIdentifierFieldNames();
-        $fieldNames = $classMetadata->getFieldNames();
-        foreach ($identifierFieldNames as $identifierFieldName) {
-            $pairs[$identifierFieldName] = $this->getIdentifierValue($fragment, $identifierFieldName, $fieldNames);
-        }
-
-        return $pairs;
-    }
-
-    function getIdentifierValue (Model\Fragment $fragment, $identifierFieldName, $fieldNames)
-    {
-        $classMetadata = $this->entityManager->getClassMetadata($fragment->getSource()->getClassName());
-
-        if (in_array($identifierFieldName, $fieldNames)) {
-            if (!isset($fragment->getIncoming()[$identifierFieldName])) {
-                throw new \InvalidArgumentException("Missing identifier for entity " . $fragment->getSource()->getClassName() . " in data " . json_encode($fragment->getIncoming()));
-            }
-            return $fragment->getIncoming()[$identifierFieldName];
-        } else {
-            $associationMapping = $classMetadata->getAssociationMapping($identifierFieldName);
-            $referenceMetadata = $this->normalizer->findReferenceMetadata($fragment->getIncoming(), $associationMapping);
-            $entity = $this->normalizer->findReferencedEntity($identifierFieldName, $referenceMetadata);
-            if (!$entity) {
-                throw new \InvalidArgumentException("Cannot find entity referenced by $identifierFieldName in data " . json_encode($fragment->getIncoming()));
-            }
-            return $entity;
-        }
-    }
 
 }

@@ -29,13 +29,13 @@ class DataImportCommand extends ContainerAwareCommand
         $result = $serializer->import();
 
         foreach ($result as $fragment) {
-            if (!empty($fragment->changes)) {
+            if (!empty($fragment->getChanges())) {
                 $output->writeln("The data was:");
-                dump($fragment->original);
+                dump($fragment->getOriginal());
                 $output->writeln("The changes that were applied are:");
-                dump($fragment->changes);
+                dump($fragment->getChanges());
             } else {
-                $output->writeln("No change found in " . $fragment->path);
+                $output->writeln("No change found in " . $fragment->getPath());
             }
         }
     }
