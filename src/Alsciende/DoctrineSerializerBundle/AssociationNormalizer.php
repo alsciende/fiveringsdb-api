@@ -33,12 +33,15 @@ class AssociationNormalizer
     function normalize ($entity, $group = null)
     {
         $className = get_class($entity);
+        
+        // scalar normalization
         $context = [];
         if(isset($group)) {
             $context['groups'] = array($group);
         }
         $data = $this->serializer->normalize($entity, null, $context);
 
+        // reference normalization
         $dependencies = $this->objectManager->getDependingClassNames($className);
         foreach($dependencies as $foreignKey => $foreignClassName) {
             list($compositeField, $value) = $this->normalizeOwningSideAssociation($entity, $foreignKey, $foreignClassName);
@@ -55,16 +58,16 @@ class AssociationNormalizer
      * @param string $foreignClassName
      * @return array
      */
-    function normalizeOwningSideAssociation ($entity, $foreignKey, $foreignClassName)
+    private function normalizeOwningSideAssociation ($entity, $foreignKey, $foreignClassName)
     {
-        $identifier = $this->objectManager->getSingleIdentifier($foreignClassName);
-        $target = $this->objectManager->readObject($entity, $foreignKey);
-        if($target === null) {
+        $foreignObject = $this->objectManager->readObject($entity, $foreignKey);
+        $foreignIdentifier = $this->objectManager->getSingleIdentifier($foreignClassName);
+        if($foreignObject === null) {
             $value = null;
         } else {
-            $value = $this->objectManager->readObject($target, $identifier);
+            $value = $this->objectManager->readObject($foreignObject, $foreignIdentifier);
         }
-        $compositeField = $foreignKey . '_' . $identifier;
+        $compositeField = $foreignKey . '_' . $foreignIdentifier;
         return array($compositeField, $value);
     }
 
