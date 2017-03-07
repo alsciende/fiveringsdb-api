@@ -3,16 +3,16 @@
 namespace Alsciende\DoctrineSerializerBundle\Manager\Entity;
 
 /**
- * Description of ReferenceManager
+ * Description of ObjectManager
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class ReferenceManager implements \Alsciende\DoctrineSerializerBundle\Manager\ReferenceManagerInterface
+class ObjectManager implements \Alsciende\DoctrineSerializerBundle\Manager\ObjectManagerInterface
 {
 
     /* @var \Doctrine\ORM\EntityManager */
     private $entityManager;
-    
+
     function __construct (\Doctrine\ORM\EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
@@ -21,22 +21,22 @@ class ReferenceManager implements \Alsciende\DoctrineSerializerBundle\Manager\Re
     /**
      * {@inheritDoc}
      */
-    function getDependingClassNames($className)
+    function getDependingClassNames ($className)
     {
         $result = [];
         $classMetadata = $this->entityManager->getClassMetadata($className);
-        foreach ($classMetadata->getAssociationMappings() as $mapping) {
+        foreach($classMetadata->getAssociationMappings() as $mapping) {
             if($mapping['isOwningSide']) {
                 $result[$mapping['fieldName']] = $mapping['targetEntity'];
             }
         }
         return $result;
     }
-    
+
     /**
      * {@inheritDoc}
      */
-    function getAllManagedClassNames()
+    function getAllManagedClassNames ()
     {
         $result = [];
         $allMetadata = $this->entityManager->getMetadataFactory()->getAllMetadata();
@@ -45,7 +45,7 @@ class ReferenceManager implements \Alsciende\DoctrineSerializerBundle\Manager\Re
         }
         return $result;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -62,15 +62,15 @@ class ReferenceManager implements \Alsciende\DoctrineSerializerBundle\Manager\Re
     /**
      * {@inheritDoc}
      */
-    function flush()
+    function flush ()
     {
         $this->entityManager->flush();
     }
-    
+
     /**
      * {@inheritDoc}
      */
-    function updateEntity($entity, $update)
+    function updateObject ($entity, $update)
     {
         $classMetadata = $this->entityManager->getClassMetadata(get_class($entity));
         foreach($update as $field => $value) {
@@ -78,67 +78,54 @@ class ReferenceManager implements \Alsciende\DoctrineSerializerBundle\Manager\Re
         }
         $this->entityManager->merge($entity);
     }
-    
+
     /**
      * {@inheritDoc}
      */
-    function readEntity($entity, $field)
+    function readObject ($entity, $field)
     {
         $classMetadata = $this->entityManager->getClassMetadata(get_class($entity));
         return $classMetadata->getFieldValue($entity, $field);
     }
-    
+
     /**
      * {@inheritDoc}
      */
-    function findEntity ($className, $data)
+    function findObject ($className, $identifiers)
     {
-        $classMetadata = $this->entityManager->getClassMetadata($className);
-
-        $identifierPairs = $this->getIdentifierPairs($className, $data);
-
-        $entity = $this->entityManager->find($className, $identifierPairs);
-
-        if (!isset($entity)) {
-            $classname = $className;
-            $entity = new $classname();
-            foreach ($identifierPairs as $identifierField => $uniqueValue) {
-                $classMetadata->setFieldValue($entity, $identifierField, $uniqueValue);
-            }
-        }
-
-        return $entity;
+        return $this->entityManager->find($className, $identifiers);
     }
 
     /**
-     * Returns the array of identifier keys/values that can be used with find()
-     * to find the entity described by $incoming
-     * 
-     * If an identifier is a foreignIdentifier, find the foreign entity
-     * 
-     * @return array
-     * @throws \InvalidArgumentException
+     * {@inheritDoc}
      */
-    private function getIdentifierPairs ($className, $data)
+    function getIdentifierValues ($className, $data)
     {
         $classMetadata = $this->entityManager->getClassMetadata($className);
 
-        $pairs = [];
-
-        $identifierFieldNames = $classMetadata->getIdentifierFieldNames();
-        foreach ($identifierFieldNames as $identifierFieldName) {
-            $pairs[$identifierFieldName] = $this->getIdentifierValue($className, $data, $identifierFieldName);
+        $result = [];
+        foreach($classMetadata->getIdentifierFieldNames() as $identifierFieldName) {
+            $result[$identifierFieldName] = $this->getIdentifierValue($className, $data, $identifierFieldName);
         }
-
-        return $pairs;
+        return $result;
     }
 
+    /**
+     * Returns the unique value (scalar or object) used as identifier in $data
+     * considered as a normalization of $className
+     * 
+     * @param string $className
+     * @param array $data
+     * @param string $identifierFieldName
+     * @return mixed
+     * @throws \InvalidArgumentException
+     */
     private function getIdentifierValue ($className, $data, $identifierFieldName)
     {
         $classMetadata = $this->entityManager->getClassMetadata($className);
 
-        if (in_array($identifierFieldName, $classMetadata->getFieldNames())) {
-            if (!isset($data[$identifierFieldName])) {
+        if(in_array($identifierFieldName, $classMetadata->getFieldNames())) {
+            if(!isset($data[$identifierFieldName])) {
                 throw new \InvalidArgumentException("Missing identifier for entity " . $className . " in data " . json_encode($data));
             }
             return $data[$identifierFieldName];
@@ -146,17 +133,44 @@ class ReferenceManager implements \Alsciende\DoctrineSerializerBundle\Manager\Re
             $associationMapping = $classMetadata->getAssociationMapping($identifierFieldName);
             $referenceMetadata = $this->findReferenceMetadata($data, $associationMapping);
             $entity = $this->findReferencedEntity($identifierFieldName, $referenceMetadata);
-            if (!$entity) {
+            if(!$entity) {
                 throw new \InvalidArgumentException("Cannot find entity referenced by $identifierFieldName in data " . json_encode($data));
             }
             return $entity;
         }
     }
-    
+
     /**
      * {@inheritDoc}
      */
-    function findReferences ($className, $data)
+    function findForeignKeyValues ($className, $data)
+    {
+        $references = $this->findReferences($className, $data);
+
+        $result = [];
+        foreach($references as $field => $reference) {
+            $entity = $this->findReferencedEntity($field, $reference);
+            if(!$entity) {
+                throw new \InvalidArgumentException("Invalid reference " . json_encode($reference));
+            }
+            $result[] = [
+                "foreignKey" => $field,
+                "foreignValue" => $entity,
+                "joinColumns" => array_keys($reference['joinColumns'])
+            ];
+        }
+        return $result;
+    }
+
+    /**
+     * Return an array listing the associations in $metadata that exist in $data,
+     * with the relevant information to find the referenced entity
+     * 
+     * @param string className
+     * @param array $data
+     * @return array
+     */
+    private function findReferences ($className, $data)
     {
         $classMetadata = $this->entityManager->getClassMetadata($className);
 
@@ -200,9 +214,13 @@ class ReferenceManager implements \Alsciende\DoctrineSerializerBundle\Manager\Re
     }
 
     /**
-     * {@inheritDoc}
+     * Finds the entity described by $reference. $field is a unique identifier.
+     * 
+     * @param type $field
+     * @param type $reference
+     * @return object
      */
-    function findReferencedEntity ($field, $reference)
+    private function findReferencedEntity ($field, $reference)
     {
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select($field)->from($reference['className'], $field);

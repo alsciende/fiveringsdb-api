@@ -4,7 +4,7 @@ services:
         arguments: ["@alsciende.doctrine_serializer.reference_manager.entity","%alsciende.doctrine_serializer.group%","%alsciende.doctrine_serializer.path%"]
         
     alsciende.doctrine_serializer.reference_manager.entity:
-        class: Alsciende\DoctrineSerializerBundle\Manager\Entity\ReferenceManager
+        class: Alsciende\DoctrineSerializerBundle\Manager\Entity\ObjectManager
         arguments: ["@doctrine.orm.entity_manager"]
 
     alsciende.doctrine_serializer.serializer:

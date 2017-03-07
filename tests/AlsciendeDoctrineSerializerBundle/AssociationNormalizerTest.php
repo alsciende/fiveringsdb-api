@@ -38,18 +38,18 @@ class AssociationNormalizerTest extends KernelTestCase
                 ->get('doctrine')
                 ->getManager();
 
-        $this->referenceManager = static::$kernel->getContainer()
+        $this->objectManager = static::$kernel->getContainer()
                 ->get('alsciende.doctrine_serializer.reference_manager.entity');
 
         $this->serializer = static::$kernel->getContainer()
                 ->get('serializer');
-        
+
         $this->clearDatabase();
     }
 
     function testGetSingleIdentifier ()
     {
-        $identifier = $this->referenceManager->getSingleIdentifier(Card::class);
+        $identifier = $this->objectManager->getSingleIdentifier(Card::class);
         $this->assertEquals('code', $identifier);
     }
 
@@ -60,7 +60,7 @@ class AssociationNormalizerTest extends KernelTestCase
         $clan->setCode('crab');
         $clan->setName("Crab");
         //work
-        $normalizer = new AssociationNormalizer($this->referenceManager, $this->serializer);
+        $normalizer = new AssociationNormalizer($this->objectManager, $this->serializer);
         $data = $normalizer->normalize($clan);
         //assert
         $this->assertEquals('crab', $data['code']);
@@ -80,7 +80,7 @@ class AssociationNormalizerTest extends KernelTestCase
         $card->setName("The Impregnable Fortress of the Crab");
         $card->setType($type);
         //work
-        $normalizer = new AssociationNormalizer($this->referenceManager, $this->serializer);
+        $normalizer = new AssociationNormalizer($this->objectManager, $this->serializer);
         $data = $normalizer->normalize($card);
         //assert
         $this->assertEquals('01001', $data['code']);
@@ -98,7 +98,7 @@ class AssociationNormalizerTest extends KernelTestCase
         $pack->setCode('core');
         $pack->setCycle($cycle);
         //work
-        $normalizer = new AssociationNormalizer($this->referenceManager, $this->serializer);
+        $normalizer = new AssociationNormalizer($this->objectManager, $this->serializer);
         $data = $normalizer->normalize($pack);
         //assert
         $this->assertEquals('core', $data['code']);
@@ -109,66 +109,23 @@ class AssociationNormalizerTest extends KernelTestCase
         //setup
         $pack = new Pack();
         $pack->setCode('core');
-        
+
         $card = new Card();
         $card->setCode('01001');
-        
+
         $packslot = new PackSlot();
         $packslot->setCard($card);
         $packslot->setPack($pack);
         $packslot->setQuantity(3);
         //work
-        $normalizer = new AssociationNormalizer($this->referenceManager, $this->serializer);
+        $normalizer = new AssociationNormalizer($this->objectManager, $this->serializer);
         $data = $normalizer->normalize($packslot);
         //assert
         $this->assertEquals('core', $data['pack_code']);
         $this->assertEquals('01001', $data['card_code']);
     }
 
-    function testFindReferencedEntity ()
-    {
-        //setup
-        $reference = [
-            'joinColumns' => [
-                'clan_code' => [
-                    'referencedColumnName' => 'code',
-                    'referencedValue' => 'crab'
-                ]
-            ],
-            'className' => Clan::class
-        ];
-        $this->createCrab();
-        //work
-        $entity = $this->referenceManager->findReferencedEntity('clan', $reference);
-        //assert
-        $this->assertNotNull($entity);
-        $this->assertEquals('crab', $entity->getCode());
-    }
-
-    function testFindReferences ()
-    {
-        //setup
-        $this->createStronghold();
-        $this->createCrab();
-
-        $data = [
-            'clan_code' => 'crab',
-            'type_code' => 'stronghold'
-        ];
-        //work
-        $associations = $this->referenceManager->findReferences(Card::class, $data);
-        //assert
-        $this->assertEquals(2, count($associations));
-        $this->assertArrayHasKey('clan', $associations);
-        $this->assertArrayHasKey('type', $associations);
-        $this->assertArrayHasKey('joinColumns', $associations['clan']);
-        $this->assertArrayHasKey('className', $associations['clan']);
-        $this->assertArrayHasKey('clan_code', $associations['clan']['joinColumns']);
-        $this->assertArrayHasKey('referencedColumnName', $associations['clan']['joinColumns']['clan_code']);
-        $this->assertArrayHasKey('referencedValue', $associations['clan']['joinColumns']['clan_code']);
-    }
-    
-    function testFindForeignKeyValues()
+    function testFindForeignKeyValues ()
     {
         //setup
         $this->createCycleCore();
@@ -177,9 +134,7 @@ class AssociationNormalizerTest extends KernelTestCase
             "cycle_code" => "core"
         ];
         //work
-        $normalizer = new AssociationNormalizer($this->referenceManager, $this->serializer);
-        $references = $this->referenceManager->findReferences(Pack::class, $data);
-        $foreignKeyValues = $normalizer->findForeignKeyValues($references);
+        $foreignKeyValues = $this->objectManager->findForeignKeyValues(Pack::class, $data);
         //assert
         $this->assertEquals(1, count($foreignKeyValues));
         $foreignKeyValue = $foreignKeyValues[0];

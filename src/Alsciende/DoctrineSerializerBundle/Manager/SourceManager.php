@@ -16,16 +16,16 @@ class SourceManager
     /* @var array */
     private $ordered;
 
-    /* @var ReferenceManagerInterface */
-    private $referenceManager;
+    /* @var ObjectManagerInterface */
+    private $objectManager;
     
     private $group;
     
     private $path;
     
-    public function __construct (ReferenceManagerInterface $referenceManager, $group, $path)
+    public function __construct (ObjectManagerInterface $objectManager, $group, $path)
     {
-        $this->referenceManager = $referenceManager;
+        $this->objectManager = $objectManager;
         $this->group = $group;
         $this->path = $path;
         
@@ -117,7 +117,7 @@ class SourceManager
      */
     public function allTargetEntitiesAreKnown ($className, $classes)
     {
-        $dependencies = $this->referenceManager->getDependingClassNames($className);
+        $dependencies = $this->objectManager->getDependingClassNames($className);
         foreach(array_values($dependencies) as $dependency) {
             if (!in_array($dependency, $classes)) {
                 return false;
