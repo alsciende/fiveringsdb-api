@@ -194,7 +194,8 @@ class AssociationNormalizerTest extends KernelTestCase
         ];
         //work
         $normalizer = new AssociationNormalizer($this->em);
-        $references = $normalizer->findReferences($data, Pack::class);
+        $classMetadata = $this->em->getClassMetadata(Pack::class);
+        $references = $normalizer->findReferences($data, $classMetadata);
         $foreignKeyValues = $normalizer->findForeignKeyValues($references);
         //assert
         $this->assertEquals(1, count($foreignKeyValues));
