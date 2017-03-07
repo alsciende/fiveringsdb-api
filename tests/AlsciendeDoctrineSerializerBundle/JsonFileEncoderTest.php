@@ -21,11 +21,7 @@ class JsonFileEncoderTest extends PHPUnit_Framework_TestCase
     {
         $path = __DIR__ . "/DataFixtures";
         
-        $source = new \Alsciende\DoctrineSerializerBundle\Model\Source([
-            "break" => null,
-            "path" => $path,
-            "className" => Clan::class
-        ]);
+        $source = new \Alsciende\DoctrineSerializerBundle\Model\Source(Clan::class, $path);
 
         $encoder = new JsonFileEncoder();
         $files = $encoder->decodeFile($source, "$path/Clan.json");
@@ -37,11 +33,7 @@ class JsonFileEncoderTest extends PHPUnit_Framework_TestCase
     {
         $path = __DIR__ . "/DataFixtures";
 
-        $source = new \Alsciende\DoctrineSerializerBundle\Model\Source([
-            "break" => "code",
-            "path" => $path,
-            "className" => Card::class
-        ]);
+        $source = new \Alsciende\DoctrineSerializerBundle\Model\Source(Card::class, $path);
 
         $encoder = new JsonFileEncoder();
         $files = $encoder->decodeFile($source, "$path/Card/01001.json");
@@ -53,11 +45,7 @@ class JsonFileEncoderTest extends PHPUnit_Framework_TestCase
     {
         $path = __DIR__ . "/DataFixtures";
 
-        $source = new \Alsciende\DoctrineSerializerBundle\Model\Source([
-            "break" => "code",
-            "path" => $path,
-            "className" => Card::class
-        ]);
+        $source = new \Alsciende\DoctrineSerializerBundle\Model\Source(Card::class, $path);
 
         $encoder = new JsonFileEncoder();
         $files = $encoder->decodeDirectory($source, "$path/Card");
@@ -69,11 +57,7 @@ class JsonFileEncoderTest extends PHPUnit_Framework_TestCase
     {
         $path = __DIR__ . "/DataFixtures";
 
-        $source = new \Alsciende\DoctrineSerializerBundle\Model\Source([
-            "break" => null,
-            "path" => $path,
-            "className" => Clan::class
-        ]);
+        $source = new \Alsciende\DoctrineSerializerBundle\Model\Source(Clan::class, $path);
 
         $encoder = new JsonFileEncoder();
         $files = $encoder->decode($source);
@@ -85,11 +69,7 @@ class JsonFileEncoderTest extends PHPUnit_Framework_TestCase
     {
         $path = __DIR__ . "/DataFixtures";
 
-        $source = new \Alsciende\DoctrineSerializerBundle\Model\Source([
-            "break" => null,
-            "path" => $path,
-            "className" => Type::class
-        ]);
+        $source = new \Alsciende\DoctrineSerializerBundle\Model\Source(Type::class, $path);
 
         $encoder = new JsonFileEncoder();
         $files = $encoder->decode($source);
@@ -101,11 +81,7 @@ class JsonFileEncoderTest extends PHPUnit_Framework_TestCase
     {
         $path = __DIR__ . "/DataFixtures";
 
-        $source = new \Alsciende\DoctrineSerializerBundle\Model\Source([
-            "break" => "code",
-            "path" => $path,
-            "className" => Card::class
-        ]);
+        $source = new \Alsciende\DoctrineSerializerBundle\Model\Source(Card::class, $path, "code");
 
         $encoder = new JsonFileEncoder();
         $files = $encoder->decode($source);
@@ -117,11 +93,7 @@ class JsonFileEncoderTest extends PHPUnit_Framework_TestCase
     {
         $path = __DIR__ . "/DataFixtures";
 
-        $source = new \Alsciende\DoctrineSerializerBundle\Model\Source([
-            "break" => "pack_code",
-            "path" => $path,
-            "className" => PackSlot::class
-        ]);
+        $source = new \Alsciende\DoctrineSerializerBundle\Model\Source(PackSlot::class, $path, "pack_code");
 
         $encoder = new JsonFileEncoder();
         $files = $encoder->decode($source);

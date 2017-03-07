@@ -33,20 +33,20 @@ class JsonFileEncoder
     public function decode (Model\Source $source)
     {
         
-        $parts = explode('\\', $source->className);
-        $path = $source->path . "/" . array_pop($parts);
+        $parts = explode('\\', $source->getClassName());
+        $path = $source->getPath() . "/" . array_pop($parts);
 
-        if(isset($source->break)) {
-            if(file_exists("$path") and is_dir("$path")) {
-                return $this->decodeDirectory($source, "$path");
-            } else {
-                throw new \Exception("Directory $path not found");
-            }
-        } else {
+        if($source->getBreak() === null) {
             if(file_exists("$path.json") and is_file("$path.json")) {
                 return $this->decodeFile($source, "$path.json");
             } else {
                 throw new \Exception("File $path.json not found");
+            }
+        } else {
+            if(file_exists("$path") and is_dir("$path")) {
+                return $this->decodeDirectory($source, "$path");
+            } else {
+                throw new \Exception("Directory $path not found");
             }
         }
     }

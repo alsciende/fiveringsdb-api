@@ -16,15 +16,20 @@ class SourceManager
     /* @var array */
     private $ordered;
 
+    /* @var ReferenceManagerInterface */
+    private $referenceManager;
+    
     private $group;
     
     private $path;
     
-    public function __construct ($group, $path)
+    public function __construct (ReferenceManagerInterface $referenceManager, $group, $path)
     {
-        $this->sources = [];
+        $this->referenceManager = $referenceManager;
         $this->group = $group;
         $this->path = $path;
+        
+        $this->sources = [];
     }
 
     /**
@@ -48,11 +53,11 @@ class SourceManager
      */
     public function addSource (\Alsciende\DoctrineSerializerBundle\Model\Source $source)
     {
-        if(!isset($source->path)) {
-            $source->path = $this->path;
+        if($source->getPath() === null) {
+            $source->setPath($this->path);
         }
-        if(!isset($source->group)) {
-            $source->group = $this->group;
+        if($source->getGroup() === null) {
+            $source->setGroup($this->group);
         }
         $this->sources[] = $source;
     }
@@ -70,14 +75,14 @@ class SourceManager
             $next = $this->findNextResolvedSource($this->sources, $classes);
             if ($next === null) {
                 $unresolvedClasses = array_map(function (\Alsciende\DoctrineSerializerBundle\Model\Source $source) {
-                    return $source->className;
+                    return $source->getClassName();
                 }, $this->sources);
                 throw new \InvalidArgumentException("Sources contain a cycle of dependencies, or a dependency is not configured as a Source.\nUnresolved classes are: " . implode(", ", $unresolvedClasses). ".\nResolved classes are : ". implode(", ", $classes).".");
             }
 
             $source = $this->sources[$next];
             $sources[] = $source;
-            $classes[] = $source->className;
+            $classes[] = $source->getClassName();
             array_splice($this->sources, $next, 1);
         }
         
@@ -94,7 +99,7 @@ class SourceManager
     public function findNextResolvedSource ($sources, $classes)
     {
         foreach ($sources as $index => $source) {
-            $resolved = $this->allTargetEntitiesAreKnown($source->classMetadata, $classes);
+            $resolved = $this->allTargetEntitiesAreKnown($source->getClassName(), $classes);
             if($resolved) {
                 return $index;
             }
@@ -106,17 +111,15 @@ class SourceManager
     /**
      * Return true if all target entities of the association mappings of $classMetadata are listed in $classes
      * 
-     * @param \Doctrine\ORM\Mapping\ClassMetadata $classMetadata
+     * @param string $className
      * @param string[] $classes
      * @return boolean
      */
-    public function allTargetEntitiesAreKnown (\Doctrine\ORM\Mapping\ClassMetadata $classMetadata, $classes)
+    public function allTargetEntitiesAreKnown ($className, $classes)
     {
-        foreach ($classMetadata->getAssociationMappings() as $mapping) {
-            if(!$mapping['isOwningSide']) {
-                continue;
-            }
-            if (!in_array($mapping['targetEntity'], $classes)) {
+        $dependencies = $this->referenceManager->getClassDependencies($className);
+        foreach($dependencies as $dependency) {
+            if (!in_array($dependency, $classes)) {
                 return false;
             }
         }

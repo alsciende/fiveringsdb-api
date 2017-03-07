@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use Alsciende\DoctrineSerializerBundle\Model\Source;
+use Alsciende\DoctrineSerializerBundle\Annotation\Source;
 
 /**
  * Card

@@ -4,31 +4,114 @@ namespace Alsciende\DoctrineSerializerBundle\Model;
 
 /**
  * Represents a data source, a table to be serialized/deserialized
- * 
- * @Annotation
- * @Target("CLASS")
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class Source extends \Doctrine\Common\Annotations\Annotation
+class Source
 {
     
     /* @var string */
-    public $break;
+    private $break;
 
     /* @var string */
-    public $group;
+    private $group;
 
     /* @var string */
-    public $path;
+    private $path;
 
     /* @var string */
-    public $className;
+    private $className;
 
-    /* @var \Doctrine\ORM\EntityManager */
-    public $entityManager;
+    function __construct ($className, $path, $break = null, $group = null)
+    {
+        $this->className = $className;
+        $this->path = $path;
+        $this->break = $break;
+        $this->group = $group;
+    }
+    
+    /**
+     * 
+     * @return string
+     */
+    function getBreak ()
+    {
+        return $this->break;
+    }
 
-    /* @var Doctrine\ORM\Mapping\ClassMetadata */
-    public $classMetadata;
+    /**
+     * 
+     * @return string
+     */
+    function getGroup ()
+    {
+        return $this->group;
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    function getPath ()
+    {
+        return $this->path;
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    function getClassName ()
+    {
+        return $this->className;
+    }
+
+    /**
+     * 
+     * @param string $break
+     * @return Source
+     */
+    function setBreak ($break)
+    {
+        $this->break = $break;
+        
+        return $this;
+    }
+
+    /**
+     * 
+     * @param string $group
+     * @return Source
+     */
+    function setGroup ($group)
+    {
+        $this->group = $group;
+        
+        return $this;
+    }
+
+    /**
+     * 
+     * @param string $path
+     * @return Source
+     */
+    function setPath ($path)
+    {
+        $this->path = $path;
+        
+        return $this;
+    }
+
+    /**
+     * 
+     * @param string $className
+     * @return Source
+     */
+    function setClassName ($className)
+    {
+        $this->className = $className;
+        
+        return $this;
+    }
 
 }

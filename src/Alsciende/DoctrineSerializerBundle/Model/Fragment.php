@@ -11,28 +11,154 @@ class Fragment
 {
     
     /* @var Source */
-    public $source;
+    private $source;
     
     /* @var string */
-    public $path;
+    private $path;
 
     /* @var object */
-    public $entity;
+    private $entity;
     
     /* @var array */
-    public $original;
+    private $original;
 
     /* @var array */
-    public $incoming;
+    private $incoming;
 
     /* @var array */
-    public $changes;
+    private $changes;
 
     function __construct (Source $source, $path, $incoming)
     {
         $this->source = $source;
         $this->path = $path;
         $this->incoming = $incoming;
+    }
+
+    /**
+     * 
+     * @return Source
+     */
+    function getSource ()
+    {
+        return $this->source;
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    function getPath ()
+    {
+        return $this->path;
+    }
+
+    /**
+     * 
+     * @return object
+     */
+    function getEntity ()
+    {
+        return $this->entity;
+    }
+
+    /**
+     * 
+     * @return array
+     */
+    function getOriginal ()
+    {
+        return $this->original;
+    }
+
+    /**
+     * 
+     * @return array
+     */
+    function getIncoming ()
+    {
+        return $this->incoming;
+    }
+
+    /**
+     * 
+     * @return array
+     */
+    function getChanges ()
+    {
+        return $this->changes;
+    }
+
+    /**
+     * 
+     * @param Source $source
+     * @return Fragment
+     */
+    function setSource ($source)
+    {
+        $this->source = $source;
+        
+        return $this;
+    }
+
+    /**
+     * 
+     * @param string $path
+     * @return Fragment
+     */
+    function setPath ($path)
+    {
+        $this->path = $path;
+        
+        return $this;
+    }
+
+    /**
+     * 
+     * @param object $entity
+     * @return Fragment
+     */
+    function setEntity ($entity)
+    {
+        $this->entity = $entity;
+        
+        return $this;
+    }
+
+    /**
+     * 
+     * @param array $original
+     * @return Fragment
+     */
+    function setOriginal ($original)
+    {
+        $this->original = $original;
+        
+        return $this;
+    }
+
+    /**
+     * 
+     * @param array $incoming
+     * @return Fragment
+     */
+    function setIncoming ($incoming)
+    {
+        $this->incoming = $incoming;
+        
+        return $this;
+    }
+
+    /**
+     * 
+     * @param array $changes
+     * @return Fragment
+     */
+    function setChanges ($changes)
+    {
+        $this->changes = $changes;
+        
+        return $this;
     }
 
 }

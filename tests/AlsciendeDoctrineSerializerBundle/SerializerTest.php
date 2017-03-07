@@ -28,6 +28,9 @@ class SerializerTest extends \Symfony\Bundle\FrameworkBundle\Test\KernelTestCase
                 ->get('doctrine')
                 ->getManager();
         
+        $this->referenceManager = static::$kernel->getContainer()
+                ->get('alsciende.doctrine_serializer.reference_manager.entity');
+        
         $this->validator = static::$kernel->getContainer()
                 ->get('validator');
 
@@ -40,7 +43,7 @@ class SerializerTest extends \Symfony\Bundle\FrameworkBundle\Test\KernelTestCase
     public function testImport ()
     {
         $path = __DIR__ . "/DataFixtures";
-        $sourceManager = new \Alsciende\DoctrineSerializerBundle\Manager\SourceManager('doctrine_serializer', $path);
+        $sourceManager = new \Alsciende\DoctrineSerializerBundle\Manager\SourceManager($this->referenceManager, 'doctrine_serializer', $path);
         $serializer = new \Alsciende\DoctrineSerializerBundle\Serializer($this->em, $sourceManager, $this->validator, $this->reader);
         
         $result = $serializer->import();
