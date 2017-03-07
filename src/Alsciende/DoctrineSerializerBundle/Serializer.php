@@ -10,9 +10,6 @@ namespace Alsciende\DoctrineSerializerBundle;
 class Serializer
 {
 
-    /* @var \Doctrine\ORM\EntityManager */
-    private $entityManager;
-
     /* @var Manager\SourceManager */
     private $sourceManager;
 
@@ -28,14 +25,13 @@ class Serializer
     /* @var Manager\ReferenceManagerInterface */
     private $referenceManager;
 
-    public function __construct (\Doctrine\ORM\EntityManager $entityManager, Manager\SourceManager $sourceManager, \Symfony\Component\Validator\Validator\RecursiveValidator $validator, \Doctrine\Common\Annotations\Reader $reader, \Alsciende\DoctrineSerializerBundle\AssociationNormalizer $normalizer, Manager\ReferenceManagerInterface $referenceManager)
+    public function __construct (Manager\ReferenceManagerInterface $referenceManager, Manager\SourceManager $sourceManager, \Symfony\Component\Validator\Validator\RecursiveValidator $validator, \Doctrine\Common\Annotations\Reader $reader, \Alsciende\DoctrineSerializerBundle\AssociationNormalizer $normalizer)
     {
-        $this->entityManager = $entityManager;
+        $this->referenceManager = $referenceManager;
         $this->sourceManager = $sourceManager;
         $this->validator = $validator;
         $this->reader = $reader;
         $this->normalizer = $normalizer;
-        $this->referenceManager = $referenceManager;
     }
 
     /**
@@ -48,9 +44,8 @@ class Serializer
         /* @var $encoder JsonFileEncoder */
         $encoder = new JsonFileEncoder();
 
-        $allMetadata = $this->entityManager->getMetadataFactory()->getAllMetadata();
-        foreach($allMetadata as $metadata) {
-            $className = $metadata->getName();
+        $classNames = $this->referenceManager->getAllManagedClassNames();
+        foreach($classNames as $className) {
             /* @var $annotation \Alsciende\DoctrineSerializerBundle\Annotation\Source */
             $annotation = $this->reader->getClassAnnotation(new \ReflectionClass($className), 'Alsciende\DoctrineSerializerBundle\Annotation\Source');
             if ($annotation) {
@@ -70,7 +65,7 @@ class Serializer
                 $this->importFragment($fragment);
             }
 
-            $this->entityManager->flush();
+            $this->referenceManager->flush();
 
             $result = array_merge($result, $fragments);
         }
@@ -85,8 +80,6 @@ class Serializer
      */
     public function importFragment (Model\Fragment $fragment)
     {
-        $classMetadata = $this->entityManager->getClassMetadata($fragment->getSource()->getClassName());
-
         // find the entity based on the incoming identifier
         $fragment->setEntity($this->referenceManager->findEntity($fragment->getSource()->getClassName(), $fragment->getIncoming()));
 
@@ -113,13 +106,15 @@ class Serializer
         }
         
         // update the entity with the field updated in incoming
+        $updatedFields = [];
         foreach ($fragment->getChanges() as $field => $value) {
             if (isset($renamedKeys[$field])) {
                 $field = $renamedKeys[$field];
                 $value = $incoming[$field];
             }
-            $classMetadata->setFieldValue($fragment->getEntity(), $field, $value);
+            $updatedFields[$field] = $value;
         }
+        $this->referenceManager->updateEntity($fragment->getEntity(), $updatedFields);
         
         $fragment->setIncoming($incoming);
 
@@ -128,8 +123,6 @@ class Serializer
             $errorsString = (string) $errors;
             throw new \Exception($errorsString);
         }
-
-        $this->entityManager->merge($fragment->getEntity());
     }
 
 

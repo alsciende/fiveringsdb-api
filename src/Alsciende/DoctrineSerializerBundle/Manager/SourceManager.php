@@ -63,7 +63,7 @@ class SourceManager
     }
 
     /**
-     * Order Sources by dependancies
+     * Order Sources by dependencies
      * Sources can only depend on Sources before them in the list
      */
     public function orderSources ()
@@ -109,7 +109,7 @@ class SourceManager
     }
 
     /**
-     * Return true if all target entities of the association mappings of $classMetadata are listed in $classes
+     * Return true if all target entities of $className are listed in $classes
      * 
      * @param string $className
      * @param string[] $classes
@@ -117,7 +117,7 @@ class SourceManager
      */
     public function allTargetEntitiesAreKnown ($className, $classes)
     {
-        $dependencies = $this->referenceManager->getClassDependencies($className);
+        $dependencies = $this->referenceManager->getDependingClassNames($className);
         foreach($dependencies as $dependency) {
             if (!in_array($dependency, $classes)) {
                 return false;

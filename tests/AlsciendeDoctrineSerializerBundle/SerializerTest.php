@@ -47,7 +47,7 @@ class SerializerTest extends \Symfony\Bundle\FrameworkBundle\Test\KernelTestCase
     {
         $path = __DIR__ . "/DataFixtures";
         $sourceManager = new \Alsciende\DoctrineSerializerBundle\Manager\SourceManager($this->referenceManager, 'doctrine_serializer', $path);
-        $serializer = new \Alsciende\DoctrineSerializerBundle\Serializer($this->em, $sourceManager, $this->validator, $this->reader, $this->normalizer, $this->referenceManager);
+        $serializer = new \Alsciende\DoctrineSerializerBundle\Serializer($this->referenceManager, $sourceManager, $this->validator, $this->reader, $this->normalizer);
         
         $result = $serializer->import();
     }

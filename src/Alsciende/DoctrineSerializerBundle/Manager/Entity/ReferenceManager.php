@@ -21,16 +21,49 @@ class ReferenceManager implements \Alsciende\DoctrineSerializerBundle\Manager\Re
     /**
      * {@inheritDoc}
      */
-    function getClassDependencies($className)
+    function getDependingClassNames($className)
     {
-        $classMetadata = $this->entityManager->getClassMetadata($className);
         $result = [];
+        $classMetadata = $this->entityManager->getClassMetadata($className);
         foreach ($classMetadata->getAssociationMappings() as $mapping) {
             if($mapping['isOwningSide']) {
                 $result[] = $mapping['targetEntity'];
             }
         }
         return $result;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    function getAllManagedClassNames()
+    {
+        $result = [];
+        $allMetadata = $this->entityManager->getMetadataFactory()->getAllMetadata();
+        foreach($allMetadata as $metadata) {
+            $result[] = $metadata->getName();
+        }
+        return $result;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    function flush()
+    {
+        $this->entityManager->flush();
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    function updateEntity($entity, $update)
+    {
+        $classMetadata = $this->entityManager->getClassMetadata(get_class($entity));
+        foreach($update as $field => $value) {
+            $classMetadata->setFieldValue($entity, $field, $value);
+        }
+        $this->entityManager->merge($entity);
     }
     
     /**
