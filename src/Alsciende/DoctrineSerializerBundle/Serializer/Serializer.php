@@ -1,6 +1,6 @@
 <?php
 
-namespace Alsciende\DoctrineSerializerBundle;
+namespace Alsciende\DoctrineSerializerBundle\Serializer;
 
 /**
  * Description of Serializer
@@ -10,28 +10,50 @@ namespace Alsciende\DoctrineSerializerBundle;
 class Serializer
 {
 
-    /* @var Manager\SourceManager */
-    private $sourceManager;
+    /**
+     * @var \Alsciende\DoctrineSerializerBundle\Scanner\Scanner
+     */
+    private $scanner;
 
-    /* @var \Symfony\Component\Validator\Validator\RecursiveValidator */
-    private $validator;
+    /**
+     * @var \Alsciende\DoctrineSerializerBundle\Encoder\Encoder
+     */
+    private $encoder;
 
-    /* @var Normalizer */
+    /**
+     * @var \Alsciende\DoctrineSerializerBundle\Normalizer\Normalizer
+     */
     private $normalizer;
 
-    /* @var \Doctrine\Common\Annotations\Reader */
+    /**
+     * @var \Alsciende\DoctrineSerializerBundle\Manager\SourceManager
+     */
+    private $sourceManager;
+
+    /**
+     * @var \Symfony\Component\Validator\Validator\RecursiveValidator
+     */
+    private $validator;
+
+    /**
+     * @var \Doctrine\Common\Annotations\Reader
+     */
     private $reader;
 
-    /* @var Manager\ObjectManagerInterface */
+    /**
+     * @var \Alsciende\DoctrineSerializerBundle\Manager\ObjectManagerInterface
+     */
     private $objectManager;
 
-    public function __construct (Manager\ObjectManagerInterface $objectManager, Manager\SourceManager $sourceManager, \Symfony\Component\Validator\Validator\RecursiveValidator $validator, \Doctrine\Common\Annotations\Reader $reader, \Alsciende\DoctrineSerializerBundle\Normalizer $normalizer)
+    public function __construct (\Alsciende\DoctrineSerializerBundle\Scanner\Scanner $scanner, \Alsciende\DoctrineSerializerBundle\Encoder\Encoder $encoder, \Alsciende\DoctrineSerializerBundle\Normalizer\Normalizer $normalizer, \Alsciende\DoctrineSerializerBundle\Manager\ObjectManagerInterface $objectManager, \Alsciende\DoctrineSerializerBundle\Manager\SourceManager $sourceManager, \Symfony\Component\Validator\Validator\RecursiveValidator $validator, \Doctrine\Common\Annotations\Reader $reader)
     {
+        $this->scanner = $scanner;
+        $this->encoder = $encoder;
+        $this->normalizer = $normalizer;
         $this->objectManager = $objectManager;
         $this->sourceManager = $sourceManager;
         $this->validator = $validator;
         $this->reader = $reader;
-        $this->normalizer = $normalizer;
     }
 
     /**
@@ -40,37 +62,47 @@ class Serializer
      */
     public function import ()
     {
+        $result = [];
+        foreach($this->getSources() as $source) {
+            $result = array_merge($result, $this->importSource($source));
+        }
+        return $result;
+    }
 
-        /* @var $encoder JsonFileEncoder */
-        $encoder = new JsonFileEncoder();
+    
+    
+    public function importSource (\Alsciende\DoctrineSerializerBundle\Model\Source $source)
+    {
+        $result = [];
+        foreach($this->scanner->scan($source) as $block) {
+            $result = array_merge($result, $this->importBlock($block));
+        }
+        $this->objectManager->flush();
+        return $result;
+    }
 
+    public function importBlock (\Alsciende\DoctrineSerializerBundle\Model\Block $block)
+    {
+        $result = [];
+        foreach($this->encoder->decode($block) as $fragment) {
+            $this->importFragment($fragment);
+            $result[] = $fragment;
+        }
+        return $result;
+    }
+
+    public function getSources ()
+    {
         $classNames = $this->objectManager->getAllManagedClassNames();
         foreach($classNames as $className) {
             /* @var $annotation \Alsciende\DoctrineSerializerBundle\Annotation\Source */
             $annotation = $this->reader->getClassAnnotation(new \ReflectionClass($className), 'Alsciende\DoctrineSerializerBundle\Annotation\Source');
             if($annotation) {
-                $source = new Model\Source($className, $annotation->path, $annotation->break, $annotation->group);
+                $source = new \Alsciende\DoctrineSerializerBundle\Model\Source($className, $annotation->path, $annotation->break, $annotation->group);
                 $this->sourceManager->addSource($source);
             }
         }
-        $sources = $this->sourceManager->getSources();
-
-        $result = [];
-
-        foreach($sources as $source) {
-
-            $fragments = $encoder->decode($source);
-
-            foreach($fragments as $fragment) {
-                $this->importFragment($fragment);
-            }
-
-            $this->objectManager->flush();
-
-            $result = array_merge($result, $fragments);
-        }
-
-        return $result;
+        return $this->sourceManager->getSources();
     }
 
     /**
@@ -78,11 +110,11 @@ class Serializer
      * @param \Alsciende\DoctrineSerializerBundle\Model\Fragment $fragment
      * @throws \Exception
      */
-    public function importFragment (Model\Fragment $fragment)
+    public function importFragment (\Alsciende\DoctrineSerializerBundle\Model\Fragment $fragment)
     {
-        $incoming = $fragment->getIncoming();
-        $className = $fragment->getSource()->getClassName();
-        $group = $fragment->getSource()->getGroup();
+        $incoming = $fragment->getData();
+        $className = $fragment->getBlock()->getSource()->getClassName();
+        $group = $fragment->getBlock()->getSource()->getGroup();
 
         // find the entity based on the incoming identifier
         $entity = $this->findOrCreateObject($className, $incoming);
@@ -116,17 +148,17 @@ class Serializer
             $updatedFields[$field] = $value;
         }
         $this->objectManager->updateObject($entity, $updatedFields);
-        
+
         $errors = $this->validator->validate($entity);
         if(count($errors) > 0) {
             $errorsString = (string) $errors;
             throw new \Exception($errorsString);
         }
-        
+
         $fragment->setEntity($entity);
         $fragment->setOriginal($original);
         $fragment->setChanges($changes);
-        $fragment->setIncoming($incoming);
+        $fragment->setData($incoming);
     }
 
     /**

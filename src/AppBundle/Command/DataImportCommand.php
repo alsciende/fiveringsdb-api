@@ -27,7 +27,7 @@ class DataImportCommand extends ContainerAwareCommand
         /* @var $serializer \Alsciende\DoctrineSerializerBundle\Serializer */
         $serializer = $this->getContainer()->get('alsciende.doctrine_serializer.serializer');
         $result = $serializer->import();
-
+        /* @var $fragment \Alsciende\DoctrineSerializerBundle\Model\Fragment */
         foreach ($result as $fragment) {
             if (!empty($fragment->getChanges())) {
                 $output->writeln("The data was:");
@@ -35,7 +35,7 @@ class DataImportCommand extends ContainerAwareCommand
                 $output->writeln("The changes that were applied are:");
                 dump($fragment->getChanges());
             } else {
-                $output->writeln("No change found in " . $fragment->getPath());
+                $output->writeln("No change found in " . $fragment->getBlock()->getPath());
             }
         }
     }

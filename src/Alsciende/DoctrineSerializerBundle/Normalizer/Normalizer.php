@@ -1,6 +1,6 @@
 <?php
 
-namespace Alsciende\DoctrineSerializerBundle;
+namespace Alsciende\DoctrineSerializerBundle\Normalizer;
 
 /**
  * Description of Normalizer
@@ -10,13 +10,13 @@ namespace Alsciende\DoctrineSerializerBundle;
 class Normalizer
 {
 
-    /* @var Manager\ObjectManagerInterface */
+    /* @var \Alsciende\DoctrineSerializerBundle\Manager\ObjectManagerInterface */
     private $objectManager;
 
     /* @var \Symfony\Component\Serializer\Serializer */
     private $serializer;
 
-    function __construct (Manager\ObjectManagerInterface $objectManager, \Symfony\Component\Serializer\Serializer $serializer)
+    function __construct (\Alsciende\DoctrineSerializerBundle\Manager\ObjectManagerInterface $objectManager, \Symfony\Component\Serializer\Serializer $serializer)
     {
         $this->objectManager = $objectManager;
         $this->serializer = $serializer;

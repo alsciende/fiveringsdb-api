@@ -28,8 +28,8 @@ class SerializerTest extends \Symfony\Bundle\FrameworkBundle\Test\KernelTestCase
                 ->get('doctrine')
                 ->getManager();
 
-        $this->objectManager = static::$kernel->getContainer()
-                ->get('alsciende.doctrine_serializer.reference_manager.entity');
+        $this->serializer = static::$kernel->getContainer()
+                ->get('serializer');
 
         $this->validator = static::$kernel->getContainer()
                 ->get('validator');
@@ -37,19 +37,20 @@ class SerializerTest extends \Symfony\Bundle\FrameworkBundle\Test\KernelTestCase
         $this->reader = static::$kernel->getContainer()
                 ->get('annotation_reader');
 
-        $this->normalizer = static::$kernel->getContainer()
-                ->get('alsciende.doctrine_serializer.normalizer');
-
         $this->clearDatabase();
     }
 
     public function testImport ()
     {
         $path = __DIR__ . "/DataFixtures";
-        $sourceManager = new \Alsciende\DoctrineSerializerBundle\Manager\SourceManager($this->objectManager, 'doctrine_serializer', $path);
-        $serializer = new \Alsciende\DoctrineSerializerBundle\Serializer($this->objectManager, $sourceManager, $this->validator, $this->reader, $this->normalizer);
+        $objectManager = new \Alsciende\DoctrineSerializerBundle\Manager\Entity\ObjectManager($this->em);
+        $sourceManager = new \Alsciende\DoctrineSerializerBundle\Manager\SourceManager($objectManager, 'doctrine_serializer', $path);
+        $scanner = new \Alsciende\DoctrineSerializerBundle\Scanner\Scanner();
+        $encoder = new \Alsciende\DoctrineSerializerBundle\Encoder\Encoder();
+        $normalizer = new \Alsciende\DoctrineSerializerBundle\Normalizer\Normalizer($objectManager, $this->serializer);
+        $serializer = new \Alsciende\DoctrineSerializerBundle\Serializer\Serializer($scanner, $encoder, $normalizer, $objectManager, $sourceManager, $this->validator, $this->reader);
 
-        $result = $serializer->import();
+        $serializer->import();
     }
 
     /**

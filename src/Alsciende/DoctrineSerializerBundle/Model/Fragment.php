@@ -10,11 +10,11 @@ namespace Alsciende\DoctrineSerializerBundle\Model;
 class Fragment
 {
     
-    /* @var Source */
-    private $source;
-    
-    /* @var string */
-    private $path;
+    /* @var array */
+    private $data;
+
+    /* @var Block */
+    private $block;
 
     /* @var object */
     private $entity;
@@ -23,34 +23,11 @@ class Fragment
     private $original;
 
     /* @var array */
-    private $incoming;
-
-    /* @var array */
     private $changes;
 
-    function __construct (Source $source, $path, $incoming)
+    function __construct ($data)
     {
-        $this->source = $source;
-        $this->path = $path;
-        $this->incoming = $incoming;
-    }
-
-    /**
-     * 
-     * @return Source
-     */
-    function getSource ()
-    {
-        return $this->source;
-    }
-
-    /**
-     * 
-     * @return string
-     */
-    function getPath ()
-    {
-        return $this->path;
+        $this->data = $data;
     }
 
     /**
@@ -75,9 +52,9 @@ class Fragment
      * 
      * @return array
      */
-    function getIncoming ()
+    function getData ()
     {
-        return $this->incoming;
+        return $this->data;
     }
 
     /**
@@ -87,30 +64,6 @@ class Fragment
     function getChanges ()
     {
         return $this->changes;
-    }
-
-    /**
-     * 
-     * @param Source $source
-     * @return Fragment
-     */
-    function setSource ($source)
-    {
-        $this->source = $source;
-        
-        return $this;
-    }
-
-    /**
-     * 
-     * @param string $path
-     * @return Fragment
-     */
-    function setPath ($path)
-    {
-        $this->path = $path;
-        
-        return $this;
     }
 
     /**
@@ -139,12 +92,12 @@ class Fragment
 
     /**
      * 
-     * @param array $incoming
+     * @param array $data
      * @return Fragment
      */
-    function setIncoming ($incoming)
+    function setData ($data)
     {
-        $this->incoming = $incoming;
+        $this->data = $data;
         
         return $this;
     }
@@ -160,5 +113,27 @@ class Fragment
         
         return $this;
     }
+
+    /**
+     * 
+     * @return Block
+     */
+    function getBlock ()
+    {
+        return $this->block;
+    }
+
+    /**
+     * 
+     * @param Block $block
+     * @return Fragment
+     */
+    function setBlock ($block)
+    {
+        $this->block = $block;
+        
+        return $this;
+    }
+
 
 }

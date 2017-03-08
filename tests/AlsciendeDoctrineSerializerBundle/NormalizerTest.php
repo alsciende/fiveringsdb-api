@@ -2,7 +2,7 @@
 
 namespace Tests\AlsciendeDoctrineSerializerBundle;
 
-use Alsciende\DoctrineSerializerBundle\Normalizer;
+use Alsciende\DoctrineSerializerBundle\Normalizer\Normalizer;
 use AppBundle\Entity\Card;
 use AppBundle\Entity\Clan;
 use AppBundle\Entity\Cycle;

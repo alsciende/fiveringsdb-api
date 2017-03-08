@@ -7,10 +7,25 @@ services:
         class: Alsciende\DoctrineSerializerBundle\Manager\Entity\ObjectManager
         arguments: ["@doctrine.orm.entity_manager"]
 
-    alsciende.doctrine_serializer.serializer:
-        class: Alsciende\DoctrineSerializerBundle\Serializer
-        arguments: ["@alsciende.doctrine_serializer.reference_manager.entity","@alsciende.doctrine_serializer.source_manager","@validator","@annotation_reader","@alsciende.doctrine_serializer.normalizer"]
+    alsciende.doctrine_serializer.scanner:
+        class: Alsciende\DoctrineSerializerBundle\Scanner\Scanner
+        arguments: []
+
+    alsciende.doctrine_serializer.encoder:
+        class: Alsciende\DoctrineSerializerBundle\Encoder\Encoder
+        arguments: []
 
     alsciende.doctrine_serializer.normalizer:
-        class: Alsciende\DoctrineSerializerBundle\Normalizer
+        class: Alsciende\DoctrineSerializerBundle\Normalizer\Normalizer
         arguments: ["@alsciende.doctrine_serializer.reference_manager.entity","@serializer"]
+
+    alsciende.doctrine_serializer.serializer:
+        class: Alsciende\DoctrineSerializerBundle\Serializer\Serializer
+        arguments: 
+            - "@alsciende.doctrine_serializer.scanner"
+            - "@alsciende.doctrine_serializer.encoder"
+            - "@alsciende.doctrine_serializer.normalizer"
+            - "@alsciende.doctrine_serializer.reference_manager.entity"
+            - "@alsciende.doctrine_serializer.source_manager"
+            - "@validator"
+            - "@annotation_reader"
