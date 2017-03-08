@@ -9,14 +9,14 @@ namespace Alsciende\DoctrineSerializerBundle;
  */
 class Serializer
 {
-    
+
     /* @var Manager\SourceManager */
     private $sourceManager;
 
     /* @var \Symfony\Component\Validator\Validator\RecursiveValidator */
     private $validator;
 
-    /* @var AssociationNormalizer */
+    /* @var Normalizer */
     private $normalizer;
 
     /* @var \Doctrine\Common\Annotations\Reader */
@@ -25,7 +25,7 @@ class Serializer
     /* @var Manager\ObjectManagerInterface */
     private $objectManager;
 
-    public function __construct (Manager\ObjectManagerInterface $objectManager, Manager\SourceManager $sourceManager, \Symfony\Component\Validator\Validator\RecursiveValidator $validator, \Doctrine\Common\Annotations\Reader $reader, \Alsciende\DoctrineSerializerBundle\AssociationNormalizer $normalizer)
+    public function __construct (Manager\ObjectManagerInterface $objectManager, Manager\SourceManager $sourceManager, \Symfony\Component\Validator\Validator\RecursiveValidator $validator, \Doctrine\Common\Annotations\Reader $reader, \Alsciende\DoctrineSerializerBundle\Normalizer $normalizer)
     {
         $this->objectManager = $objectManager;
         $this->sourceManager = $sourceManager;
@@ -80,48 +80,53 @@ class Serializer
      */
     public function importFragment (Model\Fragment $fragment)
     {
+        $incoming = $fragment->getIncoming();
+        $className = $fragment->getSource()->getClassName();
+        $group = $fragment->getSource()->getGroup();
+
         // find the entity based on the incoming identifier
-        $fragment->setEntity($this->findOrCreateObject($fragment->getSource()->getClassName(), $fragment->getIncoming()));
+        $entity = $this->findOrCreateObject($className, $incoming);
 
         // normalize the entity in its original state
-        $fragment->setOriginal($this->normalizer->normalize($fragment->getEntity(), $fragment->getSource()->getGroup()));
+        $original = $this->normalizer->normalize($entity, $group);
 
         // compute changes between the normalized data
-        $fragment->setChanges(array_diff($fragment->getIncoming(), $fragment->getOriginal()));
+        $changes = array_diff($incoming, $original);
 
         // denormalize the associations in the incoming data
-        $findForeignKeyValues = $this->objectManager->findForeignKeyValues($fragment->getSource()->getClassName(), $fragment->getIncoming());
+        $associations = $this->objectManager->findAssociations($className, $incoming);
 
         $renamedKeys = [];
-        $incoming = $fragment->getIncoming();
-
-        // replace the references with foreignKeys
-        foreach($findForeignKeyValues as $findForeignKeyValue) {
-            foreach($findForeignKeyValue['joinColumns'] as $joinColumn) {
-                unset($incoming[$joinColumn]);
-                $renamedKeys[$joinColumn] = $findForeignKeyValue['foreignKey'];
+        // replace the references with associations
+        foreach($associations as $association) {
+            foreach($association['referenceKeys'] as $referenceKey) {
+                unset($incoming[$referenceKey]);
+                $renamedKeys[$referenceKey] = $association['associationKey'];
             }
-            $incoming[$findForeignKeyValue['foreignKey']] = $findForeignKeyValue['foreignValue'];
+            $incoming[$association['associationKey']] = $association['associationValue'];
         }
 
         // update the entity with the field updated in incoming
         $updatedFields = [];
-        foreach($fragment->getChanges() as $field => $value) {
+        foreach($changes as $field => $value) {
             if(isset($renamedKeys[$field])) {
                 $field = $renamedKeys[$field];
                 $value = $incoming[$field];
             }
             $updatedFields[$field] = $value;
         }
-        $this->objectManager->updateObject($fragment->getEntity(), $updatedFields);
-
-        $fragment->setIncoming($incoming);
-
-        $errors = $this->validator->validate($fragment->getEntity());
+        $this->objectManager->updateObject($entity, $updatedFields);
+        
+        $errors = $this->validator->validate($entity);
         if(count($errors) > 0) {
             $errorsString = (string) $errors;
             throw new \Exception($errorsString);
         }
+        
+        $fragment->setEntity($entity);
+        $fragment->setOriginal($original);
+        $fragment->setChanges($changes);
+        $fragment->setIncoming($incoming);
     }
 
     /**

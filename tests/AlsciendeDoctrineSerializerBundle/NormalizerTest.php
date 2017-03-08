@@ -2,7 +2,7 @@
 
 namespace Tests\AlsciendeDoctrineSerializerBundle;
 
-use Alsciende\DoctrineSerializerBundle\AssociationNormalizer;
+use Alsciende\DoctrineSerializerBundle\Normalizer;
 use AppBundle\Entity\Card;
 use AppBundle\Entity\Clan;
 use AppBundle\Entity\Cycle;
@@ -13,11 +13,11 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
- * Description of AssociationNormalizerTest
+ * Description of NormalizerTest
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class AssociationNormalizerTest extends KernelTestCase
+class NormalizerTest extends KernelTestCase
 {
 
     use DomainFixtures;
@@ -60,7 +60,7 @@ class AssociationNormalizerTest extends KernelTestCase
         $clan->setCode('crab');
         $clan->setName("Crab");
         //work
-        $normalizer = new AssociationNormalizer($this->objectManager, $this->serializer);
+        $normalizer = new Normalizer($this->objectManager, $this->serializer);
         $data = $normalizer->normalize($clan);
         //assert
         $this->assertEquals('crab', $data['code']);
@@ -80,7 +80,7 @@ class AssociationNormalizerTest extends KernelTestCase
         $card->setName("The Impregnable Fortress of the Crab");
         $card->setType($type);
         //work
-        $normalizer = new AssociationNormalizer($this->objectManager, $this->serializer);
+        $normalizer = new Normalizer($this->objectManager, $this->serializer);
         $data = $normalizer->normalize($card);
         //assert
         $this->assertEquals('01001', $data['code']);
@@ -98,7 +98,7 @@ class AssociationNormalizerTest extends KernelTestCase
         $pack->setCode('core');
         $pack->setCycle($cycle);
         //work
-        $normalizer = new AssociationNormalizer($this->objectManager, $this->serializer);
+        $normalizer = new Normalizer($this->objectManager, $this->serializer);
         $data = $normalizer->normalize($pack);
         //assert
         $this->assertEquals('core', $data['code']);
@@ -118,14 +118,14 @@ class AssociationNormalizerTest extends KernelTestCase
         $packslot->setPack($pack);
         $packslot->setQuantity(3);
         //work
-        $normalizer = new AssociationNormalizer($this->objectManager, $this->serializer);
+        $normalizer = new Normalizer($this->objectManager, $this->serializer);
         $data = $normalizer->normalize($packslot);
         //assert
         $this->assertEquals('core', $data['pack_code']);
         $this->assertEquals('01001', $data['card_code']);
     }
 
-    function testFindForeignKeyValues ()
+    function testFindAssociations ()
     {
         //setup
         $this->createCycleCore();
@@ -134,13 +134,13 @@ class AssociationNormalizerTest extends KernelTestCase
             "cycle_code" => "core"
         ];
         //work
-        $foreignKeyValues = $this->objectManager->findForeignKeyValues(Pack::class, $data);
+        $associations = $this->objectManager->findAssociations(Pack::class, $data);
         //assert
-        $this->assertEquals(1, count($foreignKeyValues));
-        $foreignKeyValue = $foreignKeyValues[0];
-        $this->assertEquals('cycle', $foreignKeyValue['foreignKey']);
-        $this->assertArrayHasKey('foreignValue', $foreignKeyValue);
-        $this->assertEquals('cycle_code', $foreignKeyValue['joinColumns'][0]);
+        $this->assertEquals(1, count($associations));
+        $association = $associations[0];
+        $this->assertEquals('cycle', $association['associationKey']);
+        $this->assertArrayHasKey('associationValue', $association);
+        $this->assertEquals('cycle_code', $association['referenceKeys'][0]);
     }
 
     /**

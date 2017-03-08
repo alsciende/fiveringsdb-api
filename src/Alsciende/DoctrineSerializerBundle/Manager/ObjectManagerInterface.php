@@ -23,7 +23,7 @@ interface ObjectManagerInterface
      * @param string $className
      * @return string[]
      */
-    function getDependingClassNames ($className);
+    function getAllTargetClasses ($className);
 
     /**
      * Returns the single identifier of a class. Throws an exception if the class
@@ -77,9 +77,9 @@ interface ObjectManagerInterface
      * Finds all the foreign keys in $data and the entity associated
      * 
      * eg ["article_id" => 2134] returns 
-     * array([ "foreignKey" => "article", "foreignValue" => (object Article), "joinColumns" => [ "article_id"] ])
+     * array([ "associationKey" => "article", "associationValue" => (object Article), "referenceKeys" => [ "article_id"] ])
      * 
      * @return array
      */
-    function findForeignKeyValues ($className, $data);
+    function findAssociations ($className, $data);
 }

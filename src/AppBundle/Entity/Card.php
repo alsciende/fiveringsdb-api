@@ -69,7 +69,7 @@ class Card
     /**
      * @var \AppBundle\Entity\Type
      *
-     * @ORM\ManyToOne(targetEntity="Type", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="Type", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="type_code", referencedColumnName="code")
      */
     private $type;
@@ -77,7 +77,7 @@ class Card
     /**
      * @var \AppBundle\Entity\Clan
      *
-     * @ORM\ManyToOne(targetEntity="Clan", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="Clan", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="clan_code", referencedColumnName="code")
      */
     private $clan;

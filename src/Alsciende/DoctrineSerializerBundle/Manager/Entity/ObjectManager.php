@@ -21,7 +21,7 @@ class ObjectManager implements \Alsciende\DoctrineSerializerBundle\Manager\Objec
     /**
      * {@inheritDoc}
      */
-    function getDependingClassNames ($className)
+    function getAllTargetClasses ($className)
     {
         $result = [];
         $classMetadata = $this->entityManager->getClassMetadata($className);
@@ -131,57 +131,30 @@ class ObjectManager implements \Alsciende\DoctrineSerializerBundle\Manager\Objec
             return $data[$identifierFieldName];
         } else {
             $associationMapping = $classMetadata->getAssociationMapping($identifierFieldName);
-            $referenceMetadata = $this->findReferenceMetadata($data, $associationMapping);
-            $entity = $this->findReferencedEntity($identifierFieldName, $referenceMetadata);
-            if(!$entity) {
+            $association = $this->findAssociation($data, $associationMapping);
+            if(!$association) {
                 throw new \InvalidArgumentException("Cannot find entity referenced by $identifierFieldName in data " . json_encode($data));
             }
-            return $entity;
+            return $association['associationValue'];
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    function findForeignKeyValues ($className, $data)
-    {
-        $references = $this->findReferences($className, $data);
-
-        $result = [];
-        foreach($references as $field => $reference) {
-            $entity = $this->findReferencedEntity($field, $reference);
-            if(!$entity) {
-                throw new \InvalidArgumentException("Invalid reference " . json_encode($reference));
-            }
-            $result[] = [
-                "foreignKey" => $field,
-                "foreignValue" => $entity,
-                "joinColumns" => array_keys($reference['joinColumns'])
-            ];
-        }
-        return $result;
-    }
-
-    /**
-     * Return an array listing the associations in $metadata that exist in $data,
-     * with the relevant information to find the referenced entity
-     * 
-     * @param string className
-     * @param array $data
-     * @return array
-     */
-    private function findReferences ($className, $data)
+    function findAssociations ($className, $data)
     {
         $classMetadata = $this->entityManager->getClassMetadata($className);
 
-        $references = [];
+        $associations = [];
         foreach($classMetadata->getAssociationMappings() as $mapping) {
-            $reference = $this->findReferenceMetadata($data, $mapping);
-            if($reference) {
-                $references[$mapping['fieldName']] = $reference;
+            $association = $this->findAssociation($data, $mapping);
+            if($association) {
+                $associations[] = $association;
             }
         }
-        return $references;
+
+        return $associations;
     }
 
     /**
@@ -192,48 +165,27 @@ class ObjectManager implements \Alsciende\DoctrineSerializerBundle\Manager\Objec
      * @param type $associationMapping
      * @return array
      */
-    private function findReferenceMetadata ($data, $associationMapping)
+    private function findAssociation ($data, $associationMapping)
     {
         if(!$associationMapping['isOwningSide']) {
             return;
         }
-        $reference = [
-            'joinColumns' => [],
-            'className' => $associationMapping['targetEntity']
-        ];
-        foreach($associationMapping['sourceToTargetKeyColumns'] as $foreignKey => $referencedColumnName) {
-            if(!key_exists($foreignKey, $data)) {
+        $referenceKeys = [];
+        $id = [];
+        foreach($associationMapping['sourceToTargetKeyColumns'] as $referenceKey => $targetIdentifier) {
+            if(!key_exists($referenceKey, $data)) {
                 return;
             }
-            $reference['joinColumns'][$foreignKey] = [
-                'referencedColumnName' => $referencedColumnName,
-                'referencedValue' => $data[$foreignKey]
-            ];
+            $referenceKeys[] = $referenceKey;
+            $id[$targetIdentifier] = $data[$referenceKey];
         }
-        return $reference;
-    }
+        $associationValue = $this->entityManager->getRepository($associationMapping['targetEntity'])->find($id);
 
-    /**
-     * Finds the entity described by $reference. $field is a unique identifier.
-     * 
-     * @param type $field
-     * @param type $reference
-     * @return object
-     */
-    private function findReferencedEntity ($field, $reference)
-    {
-        $qb = $this->entityManager->createQueryBuilder();
-        $qb->select($field)->from($reference['className'], $field);
-        foreach($reference['joinColumns'] as $foreignKey => $condition) {
-            $conditionString = sprintf("%s.%s = :%s", $field, $condition['referencedColumnName'], $foreignKey);
-            $qb->andWhere($conditionString)->setParameter($foreignKey, $condition['referencedValue']);
-        }
-
-        try {
-            return $qb->getQuery()->getSingleResult();
-        } catch(\Doctrine\ORM\NoResultException $ex) {
-            throw new \InvalidArgumentException("Foreign key cannot be matched to a record");
-        }
+        return [
+            'referenceKeys' => $referenceKeys,
+            'associationKey' => $associationMapping['fieldName'],
+            'associationValue' => $associationValue
+        ];
     }
 
 }

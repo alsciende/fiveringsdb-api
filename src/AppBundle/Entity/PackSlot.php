@@ -24,6 +24,8 @@ class PackSlot implements \AppBundle\Model\CardSlotInterface
      * @var int
      *
      * @ORM\Column(name="quantity", type="integer", nullable=false)
+     * 
+     * @Groups({"doctrine_serializer"})
      */
     private $quantity;
 
@@ -31,7 +33,7 @@ class PackSlot implements \AppBundle\Model\CardSlotInterface
      * @var \AppBundle\Entity\Card
      *
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="Card", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="Card", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="card_code", referencedColumnName="code")
      */
     private $card;
@@ -40,7 +42,7 @@ class PackSlot implements \AppBundle\Model\CardSlotInterface
      * @var \AppBundle\Entity\Pack
      *
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="Pack", fetch="EAGER", inversedBy="slots")
+     * @ORM\ManyToOne(targetEntity="Pack", fetch="EXTRA_LAZY", inversedBy="slots")
      * @ORM\JoinColumn(name="pack_code", referencedColumnName="code")
      */
     private $pack;

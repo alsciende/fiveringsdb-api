@@ -117,7 +117,7 @@ class SourceManager
      */
     public function allTargetEntitiesAreKnown ($className, $classes)
     {
-        $dependencies = $this->objectManager->getDependingClassNames($className);
+        $dependencies = $this->objectManager->getAllTargetClasses($className);
         foreach(array_values($dependencies) as $dependency) {
             if (!in_array($dependency, $classes)) {
                 return false;
