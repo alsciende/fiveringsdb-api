@@ -46,7 +46,7 @@ class SerializerTest extends \Symfony\Bundle\FrameworkBundle\Test\KernelTestCase
         $objectManager = new \Alsciende\SerializerBundle\Manager\Entity\ObjectManager($this->em);
         $sourceManager = new \Alsciende\SerializerBundle\Manager\SourceManager($objectManager, 'serializer', $path);
         $storingService = new \Alsciende\SerializerBundle\Service\StoringService();
-        $encoder = new \Alsciende\SerializerBundle\Encoder\Encoder();
+        $encoder = new \Alsciende\SerializerBundle\Service\EncodingService();
         $normalizer = new \Alsciende\SerializerBundle\Normalizer\Normalizer($objectManager, $this->serializer);
         $serializer = new \Alsciende\SerializerBundle\Serializer\Serializer($storingService, $encoder, $normalizer, $objectManager, $sourceManager, $this->validator, $this->reader);
 

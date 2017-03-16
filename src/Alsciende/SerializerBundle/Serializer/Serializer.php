@@ -16,7 +16,7 @@ class Serializer
     private $storingService;
 
     /**
-     * @var \Alsciende\SerializerBundle\Encoder\Encoder
+     * @var \Alsciende\SerializerBundle\Service\EncodingService
      */
     private $encoder;
 
@@ -45,7 +45,7 @@ class Serializer
      */
     private $objectManager;
 
-    public function __construct (\Alsciende\SerializerBundle\Service\StoringService $storingService, \Alsciende\SerializerBundle\Encoder\Encoder $encoder, \Alsciende\SerializerBundle\Normalizer\Normalizer $normalizer, \Alsciende\SerializerBundle\Manager\ObjectManagerInterface $objectManager, \Alsciende\SerializerBundle\Manager\SourceManager $sourceManager, \Symfony\Component\Validator\Validator\RecursiveValidator $validator, \Doctrine\Common\Annotations\Reader $reader)
+    public function __construct (\Alsciende\SerializerBundle\Service\StoringService $storingService, \Alsciende\SerializerBundle\Service\EncodingService $encoder, \Alsciende\SerializerBundle\Normalizer\Normalizer $normalizer, \Alsciende\SerializerBundle\Manager\ObjectManagerInterface $objectManager, \Alsciende\SerializerBundle\Manager\SourceManager $sourceManager, \Symfony\Component\Validator\Validator\RecursiveValidator $validator, \Doctrine\Common\Annotations\Reader $reader)
     {
         $this->storingService = $storingService;
         $this->encoder = $encoder;
