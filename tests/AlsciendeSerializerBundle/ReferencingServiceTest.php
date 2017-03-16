@@ -2,7 +2,6 @@
 
 namespace Tests\AlsciendeSerializerBundle;
 
-use Alsciende\SerializerBundle\Normalizer\Normalizer;
 use AppBundle\Entity\Card;
 use AppBundle\Entity\Clan;
 use AppBundle\Entity\Cycle;
@@ -13,11 +12,9 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
- * Description of NormalizerTest
- *
  * @author Alsciende <alsciende@icloud.com>
  */
-class NormalizerTest extends KernelTestCase
+class ReferencingServiceTest extends KernelTestCase
 {
 
     use DomainFixtures;
@@ -47,27 +44,20 @@ class NormalizerTest extends KernelTestCase
         $this->clearDatabase();
     }
 
-    function testGetSingleIdentifier ()
-    {
-        $identifier = $this->objectManager->getSingleIdentifier(Card::class);
-        $this->assertEquals('code', $identifier);
-    }
-
-    function testNormalizeClan ()
+    function testReferenceClan ()
     {
         //setup
         $clan = new Clan();
         $clan->setCode('crab');
         $clan->setName("Crab");
         //work
-        $normalizer = new Normalizer($this->objectManager, $this->serializer);
-        $data = $normalizer->normalize($clan);
+        $referencer = new \Alsciende\SerializerBundle\Service\ReferencingService($this->objectManager);
+        $data = $referencer->reference($clan);
         //assert
-        $this->assertEquals('crab', $data['code']);
-        $this->assertEquals("Crab", $data['name']);
+        $this->assertEmpty($data);
     }
 
-    function testNormalizeCard ()
+    function testReferenceCard ()
     {
         //setup
         $clan = new Clan();
@@ -80,16 +70,14 @@ class NormalizerTest extends KernelTestCase
         $card->setName("The Impregnable Fortress of the Crab");
         $card->setType($type);
         //work
-        $normalizer = new Normalizer($this->objectManager, $this->serializer);
-        $data = $normalizer->normalize($card);
+        $referencer = new \Alsciende\SerializerBundle\Service\ReferencingService($this->objectManager);
+        $data = $referencer->reference($card);
         //assert
-        $this->assertEquals('01001', $data['code']);
-        $this->assertEquals("The Impregnable Fortress of the Crab", $data['name']);
         $this->assertEquals('crab', $data['clan_code']);
         $this->assertEquals('stronghold', $data['type_code']);
     }
 
-    function testNormalizePack ()
+    function testReferencePack ()
     {
         //setup
         $cycle = new Cycle();
@@ -98,13 +86,13 @@ class NormalizerTest extends KernelTestCase
         $pack->setCode('core');
         $pack->setCycle($cycle);
         //work
-        $normalizer = new Normalizer($this->objectManager, $this->serializer);
-        $data = $normalizer->normalize($pack);
+        $referencer = new \Alsciende\SerializerBundle\Service\ReferencingService($this->objectManager);
+        $data = $referencer->reference($pack);
         //assert
-        $this->assertEquals('core', $data['code']);
+        $this->assertEquals('core', $data['cycle_code']);
     }
 
-    function testNormalizePackSlot ()
+    function testReferencePackSlot ()
     {
         //setup
         $pack = new Pack();
@@ -118,29 +106,11 @@ class NormalizerTest extends KernelTestCase
         $packslot->setPack($pack);
         $packslot->setQuantity(3);
         //work
-        $normalizer = new Normalizer($this->objectManager, $this->serializer);
-        $data = $normalizer->normalize($packslot);
+        $referencer = new \Alsciende\SerializerBundle\Service\ReferencingService($this->objectManager);
+        $data = $referencer->reference($packslot);
         //assert
         $this->assertEquals('core', $data['pack_code']);
         $this->assertEquals('01001', $data['card_code']);
-    }
-
-    function testFindAssociations ()
-    {
-        //setup
-        $this->createCycleCore();
-
-        $data = [
-            "cycle_code" => "core"
-        ];
-        //work
-        $associations = $this->objectManager->findAssociations(Pack::class, $data);
-        //assert
-        $this->assertEquals(1, count($associations));
-        $association = $associations[0];
-        $this->assertEquals('cycle', $association['associationKey']);
-        $this->assertArrayHasKey('associationValue', $association);
-        $this->assertEquals('cycle_code', $association['referenceKeys'][0]);
     }
 
     /**

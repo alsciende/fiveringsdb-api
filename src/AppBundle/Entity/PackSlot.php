@@ -25,7 +25,7 @@ class PackSlot implements \AppBundle\Model\CardSlotInterface
      *
      * @ORM\Column(name="quantity", type="integer", nullable=false)
      * 
-     * @Groups({"doctrine_serializer"})
+     * @Groups({"alsciende_serializer"})
      */
     private $quantity;
 

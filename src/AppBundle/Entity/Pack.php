@@ -31,7 +31,7 @@ class Pack
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      * 
-     * @Groups({"doctrine_serializer"})
+     * @Groups({"alsciende_serializer"})
      */
     private $code;
 
@@ -40,7 +40,7 @@ class Pack
      *
      * @ORM\Column(name="name", type="string", length=255, unique=true)
      * 
-     * @Groups({"doctrine_serializer"})
+     * @Groups({"alsciende_serializer"})
      */
     private $name;
 
@@ -49,7 +49,7 @@ class Pack
      *
      * @ORM\Column(name="position", type="integer")
      * 
-     * @Groups({"doctrine_serializer"})
+     * @Groups({"alsciende_serializer"})
      */
     private $position;
 
@@ -58,7 +58,7 @@ class Pack
      *
      * @ORM\Column(name="size", type="integer", nullable=true)
      * 
-     * @Groups({"doctrine_serializer"})
+     * @Groups({"alsciende_serializer"})
      */
     private $size;
 

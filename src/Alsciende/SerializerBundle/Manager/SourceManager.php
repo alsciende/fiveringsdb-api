@@ -19,14 +19,11 @@ class SourceManager
     /* @var ObjectManagerInterface */
     private $objectManager;
     
-    private $group;
-    
     private $path;
     
-    public function __construct (ObjectManagerInterface $objectManager, $group, $path)
+    public function __construct (ObjectManagerInterface $objectManager, $path)
     {
         $this->objectManager = $objectManager;
-        $this->group = $group;
         $this->path = $path;
         
         $this->sources = [];
@@ -55,9 +52,6 @@ class SourceManager
     {
         if($source->getPath() === null) {
             $source->setPath($this->path);
-        }
-        if($source->getGroup() === null) {
-            $source->setGroup($this->group);
         }
         $this->sources[] = $source;
     }

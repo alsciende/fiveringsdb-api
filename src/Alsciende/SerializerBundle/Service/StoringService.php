@@ -39,11 +39,11 @@ class StoringService
                 throw new Exception("Directory $path not found");
             }
         }
-        
+
         foreach($blocks as $block) {
             $block->setSource($source);
         }
-        
+
         return $blocks;
     }
 
@@ -74,5 +74,5 @@ class StoringService
         $block = new Block($data, $path);
         return array($block);
     }
-    
+
 }

@@ -17,9 +17,6 @@ class Source extends \Doctrine\Common\Annotations\Annotation
     public $break;
 
     /* @var string */
-    public $group;
-
-    /* @var string */
     public $path;
 
 }

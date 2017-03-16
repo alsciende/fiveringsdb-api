@@ -33,7 +33,7 @@ class Card
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      * 
-     * @Groups({"doctrine_serializer"})
+     * @Groups({"alsciende_serializer"})
      */
     private $code;
 
@@ -44,7 +44,7 @@ class Card
      *
      * @ORM\Column(name="name", type="string", length=255)
      * 
-     * @Groups({"doctrine_serializer"})
+     * @Groups({"alsciende_serializer"})
      */
     private $name;
 
@@ -53,7 +53,7 @@ class Card
      *
      * @ORM\Column(name="cost", type="integer", nullable=true)
      * 
-     * @Groups({"doctrine_serializer"})
+     * @Groups({"alsciende_serializer"})
      */
     private $cost;
 
@@ -62,7 +62,7 @@ class Card
      *
      * @ORM\Column(name="text", type="text", nullable=true)
      * 
-     * @Groups({"doctrine_serializer"})
+     * @Groups({"alsciende_serializer"})
      */
     private $text;
 

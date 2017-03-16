@@ -1,7 +1,7 @@
 services:
     alsciende_serializer.source_manager:
         class: Alsciende\SerializerBundle\Manager\SourceManager
-        arguments: ["@alsciende_serializer.reference_manager.entity","%alsciende_serializer.group%","%alsciende_serializer.path%"]
+        arguments: ["@alsciende_serializer.reference_manager.entity","%alsciende_serializer.path%"]
         
     alsciende_serializer.reference_manager.entity:
         class: Alsciende\SerializerBundle\Manager\Entity\ObjectManager
@@ -15,16 +15,21 @@ services:
         class: Alsciende\SerializerBundle\Service\EncodingService
         arguments: []
 
-    alsciende_serializer.normalizer:
-        class: Alsciende\SerializerBundle\Normalizer\Normalizer
-        arguments: ["@alsciende_serializer.reference_manager.entity","@serializer"]
+    alsciende_serializer.normalizing_service:
+        class: Alsciende\SerializerBundle\Service\NormalizingService
+        arguments: ["@serializer","%alsciende_serializer.group%"]
+
+    alsciende_serializer.referencing_service:
+        class: Alsciende\SerializerBundle\Service\ReferencingService
+        arguments: ["@alsciende_serializer.reference_manager.entity"]
 
     alsciende_serializer.serializer:
         class: Alsciende\SerializerBundle\Serializer\Serializer
         arguments: 
             - "@alsciende_serializer.storing_service"
             - "@alsciende_serializer.encoding_service"
-            - "@alsciende_serializer.normalizer"
+            - "@alsciende_serializer.normalizing_service"
+            - "@alsciende_serializer.referencing_service"
             - "@alsciende_serializer.reference_manager.entity"
             - "@alsciende_serializer.source_manager"
             - "@validator"

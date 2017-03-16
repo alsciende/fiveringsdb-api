@@ -14,20 +14,16 @@ class Source
     private $break;
 
     /* @var string */
-    private $group;
-
-    /* @var string */
     private $path;
 
     /* @var string */
     private $className;
 
-    function __construct ($className, $path, $break = null, $group = null)
+    function __construct ($className, $path, $break = null)
     {
         $this->className = $className;
         $this->path = $path;
         $this->break = $break;
-        $this->group = $group;
     }
     
     /**
@@ -37,15 +33,6 @@ class Source
     function getBreak ()
     {
         return $this->break;
-    }
-
-    /**
-     * 
-     * @return string
-     */
-    function getGroup ()
-    {
-        return $this->group;
     }
 
     /**
@@ -74,18 +61,6 @@ class Source
     function setBreak ($break)
     {
         $this->break = $break;
-        
-        return $this;
-    }
-
-    /**
-     * 
-     * @param string $group
-     * @return Source
-     */
-    function setGroup ($group)
-    {
-        $this->group = $group;
         
         return $this;
     }

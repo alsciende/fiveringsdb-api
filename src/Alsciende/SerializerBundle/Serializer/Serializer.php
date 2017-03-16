@@ -10,6 +10,27 @@ namespace Alsciende\SerializerBundle\Serializer;
 class Serializer
 {
 
+    public function __construct (
+            \Alsciende\SerializerBundle\Service\StoringService $storingService,
+            \Alsciende\SerializerBundle\Service\EncodingService $encoder,
+            \Alsciende\SerializerBundle\Service\NormalizingServiceInterface $normalizingService,
+            \Alsciende\SerializerBundle\Service\ReferencingServiceInterface $referencingService,
+            \Alsciende\SerializerBundle\Manager\ObjectManagerInterface $objectManager,
+            \Alsciende\SerializerBundle\Manager\SourceManager $sourceManager,
+            \Symfony\Component\Validator\Validator\RecursiveValidator $validator,
+            \Doctrine\Common\Annotations\Reader $reader
+            )
+    {
+        $this->storingService = $storingService;
+        $this->encoder = $encoder;
+        $this->normalizingService = $normalizingService;
+        $this->referencingService = $referencingService;
+        $this->objectManager = $objectManager;
+        $this->sourceManager = $sourceManager;
+        $this->validator = $validator;
+        $this->reader = $reader;
+    }
+
     /**
      * @var \Alsciende\SerializerBundle\Service\StoringService
      */
@@ -21,9 +42,14 @@ class Serializer
     private $encoder;
 
     /**
-     * @var \Alsciende\SerializerBundle\Normalizer\Normalizer
+     * @var \Alsciende\SerializerBundle\Service\NormalizingServiceInterface
      */
-    private $normalizer;
+    private $normalizingService;
+
+    /**
+     * @var \Alsciende\SerializerBundle\Service\ReferencingServiceInterface
+     */
+    private $referencingService;
 
     /**
      * @var \Alsciende\SerializerBundle\Manager\SourceManager
@@ -44,17 +70,6 @@ class Serializer
      * @var \Alsciende\SerializerBundle\Manager\ObjectManagerInterface
      */
     private $objectManager;
-
-    public function __construct (\Alsciende\SerializerBundle\Service\StoringService $storingService, \Alsciende\SerializerBundle\Service\EncodingService $encoder, \Alsciende\SerializerBundle\Normalizer\Normalizer $normalizer, \Alsciende\SerializerBundle\Manager\ObjectManagerInterface $objectManager, \Alsciende\SerializerBundle\Manager\SourceManager $sourceManager, \Symfony\Component\Validator\Validator\RecursiveValidator $validator, \Doctrine\Common\Annotations\Reader $reader)
-    {
-        $this->storingService = $storingService;
-        $this->encoder = $encoder;
-        $this->normalizer = $normalizer;
-        $this->objectManager = $objectManager;
-        $this->sourceManager = $sourceManager;
-        $this->validator = $validator;
-        $this->reader = $reader;
-    }
 
     /**
      * 
@@ -98,7 +113,7 @@ class Serializer
             /* @var $annotation \Alsciende\SerializerBundle\Annotation\Source */
             $annotation = $this->reader->getClassAnnotation(new \ReflectionClass($className), 'Alsciende\SerializerBundle\Annotation\Source');
             if($annotation) {
-                $source = new \Alsciende\SerializerBundle\Model\Source($className, $annotation->path, $annotation->break, $annotation->group);
+                $source = new \Alsciende\SerializerBundle\Model\Source($className, $annotation->path, $annotation->break);
                 $this->sourceManager->addSource($source);
             }
         }
@@ -114,13 +129,14 @@ class Serializer
     {
         $incoming = $fragment->getData();
         $className = $fragment->getBlock()->getSource()->getClassName();
-        $group = $fragment->getBlock()->getSource()->getGroup();
 
         // find the entity based on the incoming identifier
         $entity = $this->findOrCreateObject($className, $incoming);
 
         // normalize the entity in its original state
-        $original = $this->normalizer->normalize($entity, $group);
+        $normalized = $this->normalizingService->normalize($entity);
+        $referenced = $this->referencingService->reference($entity);
+        $original = array_merge($normalized, $referenced);
 
         // compute changes between the normalized data
         $changes = array_diff($incoming, $original);

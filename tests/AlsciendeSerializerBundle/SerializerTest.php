@@ -44,11 +44,12 @@ class SerializerTest extends \Symfony\Bundle\FrameworkBundle\Test\KernelTestCase
     {
         $path = __DIR__ . "/DataFixtures";
         $objectManager = new \Alsciende\SerializerBundle\Manager\Entity\ObjectManager($this->em);
-        $sourceManager = new \Alsciende\SerializerBundle\Manager\SourceManager($objectManager, 'serializer', $path);
+        $sourceManager = new \Alsciende\SerializerBundle\Manager\SourceManager($objectManager, $path);
         $storingService = new \Alsciende\SerializerBundle\Service\StoringService();
         $encoder = new \Alsciende\SerializerBundle\Service\EncodingService();
-        $normalizer = new \Alsciende\SerializerBundle\Normalizer\Normalizer($objectManager, $this->serializer);
-        $serializer = new \Alsciende\SerializerBundle\Serializer\Serializer($storingService, $encoder, $normalizer, $objectManager, $sourceManager, $this->validator, $this->reader);
+        $normalizingService = new \Alsciende\SerializerBundle\Service\NormalizingService($this->serializer, 'alsciende_serializer');
+        $referencingService = new \Alsciende\SerializerBundle\Service\ReferencingService($objectManager);
+        $serializer = new \Alsciende\SerializerBundle\Serializer\Serializer($storingService, $encoder, $normalizingService, $referencingService, $objectManager, $sourceManager, $this->validator, $this->reader);
 
         $serializer->import();
     }
