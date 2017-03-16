@@ -57,6 +57,18 @@ class ReferencingServiceTest extends KernelTestCase
         $this->assertEmpty($data);
     }
 
+    function testDereferenceClan()
+    {
+        //setup
+        $data = [];
+        //work
+        $referencer = new \Alsciende\SerializerBundle\Service\ReferencingService($this->objectManager);
+        $object = $referencer->dereference($data, Clan::class);
+        //assert
+        $this->assertEquals(Clan::class, get_class($object));
+        $this->assertEmpty($object->getCode());
+    }
+
     function testReferenceCard ()
     {
         //setup
@@ -75,6 +87,21 @@ class ReferencingServiceTest extends KernelTestCase
         //assert
         $this->assertEquals('crab', $data['clan_code']);
         $this->assertEquals('stronghold', $data['type_code']);
+    }
+
+    function testDereferenceCard ()
+    {
+        //setup
+        $this->createCrab();
+        $this->createStronghold();
+        $data = ['clan_code' => 'crab', 'type_code' => 'stronghold'];
+        //work
+        $referencer = new \Alsciende\SerializerBundle\Service\ReferencingService($this->objectManager);
+        $card = $referencer->dereference($data, Card::class);
+        //assert
+        $this->assertEquals(Card::class, get_class($card));
+        $this->assertEquals('crab', $card->getClan()->getCode());
+        $this->assertEquals('stronghold', $card->getType()->getCode());
     }
 
     function testReferencePack ()
@@ -112,7 +139,7 @@ class ReferencingServiceTest extends KernelTestCase
         $this->assertEquals('core', $data['pack_code']);
         $this->assertEquals('01001', $data['card_code']);
     }
-
+    
     /**
      * {@inheritDoc}
      */

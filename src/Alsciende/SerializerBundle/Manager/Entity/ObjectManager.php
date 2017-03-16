@@ -9,8 +9,8 @@ namespace Alsciende\SerializerBundle\Manager\Entity;
  */
 class ObjectManager implements \Alsciende\SerializerBundle\Manager\ObjectManagerInterface
 {
-
     /* @var \Doctrine\ORM\EntityManager */
+
     private $entityManager;
 
     function __construct (\Doctrine\ORM\EntityManager $entityManager)
@@ -76,6 +76,10 @@ class ObjectManager implements \Alsciende\SerializerBundle\Manager\ObjectManager
         foreach($update as $field => $value) {
             $classMetadata->setFieldValue($entity, $field, $value);
         }
+    }
+
+    public function mergeObject ($entity)
+    {
         $this->entityManager->merge($entity);
     }
 

@@ -164,7 +164,8 @@ class Serializer
             $updatedFields[$field] = $value;
         }
         $this->objectManager->updateObject($entity, $updatedFields);
-
+        $this->objectManager->mergeObject($entity);
+        
         $errors = $this->validator->validate($entity);
         if(count($errors) > 0) {
             $errorsString = (string) $errors;

@@ -53,4 +53,18 @@ class ReferencingService implements ReferencingServiceInterface
         return array($referenceKey, $referenceValue);
     }
 
+    public function dereference($data, $type)
+    {
+        $object = new $type;
+        $associations = $this->objectManager->findAssociations($type, $data);
+        
+        $updatedFields = [];
+        foreach($associations as $association) {
+            $updatedFields[$association['associationKey']] = $association['associationValue'];
+        }
+        
+        $this->objectManager->updateObject($object, $updatedFields);
+
+        return $object;
+    }
 }
