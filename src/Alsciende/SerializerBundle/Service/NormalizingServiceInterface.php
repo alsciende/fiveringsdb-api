@@ -9,5 +9,5 @@ namespace Alsciende\SerializerBundle\Service;
 interface NormalizingServiceInterface
 {
     public function normalize($object);
-    public function denormalize($data, $type);
+    public function denormalize($data, $className, $propertyMap);
 }

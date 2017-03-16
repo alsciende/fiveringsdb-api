@@ -118,9 +118,17 @@ class Serializer
         $classNames = $this->objectManager->getAllManagedClassNames();
         foreach($classNames as $className) {
             /* @var $annotation \Alsciende\SerializerBundle\Annotation\Source */
-            $annotation = $this->reader->getClassAnnotation(new \ReflectionClass($className), 'Alsciende\SerializerBundle\Annotation\Source');
+            $reflectionClass = new \ReflectionClass($className);
+            $annotation = $this->reader->getClassAnnotation($reflectionClass, 'Alsciende\SerializerBundle\Annotation\Source');
             if($annotation) {
                 $source = new \Alsciende\SerializerBundle\Model\Source($className, $annotation->path, $annotation->break);
+                /* @var $reflectionProperty \ReflectionProperty */
+                foreach ($reflectionClass->getProperties() as $reflectionProperty) {
+                    $annotation = $this->reader->getPropertyAnnotation($reflectionProperty, 'Alsciende\SerializerBundle\Annotation\Source');
+                    if($annotation) {
+                        $source->addProperty($reflectionProperty->name, $annotation->type);
+                    }
+                }
                 $this->sourceManager->addSource($source);
             }
         }
@@ -134,31 +142,32 @@ class Serializer
      */
     public function importFragment (\Alsciende\SerializerBundle\Model\Fragment $fragment)
     {
-        $incoming = $fragment->getData();
+        $data = $fragment->getData();
         $className = $fragment->getBlock()->getSource()->getClassName();
 
         // find the entity based on the incoming identifier
-        $entity = $this->findOrCreateObject($className, $incoming);
+        $entity = $this->findOrCreateObject($className, $data);
         
+        /*
         // normalize the entity in its original state
         $normalized = $this->normalizingService->normalize($entity);
         $referenced = $this->referencingService->reference($entity);
         $original = array_merge($normalized, $referenced);
 
         // compute changes between the normalized data
-        $changes = array_diff($incoming, $original);
+        $changes = array_diff($data, $original);
 
         // denormalize the associations in the incoming data
-        $associations = $this->objectManager->findAssociations($className, $incoming);
+        $associations = $this->objectManager->findAssociations($className, $data);
 
         $renamedKeys = [];
         // replace the references with associations
         foreach($associations as $association) {
             foreach($association['referenceKeys'] as $referenceKey) {
-                unset($incoming[$referenceKey]);
+                unset($data[$referenceKey]);
                 $renamedKeys[$referenceKey] = $association['associationKey'];
             }
-            $incoming[$association['associationKey']] = $association['associationValue'];
+            $data[$association['associationKey']] = $association['associationValue'];
         }
 
         // update the entity with the field updated in incoming
@@ -166,11 +175,15 @@ class Serializer
         foreach($changes as $field => $value) {
             if(isset($renamedKeys[$field])) {
                 $field = $renamedKeys[$field];
-                $value = $incoming[$field];
+                $value = $data[$field];
             }
             $updatedFields[$field] = $value;
         }
-        $this->objectManager->updateObject($entity, $updatedFields);
+        $this->objectManager->updateObject($entity, $updatedFields);*
+        */
+        
+        $data = $this->normalizingService->denormalize($data, $className, $fragment->getBlock()->getSource()->getProperties());
+        
         $this->objectManager->mergeObject($entity);
         
         $errors = $this->validator->validate($entity);
@@ -182,7 +195,7 @@ class Serializer
         $fragment->setEntity($entity);
         $fragment->setOriginal($original);
         $fragment->setChanges($changes);
-        $fragment->setData($incoming);
+        $fragment->setData($data);
     }
 
     /**

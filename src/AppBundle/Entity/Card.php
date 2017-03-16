@@ -33,7 +33,7 @@ class Card
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      * 
-     * @Groups({"alsciende_serializer"})
+     * @Source(type="string")
      */
     private $code;
 
@@ -44,7 +44,7 @@ class Card
      *
      * @ORM\Column(name="name", type="string", length=255)
      * 
-     * @Groups({"alsciende_serializer"})
+     * @Source(type="string")
      */
     private $name;
 
@@ -53,7 +53,7 @@ class Card
      *
      * @ORM\Column(name="cost", type="integer", nullable=true)
      * 
-     * @Groups({"alsciende_serializer"})
+     * @Source(type="integer")
      */
     private $cost;
 
@@ -62,7 +62,7 @@ class Card
      *
      * @ORM\Column(name="text", type="text", nullable=true)
      * 
-     * @Groups({"alsciende_serializer"})
+     * @Source(type="string")
      */
     private $text;
 
@@ -71,6 +71,8 @@ class Card
      *
      * @ORM\ManyToOne(targetEntity="Type", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="type_code", referencedColumnName="code")
+     * 
+     * @Source(type="association")
      */
     private $type;
 
@@ -79,6 +81,8 @@ class Card
      *
      * @ORM\ManyToOne(targetEntity="Clan", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="clan_code", referencedColumnName="code")
+     * 
+     * @Source(type="association")
      */
     private $clan;
 

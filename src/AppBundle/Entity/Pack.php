@@ -31,7 +31,7 @@ class Pack
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      * 
-     * @Groups({"alsciende_serializer"})
+     * @Source(type="string")
      */
     private $code;
 
@@ -40,7 +40,7 @@ class Pack
      *
      * @ORM\Column(name="name", type="string", length=255, unique=true)
      * 
-     * @Groups({"alsciende_serializer"})
+     * @Source(type="string")
      */
     private $name;
 
@@ -49,7 +49,7 @@ class Pack
      *
      * @ORM\Column(name="position", type="integer")
      * 
-     * @Groups({"alsciende_serializer"})
+     * @Source(type="integer")
      */
     private $position;
 
@@ -58,21 +58,25 @@ class Pack
      *
      * @ORM\Column(name="size", type="integer", nullable=true)
      * 
-     * @Groups({"alsciende_serializer"})
+     * @Source(type="integer")
      */
     private $size;
 
     /**
      * @var DateTime
      *
-     * @ORM\Column(name="release_at", type="datetime", nullable=true)
+     * @ORM\Column(name="released_at", type="datetime", nullable=true)
+     * 
+     * @Source(type="date")
      */
-    private $releaseAt;
+    private $releasedAt;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="ffgId", type="integer", nullable=true)
+     * @ORM\Column(name="ffg_id", type="integer", nullable=true)
+     * 
+     * @Source(type="integer")
      */
     private $ffgId;
 
@@ -81,6 +85,8 @@ class Pack
      *
      * @ORM\ManyToOne(targetEntity="Cycle", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="cycle_code", referencedColumnName="code")
+     * 
+     * @Source(type="association")
      */
     private $cycle;
 
@@ -196,18 +202,18 @@ class Pack
      * 
      * @return DateTime
      */
-    function getReleaseAt ()
+    function getReleasedAt ()
     {
-        return $this->releaseAt;
+        return $this->releasedAt;
     }
 
     /**
      * 
      * @param DateTime $releaseAt
      */
-    function setReleaseAt (DateTime $releaseAt)
+    function setReleasedAt (DateTime $releaseAt)
     {
-        $this->releaseAt = $releaseAt;
+        $this->releasedAt = $releasedAt;
         
         return $this;
     }

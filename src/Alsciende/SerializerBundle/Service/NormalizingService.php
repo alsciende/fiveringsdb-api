@@ -10,11 +10,16 @@ namespace Alsciende\SerializerBundle\Service;
 class NormalizingService implements NormalizingServiceInterface
 {
 
-    public function __construct (\Symfony\Component\Serializer\Serializer $serializer, $group)
+    public function __construct (\Alsciende\SerializerBundle\Manager\ObjectManagerInterface $objectManager)
     {
-        $this->serializer = $serializer;
-        $this->group = $group;
+        $this->objectManager = $objectManager;
     }
+
+    /**
+     *
+     * @var \Alsciende\SerializerBundle\Manager\ObjectManagerInterface
+     */
+    private $objectManager;
 
     /**
      *
@@ -22,32 +27,38 @@ class NormalizingService implements NormalizingServiceInterface
      */
     private $serializer;
 
-    /**
-     *
-     * @var string
-     */
-    private $group;
-
     public function normalize ($object)
     {
-        $context = [];
-        if(!empty($this->group)) {
-            $context['groups'] = array($this->group);
-        }
-        $data = $this->serializer->normalize($object, null, $context);
+        $data = $this->serializer->normalize($object);
 
         return $data;
     }
 
-    public function denormalize ($data, $type)
+    public function denormalize ($data, $className, $propertyMap)
     {
-        $context = [];
-        if(isset($this->group)) {
-            $context['groups'] = array($this->group);
+        $result = [];
+        
+        foreach($propertyMap as $fieldName => $type) {
+            switch($type) {
+                case 'string':
+                    $columnName = $this->objectManager->getColumnName($className, $fieldName);
+                    $result[$fieldName] = $data[$columnName];
+                    break;
+                case 'integer':
+                    $columnName = $this->objectManager->getColumnName($className, $fieldName);
+                    $result[$fieldName] = (integer) $data[$columnName];
+                    break;
+                case 'date':
+                    $columnName = $this->objectManager->getColumnName($className, $fieldName);
+                    $result[$fieldName] = \DateTime::createFromFormat('Y-m-d', $data[$columnName]);
+                    break;
+                case 'association':
+                    //throw new \Exception("Association denormalization not yet implemented!");
+                    break;
+            }
         }
-        $object = $this->serializer->denormalize($data, $type, null, $context);
-
-        return $object;
+        
+        return $result;
     }
 
 }

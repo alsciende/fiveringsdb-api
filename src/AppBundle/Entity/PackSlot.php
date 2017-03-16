@@ -25,7 +25,7 @@ class PackSlot implements \AppBundle\Model\CardSlotInterface
      *
      * @ORM\Column(name="quantity", type="integer", nullable=false)
      * 
-     * @Groups({"alsciende_serializer"})
+     * @Source(type="integer")
      */
     private $quantity;
 
@@ -35,6 +35,8 @@ class PackSlot implements \AppBundle\Model\CardSlotInterface
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Card", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="card_code", referencedColumnName="code")
+     * 
+     * @Source(type="association")
      */
     private $card;
 
@@ -44,6 +46,8 @@ class PackSlot implements \AppBundle\Model\CardSlotInterface
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Pack", fetch="EXTRA_LAZY", inversedBy="slots")
      * @ORM\JoinColumn(name="pack_code", referencedColumnName="code")
+     * 
+     * @Source(type="association")
      */
     private $pack;
 

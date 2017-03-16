@@ -73,12 +73,23 @@ class ObjectManager implements \Alsciende\SerializerBundle\Manager\ObjectManager
     function updateObject ($entity, $data)
     {
         $classMetadata = $this->entityManager->getClassMetadata(get_class($entity));
-        dump($classMetadata);
         foreach($data as $field => $value) {
             $classMetadata->setFieldValue($entity, $field, $value);
         }
     }
+    
+    function getFieldName ($className, $columnName)
+    {
+        $classMetadata = $this->entityManager->getClassMetadata($className);
+        return $classMetadata->getFieldName($columnName);
+    }
 
+    function getColumnName ($className, $fieldName)
+    {
+        $classMetadata = $this->entityManager->getClassMetadata($className);
+        return $classMetadata->getColumnName($fieldName);
+    }
+    
     public function mergeObject ($entity)
     {
         $this->entityManager->merge($entity);

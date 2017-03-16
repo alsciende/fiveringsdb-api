@@ -29,7 +29,7 @@ class Cycle
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      * 
-     * @Groups({"alsciende_serializer"})
+     * @Source(type="string")
      */
     private $code;
 
@@ -38,7 +38,7 @@ class Cycle
      *
      * @ORM\Column(name="name", type="string", length=255, unique=true)
      * 
-     * @Groups({"alsciende_serializer"})
+     * @Source(type="string")
      */
     private $name;
 
@@ -47,7 +47,7 @@ class Cycle
      *
      * @ORM\Column(name="position", type="integer")
      * 
-     * @Groups({"alsciende_serializer"})
+     * @Source(type="integer")
      */
     private $position;
 
@@ -56,7 +56,7 @@ class Cycle
      *
      * @ORM\Column(name="size", type="integer", nullable=true)
      * 
-     * @Groups({"alsciende_serializer"})
+     * @Source(type="integer")
      */
     private $size;
 

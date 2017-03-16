@@ -27,7 +27,7 @@ class Clan
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      * 
-     * @Groups({"alsciende_serializer"})
+     * @Source(type="string")
      */
     private $code;
 
@@ -36,7 +36,7 @@ class Clan
      *
      * @ORM\Column(name="name", type="string", length=255, unique=true)
      * 
-     * @Groups({"alsciende_serializer"})
+     * @Source(type="string")
      */
     private $name;
 

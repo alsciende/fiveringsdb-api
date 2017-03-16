@@ -17,7 +17,7 @@ services:
 
     alsciende_serializer.normalizing_service:
         class: Alsciende\SerializerBundle\Service\NormalizingService
-        arguments: ["@serializer","%alsciende_serializer.group%"]
+        arguments: ["@serializer"]
 
     alsciende_serializer.referencing_service:
         class: Alsciende\SerializerBundle\Service\ReferencingService
