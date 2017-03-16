@@ -15,6 +15,7 @@ class Serializer
             \Alsciende\SerializerBundle\Service\EncodingService $encoder,
             \Alsciende\SerializerBundle\Service\NormalizingServiceInterface $normalizingService,
             \Alsciende\SerializerBundle\Service\ReferencingServiceInterface $referencingService,
+            \Alsciende\SerializerBundle\Service\MergingService $mergingService,
             \Alsciende\SerializerBundle\Manager\ObjectManagerInterface $objectManager,
             \Alsciende\SerializerBundle\Manager\SourceManager $sourceManager,
             \Symfony\Component\Validator\Validator\RecursiveValidator $validator,
@@ -25,6 +26,7 @@ class Serializer
         $this->encoder = $encoder;
         $this->normalizingService = $normalizingService;
         $this->referencingService = $referencingService;
+        $this->mergingService = $mergingService;
         $this->objectManager = $objectManager;
         $this->sourceManager = $sourceManager;
         $this->validator = $validator;
@@ -50,6 +52,11 @@ class Serializer
      * @var \Alsciende\SerializerBundle\Service\ReferencingServiceInterface
      */
     private $referencingService;
+
+    /**
+     * @var \Alsciende\SerializerBundle\Service\MergingService
+     */
+    private $mergingService;
 
     /**
      * @var \Alsciende\SerializerBundle\Manager\SourceManager
@@ -132,7 +139,7 @@ class Serializer
 
         // find the entity based on the incoming identifier
         $entity = $this->findOrCreateObject($className, $incoming);
-
+        
         // normalize the entity in its original state
         $normalized = $this->normalizingService->normalize($entity);
         $referenced = $this->referencingService->reference($entity);

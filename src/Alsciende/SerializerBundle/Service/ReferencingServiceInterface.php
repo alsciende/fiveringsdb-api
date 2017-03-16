@@ -22,4 +22,12 @@ interface ReferencingServiceInterface
      */
     public function reference($object);
     
+    /**
+     * Returns an object containing all the associations in $data
+     * 
+     * @param array $data
+     * @param string $type
+     * @return object
+     */
+    public function dereference($data, $type);
 }

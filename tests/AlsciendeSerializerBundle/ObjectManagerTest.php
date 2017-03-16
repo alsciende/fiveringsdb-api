@@ -32,7 +32,7 @@ class ObjectManagerTest extends \Symfony\Bundle\FrameworkBundle\Test\KernelTestC
                 ->getManager();
 
         $this->objectManager = static::$kernel->getContainer()
-                ->get('alsciende_serializer.reference_manager.entity');
+                ->get('alsciende_serializer.object_manager.entity');
 
         $this->serializer = static::$kernel->getContainer()
                 ->get('serializer');

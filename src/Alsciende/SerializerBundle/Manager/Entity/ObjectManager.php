@@ -70,10 +70,11 @@ class ObjectManager implements \Alsciende\SerializerBundle\Manager\ObjectManager
     /**
      * {@inheritDoc}
      */
-    function updateObject ($entity, $update)
+    function updateObject ($entity, $data)
     {
         $classMetadata = $this->entityManager->getClassMetadata(get_class($entity));
-        foreach($update as $field => $value) {
+        dump($classMetadata);
+        foreach($data as $field => $value) {
             $classMetadata->setFieldValue($entity, $field, $value);
         }
     }

@@ -42,9 +42,9 @@ interface ObjectManagerInterface
      * Updates some fields in the entity
      * 
      * @param object $entity
-     * @param array $update
+     * @param array $data
      */
-    function updateObject ($entity, $update);
+    function updateObject ($entity, $data);
 
     /**
      * Returns the value of a field of the entity
