@@ -20,7 +20,7 @@ class AppKernel extends Kernel
             new FOS\OAuthServerBundle\FOSOAuthServerBundle(),
             new AppBundle\AppBundle(),
             new Alsciende\SecurityBundle\AlsciendeSecurityBundle(),
-            new Alsciende\DoctrineSerializerBundle\AlsciendeDoctrineSerializerBundle(),
+            new Alsciende\SerializerBundle\AlsciendeSerializerBundle(),
         ];
 
         if(in_array($this->getEnvironment(), ['dev', 'test'], true)) {

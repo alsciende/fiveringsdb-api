@@ -1,0 +1,31 @@
+services:
+    alsciende_serializer.source_manager:
+        class: Alsciende\SerializerBundle\Manager\SourceManager
+        arguments: ["@alsciende_serializer.reference_manager.entity","%alsciende_serializer.group%","%alsciende_serializer.path%"]
+        
+    alsciende_serializer.reference_manager.entity:
+        class: Alsciende\SerializerBundle\Manager\Entity\ObjectManager
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    alsciende_serializer.scanner:
+        class: Alsciende\SerializerBundle\Scanner\Scanner
+        arguments: []
+
+    alsciende_serializer.encoder:
+        class: Alsciende\SerializerBundle\Encoder\Encoder
+        arguments: []
+
+    alsciende_serializer.normalizer:
+        class: Alsciende\SerializerBundle\Normalizer\Normalizer
+        arguments: ["@alsciende_serializer.reference_manager.entity","@serializer"]
+
+    alsciende_serializer.serializer:
+        class: Alsciende\SerializerBundle\Serializer\Serializer
+        arguments: 
+            - "@alsciende_serializer.scanner"
+            - "@alsciende_serializer.encoder"
+            - "@alsciende_serializer.normalizer"
+            - "@alsciende_serializer.reference_manager.entity"
+            - "@alsciende_serializer.source_manager"
+            - "@validator"
+            - "@annotation_reader"

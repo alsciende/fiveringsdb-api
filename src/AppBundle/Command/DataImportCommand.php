@@ -24,10 +24,10 @@ class DataImportCommand extends ContainerAwareCommand
 
     protected function execute (InputInterface $input, OutputInterface $output)
     {
-        /* @var $serializer \Alsciende\DoctrineSerializerBundle\Serializer */
-        $serializer = $this->getContainer()->get('alsciende.doctrine_serializer.serializer');
+        /* @var $serializer \Alsciende\SerializerBundle\Serializer */
+        $serializer = $this->getContainer()->get('alsciende_serializer.serializer');
         $result = $serializer->import();
-        /* @var $fragment \Alsciende\DoctrineSerializerBundle\Model\Fragment */
+        /* @var $fragment \Alsciende\SerializerBundle\Model\Fragment */
         foreach ($result as $fragment) {
             if (!empty($fragment->getChanges())) {
                 $output->writeln("The data was:");
