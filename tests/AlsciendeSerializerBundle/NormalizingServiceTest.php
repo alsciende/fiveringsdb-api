@@ -44,73 +44,100 @@ class NormalizingServiceTest extends KernelTestCase
         $this->clearDatabase();
     }
 
+    /**
+     * 
+     * @return NormalizingService
+     */
+    private function getNormalizer ()
+    {
+        $objectManager = new \Alsciende\SerializerBundle\Manager\Entity\ObjectManager($this->em);
+        $normalizer = new NormalizingService($objectManager);
+        return $normalizer;
+    }
+
     function testNormalizeClan ()
     {
         //setup
-        $clan = new Clan();
-        $clan->setCode('crab');
-        $clan->setName("Crab");
+        $data = [
+            'code' => 'crab',
+            'name' => "Crab",
+        ];
+        $map = [
+            "code" => "string",
+            "name" => "string",
+        ];
         //work
-        $normalizer = new NormalizingService($this->serializer, 'alsciende_serializer');
-        $data = $normalizer->normalize($clan);
+        $data = $this->getNormalizer()->normalize($data, Clan::class, $map);
         //assert
         $this->assertEquals('crab', $data['code']);
         $this->assertEquals("Crab", $data['name']);
     }
 
-    function testNormalizeCard ()
-    {
-        //setup
-        $clan = new Clan();
-        $clan->setCode('crab');
-        $type = new Type();
-        $type->setCode('stronghold');
-        $card = new Card();
-        $card->setCode('01001');
-        $card->setClan($clan);
-        $card->setName("The Impregnable Fortress of the Crab");
-        $card->setType($type);
-        //work
-        $normalizer = new NormalizingService($this->serializer, 'alsciende_serializer');
-        $data = $normalizer->normalize($card);
-        //assert
-        $this->assertEquals('01001', $data['code']);
-        $this->assertEquals("The Impregnable Fortress of the Crab", $data['name']);
-    }
-
     function testNormalizePack ()
     {
         //setup
-        $cycle = new Cycle();
-        $cycle->setCode('core');
-        $pack = new Pack();
-        $pack->setCode('core');
-        $pack->setCycle($cycle);
+        $data = [
+            'code' => 'core',
+            'name' => "Core Set",
+            'position' => 1,
+            'size' => 1,
+            'ffgId' => 1,
+            'releasedAt' => \DateTime::createFromFormat('Y-m-d', '2017-09-01'),
+            'cycle' => $this->createCycleCore(),
+        ];
+        $map = [
+            "code" => "string",
+            "name" => "string",
+            "position" => "integer",
+            "size" => "integer",
+            "ffgId" => "integer",
+            "releasedAt" => "date",
+            "cycle" => "association",
+        ];
         //work
-        $normalizer = new NormalizingService($this->serializer, 'alsciende_serializer');
-        $data = $normalizer->normalize($pack);
+        $data = $this->getNormalizer()->normalize($data, Pack::class, $map);
         //assert
-        $this->assertEquals('core', $data['code']);
+        $this->assertEquals(['code' => 'core', 'name' => "Core Set", 'position' => 1, 'size' => 1, 'ffg_id' => 1, 'released_at' => '2017-09-01', 'cycle_code' => 'core'], $data);
+    }
+
+    function testNormalizeCard ()
+    {
+        //setup
+        $data = [
+            'code' => '01001',
+            'name' => "The Impregnable Fortress of the Crab",
+            'clan' => $this->createCrab(),
+            'type' => $this->createStronghold(),
+        ];
+        $map = [
+            "code" => "string",
+            "name" => "string",
+            "clan" => "association",
+            "type" => "association",
+        ];
+        //work
+        $data = $this->getNormalizer()->normalize($data, Card::class, $map);
+        //assert
+        $this->assertEquals(['code' => '01001', 'name' => "The Impregnable Fortress of the Crab", 'clan_code' => 'crab', 'type_code' => 'stronghold'], $data);
     }
 
     function testNormalizePackSlot ()
     {
         //setup
-        $pack = new Pack();
-        $pack->setCode('core');
-
-        $card = new Card();
-        $card->setCode('01001');
-
-        $packslot = new PackSlot();
-        $packslot->setCard($card);
-        $packslot->setPack($pack);
-        $packslot->setQuantity(3);
+        $data = [
+            'quantity' => 3,
+            'pack' => $this->createPackCore(),
+            'card' => $this->createCrabFortress(),
+        ];
+        $map = [
+            "quantity" => "integer",
+            "pack" => "association",
+            "card" => "association",
+        ];
         //work
-        $normalizer = new NormalizingService($this->serializer, 'alsciende_serializer');
-        $data = $normalizer->normalize($packslot);
+        $data = $this->getNormalizer()->normalize($data, PackSlot::class, $map);
         //assert
-        $this->assertEquals(3, $data['quantity']);
+        $this->assertEquals(['quantity'=>3, 'pack_code' => 'core', 'card_code' => "01001"], $data);
     }
 
     /**

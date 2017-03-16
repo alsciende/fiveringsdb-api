@@ -83,19 +83,7 @@ interface ObjectManagerInterface
      */
     function findAssociations ($className, $data);
     
-    /**
-     * 
-     * @param string $className
-     * @param string $columnName
-     * @return string
-     */
-    function getFieldName ($className, $columnName);
+    function getFieldValue($data, $className, $fieldName);
     
-    /**
-     * 
-     * @param string $className
-     * @param string $fieldName
-     * @return string
-     */
-    function getColumnName ($className, $fieldName);
+    function getAssociationValue($data, $className, $fieldName);
 }

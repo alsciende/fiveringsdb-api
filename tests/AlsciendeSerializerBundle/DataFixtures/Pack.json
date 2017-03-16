@@ -4,7 +4,8 @@
         "name": "Core Set",
         "position": 1,
         "size": 350,
-        "ffgId": "",
+        "released_at": null,
+        "ffg_id": null,
         "cycle_code": "core"
     }
 ]

@@ -22,38 +22,33 @@ class NormalizingService implements NormalizingServiceInterface
     private $objectManager;
 
     /**
-     *
-     * @var \Symfony\Component\Serializer\Serializer
+     * with [ "id" => 3, "name" => "The Dark Side of the Moon", "releasedAt" => (DateTime), "band" => (Band) ]
+     * does [ "id" => 3, "name" => "The Dark Side of the Moon", "released_at" => "1973-03-01", "band_code" => "pink-floyd" ]
+     * 
+     * @param type $data
+     * @param type $className
+     * @param type $propertyMap
+     * @return type
      */
-    private $serializer;
-
-    public function normalize ($object)
-    {
-        $data = $this->serializer->normalize($object);
-
-        return $data;
-    }
-
-    public function denormalize ($data, $className, $propertyMap)
+    public function normalize ($data, $className, $propertyMap)
     {
         $result = [];
         
-        foreach($propertyMap as $fieldName => $type) {
+        foreach($propertyMap as $property => $type) {
+            $value = $data[$property];
             switch($type) {
                 case 'string':
-                    $columnName = $this->objectManager->getColumnName($className, $fieldName);
-                    $result[$fieldName] = $data[$columnName];
+                    $this->objectManager->setFieldValue($result, $className, $property, $value);
                     break;
                 case 'integer':
-                    $columnName = $this->objectManager->getColumnName($className, $fieldName);
-                    $result[$fieldName] = (integer) $data[$columnName];
+                    $this->objectManager->setFieldValue($result, $className, $property, $value);
                     break;
                 case 'date':
-                    $columnName = $this->objectManager->getColumnName($className, $fieldName);
-                    $result[$fieldName] = \DateTime::createFromFormat('Y-m-d', $data[$columnName]);
+                    $value = $value->format('Y-m-d');
+                    $this->objectManager->setFieldValue($result, $className, $property, $value);
                     break;
                 case 'association':
-                    //throw new \Exception("Association denormalization not yet implemented!");
+                    $this->objectManager->setAssociationValue($result, $className, $property, $value);
                     break;
             }
         }
@@ -61,4 +56,41 @@ class NormalizingService implements NormalizingServiceInterface
         return $result;
     }
 
+    /**
+     * with [ "id" => 3, "name" => "The Dark Side of the Moon", "released_at" => "1973-03-01", "band_code" => "pink-floyd" ]
+     * does [ "id" => 3, "name" => "The Dark Side of the Moon", "releasedAt" => (DateTime), "band" => (Band) ]
+     * 
+     * @param type $data
+     * @param type $className
+     * @param type $propertyMap
+     * @return type
+     */
+    public function denormalize ($data, $className, $propertyMap)
+    {
+        $result = [];
+        
+        foreach($propertyMap as $property => $type) {
+            switch($type) {
+                case 'string':
+                    $value = $this->objectManager->getFieldValue($data, $className, $property);
+                    $result[$property] = $value;
+                    break;
+                case 'integer':
+                    $value = $this->objectManager->getFieldValue($data, $className, $property);
+                    $result[$property] = (integer) $value;
+                    break;
+                case 'date':
+                    $value = $this->objectManager->getFieldValue($data, $className, $property);
+                    $result[$property] = $value ? \DateTime::createFromFormat('Y-m-d', $value) : null;
+                    break;
+                case 'association':
+                    $value = $this->objectManager->getAssociationValue($data, $className, $property);
+                    $result[$property] = $value;
+                    break;
+            }
+        }
+        
+        return $result;
+    }
+    
 }

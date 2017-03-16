@@ -76,23 +76,58 @@ class ObjectManager implements \Alsciende\SerializerBundle\Manager\ObjectManager
         foreach($data as $field => $value) {
             $classMetadata->setFieldValue($entity, $field, $value);
         }
-    }
-    
-    function getFieldName ($className, $columnName)
-    {
-        $classMetadata = $this->entityManager->getClassMetadata($className);
-        return $classMetadata->getFieldName($columnName);
-    }
-
-    function getColumnName ($className, $fieldName)
-    {
-        $classMetadata = $this->entityManager->getClassMetadata($className);
-        return $classMetadata->getColumnName($fieldName);
-    }
-    
-    public function mergeObject ($entity)
-    {
         $this->entityManager->merge($entity);
+    }
+    
+    function getFieldValue($data, $className, $fieldName)
+    {
+        $classMetadata = $this->entityManager->getClassMetadata($className);
+        $columnName = $classMetadata->getColumnName($fieldName);
+        return $data[$columnName];
+    }
+    
+    function setFieldValue(&$result, $className, $fieldName, $value)
+    {
+        $classMetadata = $this->entityManager->getClassMetadata($className);
+        $columnName = $classMetadata->getColumnName($fieldName);
+        $result[$columnName] = $value;
+    }
+    
+    function getAssociationValue($data, $className, $fieldName)
+    {
+        $classMetadata = $this->entityManager->getClassMetadata($className);
+        $associationMapping = $classMetadata->getAssociationMapping($fieldName);
+        $association = $this->findAssociation($data, $associationMapping);
+        if($association) {
+            return $association['associationValue'];
+        }
+    }
+    
+    function setAssociationValue(&$result, $className, $fieldName, $value)
+    {
+        $classMetadata = $this->entityManager->getClassMetadata($className);
+        $associationMapping = $classMetadata->getAssociationMapping($fieldName);
+        list($referenceKey, $referenceValue) = $this->getReferenceFromAssociation($associationMapping['targetEntity'], $fieldName, $value);
+        $result[$referenceKey] = $referenceValue;
+    }
+    
+    /**
+     * Return the reference corresponding to the assocation in the entity
+     * 
+     * @param string $targetClass
+     * @param string $associationKey
+     * @param object $associationValue
+     * @return array
+     */
+    private function getReferenceFromAssociation ($targetClass, $associationKey, $associationValue)
+    {
+        $targetIdentifier = $this->getSingleIdentifier($targetClass);
+        $referenceValue = null;
+        if($associationValue !== null) {
+            $referenceValue = $this->readObject($associationValue, $targetIdentifier);
+        }
+        $referenceKey = $associationKey . '_' . $targetIdentifier;
+        return array($referenceKey, $referenceValue);
     }
 
     /**

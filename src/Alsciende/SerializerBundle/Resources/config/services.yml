@@ -17,14 +17,6 @@ services:
 
     alsciende_serializer.normalizing_service:
         class: Alsciende\SerializerBundle\Service\NormalizingService
-        arguments: ["@serializer"]
-
-    alsciende_serializer.referencing_service:
-        class: Alsciende\SerializerBundle\Service\ReferencingService
-        arguments: ["@alsciende_serializer.object_manager.entity"]
-
-    alsciende_serializer.merging_service:
-        class: Alsciende\SerializerBundle\Service\MergingService
         arguments: ["@alsciende_serializer.object_manager.entity"]
 
     alsciende_serializer.serializer:
@@ -33,8 +25,6 @@ services:
             - "@alsciende_serializer.storing_service"
             - "@alsciende_serializer.encoding_service"
             - "@alsciende_serializer.normalizing_service"
-            - "@alsciende_serializer.referencing_service"
-            - "@alsciende_serializer.merging_service"
             - "@alsciende_serializer.object_manager.entity"
             - "@alsciende_serializer.source_manager"
             - "@validator"

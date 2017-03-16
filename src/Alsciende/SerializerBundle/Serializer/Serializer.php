@@ -14,8 +14,6 @@ class Serializer
             \Alsciende\SerializerBundle\Service\StoringService $storingService,
             \Alsciende\SerializerBundle\Service\EncodingService $encoder,
             \Alsciende\SerializerBundle\Service\NormalizingServiceInterface $normalizingService,
-            \Alsciende\SerializerBundle\Service\ReferencingServiceInterface $referencingService,
-            \Alsciende\SerializerBundle\Service\MergingService $mergingService,
             \Alsciende\SerializerBundle\Manager\ObjectManagerInterface $objectManager,
             \Alsciende\SerializerBundle\Manager\SourceManager $sourceManager,
             \Symfony\Component\Validator\Validator\RecursiveValidator $validator,
@@ -25,8 +23,6 @@ class Serializer
         $this->storingService = $storingService;
         $this->encoder = $encoder;
         $this->normalizingService = $normalizingService;
-        $this->referencingService = $referencingService;
-        $this->mergingService = $mergingService;
         $this->objectManager = $objectManager;
         $this->sourceManager = $sourceManager;
         $this->validator = $validator;
@@ -47,11 +43,6 @@ class Serializer
      * @var \Alsciende\SerializerBundle\Service\NormalizingServiceInterface
      */
     private $normalizingService;
-
-    /**
-     * @var \Alsciende\SerializerBundle\Service\ReferencingServiceInterface
-     */
-    private $referencingService;
 
     /**
      * @var \Alsciende\SerializerBundle\Service\MergingService
@@ -148,43 +139,9 @@ class Serializer
         // find the entity based on the incoming identifier
         $entity = $this->findOrCreateObject($className, $data);
         
-        /*
-        // normalize the entity in its original state
-        $normalized = $this->normalizingService->normalize($entity);
-        $referenced = $this->referencingService->reference($entity);
-        $original = array_merge($normalized, $referenced);
-
-        // compute changes between the normalized data
-        $changes = array_diff($data, $original);
-
-        // denormalize the associations in the incoming data
-        $associations = $this->objectManager->findAssociations($className, $data);
-
-        $renamedKeys = [];
-        // replace the references with associations
-        foreach($associations as $association) {
-            foreach($association['referenceKeys'] as $referenceKey) {
-                unset($data[$referenceKey]);
-                $renamedKeys[$referenceKey] = $association['associationKey'];
-            }
-            $data[$association['associationKey']] = $association['associationValue'];
-        }
-
-        // update the entity with the field updated in incoming
-        $updatedFields = [];
-        foreach($changes as $field => $value) {
-            if(isset($renamedKeys[$field])) {
-                $field = $renamedKeys[$field];
-                $value = $data[$field];
-            }
-            $updatedFields[$field] = $value;
-        }
-        $this->objectManager->updateObject($entity, $updatedFields);*
-        */
+        $result = $this->normalizingService->denormalize($data, $className, $fragment->getBlock()->getSource()->getProperties());
         
-        $data = $this->normalizingService->denormalize($data, $className, $fragment->getBlock()->getSource()->getProperties());
-        
-        $this->objectManager->mergeObject($entity);
+        $this->objectManager->updateObject($entity, $result);
         
         $errors = $this->validator->validate($entity);
         if(count($errors) > 0) {
@@ -192,10 +149,10 @@ class Serializer
             throw new \Exception($errorsString);
         }
 
-        $fragment->setEntity($entity);
-        $fragment->setOriginal($original);
-        $fragment->setChanges($changes);
-        $fragment->setData($data);
+//        $fragment->setEntity($entity);
+//        $fragment->setOriginal();
+//        $fragment->setChanges($changes);
+//        $fragment->setData($result);
     }
 
     /**

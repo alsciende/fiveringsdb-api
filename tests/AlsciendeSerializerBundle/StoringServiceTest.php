@@ -13,7 +13,7 @@ use PHPUnit_Framework_TestCase;
 /**
  * @author Alsciende <alsciende@icloud.com>
  */
-class ScannerTest extends PHPUnit_Framework_TestCase
+class StoringServiceTest extends PHPUnit_Framework_TestCase
 {
 
     public function testDecodeFile1 ()

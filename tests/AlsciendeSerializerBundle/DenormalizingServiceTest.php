@@ -17,7 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class DeNormalizingServiceTest extends KernelTestCase
+class DenormalizingServiceTest extends KernelTestCase
 {
 
     use DomainFixtures;
@@ -40,15 +40,33 @@ class DeNormalizingServiceTest extends KernelTestCase
 
         $this->clearDatabase();
     }
+    
+    /**
+     * 
+     * @return NormalizingService
+     */
+    private function getNormalizer()
+    {
+        $objectManager = new \Alsciende\SerializerBundle\Manager\Entity\ObjectManager($this->em);
+        $normalizer = new NormalizingService($objectManager);
+        return $normalizer;
+    }
 
     function testDenormalizeClan ()
     {
         //setup
-        $data = array('code' => 'crab', 'name' => "Crab");
+        $data = [
+            'code' => 'crab',
+            'name' => "Crab",
+        ];
+        $map = [
+            "code" => "string",
+            "name" => "string",
+        ];
         //work
         $objectManager = new \Alsciende\SerializerBundle\Manager\Entity\ObjectManager($this->em);
         $normalizer = new NormalizingService($objectManager);
-        $data = $normalizer->denormalize($data, Clan::class, ["code" => "string", "name" => "string"]);
+        $data = $normalizer->denormalize($data, Clan::class, $map);
         //assert
         $this->assertSame('crab', $data['code']);
         $this->assertSame("Crab", $data['name']);
@@ -120,6 +138,25 @@ class DeNormalizingServiceTest extends KernelTestCase
 
     function testDenormalizePackSlot ()
     {
+        //setup
+        $this->createPackCore();
+        $this->createCrabFortress();
+        $data = [
+            'quantity' => 3,
+            'pack_code' => 'core',
+            'card_code' => '01001'
+        ];
+        $map = [
+            "quantity" => "integer",
+            "pack" => "association",
+            "card" => "association"
+        ];
+        //work
+        $data = $this->getNormalizer()->denormalize($data, PackSlot::class, $map);
+        //assert
+        $this->assertSame(3, $data['quantity']);
+        $this->assertInstanceOf(Pack::class, $data['pack']);
+        $this->assertInstanceOf(Card::class, $data['card']);
     }
 
     /**
