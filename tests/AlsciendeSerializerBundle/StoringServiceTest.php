@@ -3,7 +3,7 @@
 namespace Tests\AlsciendeSerializerBundle;
 
 use Alsciende\SerializerBundle\Model\Source;
-use Alsciende\SerializerBundle\Scanner\Scanner;
+use Alsciende\SerializerBundle\Service\StoringService;
 use AppBundle\Entity\Card;
 use AppBundle\Entity\Clan;
 use AppBundle\Entity\PackSlot;
@@ -11,8 +11,6 @@ use AppBundle\Entity\Type;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Description of ScannerTest
- *
  * @author Alsciende <alsciende@icloud.com>
  */
 class ScannerTest extends PHPUnit_Framework_TestCase
@@ -22,8 +20,8 @@ class ScannerTest extends PHPUnit_Framework_TestCase
     {
         $path = __DIR__ . "/DataFixtures";
 
-        $scanner = new Scanner();
-        $blocks = $scanner->scanFile("$path/Clan.json");
+        $storingService = new StoringService();
+        $blocks = $storingService->scanFile("$path/Clan.json");
 
         $this->assertEquals(1, count($blocks));
     }
@@ -32,8 +30,8 @@ class ScannerTest extends PHPUnit_Framework_TestCase
     {
         $path = __DIR__ . "/DataFixtures";
 
-        $scanner = new Scanner();
-        $blocks = $scanner->scanFile("$path/Card/01001.json");
+        $storingService = new StoringService();
+        $blocks = $storingService->scanFile("$path/Card/01001.json");
 
         $this->assertEquals(1, count($blocks));
     }
@@ -42,8 +40,8 @@ class ScannerTest extends PHPUnit_Framework_TestCase
     {
         $path = __DIR__ . "/DataFixtures";
 
-        $scanner = new Scanner();
-        $blocks = $scanner->scanDirectory("$path/Card");
+        $storingService = new StoringService();
+        $blocks = $storingService->scanDirectory("$path/Card");
 
         $this->assertEquals(2, count($blocks));
     }
@@ -54,8 +52,8 @@ class ScannerTest extends PHPUnit_Framework_TestCase
 
         $source = new Source(Clan::class, $path);
 
-        $scanner = new Scanner();
-        $blocks = $scanner->scan($source);
+        $storingService = new StoringService();
+        $blocks = $storingService->retrieve($source);
 
         $this->assertEquals(1, count($blocks));
     }
@@ -66,8 +64,8 @@ class ScannerTest extends PHPUnit_Framework_TestCase
 
         $source = new Source(Type::class, $path);
 
-        $scanner = new Scanner();
-        $blocks = $scanner->scan($source);
+        $storingService = new StoringService();
+        $blocks = $storingService->retrieve($source);
 
         $this->assertEquals(1, count($blocks));
     }
@@ -78,8 +76,8 @@ class ScannerTest extends PHPUnit_Framework_TestCase
 
         $source = new Source(Card::class, $path, "code");
 
-        $scanner = new Scanner();
-        $blocks = $scanner->scan($source);
+        $storingService = new StoringService();
+        $blocks = $storingService->retrieve($source);
 
         $this->assertEquals(2, count($blocks));
     }
@@ -90,8 +88,8 @@ class ScannerTest extends PHPUnit_Framework_TestCase
 
         $source = new Source(PackSlot::class, $path, "pack_code");
 
-        $scanner = new Scanner();
-        $blocks = $scanner->scan($source);
+        $storingService = new StoringService();
+        $blocks = $storingService->retrieve($source);
 
         $this->assertEquals(1, count($blocks));
     }

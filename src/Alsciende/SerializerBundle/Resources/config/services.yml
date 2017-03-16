@@ -7,8 +7,8 @@ services:
         class: Alsciende\SerializerBundle\Manager\Entity\ObjectManager
         arguments: ["@doctrine.orm.entity_manager"]
 
-    alsciende_serializer.scanner:
-        class: Alsciende\SerializerBundle\Scanner\Scanner
+    alsciende_serializer.storing_service:
+        class: Alsciende\SerializerBundle\Service\StoringService
         arguments: []
 
     alsciende_serializer.encoder:
@@ -22,7 +22,7 @@ services:
     alsciende_serializer.serializer:
         class: Alsciende\SerializerBundle\Serializer\Serializer
         arguments: 
-            - "@alsciende_serializer.scanner"
+            - "@alsciende_serializer.storing_service"
             - "@alsciende_serializer.encoder"
             - "@alsciende_serializer.normalizer"
             - "@alsciende_serializer.reference_manager.entity"

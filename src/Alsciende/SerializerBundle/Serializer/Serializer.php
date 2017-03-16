@@ -11,9 +11,9 @@ class Serializer
 {
 
     /**
-     * @var \Alsciende\SerializerBundle\Scanner\Scanner
+     * @var \Alsciende\SerializerBundle\Service\StoringService
      */
-    private $scanner;
+    private $storingService;
 
     /**
      * @var \Alsciende\SerializerBundle\Encoder\Encoder
@@ -45,9 +45,9 @@ class Serializer
      */
     private $objectManager;
 
-    public function __construct (\Alsciende\SerializerBundle\Scanner\Scanner $scanner, \Alsciende\SerializerBundle\Encoder\Encoder $encoder, \Alsciende\SerializerBundle\Normalizer\Normalizer $normalizer, \Alsciende\SerializerBundle\Manager\ObjectManagerInterface $objectManager, \Alsciende\SerializerBundle\Manager\SourceManager $sourceManager, \Symfony\Component\Validator\Validator\RecursiveValidator $validator, \Doctrine\Common\Annotations\Reader $reader)
+    public function __construct (\Alsciende\SerializerBundle\Service\StoringService $storingService, \Alsciende\SerializerBundle\Encoder\Encoder $encoder, \Alsciende\SerializerBundle\Normalizer\Normalizer $normalizer, \Alsciende\SerializerBundle\Manager\ObjectManagerInterface $objectManager, \Alsciende\SerializerBundle\Manager\SourceManager $sourceManager, \Symfony\Component\Validator\Validator\RecursiveValidator $validator, \Doctrine\Common\Annotations\Reader $reader)
     {
-        $this->scanner = $scanner;
+        $this->storingService = $storingService;
         $this->encoder = $encoder;
         $this->normalizer = $normalizer;
         $this->objectManager = $objectManager;
@@ -74,7 +74,7 @@ class Serializer
     public function importSource (\Alsciende\SerializerBundle\Model\Source $source)
     {
         $result = [];
-        foreach($this->scanner->scan($source) as $block) {
+        foreach($this->storingService->retrieve($source) as $block) {
             $result = array_merge($result, $this->importBlock($block));
         }
         $this->objectManager->flush();
