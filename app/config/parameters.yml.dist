@@ -25,3 +25,10 @@ parameters:
     oauth_test_client_id: ~
     oauth_test_client_secret: ~
     oauth_test_redirect_uri: ~
+
+    # Paypal
+    paypal_rest_api_client_id: ~
+    paypal_rest_api_secret: ~
+    paypal_classic_api_username: ~
+    paypal_classic_api_password: ~
+    paypal_classic_api_signature: ~

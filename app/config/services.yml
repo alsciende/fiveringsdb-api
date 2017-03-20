@@ -15,3 +15,8 @@ services:
     alsciende_security.user_manager:
         class: Alsciende\SecurityBundle\Service\UserManager
         arguments: ["@doctrine.orm.entity_manager","@security.password_encoder","%secret%"]
+
+    paypal:
+        class: AppBundle\Service\PaypalService
+        arguments: ["%paypal_classic_api_username%","%paypal_classic_api_password%","%paypal_classic_api_signature%"]
+    
