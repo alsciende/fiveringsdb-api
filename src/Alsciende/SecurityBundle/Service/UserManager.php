@@ -2,6 +2,10 @@
 
 namespace Alsciende\SecurityBundle\Service;
 
+use AppBundle\Entity\User;
+use Doctrine\ORM\EntityManager;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+
 /**
  * Description of UserManager
  *
@@ -10,31 +14,51 @@ namespace Alsciende\SecurityBundle\Service;
 class UserManager
 {
 
-    /** @var \Doctrine\ORM\EntityManager */
+    /** @var EntityManager */
     private $em;
 
-    /** @var \Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface */
+    /** @var UserPasswordEncoderInterface */
     private $encoder;
 
     /** @var string */
     private $salt;
 
-    public function __construct (\Doctrine\ORM\EntityManager $entityManager, \Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface $passwordEncoder, $salt)
+    public function __construct (EntityManager $entityManager, UserPasswordEncoderInterface $passwordEncoder, $salt)
     {
         $this->em = $entityManager;
         $this->encoder = $passwordEncoder;
         $this->salt = $salt;
     }
 
+    /**
+     * 
+     * @param string $username
+     * @return User
+     */
+    public function findUserByUsername ($username)
+    {
+        return $this->em->getRepository(User::class)->findOneBy(['username' => $username]);
+    }
+    
+    /**
+     * 
+     * @param string $username
+     * @param string $plainPassword
+     * @return User
+     */
     public function createUser ($username, $plainPassword)
     {
-        $user = new \AppBundle\Entity\User();
+        $user = new User();
         $user->setUsername($username);
         $user->setPassword($this->encoder->encodePassword($user, $plainPassword));
         return $user;
     }
     
-    public function updateUser(\AppBundle\Entity\User $user)
+    /**
+     * 
+     * @param User $user
+     */
+    public function updateUser(User $user)
     {
         $this->em->persist($user);
         $this->em->flush();

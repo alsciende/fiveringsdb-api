@@ -21,3 +21,8 @@ doctrine:
         dbname:   testdb
         user:     testdb
         password: testdb
+
+security:
+    firewalls:
+        main:
+            http_basic: ~

@@ -2,81 +2,45 @@
 
 namespace Tests\AlsciendeSecurityBundle;
 
-use Alsciende\SecurityBundle\Service\UserManager;
-use FOS\OAuthServerBundle\Model\AccessTokenManagerInterface;
-use FOS\OAuthServerBundle\Model\ClientManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-
 /**
  * Description of AuthTest
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class AuthTest extends KernelTestCase
+class AuthTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
 {
 
-    use DomainFixtures;
-
-    /** @var \Doctrine\ORM\EntityManager */
-    private $em;
-
-    /** @var AccessTokenManagerInterface */
-    private $accessTokenManager;
-    
-    /** @var ClientManagerInterface */
-    private $clientManager;
-    
-    /** @var UserManager */
-    private $userManager;
-    
-    protected function setUp ()
+    public function testGetIndex ()
     {
-        self::bootKernel();
-        
-        $this->em = static::$kernel->getContainer()
-                ->get('doctrine')
-                ->getManager();
+        $client = static::createClient();
 
-        $this->accessTokenManager = static::$kernel->getContainer()
-                ->get('fos_oauth_server.access_token_manager');
-
-        $this->clientManager = static::$kernel->getContainer()
-                ->get('fos_oauth_server.client_manager');
-        
-        $this->userManager = static::$kernel->getContainer()
-                ->get('alsciende_security.user_manager');
-        
-        $this->clearDatabase();
-
+        $client->request('GET', '/');
+        $this->assertEquals(
+                200, $client->getResponse()->getStatusCode()
+        );
     }
 
-    public function testCreateClient ()
+    public function testGetProfileFailure ()
     {
-        $client = $this->createClient($this->clientManager);
-        $this->assertNotNull($client);
+        $client = static::createClient();
+
+        $client->request('GET', '/profile');
+        $this->assertEquals(
+                302, $client->getResponse()->getStatusCode()
+        );
     }
 
-    public function testCreateUser ()
+    public function testGetProfileSuccess ()
     {
-        $user = $this->createUser($this->userManager);
-        $this->assertNotNull($user);
-    }
+        $client = static::createClient(array(), array(
+                    'PHP_AUTH_USER' => 'admin',
+                    'PHP_AUTH_PW' => 'test',
+        ));
 
-    public function testCreateToken ()
-    {
-        $client = $this->createClient($this->clientManager);
-        $user = $this->createUser($this->userManager);
-        $token = $this->createAccessToken($this->accessTokenManager, $client, $user);
-        $this->assertNotNull($token);
-    }
-
-    protected function tearDown ()
-    {
-        parent::tearDown();
-
-        $this->accessTokenManager = null;
-        $this->clientManager = null;
-        $this->userManager = null;
+        $client->request('GET', '/profile');
+        $this->assertEquals(
+                200, $client->getResponse()->getStatusCode()
+        );
     }
 
 }
