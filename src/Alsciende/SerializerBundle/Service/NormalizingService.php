@@ -33,7 +33,7 @@ class NormalizingService implements NormalizingServiceInterface
     public function normalize ($data, $className, $propertyMap)
     {
         $result = [];
-        
+
         foreach($propertyMap as $property => $type) {
             $value = $data[$property];
             switch($type) {
@@ -52,7 +52,7 @@ class NormalizingService implements NormalizingServiceInterface
                     break;
             }
         }
-        
+
         return $result;
     }
 
@@ -68,7 +68,7 @@ class NormalizingService implements NormalizingServiceInterface
     public function denormalize ($data, $className, $propertyMap)
     {
         $result = [];
-        
+
         foreach($propertyMap as $property => $type) {
             switch($type) {
                 case 'string':
@@ -89,8 +89,8 @@ class NormalizingService implements NormalizingServiceInterface
                     break;
             }
         }
-        
+
         return $result;
     }
-    
+
 }

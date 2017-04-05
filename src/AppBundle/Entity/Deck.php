@@ -4,7 +4,6 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Serializer\Annotation\Groups;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
@@ -28,6 +27,13 @@ class Deck
      * @ORM\GeneratedValue(strategy="UUID")
      */
     private $id;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255)
+     */
+    private $name;
 
     /**
      * @var DeckSlots[]
@@ -35,6 +41,15 @@ class Deck
      * @ORM\OneToMany(targetEntity="DeckSlot", mappedBy="deck", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
      */
     private $slots;
+    
+    /**
+     * @var User
+     * 
+     * @ORM\ManyToOne(targetEntity="User", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    private $user;
+    
 
     function __construct ()
     {
@@ -46,6 +61,15 @@ class Deck
         return $this->id;
     }
 
+    function getName ()
+    {
+        return $this->name;
+    }
+
+    function setName ($name)
+    {
+        $this->name = $name;
+    }
     function getDeckSlots ()
     {
         return $this->deckSlots;
@@ -54,6 +78,16 @@ class Deck
     function setDeckSlots (array $deckSlots)
     {
         $this->deckSlots = $deckSlots;
+    }
+
+    function getUser ()
+    {
+        return $this->user;
+    }
+
+    function setUser (User $user)
+    {
+        $this->user = $user;
     }
 
 }

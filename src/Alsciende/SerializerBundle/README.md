@@ -1,4 +1,4 @@
-## Nomenclature
+## Lexicon
 
 - reference: a key/value in some data that references another object's identifier, eg ['article_id' => 124]
 - referenceKey: the key of a reference, eg 'article_id'

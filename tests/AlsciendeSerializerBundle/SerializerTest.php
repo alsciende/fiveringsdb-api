@@ -42,15 +42,44 @@ class SerializerTest extends \Symfony\Bundle\FrameworkBundle\Test\KernelTestCase
 
     public function testImport ()
     {
-        $path = __DIR__ . "/DataFixtures";
         $objectManager = new \Alsciende\SerializerBundle\Manager\Entity\ObjectManager($this->em);
-        $sourceManager = new \Alsciende\SerializerBundle\Manager\SourceManager($objectManager, $path);
         $storingService = new \Alsciende\SerializerBundle\Service\StoringService();
         $encoder = new \Alsciende\SerializerBundle\Service\EncodingService();
         $normalizingService = new \Alsciende\SerializerBundle\Service\NormalizingService($objectManager);
-        $serializer = new \Alsciende\SerializerBundle\Serializer\Serializer($storingService, $encoder, $normalizingService, $objectManager, $sourceManager, $this->validator, $this->reader);
+        $serializer = new \Alsciende\SerializerBundle\Serializer\Serializer($storingService, $encoder, $normalizingService, $objectManager, $this->validator);
 
-        $serializer->import();
+        $source = new \Alsciende\SerializerBundle\Model\Source(\AppBundle\Entity\Clan::class, __DIR__ . "/DataFixtures");
+        $source->addProperty('code', 'string');
+        $source->addProperty('name', 'string');
+        
+        $result = $serializer->importSource($source);
+        $this->assertEquals(2, count($result));
+    }
+    
+    public function testImportFragment()
+    {
+        $objectManager = new \Alsciende\SerializerBundle\Manager\Entity\ObjectManager($this->em);
+        $storingService = new \Alsciende\SerializerBundle\Service\StoringService();
+        $encoder = new \Alsciende\SerializerBundle\Service\EncodingService();
+        $normalizingService = new \Alsciende\SerializerBundle\Service\NormalizingService($objectManager);
+        $serializer = new \Alsciende\SerializerBundle\Serializer\Serializer($storingService, $encoder, $normalizingService, $objectManager, $this->validator);
+
+        $source = new \Alsciende\SerializerBundle\Model\Source(\AppBundle\Entity\Clan::class, __DIR__ . "/DataFixtures");
+        $source->addProperty('code', 'string');
+        $source->addProperty('name', 'string');
+        
+        $data = ['code' => 'crab', 'name' => 'Crab'];
+                
+        $block = new \Alsciende\SerializerBundle\Model\Block(json_encode($data));
+        $block->setSource($source);
+        
+        $fragment = new \Alsciende\SerializerBundle\Model\Fragment($data);
+        $fragment->setBlock($block);
+        
+        $result = $serializer->importFragment($fragment);
+        $this->assertEquals('Crab', $result['array']['name']);
+        $this->assertNull($result['original']['name']);
+        $this->assertInstanceOf(\AppBundle\Entity\Clan::class, $result['entity']);
     }
 
     /**

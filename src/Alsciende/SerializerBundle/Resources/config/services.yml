@@ -1,11 +1,15 @@
 services:
-    alsciende_serializer.source_manager:
-        class: Alsciende\SerializerBundle\Manager\SourceManager
-        arguments: ["@alsciende_serializer.object_manager.entity","%alsciende_serializer.path%"]
-        
     alsciende_serializer.object_manager.entity:
         class: Alsciende\SerializerBundle\Manager\Entity\ObjectManager
         arguments: ["@doctrine.orm.entity_manager"]
+    
+    alsciende_serializer.source_ordering_service:
+        class: Alsciende\SerializerBundle\Service\SourceOrderingService
+        arguments: ["@alsciende_serializer.object_manager.entity"]
+
+    alsciende_serializer.scanning_service:
+        class: Alsciende\SerializerBundle\Service\ScanningService
+        arguments: ["@alsciende_serializer.object_manager.entity","@annotation_reader","%alsciende_serializer.path%"]
 
     alsciende_serializer.storing_service:
         class: Alsciende\SerializerBundle\Service\StoringService
@@ -26,6 +30,4 @@ services:
             - "@alsciende_serializer.encoding_service"
             - "@alsciende_serializer.normalizing_service"
             - "@alsciende_serializer.object_manager.entity"
-            - "@alsciende_serializer.source_manager"
-            - "@validator"
-            - "@annotation_reader"
+            - "@alsciende_serializer.scanning_service"

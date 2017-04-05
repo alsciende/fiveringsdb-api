@@ -62,12 +62,30 @@ class NormalizingServiceTest extends KernelTestCase
             'code' => 'crab',
             'name' => "Crab",
         ];
-        $map = [
+        $properties = [
             "code" => "string",
             "name" => "string",
         ];
         //work
-        $data = $this->getNormalizer()->normalize($data, Clan::class, $map);
+        $data = $this->getNormalizer()->normalize($data, Clan::class, $properties);
+        //assert
+        $this->assertEquals('crab', $data['code']);
+        $this->assertEquals("Crab", $data['name']);
+    }
+
+    function testDenormalizeClan ()
+    {
+        //setup
+        $data = [
+            'code' => 'crab',
+            'name' => "Crab",
+        ];
+        $properties = [
+            "code" => "string",
+            "name" => "string",
+        ];
+        //work
+        $data = $this->getNormalizer()->denormalize($data, Clan::class, $properties);
         //assert
         $this->assertEquals('crab', $data['code']);
         $this->assertEquals("Crab", $data['name']);
@@ -85,7 +103,7 @@ class NormalizingServiceTest extends KernelTestCase
             'releasedAt' => \DateTime::createFromFormat('Y-m-d', '2017-09-01'),
             'cycle' => $this->createCycleCore(),
         ];
-        $map = [
+        $properties = [
             "code" => "string",
             "name" => "string",
             "position" => "integer",
@@ -95,9 +113,39 @@ class NormalizingServiceTest extends KernelTestCase
             "cycle" => "association",
         ];
         //work
-        $data = $this->getNormalizer()->normalize($data, Pack::class, $map);
+        $data = $this->getNormalizer()->normalize($data, Pack::class, $properties);
         //assert
         $this->assertEquals(['code' => 'core', 'name' => "Core Set", 'position' => 1, 'size' => 1, 'ffg_id' => 1, 'released_at' => '2017-09-01', 'cycle_code' => 'core'], $data);
+    }
+
+    function testDenormalizePack ()
+    {
+        //setup
+        $this->createCycleCore();
+        $data = [
+            'code' => 'core',
+            'name' => "Core Set",
+            'position' => 1,
+            'size' => 1,
+            'ffg_id' => 1,
+            'released_at' => '2017-09-01',
+            'cycle_code' => 'core',
+        ];
+        $properties = [
+            "code" => "string",
+            "name" => "string",
+            "position" => "integer",
+            "size" => "integer",
+            "ffgId" => "integer",
+            "releasedAt" => "date",
+            "cycle" => "association",
+        ];
+        //work
+        $data = $this->getNormalizer()->denormalize($data, Pack::class, $properties);
+        //assert
+        $this->assertEquals(['code', 'name', 'position', 'size', 'ffgId', 'releasedAt', 'cycle'], array_keys($data));
+        $this->assertInstanceOf(Cycle::class, $data['cycle']);
+        $this->assertEquals('core', $data['cycle']->getCode());
     }
 
     function testNormalizeCard ()
@@ -109,14 +157,14 @@ class NormalizingServiceTest extends KernelTestCase
             'clan' => $this->createCrab(),
             'type' => $this->createStronghold(),
         ];
-        $map = [
+        $properties = [
             "code" => "string",
             "name" => "string",
             "clan" => "association",
             "type" => "association",
         ];
         //work
-        $data = $this->getNormalizer()->normalize($data, Card::class, $map);
+        $data = $this->getNormalizer()->normalize($data, Card::class, $properties);
         //assert
         $this->assertEquals(['code' => '01001', 'name' => "The Impregnable Fortress of the Crab", 'clan_code' => 'crab', 'type_code' => 'stronghold'], $data);
     }
@@ -129,13 +177,13 @@ class NormalizingServiceTest extends KernelTestCase
             'pack' => $this->createPackCore(),
             'card' => $this->createCrabFortress(),
         ];
-        $map = [
+        $properties = [
             "quantity" => "integer",
             "pack" => "association",
             "card" => "association",
         ];
         //work
-        $data = $this->getNormalizer()->normalize($data, PackSlot::class, $map);
+        $data = $this->getNormalizer()->normalize($data, PackSlot::class, $properties);
         //assert
         $this->assertEquals(['quantity'=>3, 'pack_code' => 'core', 'card_code' => "01001"], $data);
     }

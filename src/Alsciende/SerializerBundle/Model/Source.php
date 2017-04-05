@@ -9,8 +9,8 @@ namespace Alsciende\SerializerBundle\Model;
  */
 class Source
 {
-    /* @var string */
 
+    /* @var string */
     private $break;
 
     /* @var string */

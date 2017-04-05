@@ -34,11 +34,6 @@ interface ObjectManagerInterface
     function getSingleIdentifier ($className);
 
     /**
-     * Commits all modifications made to managed entities
-     */
-    function flush ();
-
-    /**
      * Updates some fields in the entity
      * 
      * @param object $entity
@@ -57,12 +52,21 @@ interface ObjectManagerInterface
     /**
      * Find the entity referenced by the identifiers in $data
      * 
-     * @param string $className
      * @param array $identifiers
+     * @param string $className
      * @return object
      */
-    function findObject ($className, $identifiers);
+    function findObject ($identifiers, $className);
 
+    /**
+     * Find the entity referenced by the identifiers in $data, or create a new one with the correct identifiers
+     * 
+     * @param array $data
+     * @param string $className
+     * @return object
+     */
+    function findOrCreateObject ($data, $className);
+    
     /**
      * Returns the array of identifier keys/values that can be used with find()
      * to find the entity described by $incoming
@@ -71,7 +75,7 @@ interface ObjectManagerInterface
      * 
      * @return array
      */
-    function getIdentifierValues ($className, $data);
+    function getIdentifierValues ($data, $className);
 
     /**
      * Finds all the foreign keys in $data and the entity associated
@@ -81,7 +85,7 @@ interface ObjectManagerInterface
      * 
      * @return array
      */
-    function findAssociations ($className, $data);
+    function findAssociations ($data, $className);
     
     function getFieldValue($data, $className, $fieldName);
     

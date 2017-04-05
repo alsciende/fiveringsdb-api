@@ -3,8 +3,9 @@
 namespace Alsciende\SerializerBundle\Model;
 
 /**
- * Represents a Block of data: some encoded text at a path, that must be decoded
- * as a list of Fragments
+ * Represents a data block: some encoded text at a path, 
+ *      representing one or more objects of the same class,
+ *      that must be decoded as a list of Fragments
  *
  * @author Alsciende <alsciende@icloud.com>
  */

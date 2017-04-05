@@ -7,7 +7,7 @@ namespace Alsciende\SerializerBundle\Manager\Entity;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class ObjectManager implements \Alsciende\SerializerBundle\Manager\ObjectManagerInterface
+class ObjectManager extends \Alsciende\SerializerBundle\Manager\BaseObjectManager
 {
     /* @var \Doctrine\ORM\EntityManager */
 
@@ -62,14 +62,6 @@ class ObjectManager implements \Alsciende\SerializerBundle\Manager\ObjectManager
     /**
      * {@inheritDoc}
      */
-    function flush ()
-    {
-        $this->entityManager->flush();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     function updateObject ($entity, $data)
     {
         $classMetadata = $this->entityManager->getClassMetadata(get_class($entity));
@@ -112,25 +104,6 @@ class ObjectManager implements \Alsciende\SerializerBundle\Manager\ObjectManager
     }
     
     /**
-     * Return the reference corresponding to the assocation in the entity
-     * 
-     * @param string $targetClass
-     * @param string $associationKey
-     * @param object $associationValue
-     * @return array
-     */
-    private function getReferenceFromAssociation ($targetClass, $associationKey, $associationValue)
-    {
-        $targetIdentifier = $this->getSingleIdentifier($targetClass);
-        $referenceValue = null;
-        if($associationValue !== null) {
-            $referenceValue = $this->readObject($associationValue, $targetIdentifier);
-        }
-        $referenceKey = $associationKey . '_' . $targetIdentifier;
-        return array($referenceKey, $referenceValue);
-    }
-
-    /**
      * {@inheritDoc}
      */
     function readObject ($entity, $field)
@@ -142,7 +115,7 @@ class ObjectManager implements \Alsciende\SerializerBundle\Manager\ObjectManager
     /**
      * {@inheritDoc}
      */
-    function findObject ($className, $identifiers)
+    function findObject ($identifiers, $className)
     {
         return $this->entityManager->find($className, $identifiers);
     }
@@ -150,13 +123,13 @@ class ObjectManager implements \Alsciende\SerializerBundle\Manager\ObjectManager
     /**
      * {@inheritDoc}
      */
-    function getIdentifierValues ($className, $data)
+    function getIdentifierValues ($data, $className)
     {
         $classMetadata = $this->entityManager->getClassMetadata($className);
 
         $result = [];
         foreach($classMetadata->getIdentifierFieldNames() as $identifierFieldName) {
-            $result[$identifierFieldName] = $this->getIdentifierValue($className, $data, $identifierFieldName);
+            $result[$identifierFieldName] = $this->getIdentifierValue($data, $className, $identifierFieldName);
         }
         return $result;
     }
@@ -165,13 +138,13 @@ class ObjectManager implements \Alsciende\SerializerBundle\Manager\ObjectManager
      * Returns the unique value (scalar or object) used as identifier in $data
      * considered as a normalization of $className
      * 
-     * @param string $className
      * @param array $data
+     * @param string $className
      * @param string $identifierFieldName
      * @return mixed
      * @throws \InvalidArgumentException
      */
-    private function getIdentifierValue ($className, $data, $identifierFieldName)
+    private function getIdentifierValue ($data, $className, $identifierFieldName)
     {
         $classMetadata = $this->entityManager->getClassMetadata($className);
 
@@ -193,7 +166,7 @@ class ObjectManager implements \Alsciende\SerializerBundle\Manager\ObjectManager
     /**
      * {@inheritDoc}
      */
-    function findAssociations ($className, $data)
+    function findAssociations ($data, $className)
     {
         $classMetadata = $this->entityManager->getClassMetadata($className);
 

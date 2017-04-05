@@ -55,7 +55,7 @@ class ObjectManagerTest extends \Symfony\Bundle\FrameworkBundle\Test\KernelTestC
             "cycle_code" => "core"
         ];
         //work
-        $associations = $this->objectManager->findAssociations(Pack::class, $data);
+        $associations = $this->objectManager->findAssociations($data, Pack::class);
         //assert
         $this->assertEquals(1, count($associations));
         $association = $associations[0];
