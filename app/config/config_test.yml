@@ -15,13 +15,6 @@ web_profiler:
 swiftmailer:
     disable_delivery: true
 
-doctrine:
-    dbal:
-        host:     localhost
-        dbname:   testdb
-        user:     testdb
-        password: testdb
-
 security:
     firewalls:
         main:

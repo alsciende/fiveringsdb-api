@@ -90,4 +90,10 @@ interface ObjectManagerInterface
     function getFieldValue($data, $className, $fieldName);
     
     function getAssociationValue($data, $className, $fieldName);
+    
+    /**
+     * Returns the class name of an entity, even if the object is a Proxy
+     * @param object $entity
+     */
+    function getClassName($entity);
 }

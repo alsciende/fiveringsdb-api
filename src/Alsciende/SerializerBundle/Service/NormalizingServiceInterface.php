@@ -9,6 +9,13 @@ namespace Alsciende\SerializerBundle\Service;
 interface NormalizingServiceInterface
 {
     /**
+     * 
+     * @param type $entity
+     * @param type $propertyMap
+     */
+    public function toArray ($entity, $propertyMap);
+    
+    /**
      * Returns a new array with all the key/value pairs in data normalized
      * according to the property names and class annotations of the type
      * 

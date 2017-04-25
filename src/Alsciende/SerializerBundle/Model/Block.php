@@ -25,6 +25,11 @@ class Block
     /**
      * @var string
      */
+    private $name;
+    
+    /**
+     * @var string
+     */
     private $data;
 
     /**
@@ -36,6 +41,9 @@ class Block
     {
         $this->data = $data;
         $this->path = $path;
+        if(isset($path)) {
+            $this->name = pathinfo($path, PATHINFO_FILENAME);
+        }
     }
 
     /**
@@ -49,7 +57,7 @@ class Block
 
     /**
      * 
-     * @return text
+     * @return string
      */
     function getPath ()
     {
@@ -58,11 +66,20 @@ class Block
 
     /**
      * 
-     * @return text
+     * @return string
      */
     function getData ()
     {
         return $this->data;
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    function getName ()
+    {
+        return $this->name;
     }
 
     /**
@@ -100,5 +117,18 @@ class Block
 
         return $this;
     }
+
+    /**
+     * 
+     * @param string $name
+     * @return Source
+     */
+    function setName ($name)
+    {
+        $this->name = $name;
+        
+        return $this;
+    }
+
 
 }

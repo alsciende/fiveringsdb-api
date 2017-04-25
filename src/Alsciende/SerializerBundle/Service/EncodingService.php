@@ -13,19 +13,23 @@ use UnexpectedValueException;
  */
 class EncodingService
 {
+
     /**
      * 
      * @param Block $block
      * @return Fragment[]
      */
-    public function decode(Block $block)
+    public function decode (Block $block)
     {
         $list = json_decode($block->getData(), true);
-        if(!$list or ! is_array($list)) {
-            throw new UnexpectedValueException("Block data cannot be decoded to an array!");
+        if(!$list || !is_array($list) || (!empty($list) && !is_array($list[0]))) {
+            throw new UnexpectedValueException("Block data cannot be decoded to a numeric array!");
         }
         $fragments = [];
         foreach($list as $data) {
+            if($block->getSource()->getBreak()) {
+                $data[$block->getSource()->getBreak()] = $block->getName();
+            }
             $fragment = new Fragment($data);
             $fragment->setBlock($block);
             $fragments[] = $fragment;
@@ -38,7 +42,7 @@ class EncodingService
      * @param Fragment[] $fragments
      * @return Block
      */
-    public function encode($fragments)
+    public function encode ($fragments)
     {
         $list = [];
         foreach($fragments as $fragment) {

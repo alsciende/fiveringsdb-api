@@ -9,7 +9,7 @@ namespace Tests\AlsciendeSerializerBundle;
  */
 class ScanningServiceTest extends \Symfony\Bundle\FrameworkBundle\Test\KernelTestCase
 {
-    
+
     /**
      * @var EntityManager
      */
@@ -35,14 +35,16 @@ class ScanningServiceTest extends \Symfony\Bundle\FrameworkBundle\Test\KernelTes
         $this->reader = static::$kernel->getContainer()
                 ->get('annotation_reader');
 
+        $this->cache = static::$kernel->getContainer()
+                ->get('cache.app');
     }
-    
-    public function testFindSources()
+
+    public function testFindSources ()
     {
         $path = __DIR__ . "/DataFixtures";
         $objectManager = new \Alsciende\SerializerBundle\Manager\Entity\ObjectManager($this->em);
         $sourceOrderingService = new \Alsciende\SerializerBundle\Service\SourceOrderingService($objectManager);
-        $scanningService = new \Alsciende\SerializerBundle\Service\ScanningService($objectManager, $sourceOrderingService, $this->reader, $path);
+        $scanningService = new \Alsciende\SerializerBundle\Service\ScanningService($objectManager, $sourceOrderingService, $this->reader, $this->cache, $path);
         $sources = $scanningService->findSources();
         $this->assertEquals(6, count($sources));
     }
