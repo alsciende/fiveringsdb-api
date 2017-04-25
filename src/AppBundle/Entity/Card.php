@@ -85,39 +85,159 @@ class Card
      */
     private $clan;
 
+    /**
+     * @var \AppBundle\Entity\Element
+     *
+     * @ORM\ManyToOne(targetEntity="Element")
+     * @ORM\JoinColumn(name="element_code", referencedColumnName="code", nullable=true)
+     * 
+     * @Source(type="association")
+     */
+    private $element;
+    
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_unique", type="boolean", nullable=false)
+     * 
+     * @Source(type="boolean")
+     */
     private $isUnique;
     
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_destiny", type="boolean", nullable=false)
+     * 
+     * @Source(type="boolean")
+     */
     private $isDestiny;
     
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_conflict", type="boolean", nullable=false)
+     * 
+     * @Source(type="boolean")
+     */
     private $isConflict;
     
+    /**
+     * @var string
+     * 
+     * @ORM\Column(name="keywords", type="string", nullable=true)
+     * 
+     * @Source(type="string")
+     */
     private $keywords;
     
+    /**
+     * @var string
+     * 
+     * @ORM\Column(name="illustrator", type="string", nullable=true)
+     * 
+     * @Source(type="string")
+     */
     private $illustrator;
     
-    private $position;
-    
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="military_strength", type="smallint", nullable=true)
+     * 
+     * @Source(type="integer")
+     */
     private $militaryStrength;
     
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="political_strength", type="smallint", nullable=true)
+     * 
+     * @Source(type="integer")
+     */
     private $politicalStrength;
     
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="province_strength", type="smallint", nullable=true)
+     * 
+     * @Source(type="integer")
+     */
     private $provinceStrength;
     
+    /**
+     * @var string
+     * 
+     * @ORM\Column(name="military_strength_mod", type="string", nullable=true)
+     * 
+     * @Source(type="string")
+     */
     private $militaryStrengthMod;
     
+    /**
+     * @var string
+     * 
+     * @ORM\Column(name="political_strength_mod", type="string", nullable=true)
+     * 
+     * @Source(type="string")
+     */
     private $politicalStrengthMod;
     
+    /**
+     * @var string
+     * 
+     * @ORM\Column(name="province_strength_mod", type="string", nullable=true)
+     * 
+     * @Source(type="string")
+     */
     private $provinceStrengthMod;
     
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="glory", type="smallint", nullable=true)
+     * 
+     * @Source(type="integer")
+     */
     private $glory;
     
-    private $ring;
-    
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="honor", type="smallint", nullable=true)
+     * 
+     * @Source(type="integer")
+     */
     private $honor;
     
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="fate", type="smallint", nullable=true)
+     * 
+     * @Source(type="integer")
+     */
     private $fate;
     
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="influence", type="smallint", nullable=true)
+     * 
+     * @Source(type="integer")
+     */
     private $influence;
+    
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="influence_cost", type="smallint", nullable=true)
+     * 
+     * @Source(type="integer")
+     */
+    private $influenceCost;
     
     /**
      * Set code
@@ -261,6 +381,176 @@ class Card
         $this->clan = $clan;
 
         return $this;
+    }
+    
+    function getElement ()
+    {
+        return $this->element;
+    }
+
+    function getIsUnique ()
+    {
+        return $this->isUnique;
+    }
+
+    function getIsDestiny ()
+    {
+        return $this->isDestiny;
+    }
+
+    function getIsConflict ()
+    {
+        return $this->isConflict;
+    }
+
+    function getKeywords ()
+    {
+        return $this->keywords;
+    }
+
+    function getIllustrator ()
+    {
+        return $this->illustrator;
+    }
+
+    function getMilitaryStrength ()
+    {
+        return $this->militaryStrength;
+    }
+
+    function getPoliticalStrength ()
+    {
+        return $this->politicalStrength;
+    }
+
+    function getProvinceStrength ()
+    {
+        return $this->provinceStrength;
+    }
+
+    function getMilitaryStrengthMod ()
+    {
+        return $this->militaryStrengthMod;
+    }
+
+    function getPoliticalStrengthMod ()
+    {
+        return $this->politicalStrengthMod;
+    }
+
+    function getProvinceStrengthMod ()
+    {
+        return $this->provinceStrengthMod;
+    }
+
+    function getGlory ()
+    {
+        return $this->glory;
+    }
+
+    function getHonor ()
+    {
+        return $this->honor;
+    }
+
+    function getFate ()
+    {
+        return $this->fate;
+    }
+
+    function getInfluence ()
+    {
+        return $this->influence;
+    }
+
+    function getInfluenceCost ()
+    {
+        return $this->influenceCost;
+    }
+
+    function setElement (\AppBundle\Entity\Element $element)
+    {
+        $this->element = $element;
+    }
+
+    function setIsUnique ($isUnique)
+    {
+        $this->isUnique = $isUnique;
+    }
+
+    function setIsDestiny ($isDestiny)
+    {
+        $this->isDestiny = $isDestiny;
+    }
+
+    function setIsConflict ($isConflict)
+    {
+        $this->isConflict = $isConflict;
+    }
+
+    function setKeywords ($keywords)
+    {
+        $this->keywords = $keywords;
+    }
+
+    function setIllustrator ($illustrator)
+    {
+        $this->illustrator = $illustrator;
+    }
+
+    function setMilitaryStrength ($militaryStrength)
+    {
+        $this->militaryStrength = $militaryStrength;
+    }
+
+    function setPoliticalStrength ($politicalStrength)
+    {
+        $this->politicalStrength = $politicalStrength;
+    }
+
+    function setProvinceStrength ($provinceStrength)
+    {
+        $this->provinceStrength = $provinceStrength;
+    }
+
+    function setMilitaryStrengthMod ($militaryStrengthMod)
+    {
+        $this->militaryStrengthMod = $militaryStrengthMod;
+    }
+
+    function setPoliticalStrengthMod ($politicalStrengthMod)
+    {
+        $this->politicalStrengthMod = $politicalStrengthMod;
+    }
+
+    function setProvinceStrengthMod ($provinceStrengthMod)
+    {
+        $this->provinceStrengthMod = $provinceStrengthMod;
+    }
+
+    function setGlory ($glory)
+    {
+        $this->glory = $glory;
+    }
+
+    function setHonor ($honor)
+    {
+        $this->honor = $honor;
+    }
+
+    function setFate ($fate)
+    {
+        $this->fate = $fate;
+    }
+
+    function setInfluence ($influence)
+    {
+        $this->influence = $influence;
+    }
+
+    function setInfluenceCost ($influenceCost)
+    {
+        $this->influenceCost = $influenceCost;
     }
 
 }

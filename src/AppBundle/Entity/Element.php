@@ -6,16 +6,16 @@ use Doctrine\ORM\Mapping as ORM;
 use Alsciende\SerializerBundle\Annotation\Source;
 
 /**
- * Clan
+ * Element
  *
- * @ORM\Table(name="clans")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\ClanRepository")
+ * @ORM\Table(name="elements")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\ElementRepository")
  * 
  * @Source()
  * 
  * @author Alsciende <alsciende@icloud.com>
  */
-class Clan
+class Element
 {
 
     /**
@@ -43,7 +43,7 @@ class Clan
      *
      * @param string $code
      *
-     * @return Clan
+     * @return Element
      */
     public function setCode ($code)
     {
@@ -67,7 +67,7 @@ class Clan
      *
      * @param string $name
      *
-     * @return Clan
+     * @return Element
      */
     public function setName ($name)
     {
