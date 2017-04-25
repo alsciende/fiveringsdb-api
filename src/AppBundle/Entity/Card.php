@@ -27,7 +27,6 @@ class Card
      * @var string
      * 
      * @Assert\NotBlank()
-     * @Assert\Length(min=5,max=5)
      *
      * @ORM\Column(name="code", type="string", length=255, unique=true)
      * @ORM\Id
@@ -69,7 +68,7 @@ class Card
     /**
      * @var \AppBundle\Entity\Type
      *
-     * @ORM\ManyToOne(targetEntity="Type", fetch="EXTRA_LAZY")
+     * @ORM\ManyToOne(targetEntity="Type")
      * @ORM\JoinColumn(name="type_code", referencedColumnName="code")
      * 
      * @Source(type="association")
@@ -79,13 +78,47 @@ class Card
     /**
      * @var \AppBundle\Entity\Clan
      *
-     * @ORM\ManyToOne(targetEntity="Clan", fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="clan_code", referencedColumnName="code")
+     * @ORM\ManyToOne(targetEntity="Clan")
+     * @ORM\JoinColumn(name="clan_code", referencedColumnName="code", nullable=true)
      * 
      * @Source(type="association")
      */
     private $clan;
 
+    private $isUnique;
+    
+    private $isDestiny;
+    
+    private $isConflict;
+    
+    private $keywords;
+    
+    private $illustrator;
+    
+    private $position;
+    
+    private $militaryStrength;
+    
+    private $politicalStrength;
+    
+    private $provinceStrength;
+    
+    private $militaryStrengthMod;
+    
+    private $politicalStrengthMod;
+    
+    private $provinceStrengthMod;
+    
+    private $glory;
+    
+    private $ring;
+    
+    private $honor;
+    
+    private $fate;
+    
+    private $influence;
+    
     /**
      * Set code
      *
