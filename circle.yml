@@ -19,9 +19,9 @@ dependencies:
 
 database:
   post:
-    - bin/console doctrine:schema:update --env=test --no-interaction  --force
-    - bin/console doctrine:fixtures:load --env=test --no-interaction
-    - bin/console app:data:import --env=test --no-interaction
+    - bin/console doctrine:schema:update --no-interaction  --force
+    - bin/console doctrine:fixtures:load --no-interaction
+    - bin/console app:data:import --no-interaction
 
 test:
   override:
