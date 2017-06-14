@@ -10,7 +10,7 @@ use ReflectionProperty;
 /**
  * This Service finds all Sources declared in the application
  *
- * @author Cédric Bertolini <cedric.bertolini@proximedia.fr>
+ * @author Alsciende <alsciende@icloud.com>
  */
 class ScanningService
 {

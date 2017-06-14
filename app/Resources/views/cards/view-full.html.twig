@@ -1,0 +1,14 @@
+{% extends 'cards/view-many.html.twig' %}
+
+{% block cards %}
+    {% for card in cards %}
+        <div class="row">
+            <div class="col-7">
+                {% include 'cards/card-text.html.twig' with { 'card': card } only %}
+            </div>
+            <div class="col-5">
+                <img src="{{ asset(card.code ~ '.jpg', 'img') }}">
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}

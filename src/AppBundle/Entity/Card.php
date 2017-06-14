@@ -2,19 +2,23 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Serializer\Annotation\Groups;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Alsciende\SerializerBundle\Annotation\Source;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * Card
  *
  * @ORM\Table(name="cards")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\CardRepository")
- * 
+ *
  * @Source(break="code")
+ *
+ * @JMS\ExclusionPolicy("all")
+ * @JMS\AccessorOrder("alphabetical")
  *
  * @author Alsciende <alsciende@icloud.com>
  */
@@ -25,25 +29,29 @@ class Card
 
     /**
      * @var string
-     * 
+     *
      * @Assert\NotBlank()
      *
      * @ORM\Column(name="code", type="string", length=255, unique=true)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
-     * 
+     *
      * @Source(type="string")
+     *
+     * @JMS\Expose
      */
     private $code;
 
     /**
      * @var string
-     * 
+     *
      * @Assert\NotBlank()
      *
      * @ORM\Column(name="name", type="string", length=255)
-     * 
+     *
      * @Source(type="string")
+     *
+     * @JMS\Expose
      */
     private $name;
 
@@ -51,8 +59,10 @@ class Card
      * @var int
      *
      * @ORM\Column(name="cost", type="integer", nullable=true)
-     * 
+     *
      * @Source(type="integer")
+     *
+     * @JMS\Expose
      */
     private $cost;
 
@@ -60,8 +70,10 @@ class Card
      * @var string
      *
      * @ORM\Column(name="text", type="text", nullable=true)
-     * 
+     *
      * @Source(type="string")
+     *
+     * @JMS\Expose
      */
     private $text;
 
@@ -70,7 +82,7 @@ class Card
      *
      * @ORM\ManyToOne(targetEntity="Type")
      * @ORM\JoinColumn(name="type_code", referencedColumnName="code")
-     * 
+     *
      * @Source(type="association")
      */
     private $type;
@@ -80,7 +92,7 @@ class Card
      *
      * @ORM\ManyToOne(targetEntity="Clan")
      * @ORM\JoinColumn(name="clan_code", referencedColumnName="code", nullable=true)
-     * 
+     *
      * @Source(type="association")
      */
     private $clan;
@@ -90,155 +102,217 @@ class Card
      *
      * @ORM\ManyToOne(targetEntity="Element")
      * @ORM\JoinColumn(name="element_code", referencedColumnName="code", nullable=true)
-     * 
+     *
      * @Source(type="association")
      */
     private $element;
-    
+
     /**
      * @var boolean
      *
      * @ORM\Column(name="is_unique", type="boolean", nullable=false)
-     * 
+     *
      * @Source(type="boolean")
+     *
+     * @JMS\Expose
      */
     private $isUnique;
-    
+
     /**
      * @var boolean
      *
      * @ORM\Column(name="is_destiny", type="boolean", nullable=false)
-     * 
+     *
      * @Source(type="boolean")
+     *
+     * @JMS\Expose
      */
     private $isDestiny;
-    
+
     /**
      * @var boolean
      *
      * @ORM\Column(name="is_conflict", type="boolean", nullable=false)
-     * 
+     *
      * @Source(type="boolean")
+     *
+     * @JMS\Expose
      */
     private $isConflict;
-    
+
     /**
      * @var string
-     * 
+     *
      * @ORM\Column(name="keywords", type="string", nullable=true)
-     * 
+     *
      * @Source(type="string")
+     *
+     * @JMS\Expose
      */
     private $keywords;
-    
+
     /**
      * @var string
-     * 
+     *
      * @ORM\Column(name="illustrator", type="string", nullable=true)
-     * 
+     *
      * @Source(type="string")
+     *
+     * @JMS\Expose
      */
     private $illustrator;
-    
+
     /**
      * @var integer
      *
      * @ORM\Column(name="military_strength", type="smallint", nullable=true)
-     * 
+     *
      * @Source(type="integer")
+     *
+     * @JMS\Expose
      */
     private $militaryStrength;
-    
+
     /**
      * @var integer
      *
      * @ORM\Column(name="political_strength", type="smallint", nullable=true)
-     * 
+     *
      * @Source(type="integer")
+     *
+     * @JMS\Expose
      */
     private $politicalStrength;
-    
+
     /**
      * @var integer
      *
      * @ORM\Column(name="province_strength", type="smallint", nullable=true)
-     * 
+     *
      * @Source(type="integer")
+     *
+     * @JMS\Expose
      */
     private $provinceStrength;
-    
+
     /**
      * @var string
-     * 
+     *
      * @ORM\Column(name="military_strength_mod", type="string", nullable=true)
-     * 
+     *
      * @Source(type="string")
+     *
+     * @JMS\Expose
      */
     private $militaryStrengthMod;
-    
+
     /**
      * @var string
-     * 
+     *
      * @ORM\Column(name="political_strength_mod", type="string", nullable=true)
-     * 
+     *
      * @Source(type="string")
+     *
+     * @JMS\Expose
      */
     private $politicalStrengthMod;
-    
+
     /**
      * @var string
-     * 
+     *
      * @ORM\Column(name="province_strength_mod", type="string", nullable=true)
-     * 
+     *
      * @Source(type="string")
+     *
+     * @JMS\Expose
      */
     private $provinceStrengthMod;
-    
+
     /**
      * @var integer
      *
      * @ORM\Column(name="glory", type="smallint", nullable=true)
-     * 
+     *
      * @Source(type="integer")
+     *
+     * @JMS\Expose
      */
     private $glory;
-    
+
     /**
      * @var integer
      *
      * @ORM\Column(name="honor", type="smallint", nullable=true)
-     * 
+     *
      * @Source(type="integer")
+     *
+     * @JMS\Expose
      */
     private $honor;
-    
+
     /**
      * @var integer
      *
      * @ORM\Column(name="fate", type="smallint", nullable=true)
-     * 
+     *
      * @Source(type="integer")
+     *
+     * @JMS\Expose
      */
     private $fate;
-    
+
     /**
      * @var integer
      *
      * @ORM\Column(name="influence", type="smallint", nullable=true)
-     * 
+     *
      * @Source(type="integer")
+     *
+     * @JMS\Expose
      */
     private $influence;
-    
+
     /**
      * @var integer
      *
      * @ORM\Column(name="influence_cost", type="smallint", nullable=true)
-     * 
+     *
      * @Source(type="integer")
+     *
+     * @JMS\Expose
      */
     private $influenceCost;
-    
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="PackCard", mappedBy="card", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
+     */
+    private $packCards;
+
+    /**
+     *
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="Review", mappedBy="card", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
+     */
+    private $reviews;
+
+    /**
+     *
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="Ruling", mappedBy="card", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
+     */
+    private $rulings;
+
+    function __construct ()
+    {
+        $this->packCards = new ArrayCollection();
+        $this->reviews = new ArrayCollection();
+        $this->rulings = new ArrayCollection();
+    }
+
     /**
      * Set code
      *
@@ -337,7 +411,7 @@ class Card
 
     /**
      * Get type
-     * 
+     *
      * @return Type
      */
     function getType ()
@@ -347,7 +421,7 @@ class Card
 
     /**
      * Get clan
-     * 
+     *
      * @return Clan
      */
     function getClan ()
@@ -357,7 +431,7 @@ class Card
 
     /**
      * Set type
-     * 
+     *
      * @param \AppBundle\Entity\Type $type
      *
      * @return Card
@@ -371,7 +445,7 @@ class Card
 
     /**
      * Set clan
-     * 
+     *
      * @param \AppBundle\Entity\Clan $clan
      *
      * @return Card
@@ -382,7 +456,7 @@ class Card
 
         return $this;
     }
-    
+
     function getElement ()
     {
         return $this->element;
@@ -551,6 +625,130 @@ class Card
     function setInfluenceCost ($influenceCost)
     {
         $this->influenceCost = $influenceCost;
+    }
+
+    /**
+     *
+     * @return \AppBundle\Model\PackCardSlotCollectionDecorator
+     */
+    function getPackCards ()
+    {
+        return new \AppBundle\Model\PackCardSlotCollectionDecorator($this->packCards->toArray());
+    }
+
+    /**
+     *
+     * @param \AppBundle\Entity\PackCard $packCard
+     * @return Card
+     */
+    function addPackCard (PackCard $packCard)
+    {
+        $this->packCards[] = $packCard;
+
+        return $this;
+    }
+
+    /**
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    function getReviews (): \Doctrine\Common\Collections\Collection
+    {
+        return $this->reviews;
+    }
+
+    /**
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    function getRulings (): \Doctrine\Common\Collections\Collection
+    {
+        return $this->rulings;
+    }
+
+    /**
+     *
+     * @param \Doctrine\Common\Collections\Collection $reviews
+     * @return Card
+     */
+    function setReviews (\Doctrine\Common\Collections\Collection $reviews)
+    {
+        $this->reviews = $reviews;
+        return $this;
+    }
+
+    /**
+     *
+     * @param \Doctrine\Common\Collections\Collection $rulings
+     * @return Card
+     */
+    function setRulings (\Doctrine\Common\Collections\Collection $rulings)
+    {
+        $this->rulings = $rulings;
+        return $this;
+    }
+
+    /**
+     * Get clan code
+     * @JMS\VirtualProperty()
+     * @return string
+     */
+    function getClanCode ()
+    {
+        return $this->clan ? $this->clan->getCode() : null;
+    }
+
+    /**
+     * Get type code
+     * @JMS\VirtualProperty()
+     * @return string
+     */
+    function getTypeCode ()
+    {
+        return $this->type ? $this->type->getCode() : null;
+    }
+
+    /**
+     * Get element code
+     * @JMS\VirtualProperty()
+     * @return string
+     */
+    function getElementCode ()
+    {
+        return $this->element ? $this->element->getCode() : null;
+    }
+
+    /**
+     * Packs including the card
+     *
+     * @JMS\VirtualProperty
+     * @JMS\Type("array")
+     * @return array
+     */
+    function getPacks()
+    {
+        return $this->getPackCards()->getQuantities();
+    }
+
+    /**
+     * cycles including the card
+     *
+     * @JMS\VirtualProperty
+     * @JMS\Type("array")
+     * @return array
+     */
+    function getCycles()
+    {
+        $cycles = [];
+        /* @var $packCard PackCard */
+        foreach($this->getPackCards() as $packCard) {
+            $cycleCode = $packCard->getPack()->getCycle()->getCode();
+            if(!key_exists($cycleCode, $cycles)) {
+                $cycles[$cycleCode] = 0;
+            }
+            $cycles[$cycleCode] += $packCard->getQuantity();
+        }
+        return $cycles;
     }
 
 }

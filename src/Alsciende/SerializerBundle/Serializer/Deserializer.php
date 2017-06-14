@@ -10,7 +10,7 @@ use Symfony\Component\Serializer\Serializer;
 /**
  * Description of Deserializer
  *
- * @author Cédric Bertolini <cedric.bertolini@proximedia.fr>
+ * @author Alsciende <alsciende@icloud.com>
  */
 class Deserializer
 {

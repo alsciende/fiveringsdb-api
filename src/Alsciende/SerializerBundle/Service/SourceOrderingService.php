@@ -9,7 +9,7 @@ use InvalidArgumentException;
 /**
  * Description of SourceOrderingService
  *
- * @author Cédric Bertolini <cedric.bertolini@proximedia.fr>
+ * @author Alsciende <alsciende@icloud.com>
  */
 class SourceOrderingService
 {

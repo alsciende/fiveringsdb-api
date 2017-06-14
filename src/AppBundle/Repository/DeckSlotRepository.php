@@ -3,11 +3,11 @@
 namespace AppBundle\Repository;
 
 /**
- * Description of DeckSlotRepository
+ * Description of DeckCardRepository
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class DeckSlotRepository extends \Doctrine\ORM\EntityRepository
+class DeckCardRepository extends \Doctrine\ORM\EntityRepository
 {
     
 }

@@ -31,7 +31,7 @@ security:
         main:
             context: my_security_context
             anonymous: ~
-            logout: ~ 
+            logout: ~
             guard:
                 provider:
                     my_user_provider

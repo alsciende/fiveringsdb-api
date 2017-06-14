@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    <my-paginated-list v-bind:page="{{ page }}" v-bind:per-page="{{ perPage }}" v-bind:total-rows="{{ totalRows }}" query="{{ query }}" view="{{ view }}" sort="{{ sort }}">
+    {% block cards %}
+    {% endblock %}
+    </my-paginated-list>
+{% endblock %}

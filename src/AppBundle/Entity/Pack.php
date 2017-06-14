@@ -2,22 +2,24 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Model\CardSlotCollection;
-use AppBundle\Repository\PackRepository;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Timestampable\Traits\TimestampableEntity;
-use Symfony\Component\Serializer\Annotation\Groups;
+use AppBundle\Traits\TimestampableEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 use Alsciende\SerializerBundle\Annotation\Source;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * Pack
  *
  * @ORM\Table(name="packs")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\PackRepository")
- * 
- * @Source()
- * 
+ * @ORM\Entity
+ *
+ * @Source
+ *
+ * @JMS\ExclusionPolicy("all")
+ * @JMS\AccessorOrder("alphabetical")
+ *
  * @author Alsciende <alsciende@icloud.com>
  */
 class Pack
@@ -26,21 +28,27 @@ class Pack
 
     /**
      * @var string
+     * @Assert\NotBlank()
      *
      * @ORM\Column(name="code", type="string", length=255, unique=true)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
-     * 
+     *
      * @Source(type="string")
+     *
+     * @JMS\Expose
      */
     private $code;
 
     /**
      * @var string
+     * @Assert\NotBlank()
      *
      * @ORM\Column(name="name", type="string", length=255, unique=true)
-     * 
+     *
      * @Source(type="string")
+     *
+     * @JMS\Expose
      */
     private $name;
 
@@ -48,8 +56,10 @@ class Pack
      * @var int
      *
      * @ORM\Column(name="position", type="integer")
-     * 
+     *
      * @Source(type="integer")
+     *
+     * @JMS\Expose
      */
     private $position;
 
@@ -57,8 +67,10 @@ class Pack
      * @var int
      *
      * @ORM\Column(name="size", type="integer", nullable=true)
-     * 
+     *
      * @Source(type="integer")
+     *
+     * @JMS\Expose
      */
     private $size;
 
@@ -66,16 +78,18 @@ class Pack
      * @var DateTime
      *
      * @ORM\Column(name="released_at", type="datetime", nullable=true)
-     * 
+     *
      * @Source(type="date")
+     *
+     * @JMS\Expose
      */
     private $releasedAt;
 
-    /**
+    /*
      * @var int
      *
      * @ORM\Column(name="ffg_id", type="integer", nullable=true)
-     * 
+     *
      * @Source(type="integer")
      */
     private $ffgId;
@@ -83,19 +97,19 @@ class Pack
     /**
      * @var Cycle
      *
-     * @ORM\ManyToOne(targetEntity="Cycle", fetch="EXTRA_LAZY")
+     * @ORM\ManyToOne(targetEntity="Cycle")
      * @ORM\JoinColumn(name="cycle_code", referencedColumnName="code")
-     * 
+     *
      * @Source(type="association")
      */
     private $cycle;
 
     /**
-     * @var PackSlots[]
-     * 
-     * @ORM\OneToMany(targetEntity="PackSlot", mappedBy="pack", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
+     * @var PackCard[]
+     *
+     * @ORM\OneToMany(targetEntity="PackCard", mappedBy="pack", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
      */
-    private $slots;
+    private $cards;
 
     function __construct ()
     {
@@ -197,9 +211,9 @@ class Pack
     {
         return $this->size;
     }
-    
+
     /**
-     * 
+     *
      * @return DateTime
      */
     function getReleasedAt ()
@@ -208,22 +222,21 @@ class Pack
     }
 
     /**
-     * 
+     *
      * @param DateTime $releaseAt
      */
     function setReleasedAt (DateTime $releaseAt)
     {
         $this->releasedAt = $releasedAt;
-        
+
         return $this;
     }
 
-    /**
+    /*
      * Set ffgId
      *
      * @param integer $ffgId
-     *
-     * @return Pack
+     * @return this
      */
     public function setFfgId ($ffgId)
     {
@@ -232,7 +245,7 @@ class Pack
         return $this;
     }
 
-    /**
+    /*
      * Get ffgId
      *
      * @return int
@@ -244,7 +257,7 @@ class Pack
 
     /**
      * Get cycle
-     * 
+     *
      * @return Cycle
      */
     function getCycle ()
@@ -253,10 +266,20 @@ class Pack
     }
 
     /**
+     * Get cycle code
+     * @JMS\VirtualProperty()
+     * @return string
+     */
+    function getCycleCode ()
+    {
+        return $this->cycle ? $this->cycle->getCode() : null;
+    }
+
+    /**
      * Set cycle
-     * 
+     *
      * @param Cycle $cycle
-     * 
+     *
      * @return Pack
      */
     function setCycle (Cycle $cycle)
@@ -266,4 +289,12 @@ class Pack
         return $this;
     }
 
+    /**
+     *
+     * @return PackCard[]
+     */
+    function getCards ()
+    {
+        return $this->cards;
+    }
 }

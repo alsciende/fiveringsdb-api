@@ -4,6 +4,8 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Alsciende\SerializerBundle\Annotation\Source;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * Description of User
@@ -12,6 +14,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Table(name="users")
  * 
  * @author Alsciende <alsciende@icloud.com>
+ * 
+ * @JMS\ExclusionPolicy("all")
+ * @JMS\AccessorOrder("alphabetical")
  */
 class User implements UserInterface
 {
@@ -20,11 +25,15 @@ class User implements UserInterface
      * @ORM\Column(name="id", type="string", length=255, unique=true)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="UUID")
+     * 
+     * @JMS\Expose
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", unique=true)
+     * 
+     * @Source(type="string")
      */
     private $username;
 
@@ -34,6 +43,27 @@ class User implements UserInterface
      */
     private $password;
 
+    /**
+     *
+     * @var array
+     * 
+     * @ORM\Column(name="roles",type="simple_array")
+     */
+    private $roles;
+    
+    /**
+     *
+     * @var boolean
+     * 
+     * @ORM\Column(name="is_enabled",type="boolean")
+     */
+    private $enabled;
+    
+    function __construct ()
+    {
+        $this->roles = ['ROLE_USER'];
+    }
+    
     function getId ()
     {
         return $this->id;
@@ -46,7 +76,7 @@ class User implements UserInterface
 
     public function getRoles ()
     {
-        return array('ROLE_USER');
+        return $this->roles;
     }
 
     public function getPassword ()
@@ -73,5 +103,23 @@ class User implements UserInterface
     {
         $this->password = $password;
     }
+
+    function addRole ($role)
+    {
+        $roles = $this->roles;
+        $roles[] = $role;
+        $this->roles = array_unique($roles);
+    }
+    
+    function getEnabled ()
+    {
+        return $this->enabled;
+    }
+
+    function setEnabled ($enabled)
+    {
+        $this->enabled = $enabled;
+    }
+
 
 }

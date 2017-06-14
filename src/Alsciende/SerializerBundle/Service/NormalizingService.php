@@ -31,7 +31,7 @@ class NormalizingService implements NormalizingServiceInterface
     {
         $result = [];
 
-        foreach($propertyMap as $property => $type) {
+        foreach ($propertyMap as $property => $type) {
             $result[$property] = $this->objectManager->readObject($entity, $property);
         }
 
@@ -51,13 +51,13 @@ class NormalizingService implements NormalizingServiceInterface
     {
         $result = [];
 
-        foreach($propertyMap as $property => $type) {
+        foreach ($propertyMap as $property => $type) {
             $value = $data[$property];
-            if($value === null) {
+            if ($value === null) {
                 $this->objectManager->setFieldValue($result, $className, $property, null);
                 continue;
             }
-            switch($type) {
+            switch ($type) {
                 case 'string':
                     $this->objectManager->setFieldValue($result, $className, $property, $value);
                     break;
@@ -93,19 +93,19 @@ class NormalizingService implements NormalizingServiceInterface
     {
         $result = [];
 
-        foreach($propertyMap as $property => $type) {
-            switch($type) {
+        foreach ($propertyMap as $property => $type) {
+            switch ($type) {
                 case 'string':
                     $value = $this->objectManager->getFieldValue($data, $className, $property);
                     $result[$property] = $value;
                     break;
                 case 'integer':
                     $value = $this->objectManager->getFieldValue($data, $className, $property);
-                    $result[$property] = (integer) $value;
+                    $result[$property] = isset($value) ? (integer) $value : null;
                     break;
                 case 'boolean':
                     $value = $this->objectManager->getFieldValue($data, $className, $property);
-                    $result[$property] = (boolean) $value;
+                    $result[$property] = isset($value) ? (boolean) $value : null;
                     break;
                 case 'date':
                     $value = $this->objectManager->getFieldValue($data, $className, $property);

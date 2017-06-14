@@ -1,0 +1,21 @@
+# This file is auto-generated during the composer install
+parameters:
+    database_host: 127.0.0.1
+    database_port: null
+    database_name: circle_test
+    database_user: ubuntu
+    database_password: ~
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user: null
+    mailer_password: null
+    secret: CircleCI
+    oauth_test_client_id: null
+    oauth_test_client_secret: null
+    oauth_test_redirect_uri: null
+    paypal_rest_api_client_id: null
+    paypal_rest_api_secret: null
+    paypal_classic_api_username: null
+    paypal_classic_api_password: null
+    paypal_classic_api_signature: null
+    http_cache_max_age: 60

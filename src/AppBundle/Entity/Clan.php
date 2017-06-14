@@ -10,21 +10,20 @@ use Alsciende\SerializerBundle\Annotation\Source;
  *
  * @ORM\Table(name="clans")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ClanRepository")
- * 
+ *
  * @Source()
- * 
+ *
  * @author Alsciende <alsciende@icloud.com>
  */
 class Clan
 {
-
     /**
      * @var string
      *
      * @ORM\Column(name="code", type="string", length=255, unique=true)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
-     * 
+     *
      * @Source(type="string")
      */
     private $code;
@@ -33,10 +32,29 @@ class Clan
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255, unique=true)
-     * 
+     *
      * @Source(type="string")
      */
     private $name;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_neutral", type="boolean")
+     *
+     * @Source(type="boolean")
+     */
+    private $isNeutral;
+
+    /**
+     * Get code
+     *
+     * @return string
+     */
+    public function getCode (): string
+    {
+        return $this->code;
+    }
 
     /**
      * Set code
@@ -53,13 +71,13 @@ class Clan
     }
 
     /**
-     * Get code
+     * Get name
      *
      * @return string
      */
-    public function getCode ()
+    public function getName (): string
     {
-        return $this->code;
+        return $this->name;
     }
 
     /**
@@ -77,13 +95,22 @@ class Clan
     }
 
     /**
-     * Get name
+     * Get isNeutral
      *
-     * @return string
+     * @return bool
      */
-    public function getName ()
+    public function getIsNeutral (): bool
     {
-        return $this->name;
+        return $this->isNeutral;
     }
 
+    /**
+     * Set isNeutral
+     *
+     * @param bool $isNeutral
+     */
+    public function setIsNeutral (bool $isNeutral)
+    {
+        $this->isNeutral = $isNeutral;
+    }
 }

@@ -18,7 +18,7 @@ class ClientCreateCommand extends ContainerAwareCommand
     protected function configure ()
     {
         $this
-                ->setName('alsciende_security:client:create')
+                ->setName('security:client:create')
                 ->setDescription('Creates a new client')
                 ->addOption(
                         'redirect-uri', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Sets redirect uri for client. Use this option multiple times to set multiple redirect URIs.', null

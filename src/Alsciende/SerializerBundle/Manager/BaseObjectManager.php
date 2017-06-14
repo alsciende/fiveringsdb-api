@@ -5,7 +5,7 @@ namespace Alsciende\SerializerBundle\Manager;
 /**
  * Description of BaseObjectManager
  *
- * @author Cédric Bertolini <cedric.bertolini@proximedia.fr>
+ * @author Alsciende <alsciende@icloud.com>
  */
 abstract class BaseObjectManager implements ObjectManagerInterface
 {

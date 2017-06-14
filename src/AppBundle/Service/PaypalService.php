@@ -10,16 +10,16 @@ namespace AppBundle\Service;
 class PaypalService
 {
 
+    private $username;
+    private $password;
+    private $signature;
+
     public function __construct ($username, $password, $signature)
     {
         $this->username = $username;
         $this->password = $password;
         $this->signature = $signature;
     }
-
-    private $username;
-    private $password;
-    private $signature;
 
     private function createRequest ($method, $version, $parameters)
     {

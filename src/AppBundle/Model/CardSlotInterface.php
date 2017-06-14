@@ -6,7 +6,7 @@ namespace AppBundle\Model;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-interface CardSlotInterface
+interface CardSlotInterface extends SlotInterface
 {
 
     /**
@@ -14,8 +14,4 @@ interface CardSlotInterface
      */
     public function getCard ();
 
-    /**
-     * @return integer
-     */
-    public function getQuantity ();
 }

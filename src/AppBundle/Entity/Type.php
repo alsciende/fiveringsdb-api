@@ -12,9 +12,9 @@ use Alsciende\SerializerBundle\Annotation\Source;
  *
  * @ORM\Table(name="types")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\TypeRepository")
- * 
+ *
  * @Source()
- * 
+ *
  * @author Alsciende <alsciende@icloud.com>
  */
 class Type
@@ -26,7 +26,7 @@ class Type
      * @ORM\Column(name="code", type="string", length=255, unique=true)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
-     * 
+     *
      * @Source(type="string")
      */
     private $code;
@@ -35,7 +35,7 @@ class Type
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255, unique=true)
-     * 
+     *
      * @Source(type="string")
      */
     private $name;

@@ -7,7 +7,7 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
  * Description of LoadUserData
@@ -16,30 +16,33 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class LoadUserData extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
-    
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
-    
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
-    
-    public function load(ObjectManager $manager)
+
+    use ContainerAwareTrait;
+
+    public function load (ObjectManager $manager)
     {
         /* @var $userManager UserManager */
         $userManager = $this->container->get('alsciende_security.user_manager');
-        $userAdmin = $userManager->createUser('admin', 'test');
 
-        $userManager->updateUser($userAdmin);
-
-        $this->addReference('admin-user', $userAdmin);
+        $this->loadUser($userManager, 'admin', 'admin', ['ROLE_ADMIN']);
+        $this->loadUser($userManager, 'guru', 'guru', ['ROLE_GURU']);
+        $this->loadUser($userManager, 'user', 'user');
     }
-    
-    public function getOrder()
+
+    private function loadUser (UserManager $userManager, $username, $password, $roles = [])
+    {
+        $user = $userManager->createUser($username, $password);
+        foreach ($roles as $role) {
+            $user->addRole($role);
+        }
+        $user->setEnabled(true);
+        $userManager->updateUser($user);
+        $this->addReference("user-$username", $user);
+    }
+
+    public function getOrder ()
     {
         return 1;
     }
+
 }
