@@ -11,7 +11,7 @@ php 7.x, mysql, git, composer, node 6.x, npm
 Install php DOM extension:
 
 ``` bash
-sudo apt-get install php-xml
+sudo apt-get install php-xml php-zip
 ```
 
 Create a database in MySQL:
@@ -36,6 +36,7 @@ sudo service apache2 reload
 ## Back-end
 
 ``` bash
+export SYMFONY_ENV=prod
 composer install --no-dev
 ./reset-env prod
 ```
