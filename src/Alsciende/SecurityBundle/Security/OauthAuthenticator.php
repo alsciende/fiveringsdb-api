@@ -34,7 +34,8 @@ class OauthAuthenticator extends AbstractGuardAuthenticator
      */
     public function getCredentials (Request $request)
     {
-        if(!$token = $request->query->get('access_token')) {
+        $token = $request->headers->get('X-Access-Token');
+        if(!$token) {
             // no token? Return null and no other methods will be called
             return;
         }

@@ -18,7 +18,7 @@ class ClientDeleteCommand extends ContainerAwareCommand
     protected function configure ()
     {
         $this
-                ->setName('alsciende_security:client:delete')
+                ->setName('security:client:delete')
                 ->setDescription('Deletes a client')
                 ->addArgument('client_id', \Symfony\Component\Console\Input\InputArgument::REQUIRED, "Id of the client to delete")
         ;

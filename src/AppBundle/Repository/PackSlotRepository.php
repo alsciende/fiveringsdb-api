@@ -3,11 +3,11 @@
 namespace AppBundle\Repository;
 
 /**
- * Description of PackSlotRepository
+ * Description of PackCardRepository
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class PackSlotRepository extends \Doctrine\ORM\EntityRepository
+class PackCardRepository extends \Doctrine\ORM\EntityRepository
 {
     
 }

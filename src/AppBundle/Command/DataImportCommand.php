@@ -33,7 +33,7 @@ class DataImportCommand extends ContainerAwareCommand
         $serializer = $this->getContainer()->get('alsciende_serializer.serializer');
 
         /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->getContainer()->get('doctrine.entity_manager');
+        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
 
         /* @var $validator \Symfony\Component\Validator\Validator\RecursiveValidator */
         $validator = $this->getContainer()->get('validator');
@@ -50,18 +50,6 @@ class DataImportCommand extends ContainerAwareCommand
             }
 
             $em->flush();
-        }
-
-        /* @var $fragment \Alsciende\SerializerBundle\Model\Fragment */
-        foreach($result as $fragment) {
-            if(!empty($fragment->getChanges())) {
-                $output->writeln("The data was:");
-                dump($fragment->getOriginal());
-                $output->writeln("The changes that were applied are:");
-                dump($fragment->getChanges());
-            } else {
-                $output->writeln("No change found in " . $fragment->getBlock()->getPath());
-            }
         }
     }
 

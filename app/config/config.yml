@@ -30,7 +30,10 @@ framework:
         save_path:   "%kernel.root_dir%/../var/sessions/%kernel.environment%"
     fragments:       ~
     http_method_override: true
-    assets: ~
+    assets:
+        packages:
+            img:
+                base_path: /bundles/card_images/
     php_errors:
         log: true
 
@@ -88,5 +91,20 @@ fos_oauth_server:
 
 # AlsciendeDoctrineSerializerBundle Configuration
 alsciende_serializer:
-    path: "%kernel.root_dir%/../../fiveringsdb-json-data"
+    path: "%path_to_json_data%"
     group: alsciende_serializer
+
+# JMSSerializerBundle Configuration
+jms_serializer:
+    enable_short_alias: false
+    visitors:
+        json:
+            # JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+            options: 448
+
+# NelmioApiDocBundle Configuration
+nelmio_api_doc: ~
+
+cocur_slugify:
+    rulesets:
+      - default

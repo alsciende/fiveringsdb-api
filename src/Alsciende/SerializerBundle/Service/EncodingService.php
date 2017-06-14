@@ -23,18 +23,28 @@ class EncodingService
     {
         $list = json_decode($block->getData(), true);
         if(!$list || !is_array($list) || (!empty($list) && !is_array($list[0]))) {
-            throw new UnexpectedValueException("Block data cannot be decoded to a numeric array!");
+            throw new UnexpectedValueException("Block data cannot be decoded to a numeric array: ".$block->getData());
         }
         $fragments = [];
         foreach($list as $data) {
             if($block->getSource()->getBreak()) {
-                $data[$block->getSource()->getBreak()] = $block->getName();
+                $this->applyBreak($block, $data);
             }
             $fragment = new Fragment($data);
             $fragment->setBlock($block);
             $fragments[] = $fragment;
         }
         return $fragments;
+    }
+
+    private function applyBreak (Block $block, &$data)
+    {
+        $break = $block->getSource()->getBreak();
+        if(!isset($data[$break])) {
+            $data[$break] = $block->getName();
+        } elseif($data[$break] !== $block->getName()) {
+            throw new \Exception("Discrepancy in " . $block->getPath() . ": value from '" . $break . "': " . $data[$break] . " is different from block name: " . $block->getName());
+        }
     }
 
     /**

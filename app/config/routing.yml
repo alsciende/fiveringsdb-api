@@ -10,8 +10,17 @@ app:
     resource: "@AppBundle/Controller/"
     type:     annotation
 
+api_v1:
+    resource: "@AppBundle/Controller/API/v1"
+    type:     annotation
+    prefix:   /api/v1
+
 fos_oauth_server_token:
     resource: "@FOSOAuthServerBundle/Resources/config/routing/token.xml"
 
 fos_oauth_server_authorize:
     resource: "@FOSOAuthServerBundle/Resources/config/routing/authorize.xml"
+
+nelmio_api_doc_bundle:
+    resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
+    prefix:   /api/doc

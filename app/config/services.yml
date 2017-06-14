@@ -2,21 +2,91 @@ services:
 
     alsciende_security.oauth_authenticator:
         class: Alsciende\SecurityBundle\Security\OauthAuthenticator
-        arguments: ["@fos_oauth_server.access_token_manager"]
+        arguments:
+            - "@fos_oauth_server.access_token_manager"
     
     alsciende_security.form_login_authenticator:
         class: Alsciende\SecurityBundle\Security\FormLoginAuthenticator
-        arguments: ["@security.password_encoder","@router"]
+        arguments:
+            - "@security.password_encoder"
+            - "@router"
 
     alsciende_security.client_manager:
         class: Alsciende\SecurityBundle\Service\ClientManager
-        arguments: ["@fos_oauth_server.entity_manager","%fos_oauth_server.model.client.class%"]
+        arguments:
+            - "@fos_oauth_server.entity_manager"
+            - "%fos_oauth_server.model.client.class%"
 
     alsciende_security.user_manager:
         class: Alsciende\SecurityBundle\Service\UserManager
-        arguments: ["@doctrine.orm.entity_manager","@security.password_encoder","%secret%"]
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@security.password_encoder"
+            - "%secret%"
 
     paypal:
         class: AppBundle\Service\PaypalService
-        arguments: ["%paypal_classic_api_username%","%paypal_classic_api_password%","%paypal_classic_api_signature%"]
-    
+        arguments:
+            - "%paypal_classic_api_username%"
+            - "%paypal_classic_api_password%"
+            - "%paypal_classic_api_signature%"
+
+    app.api:
+        class: AppBundle\Service\ApiService
+        arguments:
+            - "@request_stack"
+            - "@jms_serializer"
+            - "%http_cache_max_age%"
+            - "%kernel.environment%"
+
+    app.deck_checker:
+        class: AppBundle\Service\DeckChecker
+        
+    app.base_manager:
+        class: AppBundle\Manager\BaseManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@serializer"
+        
+    app.review_manager:
+        class: AppBundle\Manager\ReviewManager
+        parent: app.base_manager
+        
+    app.ruling_manager:
+        class: AppBundle\Manager\RulingManager
+        parent: app.base_manager
+        
+    app.deck_manager:
+        class: AppBundle\Manager\DeckManager
+        parent: app.base_manager
+        arguments: ['@app.deck_checker']
+
+    app.deck_checker.card_copies:
+        class: AppBundle\Service\DeckChecker\CardCopiesChecker
+        tags:
+            - { name: app.deck_checker }
+
+    app.deck_checker.card_count:
+        class: AppBundle\Service\DeckChecker\CardCountChecker
+        tags:
+            - { name: app.deck_checker }
+
+    app.deck_checker.conjurations:
+        class: AppBundle\Service\DeckChecker\ConjurationsChecker
+        tags:
+            - { name: app.deck_checker }
+
+    app.deck_checker.dice_count:
+        class: AppBundle\Service\DeckChecker\DiceCountChecker
+        tags:
+            - { name: app.deck_checker }
+
+    app.deck_checker.exclusives:
+        class: AppBundle\Service\DeckChecker\ExclusivesChecker
+        tags:
+            - { name: app.deck_checker }
+
+    app.deck_checker.phoenixborn:
+        class: AppBundle\Service\DeckChecker\PhoenixbornChecker
+        tags:
+            - { name: app.deck_checker }

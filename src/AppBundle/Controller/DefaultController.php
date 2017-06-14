@@ -33,7 +33,7 @@ class DefaultController extends Controller
     public function profileAction ()
     {
         $user = $this->getUser();
-        return new Response("<h1>Profile of ".$user->getUsername()."</h1>");
+        return new Response("<h1>Profile of " . $user->getUsername() . "</h1>");
     }
 
     /**
@@ -52,7 +52,7 @@ class DefaultController extends Controller
      */
     public function publicApiTestAction ()
     {
-        if($user = $this->getUser()) {
+        if ($user = $this->getUser()) {
             return new JsonResponse(["success" => true, "user" => $user->getUsername()]);
         } else {
             return new JsonResponse(["success" => true]);

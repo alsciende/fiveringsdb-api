@@ -30,7 +30,7 @@ class StoringService
             if(file_exists("$path.json") and is_file("$path.json")) {
                 $blocks = $this->scanFile("$path.json");
             } else {
-                throw new Exception("File $path.json not found");
+                return;
             }
         } else {
             if(file_exists("$path") and is_dir("$path")) {

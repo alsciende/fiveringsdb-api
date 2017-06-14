@@ -19,3 +19,7 @@ security:
     firewalls:
         main:
             http_basic: ~
+
+doctrine:
+    dbal:
+        dbname:   "%database_name%_test"

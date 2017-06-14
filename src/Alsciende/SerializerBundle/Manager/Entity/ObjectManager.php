@@ -197,13 +197,17 @@ class ObjectManager extends \Alsciende\SerializerBundle\Manager\BaseObjectManage
             return;
         }
         $referenceKeys = [];
-        $id = [];
+        $referenceValues = [];
         foreach($associationMapping['sourceToTargetKeyColumns'] as $referenceKey => $targetIdentifier) {
             if(!key_exists($referenceKey, $data)) {
                 return;
             }
             $referenceKeys[] = $referenceKey;
-            $id[$targetIdentifier] = $data[$referenceKey];
+            $referenceValues[$targetIdentifier] = $data[$referenceKey];
+        }
+        $id = array_filter($referenceValues);
+        if(empty($id)) {
+            return null;
         }
         $associationValue = $this->entityManager->getRepository($associationMapping['targetEntity'])->find($id);
 
