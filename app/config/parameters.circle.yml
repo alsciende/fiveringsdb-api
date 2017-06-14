@@ -2,7 +2,7 @@
 parameters:
     database_host: 127.0.0.1
     database_port: null
-    database_name: circle_test
+    database_name: circle
     database_user: ubuntu
     database_password: ~
     mailer_transport: smtp
