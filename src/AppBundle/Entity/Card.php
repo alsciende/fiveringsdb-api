@@ -119,26 +119,15 @@ class Card
     private $isUnique;
 
     /**
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(name="is_destiny", type="boolean", nullable=false)
+     * @ORM\Column(name="side", type="string", nullable=true)
      *
-     * @Source(type="boolean")
-     *
-     * @JMS\Expose
-     */
-    private $isDestiny;
-
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="is_conflict", type="boolean", nullable=false)
-     *
-     * @Source(type="boolean")
+     * @Source(type="string")
      *
      * @JMS\Expose
      */
-    private $isConflict;
+    private $side;
 
     /**
      * @var string
@@ -467,14 +456,9 @@ class Card
         return $this->isUnique;
     }
 
-    function getIsDestiny ()
+    function getSide ()
     {
-        return $this->isDestiny;
-    }
-
-    function getIsConflict ()
-    {
-        return $this->isConflict;
+        return $this->side;
     }
 
     function getKeywords ()
@@ -552,14 +536,9 @@ class Card
         $this->isUnique = $isUnique;
     }
 
-    function setIsDestiny ($isDestiny)
+    function setSide ($side)
     {
-        $this->isDestiny = $isDestiny;
-    }
-
-    function setIsConflict ($isConflict)
-    {
-        $this->isConflict = $isConflict;
+        $this->side = $side;
     }
 
     function setKeywords ($keywords)
