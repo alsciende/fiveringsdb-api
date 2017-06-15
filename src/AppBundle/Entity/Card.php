@@ -253,13 +253,13 @@ class Card
     /**
      * @var integer
      *
-     * @ORM\Column(name="influence", type="smallint", nullable=true)
+     * @ORM\Column(name="influence_pool", type="smallint", nullable=true)
      *
      * @Source(type="integer")
      *
      * @JMS\Expose
      */
-    private $influence;
+    private $influencePool;
 
     /**
      * @var integer
@@ -516,9 +516,9 @@ class Card
         return $this->fate;
     }
 
-    function getInfluence ()
+    function getInfluencePool ()
     {
-        return $this->influence;
+        return $this->influencePool;
     }
 
     function getInfluenceCost ()
@@ -596,9 +596,9 @@ class Card
         $this->fate = $fate;
     }
 
-    function setInfluence ($influence)
+    function setInfluencePool ($influencePool)
     {
-        $this->influence = $influence;
+        $this->influencePool = $influencePool;
     }
 
     function setInfluenceCost ($influenceCost)
