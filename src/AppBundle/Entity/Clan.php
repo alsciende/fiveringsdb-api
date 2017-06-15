@@ -2,8 +2,10 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Traits\TimestampableEntity;
 use Doctrine\ORM\Mapping as ORM;
 use Alsciende\SerializerBundle\Annotation\Source;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * Clan
@@ -13,10 +15,16 @@ use Alsciende\SerializerBundle\Annotation\Source;
  *
  * @Source()
  *
+ * @JMS\ExclusionPolicy("all")
+ * @JMS\AccessorOrder("alphabetical")
+ *
  * @author Alsciende <alsciende@icloud.com>
  */
 class Clan
 {
+
+    use TimestampableEntity;
+
     /**
      * @var string
      *
@@ -25,6 +33,8 @@ class Clan
      * @ORM\GeneratedValue(strategy="NONE")
      *
      * @Source(type="string")
+     *
+     * @JMS\Expose
      */
     private $code;
 
@@ -34,6 +44,8 @@ class Clan
      * @ORM\Column(name="name", type="string", length=255, unique=true)
      *
      * @Source(type="string")
+     *
+     * @JMS\Expose
      */
     private $name;
 
@@ -43,6 +55,8 @@ class Clan
      * @ORM\Column(name="is_neutral", type="boolean")
      *
      * @Source(type="boolean")
+     *
+     * @JMS\Expose
      */
     private $isNeutral;
 
