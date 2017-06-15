@@ -2,10 +2,10 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Traits\TimestampableEntity;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Serializer\Annotation\Groups;
 use Alsciende\SerializerBundle\Annotation\Source;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * Type
@@ -15,10 +15,15 @@ use Alsciende\SerializerBundle\Annotation\Source;
  *
  * @Source()
  *
+ * @JMS\ExclusionPolicy("all")
+ * @JMS\AccessorOrder("alphabetical")
+ *
  * @author Alsciende <alsciende@icloud.com>
  */
 class Type
 {
+
+    use TimestampableEntity;
 
     /**
      * @var string
@@ -28,6 +33,8 @@ class Type
      * @ORM\GeneratedValue(strategy="NONE")
      *
      * @Source(type="string")
+     *
+     * @JMS\Expose
      */
     private $code;
 
@@ -37,6 +44,8 @@ class Type
      * @ORM\Column(name="name", type="string", length=255, unique=true)
      *
      * @Source(type="string")
+     *
+     * @JMS\Expose
      */
     private $name;
 

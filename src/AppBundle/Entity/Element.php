@@ -2,8 +2,10 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Traits\TimestampableEntity;
 use Doctrine\ORM\Mapping as ORM;
 use Alsciende\SerializerBundle\Annotation\Source;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * Element
@@ -13,10 +15,15 @@ use Alsciende\SerializerBundle\Annotation\Source;
  *
  * @Source()
  *
+ * @JMS\ExclusionPolicy("all")
+ * @JMS\AccessorOrder("alphabetical")
+ *
  * @author Alsciende <alsciende@icloud.com>
  */
 class Element
 {
+
+    use TimestampableEntity;
 
     /**
      * @var string
@@ -26,6 +33,8 @@ class Element
      * @ORM\GeneratedValue(strategy="NONE")
      *
      * @Source(type="string")
+     *
+     * @JMS\Expose
      */
     private $code;
 
@@ -35,6 +44,8 @@ class Element
      * @ORM\Column(name="name", type="string", length=255, unique=true)
      *
      * @Source(type="string")
+     *
+     * @JMS\Expose
      */
     private $name;
 
