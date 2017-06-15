@@ -94,7 +94,7 @@ class ImportCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwa
             'province_strength' => $this->getValue($data, 'Strength', 'Province'),
             'military_strength_mod' => $this->getValue($data, 'Military Strength', 'Attachment'),
             'political_strength_mod' => $this->getValue($data, 'Political Strength', 'Attachment'),
-            'province_strength_mod' => $this->getValue($data, 'Strength', 'Stronghold'),
+            'province_strength_mod' => $this->getValue($data, 'Strength', 'Stronghold') ?: $this->getValue($data, 'Strength', 'Holding'),
             'glory' => $data['Glory'] ?? null,
             'honor' => $data['Starting Honor'] ?? null,
             'fate' => $data['Fate Gain'] ?? null,
