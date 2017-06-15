@@ -85,8 +85,7 @@ class ImportCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwa
             'clan_code' => strtolower($data['Clan']),
             'element_code' => isset($data['Element']) ? strtolower($data['Element']) : null,
             'is_unique' => $data['Unique'] === 'Yes',
-            'is_destiny' => $data['Deck'] === 'Destiny',
-            'is_conflict' => $data['Deck'] === 'Conflict',
+            'side' => $this->getSide($data['Deck']),
             'keywords' => $data['Traits'] ?? null,
             'illustrator' => $data['Illustrator'] ?? null,
             'military_strength' => $this->getValue($data, 'Military Strength', 'Character'),
@@ -112,6 +111,14 @@ class ImportCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwa
             return null;
         }
         return $data[$key];
+    }
+
+    private function getSide($deck) {
+        switch($deck) {
+            case 'Conflict': return 'conflict'; break;
+            case 'Dynasty': return 'dynasty'; break;
+            default: return null;
+        }
     }
 
     private function markupText(string $text): string
