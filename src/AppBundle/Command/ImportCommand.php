@@ -97,8 +97,8 @@ class ImportCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwa
             'glory' => $data['Glory'] ?? null,
             'honor' => $data['Starting Honor'] ?? null,
             'fate' => $data['Fate Gain'] ?? null,
-            'influence' => $data['Influence Pool'] ?? null,
-            'influence_cost' => $data['Influence Cost'] ?? null,
+            'influence_pool' => $data['Influence Pool'] ?? null,
+            'influence_cost' => $data['Influence Cost'] ?? ($data['Deck'] === 'Conflict' && $data['Clan'] === 'Neutral' ? 0 : null),
             'position' => intval(substr($data['Card Number'], 2, 3), 10),
         ];
 
