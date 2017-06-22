@@ -56,3 +56,7 @@
 /vue/yarn-debug.log*
 /vue/yarn-error.log*
 /vue/selenium-debug.log
+
+# Vue parameters
+/vue/config/prod.env.js
+
