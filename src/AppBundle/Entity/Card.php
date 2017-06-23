@@ -78,32 +78,35 @@ class Card
     private $text;
 
     /**
-     * @var \AppBundle\Entity\Type
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="Type")
-     * @ORM\JoinColumn(name="type_code", referencedColumnName="code")
+     * @ORM\Column(name="type_code", type="text", nullable=false)
      *
-     * @Source(type="association")
+     * @Source(type="string")
+     *
+     * @JMS\Expose
      */
     private $type;
 
     /**
-     * @var \AppBundle\Entity\Clan
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="Clan")
-     * @ORM\JoinColumn(name="clan_code", referencedColumnName="code", nullable=true)
+     * @ORM\Column(name="clan_code", type="text", nullable=false)
      *
-     * @Source(type="association")
+     * @Source(type="string")
+     *
+     * @JMS\Expose
      */
     private $clan;
 
     /**
-     * @var \AppBundle\Entity\Element
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="Element")
-     * @ORM\JoinColumn(name="element_code", referencedColumnName="code", nullable=true)
+     * @ORM\Column(name="element_code", type="text", nullable=true)
      *
-     * @Source(type="association")
+     * @Source(type="string")
+     *
+     * @JMS\Expose
      */
     private $element;
 
@@ -302,308 +305,246 @@ class Card
         $this->rulings = new ArrayCollection();
     }
 
-    /**
-     * Set code
-     *
-     * @param string $code
-     *
-     * @return Card
-     */
-    public function setCode ($code)
+    public function setCode (string $code): self
     {
         $this->code = $code;
-
         return $this;
     }
 
-    /**
-     * Get code
-     *
-     * @return string
-     */
-    public function getCode ()
+    public function setName (string $name): self
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    public function setCost (int $cost): self
+    {
+        $this->cost = $cost;
+        return $this;
+    }
+
+    public function setText (string $text): self
+    {
+        $this->text = $text;
+        return $this;
+    }
+
+    public function setType (string $type): self
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    public function setClan (string $clan): self
+    {
+        $this->clan = $clan;
+        return $this;
+    }
+
+    public function setElement (string $element): self
+    {
+        $this->element = $element;
+        return $this;
+    }
+
+    public function setIsUnique (bool $isUnique): self
+    {
+        $this->isUnique = $isUnique;
+        return $this;
+    }
+
+    public function setSide (string $side): self
+    {
+        $this->side = $side;
+        return $this;
+    }
+
+    public function setKeywords (string $keywords): self
+    {
+        $this->keywords = $keywords;
+        return $this;
+    }
+
+    public function setIllustrator (string $illustrator): self
+    {
+        $this->illustrator = $illustrator;
+        return $this;
+    }
+
+    public function setMilitaryStrength (int $militaryStrength): self
+    {
+        $this->militaryStrength = $militaryStrength;
+        return $this;
+    }
+
+    public function setPoliticalStrength (int $politicalStrength): self
+    {
+        $this->politicalStrength = $politicalStrength;
+        return $this;
+    }
+
+    public function setProvinceStrength (int $provinceStrength): self
+    {
+        $this->provinceStrength = $provinceStrength;
+        return $this;
+    }
+
+    public function setMilitaryStrengthMod (string $militaryStrengthMod): self
+    {
+        $this->militaryStrengthMod = $militaryStrengthMod;
+        return $this;
+    }
+
+    public function setPoliticalStrengthMod (string $politicalStrengthMod): self
+    {
+        $this->politicalStrengthMod = $politicalStrengthMod;
+        return $this;
+    }
+
+    public function setProvinceStrengthMod (string $provinceStrengthMod): self
+    {
+        $this->provinceStrengthMod = $provinceStrengthMod;
+        return $this;
+    }
+
+    public function setGlory (int $glory): self
+    {
+        $this->glory = $glory;
+        return $this;
+    }
+
+    public function setHonor (int $honor): self
+    {
+        $this->honor = $honor;
+        return $this;
+    }
+
+    public function setFate (int $fate): self
+    {
+        $this->fate = $fate;
+        return $this;
+    }
+
+    public function setInfluencePool (int $influencePool): self
+    {
+        $this->influencePool = $influencePool;
+        return $this;
+    }
+
+    public function setInfluenceCost (int $influenceCost): self
+    {
+        $this->influenceCost = $influenceCost;
+        return $this;
+    }
+
+    public function getCode (): string
     {
         return $this->code;
     }
 
-    /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return Card
-     */
-    public function setName ($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName ()
+    public function getName (): string
     {
         return $this->name;
     }
 
-    /**
-     * Set cost
-     *
-     * @param integer $cost
-     *
-     * @return Card
-     */
-    public function setCost ($cost)
-    {
-        $this->cost = $cost;
-
-        return $this;
-    }
-
-    /**
-     * Get cost
-     *
-     * @return int
-     */
-    public function getCost ()
+    public function getCost (): int
     {
         return $this->cost;
     }
 
-    /**
-     * Set text
-     *
-     * @param string $text
-     *
-     * @return Card
-     */
-    public function setText ($text)
-    {
-        $this->text = $text;
-
-        return $this;
-    }
-
-    /**
-     * Get text
-     *
-     * @return string
-     */
-    public function getText ()
+    public function getText (): string
     {
         return $this->text;
     }
 
-    /**
-     * Get type
-     *
-     * @return Type
-     */
-    function getType ()
+    public function getType (): string
     {
         return $this->type;
     }
 
-    /**
-     * Get clan
-     *
-     * @return Clan
-     */
-    function getClan ()
+    public function getClan (): string
     {
         return $this->clan;
     }
 
-    /**
-     * Set type
-     *
-     * @param \AppBundle\Entity\Type $type
-     *
-     * @return Card
-     */
-    function setType (\AppBundle\Entity\Type $type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Set clan
-     *
-     * @param \AppBundle\Entity\Clan $clan
-     *
-     * @return Card
-     */
-    function setClan (\AppBundle\Entity\Clan $clan)
-    {
-        $this->clan = $clan;
-
-        return $this;
-    }
-
-    function getElement ()
+    public function getElement (): string
     {
         return $this->element;
     }
 
-    function getIsUnique ()
+    public function isUnique (): bool
     {
         return $this->isUnique;
     }
 
-    function getSide ()
+    public function getSide (): string
     {
         return $this->side;
     }
 
-    function getKeywords ()
+    public function getKeywords (): string
     {
         return $this->keywords;
     }
 
-    function getIllustrator ()
+    public function getIllustrator (): string
     {
         return $this->illustrator;
     }
 
-    function getMilitaryStrength ()
+    public function getMilitaryStrength (): int
     {
         return $this->militaryStrength;
     }
 
-    function getPoliticalStrength ()
+    public function getPoliticalStrength (): int
     {
         return $this->politicalStrength;
     }
 
-    function getProvinceStrength ()
+    public function getProvinceStrength (): int
     {
         return $this->provinceStrength;
     }
 
-    function getMilitaryStrengthMod ()
+    public function getMilitaryStrengthMod (): string
     {
         return $this->militaryStrengthMod;
     }
 
-    function getPoliticalStrengthMod ()
+    public function getPoliticalStrengthMod (): string
     {
         return $this->politicalStrengthMod;
     }
 
-    function getProvinceStrengthMod ()
+    public function getProvinceStrengthMod (): string
     {
         return $this->provinceStrengthMod;
     }
 
-    function getGlory ()
+    public function getGlory (): int
     {
         return $this->glory;
     }
 
-    function getHonor ()
+    public function getHonor (): int
     {
         return $this->honor;
     }
 
-    function getFate ()
+    public function getFate (): int
     {
         return $this->fate;
     }
 
-    function getInfluencePool ()
+    public function getInfluencePool (): int
     {
         return $this->influencePool;
     }
 
-    function getInfluenceCost ()
+    public function getInfluenceCost (): int
     {
         return $this->influenceCost;
-    }
-
-    function setElement (\AppBundle\Entity\Element $element)
-    {
-        $this->element = $element;
-    }
-
-    function setIsUnique ($isUnique)
-    {
-        $this->isUnique = $isUnique;
-    }
-
-    function setSide ($side)
-    {
-        $this->side = $side;
-    }
-
-    function setKeywords ($keywords)
-    {
-        $this->keywords = $keywords;
-    }
-
-    function setIllustrator ($illustrator)
-    {
-        $this->illustrator = $illustrator;
-    }
-
-    function setMilitaryStrength ($militaryStrength)
-    {
-        $this->militaryStrength = $militaryStrength;
-    }
-
-    function setPoliticalStrength ($politicalStrength)
-    {
-        $this->politicalStrength = $politicalStrength;
-    }
-
-    function setProvinceStrength ($provinceStrength)
-    {
-        $this->provinceStrength = $provinceStrength;
-    }
-
-    function setMilitaryStrengthMod ($militaryStrengthMod)
-    {
-        $this->militaryStrengthMod = $militaryStrengthMod;
-    }
-
-    function setPoliticalStrengthMod ($politicalStrengthMod)
-    {
-        $this->politicalStrengthMod = $politicalStrengthMod;
-    }
-
-    function setProvinceStrengthMod ($provinceStrengthMod)
-    {
-        $this->provinceStrengthMod = $provinceStrengthMod;
-    }
-
-    function setGlory ($glory)
-    {
-        $this->glory = $glory;
-    }
-
-    function setHonor ($honor)
-    {
-        $this->honor = $honor;
-    }
-
-    function setFate ($fate)
-    {
-        $this->fate = $fate;
-    }
-
-    function setInfluencePool ($influencePool)
-    {
-        $this->influencePool = $influencePool;
-    }
-
-    function setInfluenceCost ($influenceCost)
-    {
-        $this->influenceCost = $influenceCost;
     }
 
     /**
@@ -665,36 +606,6 @@ class Card
     {
         $this->rulings = $rulings;
         return $this;
-    }
-
-    /**
-     * Get clan code
-     * @JMS\VirtualProperty()
-     * @return string
-     */
-    function getClanCode ()
-    {
-        return $this->clan ? $this->clan->getCode() : null;
-    }
-
-    /**
-     * Get type code
-     * @JMS\VirtualProperty()
-     * @return string
-     */
-    function getTypeCode ()
-    {
-        return $this->type ? $this->type->getCode() : null;
-    }
-
-    /**
-     * Get element code
-     * @JMS\VirtualProperty()
-     * @return string
-     */
-    function getElementCode ()
-    {
-        return $this->element ? $this->element->getCode() : null;
     }
 
     /**
