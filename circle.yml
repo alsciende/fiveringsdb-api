@@ -7,6 +7,7 @@ machine:
 checkout:
   post:
     - git clone git@github.com:Alsciende/fiveringsdb-data.git /home/ubuntu/fiveringsdb-data
+    - cp vue/config/prod.env.js.dist vue/config/prod.env.js
 
 dependencies:
   pre:
@@ -26,9 +27,3 @@ database:
 test:
   override:
     - phpunit -d memory_limit=128M --verbose --debug
-
-deployment:
-  production:
-    branch: production
-    commands:
-      - ./deploy_prod.sh
