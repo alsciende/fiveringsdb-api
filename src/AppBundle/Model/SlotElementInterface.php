@@ -8,9 +8,5 @@ namespace AppBundle\Model;
  */
 interface SlotElementInterface
 {
-    
-    /**
-     * @return string
-     */
-    public function getCode();
+    public function getCode (): string;
 }

@@ -2,6 +2,9 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Model\CardSlotCollectionDecorator;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -25,7 +28,6 @@ use JMS\Serializer\Annotation as JMS;
  */
 class Deck
 {
-
     /**
      * Unique identifier of the deck
      *
@@ -63,15 +65,6 @@ class Deck
      * @JMS\Type("DateTime")
      */
     protected $createdAt;
-
-    /**
-     * The phoenixborn used by the deck
-     *
-     * @var Card
-     * @ORM\ManyToOne(targetEntity="Card")
-     * @ORM\JoinColumn(name="phoenixborn_code", referencedColumnName="code")
-     */
-    private $phoenixborn;
 
     /**
      * The cards used by the deck
@@ -153,7 +146,7 @@ class Deck
     function __construct ()
     {
         $this->deckCards = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->problem = \AppBundle\Service\DeckChecker::VALID_DECK;
+        $this->problem = \AppBundle\Service\DeckValidator::VALID_DECK;
     }
 
     function __toString ()
@@ -161,364 +154,201 @@ class Deck
         return sprintf("%s (%s)", $this->name, $this->id ?: "no id");
     }
 
-    /**
-     *
-     * @return string
-     */
-    function getId ()
+    function getId (): string
     {
         return $this->id;
     }
 
-    /**
-     * @var string
-     * @return Deck
-     */
-    function setId (string $id)
+    function setId (string $id): self
     {
         $this->id = $id;
 
         return $this;
     }
 
-    /**
-     *
-     * @return string
-     */
-    function getName ()
+    function getName (): string
     {
         return $this->name;
     }
 
-    /**
-     *
-     * @param string $name
-     * @return Deck
-     */
-    function setName ($name)
+    function setName (string $name): self
     {
         $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * Sets createdAt.
-     *
-     * @param  \DateTime $createdAt
-     * @return $this
-     */
-    public function setCreatedAt (\DateTime $createdAt)
+    public function setCreatedAt (\DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    /**
-     * Returns createdAt.
-     *
-     * @return \DateTime
-     */
-    public function getCreatedAt ()
+    public function getCreatedAt (): \DateTime
     {
         return $this->createdAt;
     }
 
-    /**
-     *
-     * @return Card
-     */
-    function getPhoenixborn ()
+    function getDeckCards (): CardSlotCollectionDecorator
     {
-        return $this->phoenixborn;
+        return new CardSlotCollectionDecorator($this->deckCards->toArray());
     }
 
-    /**
-     * @JMS\VirtualProperty
-     * @return string
-     */
-    function getPhoenixbornCode ()
-    {
-        return $this->phoenixborn ? $this->phoenixborn->getCode() : null;
-    }
-
-    /**
-     *
-     * @param \AppBundle\Entity\Card $phoenixborn
-     * @return Deck
-     */
-    function setPhoenixborn (Card $phoenixborn)
-    {
-        $this->phoenixborn = $phoenixborn;
-
-        return $this;
-    }
-
-    /**
-     *
-     * @return \AppBundle\Model\CardSlotCollectionDecorator
-     */
-    function getDeckCards ()
-    {
-        return new \AppBundle\Model\CardSlotCollectionDecorator($this->deckCards->toArray());
-    }
-
-    /**
-     *
-     * @param \Doctrine\Common\Collections\Collection $deckCards
-     * @return Deck
-     */
-    function setDeckCards (\Doctrine\Common\Collections\Collection $deckCards)
+    function setDeckCards (Collection $deckCards): self
     {
         $this->deckCards = $deckCards;
 
         return $this;
     }
 
-    /**
-     *
-     * @return Deck
-     */
-    function clearDeckCards ()
+    function clearDeckCards (): self
     {
-        $this->deckCards = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->deckCards = new ArrayCollection();
 
         return $this;
     }
 
-    /**
-     *
-     * @param \AppBundle\Entity\DeckCard $deckCard
-     * @return Deck
-     */
-    function addDeckCard (DeckCard $deckCard)
+    function addDeckCard (DeckCard $deckCard): self
     {
         if (!$this->deckCards->contains($deckCard)) {
             $this->deckCards[] = $deckCard;
+            $deckCard->setDeck($this);
         }
 
         return $this;
     }
 
-    /**
-     *
-     * @return User
-     */
-    function getUser ()
+    function getUser (): User
     {
         return $this->user;
     }
 
     /**
      * @JMS\VirtualProperty
-     * @return string
      */
-    function getUserId ()
+    function getUserId (): string
     {
         return $this->user ? $this->user->getId() : null;
     }
 
-    /**
-     *
-     * @param \AppBundle\Entity\User $user
-     * @return Deck
-     */
-    function setUser (User $user)
+    function setUser (User $user): self
     {
         $this->user = $user;
 
         return $this;
     }
 
-    /**
-     *
-     * @return integer
-     */
-    function getNbLikes ()
+    function getNbLikes (): int
     {
         return $this->nbLikes;
     }
 
-    /**
-     *
-     * @param integer $nbLikes
-     * @return Deck
-     */
-    function setNbLikes ($nbLikes)
+    function setNbLikes (int $nbLikes): self
     {
         $this->nbLikes = $nbLikes;
+
         return $this;
     }
 
 
-    /**
-     *
-     * @return string
-     */
-    function getDescription ()
+    function getDescription (): string
     {
         return $this->description;
     }
 
-    /**
-     *
-     * @param string $description
-     * @return Deck
-     */
-    function setDescription ($description)
+    function setDescription (string $description): self
     {
         $this->description = $description;
 
         return $this;
     }
 
-    /**
-     *
-     * @return integer
-     */
-    function getMajorVersion ()
+    function getMajorVersion (): int
     {
         return $this->majorVersion;
     }
 
-    /**
-     *
-     * @return integer
-     */
-    function getMinorVersion ()
+    function getMinorVersion (): int
     {
         return $this->minorVersion;
     }
 
-    /**
-     *
-     * @param integer $majorVersion
-     * @return Deck
-     */
-    function setMajorVersion ($majorVersion)
+    function setMajorVersion (int $majorVersion): self
     {
         $this->majorVersion = $majorVersion;
+
         return $this;
     }
 
-    /**
-     *
-     * @param integer $minorVersion
-     * @return Deck
-     */
-    function setMinorVersion ($minorVersion)
+    function setMinorVersion (int $minorVersion): self
     {
         $this->minorVersion = $minorVersion;
+
         return $this;
     }
 
     /**
      * @JMS\VirtualProperty
-     * @return string
      */
-    function getVersion ()
+    function getVersion (): string
     {
-        return $this->majorVersion . "." . $this->minorVersion;
+        return $this->majorVersion . '.' . $this->minorVersion;
     }
 
-    /**
-     *
-     * @return boolean
-     */
-    function getIsPublished ()
+    function getIsPublished (): bool
     {
         return $this->isPublished;
     }
 
-    /**
-     *
-     * @param boolean $isPublished
-     * @return Deck
-     */
-    function setIsPublished ($isPublished)
+    function setIsPublished (bool $isPublished): self
     {
         $this->isPublished = $isPublished;
+
         return $this;
     }
 
     /**
      * @JMS\VirtualProperty
-     * @return array
      */
-    function getCards ()
+    function getCards (): array
     {
         return $this->getDeckCards()->getContent();
     }
 
-    /**
-     * @JMS\VirtualProperty
-     * @return array
-     */
-    function getDices ()
-    {
-        return $this->getDeckDices()->getContent();
-    }
-
-    /**
-     *
-     * @return integer
-     */
-    function getProblem ()
+    function getProblem (): int
     {
         return $this->problem;
     }
 
-    /**
-     *
-     * @param integer $problem
-     * @return Deck
-     */
-    function setProblem ($problem)
+    function setProblem (int $problem): self
     {
         $this->problem = $problem;
+
         return $this;
     }
 
-    /**
-     *
-     * @return string
-     */
-    function getLineage ()
+    function getLineage (): string
     {
         return $this->lineage;
     }
 
-    /**
-     *
-     * @param string $lineage
-     * @return Deck
-     */
-    function setLineage ($lineage)
+    function setLineage (string $lineage): self
     {
         $this->lineage = $lineage;
+
         return $this;
     }
 
-    /**
-     *
-     * @return string
-     */
-    function getGenus ()
+    function getGenus (): string
     {
         return $this->genus;
     }
 
-    /**
-     *
-     * @param string $genus
-     * @return Deck
-     */
-    function setGenus ($genus)
+    function setGenus (string $genus): self
     {
         $this->genus = $genus;
+
         return $this;
     }
-
-
 }

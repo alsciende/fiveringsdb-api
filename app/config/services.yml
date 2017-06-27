@@ -1,4 +1,23 @@
 services:
+#    _defaults:
+#        autowire: true
+#        public: true
+
+    _instanceof:
+        AppBundle\Service\DeckChecker\DeckCheckerInterface:
+            tags: [ 'app.deck_checker' ]
+
+#    _instanceof:
+#        AppBundle\Manager\BaseManager:
+#            arguments:
+#                - "@doctrine.orm.entity_manager"
+#                - "@serializer"
+
+    AppBundle\Service\DeckChecker\:
+        resource: '../../src/AppBundle/Service/DeckChecker'
+
+#    AppBundle\Manager\:
+#        resource: '../../src/AppBundle/Manager'
 
     alsciende_security.oauth_authenticator:
         class: Alsciende\SecurityBundle\Security\OauthAuthenticator
@@ -39,54 +58,12 @@ services:
             - "%http_cache_max_age%"
             - "%kernel.environment%"
 
-    app.deck_checker:
-        class: AppBundle\Service\DeckChecker
-        
-    app.base_manager:
-        class: AppBundle\Manager\BaseManager
+    app.deck_validator:
+        class: AppBundle\Service\DeckValidator
+
+    app.deck_manager:
+        class: AppBundle\Manager\DeckManager
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@serializer"
-        
-    app.review_manager:
-        class: AppBundle\Manager\ReviewManager
-        parent: app.base_manager
-        
-    app.ruling_manager:
-        class: AppBundle\Manager\RulingManager
-        parent: app.base_manager
-        
-    app.deck_manager:
-        class: AppBundle\Manager\DeckManager
-        parent: app.base_manager
-        arguments: ['@app.deck_checker']
-
-    app.deck_checker.card_copies:
-        class: AppBundle\Service\DeckChecker\CardCopiesChecker
-        tags:
-            - { name: app.deck_checker }
-
-    app.deck_checker.card_count:
-        class: AppBundle\Service\DeckChecker\CardCountChecker
-        tags:
-            - { name: app.deck_checker }
-
-    app.deck_checker.conjurations:
-        class: AppBundle\Service\DeckChecker\ConjurationsChecker
-        tags:
-            - { name: app.deck_checker }
-
-    app.deck_checker.dice_count:
-        class: AppBundle\Service\DeckChecker\DiceCountChecker
-        tags:
-            - { name: app.deck_checker }
-
-    app.deck_checker.exclusives:
-        class: AppBundle\Service\DeckChecker\ExclusivesChecker
-        tags:
-            - { name: app.deck_checker }
-
-    app.deck_checker.phoenixborn:
-        class: AppBundle\Service\DeckChecker\PhoenixbornChecker
-        tags:
-            - { name: app.deck_checker }
+            - '@app.deck_validator'
