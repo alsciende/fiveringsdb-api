@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Model\SlotElementInterface;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -18,7 +19,6 @@ use JMS\Serializer\Annotation as JMS;
  */
 class DeckCard implements \AppBundle\Model\CardSlotInterface
 {
-
     /**
      * @var int
      *
@@ -46,53 +46,57 @@ class DeckCard implements \AppBundle\Model\CardSlotInterface
      */
     private $deck;
 
-    public function __construct (Deck $deck, Card $card, int $quantity)
+    public function __construct (Card $card, int $quantity)
     {
-        $this->deck = $deck;
         $this->card = $card;
         $this->quantity = $quantity;
     }
 
-    function getQuantity ()
+    function getQuantity (): int
     {
         return $this->quantity;
     }
 
-    function getCard ()
+    function getCard (): Card
     {
         return $this->card;
     }
 
     /**
      * @JMS\VirtualProperty
-     * @return string
      */
-    function getCardCode ()
+    function getCardCode (): string
     {
         return $this->card ? $this->card->getCode() : null;
     }
 
-    function getDeck ()
+    function getDeck (): ?Deck
     {
         return $this->deck;
     }
 
-    function setQuantity ($quantity)
+    function setQuantity ($quantity): self
     {
         $this->quantity = $quantity;
+
+        return $this;
     }
 
-    function setCard (\AppBundle\Entity\Card $card)
+    function setCard (Card $card): self
     {
         $this->card = $card;
+
+        return $this;
     }
 
-    function setDeck (\AppBundle\Entity\Deck $deck)
+    function setDeck (Deck $deck): self
     {
         $this->deck = $deck;
+
+        return $this;
     }
 
-    function getElement ()
+    function getElement (): SlotElementInterface
     {
         return $this->card;
     }

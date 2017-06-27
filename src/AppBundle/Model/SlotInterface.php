@@ -8,14 +8,7 @@ namespace AppBundle\Model;
  */
 interface SlotInterface
 {
-    
-    /**
-     * @return SlotElementInterface
-     */
-    public function getElement ();
-    
-    /**
-     * @return integer
-     */
-    public function getQuantity ();
+    public function getElement (): SlotElementInterface;
+
+    public function getQuantity (): int;
 }

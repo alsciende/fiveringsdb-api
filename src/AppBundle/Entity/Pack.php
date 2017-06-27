@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use DateTime;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Traits\TimestampableEntity;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -116,173 +117,92 @@ class Pack
         $this->cards = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
-    /**
-     * Set code
-     *
-     * @param string $code
-     *
-     * @return Pack
-     */
-    public function setCode ($code)
+    public function setCode (string $code): self
     {
         $this->code = $code;
 
         return $this;
     }
 
-    /**
-     * Get code
-     *
-     * @return string
-     */
-    public function getCode ()
+    public function getCode (): string
     {
         return $this->code;
     }
 
-    /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return Pack
-     */
-    public function setName ($name)
+    public function setName (string $name): self
     {
         $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName ()
+    public function getName (): string
     {
         return $this->name;
     }
 
-    /**
-     * Set position
-     *
-     * @param integer $position
-     *
-     * @return Pack
-     */
-    public function setPosition ($position)
+    public function setPosition (int $position): self
     {
         $this->position = $position;
 
         return $this;
     }
 
-    /**
-     * Get position
-     *
-     * @return int
-     */
-    public function getPosition ()
+    public function getPosition (): int
     {
         return $this->position;
     }
 
-    /**
-     * Set size
-     *
-     * @param integer $size
-     *
-     * @return Pack
-     */
-    public function setSize ($size)
+    public function setSize (int $size): self
     {
         $this->size = $size;
 
         return $this;
     }
 
-    /**
-     * Get size
-     *
-     * @return int
-     */
-    public function getSize ()
+    public function getSize (): int
     {
         return $this->size;
     }
 
-    /**
-     *
-     * @return DateTime
-     */
-    function getReleasedAt ()
+    function getReleasedAt (): DateTime
     {
         return $this->releasedAt;
     }
 
-    /**
-     *
-     * @param DateTime $releaseAt
-     */
-    function setReleasedAt (DateTime $releaseAt)
+    function setReleasedAt (DateTime $releasedAt): self
     {
         $this->releasedAt = $releasedAt;
 
         return $this;
     }
 
-    /*
-     * Set ffgId
-     *
-     * @param integer $ffgId
-     * @return this
-     */
-    public function setFfgId ($ffgId)
+    public function setFfgId (int $ffgId): self
     {
         $this->ffgId = $ffgId;
 
         return $this;
     }
 
-    /*
-     * Get ffgId
-     *
-     * @return int
-     */
-    public function getFfgId ()
+    public function getFfgId (): int
     {
         return $this->ffgId;
     }
 
-    /**
-     * Get cycle
-     *
-     * @return Cycle
-     */
-    function getCycle ()
+    function getCycle (): Cycle
     {
         return $this->cycle;
     }
 
     /**
-     * Get cycle code
      * @JMS\VirtualProperty()
-     * @return string
      */
-    function getCycleCode ()
+    function getCycleCode (): string
     {
         return $this->cycle ? $this->cycle->getCode() : null;
     }
 
-    /**
-     * Set cycle
-     *
-     * @param Cycle $cycle
-     *
-     * @return Pack
-     */
-    function setCycle (Cycle $cycle)
+    function setCycle (Cycle $cycle): self
     {
         $this->cycle = $cycle;
 
@@ -290,10 +210,9 @@ class Pack
     }
 
     /**
-     *
      * @return PackCard[]
      */
-    function getCards ()
+    function getCards (): Collection
     {
         return $this->cards;
     }

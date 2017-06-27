@@ -2,6 +2,9 @@
 
 namespace AppBundle\Manager;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Serializer\Serializer;
+
 /**
  * Description of BaseManage
  *
@@ -9,23 +12,15 @@ namespace AppBundle\Manager;
  */
 abstract class BaseManager
 {
-
-    /**
-     *
-     * @var \Doctrine\ORM\EntityManager
-     */
+    /** @var EntityManagerInterface */
     protected $entityManager;
 
-    /**
-     *
-     * @var \Symfony\Component\Serializer\Serializer
-     */
+    /** @var Serializer */
     protected $serializer;
 
-    public function __construct (\Doctrine\ORM\EntityManager $entityManager, \Symfony\Component\Serializer\Serializer $serializer)
+    public function __construct (EntityManagerInterface $entityManager, Serializer $serializer)
     {
         $this->entityManager = $entityManager;
         $this->serializer = $serializer;
     }
-
 }
