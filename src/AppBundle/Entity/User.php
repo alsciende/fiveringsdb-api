@@ -74,9 +74,10 @@ class User implements UserInterface
         return $this->username;
     }
 
-    public function getRoles ()
+    public function setUsername ($username): self
     {
-        return $this->roles;
+        $this->username = $username;
+        return $this;
     }
 
     public function getPassword ()
@@ -84,9 +85,40 @@ class User implements UserInterface
         return $this->password;
     }
 
-    public function getSalt ()
+    public function setPassword ($password): self
     {
-        
+        $this->password = $password;
+        return $this;
+    }
+
+    public function getRoles (): array
+    {
+        return $this->roles;
+    }
+
+    public function setRoles (array $roles): self
+    {
+        $this->roles = $roles;
+        return $this;
+    }
+
+    function addRole (string $role): self
+    {
+        $roles = $this->roles;
+        $roles[] = $role;
+        $this->roles = array_unique($roles);
+        return $this;
+    }
+
+    public function isEnabled (): bool
+    {
+        return $this->enabled;
+    }
+
+    public function setEnabled (bool $enabled): self
+    {
+        $this->enabled = $enabled;
+        return $this;
     }
 
     public function eraseCredentials ()
@@ -94,32 +126,8 @@ class User implements UserInterface
         
     }
 
-    function setUsername ($username)
+    public function getSalt ()
     {
-        $this->username = $username;
+        return '';
     }
-
-    function setPassword ($password)
-    {
-        $this->password = $password;
-    }
-
-    function addRole ($role)
-    {
-        $roles = $this->roles;
-        $roles[] = $role;
-        $this->roles = array_unique($roles);
-    }
-    
-    function getEnabled ()
-    {
-        return $this->enabled;
-    }
-
-    function setEnabled ($enabled)
-    {
-        $this->enabled = $enabled;
-    }
-
-
 }

@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Model\SlotElementInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -22,8 +23,33 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class Card
+class Card implements SlotElementInterface
 {
+    const TYPE_ATTACHMENT = 'attachment';
+    const TYPE_CHARACTER = 'character';
+    const TYPE_EVENT = 'event';
+    const TYPE_HOLDING = 'holding';
+    const TYPE_PROVINCE = 'province';
+    const TYPE_ROLE = 'role';
+    const TYPE_STRONGHOLD = 'stronghold';
+
+    const ELEMENT_AIR = 'air';
+    const ELEMENT_EARTH = 'earth';
+    const ELEMENT_FIRE = 'fire';
+    const ELEMENT_VOID = 'void';
+    const ELEMENT__WATER = 'water';
+
+    const SIDE_CONFLICT = 'conflict';
+    const SIDE_DYNASTY = 'dynasty';
+
+    const CLAN_CRAB = 'crab';
+    const CLAN_CRANE = 'crane';
+    const CLAN_DRAGON = 'dragon';
+    const CLAN_LION = 'lion';
+    const CLAN_NEUTRAL = 'neutral';
+    const CLAN_PHOENIX = 'phoenix';
+    const CLAN_SCORPION = 'scorpion';
+    const CLAN_UNICORN = 'unicorn';
 
     use TimestampableEntity;
 
@@ -91,7 +117,7 @@ class Card
     /**
      * @var string
      *
-     * @ORM\Column(name="clan_code", type="text", nullable=false)
+     * @ORM\Column(name="clan_code", type="text", nullable=true)
      *
      * @Source(type="string")
      *
@@ -124,7 +150,7 @@ class Card
     /**
      * @var string
      *
-     * @ORM\Column(name="side", type="string", nullable=true)
+     * @ORM\Column(name="side_code", type="string", nullable=true)
      *
      * @Source(type="string")
      *
@@ -276,6 +302,17 @@ class Card
     private $influenceCost;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="deck_limit", type="smallint", nullable=false)
+     *
+     * @Source(type="integer")
+     *
+     * @JMS\Expose
+     */
+    private $deckLimit;
+
+    /**
      * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\OneToMany(targetEntity="PackCard", mappedBy="card", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
@@ -335,13 +372,13 @@ class Card
         return $this;
     }
 
-    public function setClan (string $clan): self
+    public function setClan (string $clan = null): self
     {
         $this->clan = $clan;
         return $this;
     }
 
-    public function setElement (string $element): self
+    public function setElement (string $element = null): self
     {
         $this->element = $element;
         return $this;
@@ -353,7 +390,7 @@ class Card
         return $this;
     }
 
-    public function setSide (string $side): self
+    public function setSide (string $side = null): self
     {
         $this->side = $side;
         return $this;
@@ -462,12 +499,12 @@ class Card
         return $this->type;
     }
 
-    public function getClan (): string
+    public function getClan (): ?string
     {
         return $this->clan;
     }
 
-    public function getElement (): string
+    public function getElement (): ?string
     {
         return $this->element;
     }
@@ -477,7 +514,7 @@ class Card
         return $this->isUnique;
     }
 
-    public function getSide (): string
+    public function getSide (): ?string
     {
         return $this->side;
     }
@@ -545,6 +582,18 @@ class Card
     public function getInfluenceCost (): int
     {
         return $this->influenceCost;
+    }
+
+    public function setDeckLimit (int $deckLimit): self
+    {
+        $this->deckLimit = $deckLimit;
+
+        return $this;
+    }
+
+    public function getDeckLimit (): int
+    {
+        return $this->deckLimit;
     }
 
     /**

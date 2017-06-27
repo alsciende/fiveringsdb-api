@@ -9,13 +9,14 @@ namespace AppBundle\Model;
  */
 class PackCardSlotCollectionDecorator extends AbstractSlotCollectionDecorator
 {
-    public function getQuantities ()
+    public function getQuantities (): array
     {
         $quantities = [];
-        foreach($this->toArray() as $slot) {
+        foreach ($this->toArray() as $slot) {
             $quantities[$slot->getPack()->getCode()] = $slot->getQuantity();
         }
         ksort($quantities);
+
         return $quantities;
     }
 }

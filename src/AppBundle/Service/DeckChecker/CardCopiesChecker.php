@@ -2,6 +2,10 @@
 
 namespace AppBundle\Service\DeckChecker;
 
+use AppBundle\Model\CardSlotCollectionDecorator;
+use AppBundle\Model\CardSlotInterface;
+use AppBundle\Service\DeckValidator;
+
 /**
  * Description of CardCopiesChecker
  *
@@ -9,17 +13,16 @@ namespace AppBundle\Service\DeckChecker;
  */
 class CardCopiesChecker implements DeckCheckerInterface
 {
-    
-    public function check(\AppBundle\Entity\Deck $deck)
+    public function check(CardSlotCollectionDecorator $deckCards): int
     {
-        $slot = $deck->getDeckCards()->find(function (\AppBundle\Model\CardSlotInterface $slot) {
-            /* @var $slot \AppBundle\Entity\DeckCard */
-            return $slot->getQuantity() > 3;
+        $slot = $deckCards->find(function (CardSlotInterface $slot) {
+            return $slot->getQuantity() > $slot->getCard()->getDeckLimit();
         });
 
         if ($slot) {
-            return \AppBundle\Service\DeckChecker::TOO_MANY_COPIES;
+            return DeckValidator::TOO_MANY_COPIES;
         }
-    }
 
+        return DeckValidator::VALID_DECK;
+    }
 }

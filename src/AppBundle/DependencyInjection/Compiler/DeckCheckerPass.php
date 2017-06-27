@@ -16,11 +16,11 @@ class DeckCheckerPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         // always first check if the primary service is defined
-        if (!$container->has('app.deck_checker')) {
+        if (!$container->has('app.deck_validator')) {
             return;
         }
 
-        $definition = $container->findDefinition('app.deck_checker');
+        $definition = $container->findDefinition('app.deck_validator');
 
         // find all service IDs with the app.mail_transport tag
         $taggedServices = $container->findTaggedServiceIds('app.deck_checker');
