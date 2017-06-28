@@ -82,7 +82,7 @@ class ImportCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwa
             'cost' => $data['Cost'] ?? null,
             'text' => isset($data['Text']) ? $this->markupText($data['Text']) : null,
             'type_code' => strtolower($data['Type']),
-            'clan_code' => $data['Clan'] === 'Neutral' ? null : strtolower($data['Clan']),
+            'clan_code' => strtolower($data['Clan']),
             'element_code' => isset($data['Element']) ? strtolower($data['Element']) : null,
             'is_unique' => $data['Unique'] === 'Yes',
             'side_code' => $this->getSide($data['Deck']),
