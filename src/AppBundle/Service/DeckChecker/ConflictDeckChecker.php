@@ -40,7 +40,7 @@ class ConflictDeckChecker implements DeckCheckerInterface
 
             $offClanSlots = $deckCards->filter(function ($slot) use ($clan) {
                 /** @var CardSlotInterface $slot */
-                return $slot->getCard()->getClan() !== null
+                return $slot->getCard()->getClan() !== 'neutral'
                     && $slot->getCard()->getClan() !== $clan;
             });
 
