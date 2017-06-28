@@ -117,7 +117,7 @@ class Card implements SlotElementInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="clan_code", type="text", nullable=true)
+     * @ORM\Column(name="clan_code", type="text", nullable=false)
      *
      * @Source(type="string")
      *
@@ -372,7 +372,7 @@ class Card implements SlotElementInterface
         return $this;
     }
 
-    public function setClan (string $clan = null): self
+    public function setClan (string $clan): self
     {
         $this->clan = $clan;
         return $this;
@@ -499,7 +499,7 @@ class Card implements SlotElementInterface
         return $this->type;
     }
 
-    public function getClan (): ?string
+    public function getClan (): string
     {
         return $this->clan;
     }

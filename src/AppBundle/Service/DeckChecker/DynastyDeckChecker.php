@@ -35,7 +35,7 @@ class DynastyDeckChecker implements DeckCheckerInterface
 
             $offClanSlot = $deckCards->find(function ($slot) use ($clan) {
                 /** @var CardSlotInterface $slot */
-                return $slot->getCard()->getClan() !== null
+                return $slot->getCard()->getClan() !== 'neutral'
                     && $slot->getCard()->getClan() !== $clan;
             });
 
