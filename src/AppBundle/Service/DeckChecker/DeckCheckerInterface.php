@@ -2,16 +2,12 @@
 
 namespace AppBundle\Service\DeckChecker;
 
+use AppBundle\Model\CardSlotCollectionDecorator;
+
 /**
- *
  * @author Alsciende <alsciende@icloud.com>
  */
 interface DeckCheckerInterface
 {
-    /**
-     * 
-     * @param \AppBundle\Entity\Deck $deck
-     * @return integer
-     */
-    public function check(\AppBundle\Entity\Deck $deck);
+    public function check(CardSlotCollectionDecorator $deckCards): int;
 }

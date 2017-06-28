@@ -85,7 +85,7 @@ class ImportCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwa
             'clan_code' => strtolower($data['Clan']),
             'element_code' => isset($data['Element']) ? strtolower($data['Element']) : null,
             'is_unique' => $data['Unique'] === 'Yes',
-            'side' => $this->getSide($data['Deck']),
+            'side_code' => $this->getSide($data['Deck']),
             'keywords' => $data['Traits'] ?? null,
             'illustrator' => $data['Illustrator'] ?? null,
             'military_strength' => $this->getValue($data, 'Military Strength', 'Character'),
@@ -100,6 +100,7 @@ class ImportCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwa
             'influence_pool' => $data['Influence Pool'] ?? null,
             'influence_cost' => $data['Influence Cost'] ?? ($data['Deck'] === 'Conflict' && $data['Clan'] === 'Neutral' ? 0 : null),
             'position' => intval(substr($data['Card Number'], 2, 3), 10),
+            'deck_limit' => in_array($data['Type'], ['Province', 'Role', 'Stronghold']) ? 1 : 3,
         ];
 
         return $card;

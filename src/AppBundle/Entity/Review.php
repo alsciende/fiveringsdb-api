@@ -71,61 +71,52 @@ class Review
         return $this->id;
     }
 
-    function getText ()
-    {
-        return $this->text;
-    }
-
-    function getCard ()
-    {
-        return $this->card;
-    }
-
     /**
      * @JMS\VirtualProperty
-     * @return string
      */
-    function getCardCode ()
+    function getCardCode (): string
     {
         return $this->card ? $this->card->getCode() : null;
     }
 
-
-    function getUser ()
-    {
-        return $this->user;
-    }
-
     /**
      * @JMS\VirtualProperty
-     * @return string
      */
-    function getUserId ()
+    function getUserId (): string
     {
         return $this->user ? $this->user->getId() : null;
     }
 
+    public function getText (): string
+    {
+        return $this->text;
+    }
 
-    function setText ($text)
+    public function setText (string $text): self
     {
         $this->text = $text;
-
         return $this;
     }
 
-    function setCard (Card $card)
+    public function getCard (): Card
+    {
+        return $this->card;
+    }
+
+    public function setCard (Card $card): self
     {
         $this->card = $card;
-
         return $this;
     }
 
-    function setUser (User $user)
+    public function getUser (): User
+    {
+        return $this->user;
+    }
+
+    public function setUser (User $user): self
     {
         $this->user = $user;
-
         return $this;
     }
-
-
 }

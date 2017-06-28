@@ -60,100 +60,47 @@ class Cycle
      */
     private $size;
 
-    /**
-     * Set code
-     *
-     * @param string $code
-     *
-     * @return Cycle
-     */
-    public function setCode ($code)
+    public function setCode (string $code): self
     {
         $this->code = $code;
-
         return $this;
     }
 
-    /**
-     * Get code
-     *
-     * @return string
-     */
-    public function getCode ()
+    public function setName (string $name): self
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    public function setPosition (int $position): self
+    {
+        $this->position = $position;
+        return $this;
+    }
+
+    public function setSize (int $size): self
+    {
+        $this->size = $size;
+        return $this;
+    }
+
+    public function getCode (): string
     {
         return $this->code;
     }
 
-    /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return Cycle
-     */
-    public function setName ($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName ()
+    public function getName (): string
     {
         return $this->name;
     }
 
-    /**
-     * Set position
-     *
-     * @param integer $position
-     *
-     * @return Cycle
-     */
-    public function setPosition ($position)
-    {
-        $this->position = $position;
-
-        return $this;
-    }
-
-    /**
-     * Get position
-     *
-     * @return int
-     */
-    public function getPosition ()
+    public function getPosition (): int
     {
         return $this->position;
     }
 
-    /**
-     * Set size
-     *
-     * @param integer $size
-     *
-     * @return Cycle
-     */
-    public function setSize ($size)
-    {
-        $this->size = $size;
-
-        return $this;
-    }
-
-    /**
-     * Get size
-     *
-     * @return int
-     */
-    public function getSize ()
+    public function getSize (): int
     {
         return $this->size;
     }
-
 }

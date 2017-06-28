@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Model\SlotElementInterface;
 use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Traits\TimestampableEntity;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -23,7 +24,6 @@ use JMS\Serializer\Annotation as JMS;
  */
 class PackCard implements \AppBundle\Model\CardSlotInterface
 {
-
     use TimestampableEntity;
 
     /**
@@ -70,56 +70,60 @@ class PackCard implements \AppBundle\Model\CardSlotInterface
      */
     private $pack;
 
-    function getQuantity ()
+    function getQuantity (): int
     {
         return $this->quantity;
     }
 
-    function getCard ()
+    function getCard (): Card
     {
         return $this->card;
     }
 
     /**
      * @JMS\VirtualProperty
-     * @return string
      */
-    function getCardCode ()
+    function getCardCode (): string
     {
         return $this->card ? $this->card->getCode() : null;
     }
 
 
-    function getPack ()
+    function getPack (): Pack
     {
         return $this->pack;
     }
 
     /**
      * @JMS\VirtualProperty
-     * @return string
      */
-    function getPackCode ()
+    function getPackCode (): string
     {
         return $this->pack ? $this->pack->getCode() : null;
     }
 
-    function setQuantity ($quantity)
+    function setQuantity ($quantity): self
     {
         $this->quantity = $quantity;
+
+        return $this;
     }
 
-    function setCard (\AppBundle\Entity\Card $card)
+    function setCard (Card $card): self
     {
         $this->card = $card;
+
+        return $this;
     }
 
-    function setPack (\AppBundle\Entity\Pack $pack)
+    function setPack (Pack $pack): self
     {
         $this->pack = $pack;
+
+        return $this;
     }
 
-    function getElement ()
+    function getElement (): SlotElementInterface
     {
         return $this->card;
     }

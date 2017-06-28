@@ -15,7 +15,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class DeckLike
 {
-
     /**
      * @var \AppBundle\Entity\Deck
      *
@@ -47,65 +46,39 @@ class DeckLike
         $this->user = $user;
     }
 
-    /**
-     *
-     * @return \AppBundle\Entity\Deck
-     */
-    function getDeck (): \AppBundle\Entity\Deck
+    function getDeck (): Deck
     {
         return $this->deck;
     }
 
-    /**
-     *
-     * @return \AppBundle\Entity\User
-     */
-    function getUser (): \AppBundle\Entity\User
+    function getUser (): User
     {
         return $this->user;
     }
 
-    /**
-     *
-     * @return \DateTime
-     */
     function getCreatedAt (): \DateTime
     {
         return $this->createdAt;
     }
 
-    /**
-     *
-     * @param \AppBundle\Entity\Deck $deck
-     * @return DeckLike
-     */
-    function setDeck (\AppBundle\Entity\Deck $deck)
+    function setDeck (Deck $deck): self
     {
         $this->deck = $deck;
+
         return $this;
     }
 
-    /**
-     *
-     * @param \AppBundle\Entity\User $user
-     * @return DeckLike
-     */
-    function setUser (\AppBundle\Entity\User $user)
+    function setUser (User $user): self
     {
         $this->user = $user;
+
         return $this;
     }
 
-    /**
-     *
-     * @param \DateTime $createdAt
-     * @return DeckLike
-     */
-    function setCreatedAt (\DateTime $createdAt)
+    function setCreatedAt (\DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
-
-
 }
