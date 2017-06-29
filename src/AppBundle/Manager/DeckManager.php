@@ -54,11 +54,6 @@ class DeckManager extends BaseManager
             $deck->addDeckCard($deckCard);
         }
         $deck->setProblem($this->deckValidator->check($deck->getDeckCards()));
-        $deck->setIsPublished(FALSE);
-        $deck->setMajorVersion(0);
-        $deck->setMinorVersion(1);
-        $deck->setGenus(\Ramsey\Uuid\Uuid::uuid4());
-        $deck->setLineage(\Ramsey\Uuid\Uuid::uuid4());
         $this->entityManager->persist($deck);
 
         return $deck;
