@@ -11,7 +11,7 @@ php 7.x, mysql, git, composer, node 6.x, npm
 Install php DOM extension:
 
 ``` bash
-sudo apt-get install php-xml php-zip
+sudo apt-get install php-xml php-zip php-mbstring
 ```
 
 Create a database in MySQL:

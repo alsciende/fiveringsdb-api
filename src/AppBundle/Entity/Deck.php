@@ -6,9 +6,7 @@ use AppBundle\Model\CardSlotCollectionDecorator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
-use JMS\Serializer\Annotation as JMS;
 
 /**
  * A Deck, private (minorVersion > 0) or public (minorVersion == 0)
@@ -21,9 +19,6 @@ use JMS\Serializer\Annotation as JMS;
  * @ORM\Table(name="decks")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\DeckRepository")
  *
- * @JMS\ExclusionPolicy("all")
- * @JMS\AccessorOrder("alphabetical")
- *
  * @author Alsciende <alsciende@icloud.com>
  */
 class Deck
@@ -35,7 +30,6 @@ class Deck
      * @ORM\Column(name="id", type="string", length=255, unique=true)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="UUID")
-     * @JMS\Expose
      */
     private $id;
 
@@ -44,7 +38,6 @@ class Deck
      *
      * @var string
      * @ORM\Column(name="name", type="string", length=255, nullable=false)
-     * @JMS\Expose
      */
     private $name;
 
@@ -53,7 +46,6 @@ class Deck
      *
      * @var string
      * @ORM\Column(name="description", type="text", nullable=true)
-     * @JMS\Expose
      */
     private $description;
 
@@ -61,8 +53,6 @@ class Deck
      * @var \DateTime
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime",nullable=false)
-     * @JMS\Expose
-     * @JMS\Type("DateTime")
      */
     protected $createdAt;
 
@@ -88,7 +78,6 @@ class Deck
      *
      * @var integer
      * @ORM\Column(name="nb_likes", type="integer", nullable=true)
-     * @JMS\Expose
      */
     private $nbLikes;
 
@@ -121,7 +110,6 @@ class Deck
      *
      * @var integer
      * @ORM\Column(name="problem", type="integer", nullable=false)
-     * @JMS\Expose
      */
     private $problem;
 
@@ -130,7 +118,6 @@ class Deck
      *
      * @var string
      * @ORM\Column(name="lineage", type="string", nullable=false)
-     * @JMS\Expose
      */
     private $lineage;
 
@@ -139,14 +126,19 @@ class Deck
      *
      * @var string
      * @ORM\Column(name="genus", type="string", nullable=false)
-     * @JMS\Expose
      */
     private $genus;
 
     function __construct ()
     {
-        $this->deckCards = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->problem = \AppBundle\Service\DeckValidator::VALID_DECK;
+        $this->nbLikes = 0;
+        $this->majorVersion = 0;
+        $this->minorVersion = 1;
+        $this->isPublished = false;
+        $this->createdAt = new \DateTime();
+        $this->deckCards = new ArrayCollection();
+        $this->lineage = \Ramsey\Uuid\Uuid::uuid4();
+        $this->genus = \Ramsey\Uuid\Uuid::uuid4();
     }
 
     function __toString ()
@@ -219,17 +211,9 @@ class Deck
         return $this;
     }
 
-    function getUser (): User
+    function getUser (): ?User
     {
         return $this->user;
-    }
-
-    /**
-     * @JMS\VirtualProperty
-     */
-    function getUserId (): string
-    {
-        return $this->user ? $this->user->getId() : null;
     }
 
     function setUser (User $user): self
@@ -252,12 +236,12 @@ class Deck
     }
 
 
-    function getDescription (): string
+    function getDescription (): ?string
     {
         return $this->description;
     }
 
-    function setDescription (string $description): self
+    function setDescription (string $description = null): self
     {
         $this->description = $description;
 
@@ -288,14 +272,6 @@ class Deck
         return $this;
     }
 
-    /**
-     * @JMS\VirtualProperty
-     */
-    function getVersion (): string
-    {
-        return $this->majorVersion . '.' . $this->minorVersion;
-    }
-
     function getIsPublished (): bool
     {
         return $this->isPublished;
@@ -308,15 +284,7 @@ class Deck
         return $this;
     }
 
-    /**
-     * @JMS\VirtualProperty
-     */
-    function getCards (): array
-    {
-        return $this->getDeckCards()->getContent();
-    }
-
-    function getProblem (): int
+    function getProblem (): ?int
     {
         return $this->problem;
     }
