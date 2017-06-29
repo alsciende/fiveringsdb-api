@@ -67,3 +67,10 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@serializer"
             - '@app.deck_validator'
+
+    app.deck_serializer:
+        class: AppBundle\Service\DeckSerializer
+        tags:
+          - name: "jms_serializer.handler"
+            type: "AppBundle\\Entity\\Deck"
+            format: "json"
