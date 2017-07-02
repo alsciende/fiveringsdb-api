@@ -183,68 +183,68 @@ class Card implements SlotElementInterface
     /**
      * @var integer
      *
-     * @ORM\Column(name="military_strength", type="smallint", nullable=true)
+     * @ORM\Column(name="military", type="smallint", nullable=true)
      *
      * @Source(type="integer")
      *
      * @JMS\Expose
      */
-    private $militaryStrength;
+    private $military;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="political_strength", type="smallint", nullable=true)
+     * @ORM\Column(name="political", type="smallint", nullable=true)
      *
      * @Source(type="integer")
      *
      * @JMS\Expose
      */
-    private $politicalStrength;
+    private $political;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="province_strength", type="smallint", nullable=true)
+     * @ORM\Column(name="strength", type="smallint", nullable=true)
      *
      * @Source(type="integer")
      *
      * @JMS\Expose
      */
-    private $provinceStrength;
+    private $strength;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="military_strength_mod", type="string", nullable=true)
+     * @ORM\Column(name="military_bonus", type="string", nullable=true)
      *
      * @Source(type="string")
      *
      * @JMS\Expose
      */
-    private $militaryStrengthMod;
+    private $militaryBonus;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="political_strength_mod", type="string", nullable=true)
+     * @ORM\Column(name="political_bonus", type="string", nullable=true)
      *
      * @Source(type="string")
      *
      * @JMS\Expose
      */
-    private $politicalStrengthMod;
+    private $politicalBonus;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="province_strength_mod", type="string", nullable=true)
+     * @ORM\Column(name="strength_bonus", type="string", nullable=true)
      *
      * @Source(type="string")
      *
      * @JMS\Expose
      */
-    private $provinceStrengthMod;
+    private $strengthBonus;
 
     /**
      * @var integer
@@ -408,39 +408,39 @@ class Card implements SlotElementInterface
         return $this;
     }
 
-    public function setMilitaryStrength (int $militaryStrength): self
+    public function setMilitary (int $military): self
     {
-        $this->militaryStrength = $militaryStrength;
+        $this->military = $military;
         return $this;
     }
 
-    public function setPoliticalStrength (int $politicalStrength): self
+    public function setPolitical (int $political): self
     {
-        $this->politicalStrength = $politicalStrength;
+        $this->political = $political;
         return $this;
     }
 
-    public function setProvinceStrength (int $provinceStrength): self
+    public function setStrength (int $strength): self
     {
-        $this->provinceStrength = $provinceStrength;
+        $this->strength = $strength;
         return $this;
     }
 
-    public function setMilitaryStrengthMod (string $militaryStrengthMod): self
+    public function setMilitaryBonus (string $militaryBonus): self
     {
-        $this->militaryStrengthMod = $militaryStrengthMod;
+        $this->militaryBonus = $militaryBonus;
         return $this;
     }
 
-    public function setPoliticalStrengthMod (string $politicalStrengthMod): self
+    public function setPoliticalBonus (string $politicalBonus): self
     {
-        $this->politicalStrengthMod = $politicalStrengthMod;
+        $this->politicalBonus = $politicalBonus;
         return $this;
     }
 
-    public function setProvinceStrengthMod (string $provinceStrengthMod): self
+    public function setStrengthBonus (string $strengthBonus): self
     {
-        $this->provinceStrengthMod = $provinceStrengthMod;
+        $this->strengthBonus = $strengthBonus;
         return $this;
     }
 
@@ -529,34 +529,34 @@ class Card implements SlotElementInterface
         return $this->illustrator;
     }
 
-    public function getMilitaryStrength (): int
+    public function getMilitary (): int
     {
-        return $this->militaryStrength;
+        return $this->military;
     }
 
-    public function getPoliticalStrength (): int
+    public function getPolitical (): int
     {
-        return $this->politicalStrength;
+        return $this->political;
     }
 
-    public function getProvinceStrength (): int
+    public function getStrength (): int
     {
-        return $this->provinceStrength;
+        return $this->strength;
     }
 
-    public function getMilitaryStrengthMod (): string
+    public function getMilitaryBonus (): string
     {
-        return $this->militaryStrengthMod;
+        return $this->militaryBonus;
     }
 
-    public function getPoliticalStrengthMod (): string
+    public function getPoliticalBonus (): string
     {
-        return $this->politicalStrengthMod;
+        return $this->politicalBonus;
     }
 
-    public function getProvinceStrengthMod (): string
+    public function getStrengthBonus (): string
     {
-        return $this->provinceStrengthMod;
+        return $this->strengthBonus;
     }
 
     public function getGlory (): int

@@ -1,0 +1,166 @@
+<template>
+    <div>
+        <form>
+        <div class="d-flex">
+            <div class="form-group mr-2" style="flex:1">
+                <form v-on:submit.prevent="navigate">
+                    <input type="text" class="form-control" v-model="currentQuery" placeholder="Enter query">
+                    <small class="form-text text-muted">
+                        Search by name. Prefix with 'x:' to search by text, 'p:' by pack, 'c:' by clan, 't:' by type, 'd:' by deck.
+                    </small>
+                </form>
+            </div>
+            <div class="btn-group align-self-start"  data-toggle="buttons">
+                <label v-bind:class="['btn', 'btn-secondary', currentView === 'table' ? 'active' : '']" v-on:click="currentView = 'table'">
+                    <input type="radio" name="currentView" id="table" autocomplete="off" v-model="currentView">
+                    <span class="fa fa-list"></span>
+                </label>
+                <label v-bind:class="['btn', 'btn-secondary', currentView === 'text' ? 'active' : '']" v-on:click="currentView = 'text'">
+                    <input type="radio" name="currentView" id="text" autocomplete="off" v-model="currentView">
+                    <span class="fa fa-th"></span>
+                </label>
+                <label v-bind:class="['btn', 'btn-secondary', currentView === 'image' ? 'active' : '']" v-on:click="currentView = 'image'">
+                    <input type="radio" name="currentView" id="image" autocomplete="off" v-model="currentView">
+                    <span class="fa fa-file-image-o"></span>
+                </label>
+                <label v-bind:class="['btn', 'btn-secondary', currentView === 'full' ? 'active' : '']" v-on:click="currentView = 'full'">
+                    <input type="radio" name="currentView" id="full" autocomplete="off" v-model="currentView">
+                    <span class="fa fa-file-text"></span>
+                </label>
+            </div>
+        </div>
+        </form>
+        <b-pagination
+                v-bind:total-rows="totalRows"
+                v-bind:per-page="perPage"
+                v-model="currentPage"
+                size="md"
+                class="my-3 justify-content-center"
+        >
+        </b-pagination>
+        <cards-list-full v-if="currentView === 'full' || totalRows === 1" v-bind:cards="cards"></cards-list-full>
+        <cards-list-text v-else-if="currentView === 'text'" v-bind:cards="cards"></cards-list-text>
+        <cards-list-image v-else-if="currentView === 'image'" v-bind:cards="cards"></cards-list-image>
+        <cards-list-table v-else-if="currentView === 'table'" v-bind:cards="cards"></cards-list-table>
+        <b-pagination
+                v-bind:total-rows="totalRows"
+                v-bind:per-page="perPage"
+                v-model="currentPage"
+                size="md"
+                class="my-3 justify-content-center"
+        >
+        </b-pagination>
+    </div>
+</template>
+
+<script>
+  import storeService from '@/services/storeService';
+  import queryParser from '@/services/queryParser';
+  import QueryInput from '@/classes/QueryInput';
+  import queryBuilder from '@/services/queryBuilder';
+  import queryRouter from '@/services/queryRouter';
+  import CardsListFull from '@/components/Cards/ListFull';
+  import CardsListText from '@/components/Cards/ListText';
+  import CardsListImage from '@/components/Cards/ListImage';
+  import CardsListTable from '@/components/Cards/ListTable';
+
+  function parseRouteQuery(route) {
+    const query = queryRouter.getQuery(route);
+    const page = route.query.page ? parseInt(route.query.page, 10) : 1;
+    const view = route.query.view || 'table';
+    return { query, page, view };
+  }
+
+  export default {
+    name: 'cards-browser',
+    props: ['query'],
+    data() {
+      return {
+        cards: [],
+        currentQuery: this.query,
+        totalRows: 0,
+        currentPage: 1,
+        result: [],
+        currentView: 'table', // text | image | full | table
+      };
+    },
+    computed: {
+      perPage: function () {
+        switch(this.currentView) {
+          case 'table':
+          case 'text':
+            return 300;
+          case 'image':
+          case 'full':
+            return 20;
+        }
+      }
+    },
+    beforeRouteEnter(to, from, next) {
+      const params = parseRouteQuery(to);
+      console.log('beforeRouteEnter', params);
+      next((vm) => {
+        vm.currentQuery = params.query;
+        vm.currentPage = params.page;
+        vm.currentView = params.view;
+        vm.filter();
+      });
+    },
+    beforeRouteUpdate(to, from, next) {
+      const params = parseRouteQuery(to);
+      console.log('beforeRouteUpdate', params);
+      this.currentQuery = params.query;
+      this.currentPage = params.page;
+      this.currentView = params.view;
+      this.filter();
+      next();
+    },
+    watch: {
+      currentPage() {
+        this.navigate();
+      },
+      currentView() {
+        this.navigate();
+      }
+    },
+    methods: {
+      filter() {
+        const clauses = queryParser.parse(this.currentQuery);
+        const queryInput = new QueryInput(clauses);
+        const filters = queryBuilder.build(queryInput);
+        this.result = storeService.stores.cards.apply(this, filters).get();
+        this.perPage = 20;
+        this.totalRows = this.result.length;
+        this.cards = this.result.slice((this.currentPage - 1)
+          * this.perPage, this.currentPage * this.perPage);
+      },
+      navigate() {
+        const route = queryRouter.getRoute(this.currentQuery);
+        if(route.query === undefined) {
+          route.query = {};
+        }
+        if(this.currentPage > 1) {
+          route.query.page = this.currentPage;
+        }
+        if(this.currentView !== 'table') {
+          route.query.view = this.currentView;
+        }
+        console.log('navigate', route);
+        this.$router.push(route);
+      },
+    },
+    created() {
+      this.filter();
+    },
+    components: {
+      CardsListFull,
+      CardsListText,
+      CardsListImage,
+      CardsListTable,
+    },
+  };
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style>
+</style>

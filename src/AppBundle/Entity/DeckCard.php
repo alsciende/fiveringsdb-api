@@ -4,17 +4,12 @@ namespace AppBundle\Entity;
 
 use AppBundle\Model\SlotElementInterface;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation as JMS;
 
 /**
  * Description of DeckCard
  *
  * @ORM\Table(name="deck_cards")
  * @ORM\Entity
- *
- * @JMS\ExclusionPolicy("all")
- * @JMS\AccessorOrder("alphabetical")
- *
  * @author Alsciende <alsciende@icloud.com>
  */
 class DeckCard implements \AppBundle\Model\CardSlotInterface
@@ -23,8 +18,6 @@ class DeckCard implements \AppBundle\Model\CardSlotInterface
      * @var int
      *
      * @ORM\Column(name="quantity", type="integer", nullable=false)
-     *
-     * @JMS\Expose
      */
     private $quantity;
 
@@ -60,14 +53,6 @@ class DeckCard implements \AppBundle\Model\CardSlotInterface
     function getCard (): Card
     {
         return $this->card;
-    }
-
-    /**
-     * @JMS\VirtualProperty
-     */
-    function getCardCode (): string
-    {
-        return $this->card ? $this->card->getCode() : null;
     }
 
     function getDeck (): ?Deck

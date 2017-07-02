@@ -6,6 +6,7 @@ import VueAnalytics from 'vue-analytics';
 import BootstrapVue from 'bootstrap-vue';
 
 import 'bootstrap-vue/dist/bootstrap-vue.css';
+
 import './style.css';
 import './font.css';
 
@@ -15,9 +16,7 @@ import { } from './i18n';
 
 import storeService from './services/storeService';
 
-import MyCardText from './components/MyCardText';
-import MyCardTextBlock from './components/MyCardTextBlock';
-import MyCardList from './components/MyCardList';
+import CardsBrowser from './components/Cards/Browser';
 
 Vue.config.productionTip = false;
 
@@ -36,9 +35,7 @@ storeService.load().then(() => {
     el: '#app',
     router,
     components: {
-      MyCardList,
-      MyCardTextBlock,
-      MyCardText,
+      CardsBrowser,
     },
   });
 });
