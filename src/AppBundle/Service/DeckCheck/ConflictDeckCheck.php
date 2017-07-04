@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Service\DeckChecker;
+namespace AppBundle\Service\DeckCheck;
 
 use AppBundle\Entity\Card;
 use AppBundle\Model\CardSlotCollectionDecorator;
@@ -8,11 +8,11 @@ use AppBundle\Model\CardSlotInterface;
 use AppBundle\Service\DeckValidator;
 
 /**
- * Description of ConflictDeckChecker
+ * Description of ConflicDeckCheck
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class ConflictDeckChecker implements DeckCheckerInterface
+class ConflictDeckCheck implements DeckCheckInterface
 {
     public function check(CardSlotCollectionDecorator $deckCards): int
     {

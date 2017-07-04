@@ -37,7 +37,7 @@ class Card implements SlotElementInterface
     const ELEMENT_EARTH = 'earth';
     const ELEMENT_FIRE = 'fire';
     const ELEMENT_VOID = 'void';
-    const ELEMENT__WATER = 'water';
+    const ELEMENT_WATER = 'water';
 
     const SIDE_CONFLICT = 'conflict';
     const SIDE_DYNASTY = 'dynasty';
@@ -65,6 +65,7 @@ class Card implements SlotElementInterface
      * @Source(type="string")
      *
      * @JMS\Expose
+     * @JMS\Type("string")
      */
     private $code;
 
@@ -111,6 +112,7 @@ class Card implements SlotElementInterface
      * @Source(type="string")
      *
      * @JMS\Expose
+     * @JMS\Type("string")
      */
     private $type;
 
@@ -122,6 +124,7 @@ class Card implements SlotElementInterface
      * @Source(type="string")
      *
      * @JMS\Expose
+     * @JMS\Type("string")
      */
     private $clan;
 
@@ -133,6 +136,7 @@ class Card implements SlotElementInterface
      * @Source(type="string")
      *
      * @JMS\Expose
+     * @JMS\Type("string")
      */
     private $element;
 
@@ -155,15 +159,16 @@ class Card implements SlotElementInterface
      * @Source(type="string")
      *
      * @JMS\Expose
+     * @JMS\Type("string")
      */
     private $side;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="keywords", type="string", nullable=true)
+     * @ORM\Column(name="keywords", type="simple_array", nullable=true)
      *
-     * @Source(type="string")
+     * @Source(type="array")
      *
      * @JMS\Expose
      */
@@ -287,6 +292,7 @@ class Card implements SlotElementInterface
      * @Source(type="integer")
      *
      * @JMS\Expose
+     * @JMS\Type("int")
      */
     private $influencePool;
 
@@ -298,6 +304,7 @@ class Card implements SlotElementInterface
      * @Source(type="integer")
      *
      * @JMS\Expose
+     * @JMS\Type("int")
      */
     private $influenceCost;
 
@@ -309,6 +316,7 @@ class Card implements SlotElementInterface
      * @Source(type="integer")
      *
      * @JMS\Expose
+     * @JMS\Type("int")
      */
     private $deckLimit;
 
@@ -340,6 +348,8 @@ class Card implements SlotElementInterface
         $this->packCards = new ArrayCollection();
         $this->reviews = new ArrayCollection();
         $this->rulings = new ArrayCollection();
+        $this->deckLimit = 3;
+        $this->keywords = [];
     }
 
     public function setCode (string $code): self
