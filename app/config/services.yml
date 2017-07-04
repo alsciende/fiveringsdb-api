@@ -4,7 +4,7 @@ services:
 #        public: true
 
     _instanceof:
-        AppBundle\Service\DeckChecker\DeckCheckerInterface:
+        AppBundle\Service\DeckCheck\DeckCheckInterface:
             tags: [ 'app.deck_checker' ]
 
 #    _instanceof:
@@ -13,8 +13,8 @@ services:
 #                - "@doctrine.orm.entity_manager"
 #                - "@serializer"
 
-    AppBundle\Service\DeckChecker\:
-        resource: '../../src/AppBundle/Service/DeckChecker'
+    AppBundle\Service\DeckCheck\:
+        resource: '../../src/AppBundle/Service/DeckCheck'
 
 #    AppBundle\Manager\:
 #        resource: '../../src/AppBundle/Manager'

@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Service\DeckChecker;
+namespace AppBundle\Service\DeckCheck;
 
 use AppBundle\Entity\Card;
 use AppBundle\Model\CardSlotCollectionDecorator;
@@ -8,15 +8,15 @@ use AppBundle\Model\CardSlotInterface;
 use AppBundle\Service\DeckValidator;
 
 /**
- * Description of DynastyDeckChecker
+ * Description of DynastyDeckCheck
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class DynastyDeckChecker implements DeckCheckerInterface
+class DynastyDeckCheck implements DeckCheckInterface
 {
     public function check(CardSlotCollectionDecorator $deckCards): int
     {
-        $dynastyDeck = $deckCards->filterBySide('conflict');
+        $dynastyDeck = $deckCards->filterBySide('dynasty');
         $dynastyCount = $dynastyDeck->countElements();
 
         if ($dynastyCount < 40) {

@@ -71,9 +71,14 @@ class NormalizingService implements NormalizingServiceInterface
                     $value = $value->format('Y-m-d');
                     $this->objectManager->setFieldValue($result, $className, $property, $value);
                     break;
+                case 'array':
+                    $this->objectManager->setFieldValue($result, $className, $property, $value);
+                    break;
                 case 'association':
                     $this->objectManager->setAssociationValue($result, $className, $property, $value);
                     break;
+                default:
+                    throw new \Exception("Unknown type: $type");
             }
         }
 
@@ -107,6 +112,10 @@ class NormalizingService implements NormalizingServiceInterface
                     $value = $this->objectManager->getFieldValue($data, $className, $property);
                     $result[$property] = isset($value) ? (boolean) $value : null;
                     break;
+                case 'array':
+                    $value = $this->objectManager->getFieldValue($data, $className, $property);
+                    $result[$property] = $value;
+                    break;
                 case 'date':
                     $value = $this->objectManager->getFieldValue($data, $className, $property);
                     $result[$property] = $value ? \DateTime::createFromFormat('Y-m-d', $value) : null;
@@ -115,6 +124,8 @@ class NormalizingService implements NormalizingServiceInterface
                     $value = $this->objectManager->getAssociationValue($data, $className, $property);
                     $result[$property] = $value;
                     break;
+                default:
+                    throw new \Exception("Unknown type: $type");
             }
         }
 

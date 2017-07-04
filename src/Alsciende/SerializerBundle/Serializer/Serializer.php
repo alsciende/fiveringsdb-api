@@ -94,23 +94,18 @@ class Serializer
 
         $result = ['data' => $data];
 
-        try {
-            // find the entity based on the incoming identifier
-            $entity = $this->objectManager->findOrCreateObject($data, $className);
+        // find the entity based on the incoming identifier
+        $entity = $this->objectManager->findOrCreateObject($data, $className);
 
-            // denormalize the designated properties of the data into an array
-            $array = $this->normalizingService->denormalize($data, $className, $properties);
-            $result['array'] = $array;
-            $result['original'] = $this->getOriginal($entity, $array);
+        // denormalize the designated properties of the data into an array
+        $array = $this->normalizingService->denormalize($data, $className, $properties);
+        $result['array'] = $array;
+        $result['original'] = $this->getOriginal($entity, $array);
 
-            // update the entity with the values of the denormalized array
-            $this->objectManager->updateObject($entity, $array);
-            $result['entity'] = $entity;
+        // update the entity with the values of the denormalized array
 
-        } catch (Exception $ex) {
-            var_dump($data);
-            throw $ex;
-        }
+        $this->objectManager->updateObject($entity, $array);
+        $result['entity'] = $entity;
 
         return $result;
     }
