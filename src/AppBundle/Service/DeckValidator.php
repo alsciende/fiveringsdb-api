@@ -2,9 +2,8 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Entity\Deck;
 use AppBundle\Model\CardSlotCollectionDecorator;
-use AppBundle\Service\DeckChecker\DeckCheckerInterface;
+use AppBundle\Service\DeckCheck\DeckCheckInterface;
 
 /**
  * Service to determine the validity/legality of a deck
@@ -31,25 +30,25 @@ class DeckValidator
     const DUPLICATE_ELEMENT = 15;
     const OFF_CLAN_PROVINCE = 16;
 
-    /** @var DeckCheckerInterface[] */
-    private $deckCheckers;
+    /** @var DeckCheckInterface[] */
+    private $DeckChecks;
 
     public function __construct ()
     {
-        $this->deckCheckers = array();
+        $this->DeckChecks = array();
     }
 
     /**
-     * Called by the CompilerPass to get all the DeckCheckers in services.yml
+     * Called by the CompilerPass to get all the DeckChecks in services.yml
      */
-    public function addDeckChecker (DeckCheckerInterface $deckChecker)
+    public function addDeckCheck (DeckCheckInterface $DeckCheck)
     {
-        $this->deckCheckers[] = $deckChecker;
+        $this->DeckChecks[] = $DeckCheck;
     }
 
-    public function getDeckCheckerCount()
+    public function getDeckCheckCount()
     {
-        return count($this->deckCheckers);
+        return count($this->DeckChecks);
     }
 
     /**
@@ -57,8 +56,8 @@ class DeckValidator
      */
     public function check (CardSlotCollectionDecorator $deckCards)
     {
-        foreach ($this->deckCheckers as $deckChecker) {
-            $result = $deckChecker->check($deckCards);
+        foreach ($this->DeckChecks as $DeckCheck) {
+            $result = $DeckCheck->check($deckCards);
             if ($result !== self::VALID_DECK) {
                 return $result;
             }

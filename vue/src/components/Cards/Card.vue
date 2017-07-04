@@ -8,14 +8,14 @@
             <h6 class="card-subtitle mb-2 text-muted">
                 <span v-if="card.clan !== 'neutral'" v-bind:class="'icon-clan-' + card.clan"></span>
                 {{ $t('clan.'+card.clan) }} {{ $t('type.'+card.type) }}.
-                {{ card.keywords }}
+                <span class="card-keyword" v-for="keyword in card.keywords">{{ $t('keyword.'+keyword) }}. </span>
             </h6>
             <p v-if="card.type === 'character'">
                 <span>Cost: {{ card.cost }}.</span>
                 <span v-if="card.military === undefined"><span class="strike-through">Military</span>.</span>
-                <span v-else>Military: {{ card.military === undefined ? '-' : card.military }}.</span>
+                <span v-else>Military: {{ card.military }}.</span>
                 <span v-if="card.political === undefined"><span class="strike-through">Political</span>.</span>
-                <span v-else>Political: {{ card.political === undefined ? '-' : card.political }}.</span>
+                <span v-else>Political: {{ card.political }}.</span>
                 <span>Glory: {{ card.glory }}.</span>
             </p>
             <p v-if="card.type === 'attachment'">

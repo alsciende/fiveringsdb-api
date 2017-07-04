@@ -4,12 +4,12 @@ namespace AppBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use AppBundle\DependencyInjection\Compiler\DeckCheckerPass;
+use AppBundle\DependencyInjection\Compiler\DeckCheckPass;
 
 class AppBundle extends Bundle
 {
     public function build(ContainerBuilder $container)
     {
-        $container->addCompilerPass(new DeckCheckerPass());
+        $container->addCompilerPass(new DeckCheckPass());
     }
 }

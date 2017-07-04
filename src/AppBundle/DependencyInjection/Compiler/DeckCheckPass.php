@@ -11,7 +11,7 @@ use Symfony\Component\DependencyInjection\Reference;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class DeckCheckerPass implements CompilerPassInterface
+class DeckCheckPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
@@ -23,11 +23,11 @@ class DeckCheckerPass implements CompilerPassInterface
         $definition = $container->findDefinition('app.deck_validator');
 
         // find all service IDs with the app.mail_transport tag
-        $taggedServices = $container->findTaggedServiceIds('app.deck_checker');
+        $taggedServices = $container->findTaggedServiceIds('app.deck_check');
 
         foreach ($taggedServices as $id => $tags) {
             // add the transport service to the ChainTransport service
-            $definition->addMethodCall('addDeckChecker', array(new Reference($id)));
+            $definition->addMethodCall('addDeckCheck', array(new Reference($id)));
         }
     }
 }

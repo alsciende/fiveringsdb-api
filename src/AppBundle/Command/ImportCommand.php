@@ -76,6 +76,10 @@ class ImportCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwa
     {
         $slug = $this->slugify->slugify($data['Title']);
 
+        $keywords = empty($data['Traits']) ? [] : array_map(function ($trait) {
+            return $this->slugify->slugify(str_replace('.', '', $trait));
+        }, explode(' ',  $data['Traits']));
+
         $card = [
             'code' => $slug,
             'name' => $data['Title'],
@@ -86,7 +90,7 @@ class ImportCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwa
             'element_code' => isset($data['Element']) ? strtolower($data['Element']) : null,
             'is_unique' => $data['Unique'] === 'Yes',
             'side_code' => $this->getSide($data['Deck']),
-            'keywords' => $data['Traits'] ?? null,
+            'keywords' => $keywords,
             'illustrator' => $data['Illustrator'] ?? null,
             'military' => $this->getValue($data, 'Military Strength', 'Character'),
             'political' => $this->getValue($data, 'Political Strength', 'Character'),

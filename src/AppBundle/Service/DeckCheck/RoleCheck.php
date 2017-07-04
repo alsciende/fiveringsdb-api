@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Service\DeckChecker;
+namespace AppBundle\Service\DeckCheck;
 
 use AppBundle\Entity\Card;
 use AppBundle\Model\CardSlotCollectionDecorator;
@@ -11,7 +11,7 @@ use AppBundle\Service\DeckValidator;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class RoleChecker implements DeckCheckerInterface
+class RoleCheck implements DeckCheckInterface
 {
     public function check(CardSlotCollectionDecorator $deckCards): int
     {
