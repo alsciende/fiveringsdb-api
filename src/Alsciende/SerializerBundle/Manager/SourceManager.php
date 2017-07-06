@@ -9,7 +9,7 @@ namespace Alsciende\SerializerBundle\Manager;
  */
 class SourceManager
 {
-    
+
     /* @var array */
     private $sources;
 
@@ -18,20 +18,20 @@ class SourceManager
 
     /* @var ObjectManagerInterface */
     private $objectManager;
-    
+
     private $path;
-    
+
     public function __construct (ObjectManagerInterface $objectManager, $path)
     {
         $this->objectManager = $objectManager;
         $this->path = $path;
-        
+
         $this->sources = [];
     }
 
     /**
      * Return all sources
-     * 
+     *
      * @return \Alsciende\SerializerBundle\Model\Source[]
      */
     public function getSources ()
@@ -42,7 +42,7 @@ class SourceManager
 
         return $this->ordered;
     }
-    
+
     /**
      * Add one source
      *
@@ -50,7 +50,7 @@ class SourceManager
      */
     public function addSource (\Alsciende\SerializerBundle\Model\Source $source)
     {
-        if($source->getPath() === null) {
+        if ($source->getPath() === null) {
             $source->setPath($this->path);
         }
         $this->sources[] = $source;
@@ -64,14 +64,14 @@ class SourceManager
     {
         $sources = [];
         $classes = [];
-        
+
         while (count($this->sources)) {
             $next = $this->findNextResolvedSource($this->sources, $classes);
             if ($next === null) {
                 $unresolvedClasses = array_map(function (\Alsciende\SerializerBundle\Model\Source $source) {
                     return $source->getClassName();
                 }, $this->sources);
-                throw new \InvalidArgumentException("Sources contain a cycle of dependencies, or a dependency is not configured as a Source.\nUnresolved classes are: " . implode(", ", $unresolvedClasses). ".\nResolved classes are : ". implode(", ", $classes).".");
+                throw new \InvalidArgumentException("Sources contain a cycle of dependencies, or a dependency is not configured as a Source.\nUnresolved classes are: " . implode(", ", $unresolvedClasses) . ".\nResolved classes are : " . implode(", ", $classes) . ".");
             }
 
             $source = $this->sources[$next];
@@ -79,13 +79,13 @@ class SourceManager
             $classes[] = $source->getClassName();
             array_splice($this->sources, $next, 1);
         }
-        
+
         return $sources;
     }
 
     /**
      * Find the first class in $sources that only depends on classes in $classes
-     * 
+     *
      * @param \Alsciende\SerializerBundle\Model\Source[] $sources
      * @param string[] $classes
      * @return integer
@@ -94,17 +94,17 @@ class SourceManager
     {
         foreach ($sources as $index => $source) {
             $resolved = $this->allTargetEntitiesAreKnown($source->getClassName(), $classes);
-            if($resolved) {
+            if ($resolved) {
                 return $index;
             }
         }
-        
+
         return null;
     }
 
     /**
      * Return true if all target entities of $className are listed in $classes
-     * 
+     *
      * @param string $className
      * @param string[] $classes
      * @return boolean
@@ -112,12 +112,12 @@ class SourceManager
     public function allTargetEntitiesAreKnown ($className, $classes)
     {
         $dependencies = $this->objectManager->getAllTargetClasses($className);
-        foreach(array_values($dependencies) as $dependency) {
+        foreach (array_values($dependencies) as $dependency) {
             if (!in_array($dependency, $classes)) {
                 return false;
             }
         }
-        
+
         return true;
     }
 

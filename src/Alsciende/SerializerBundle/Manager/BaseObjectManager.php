@@ -15,17 +15,18 @@ abstract class BaseObjectManager implements ObjectManagerInterface
 
         $entity = $this->findObject($identifiers, $className);
 
-        if(!isset($entity)) {
-            $entity = new $className();
-            $this->updateObject($entity, $identifiers);
+        if (isset($entity)) {
+            return $entity;
         }
 
+        $entity = new $className();
+        $this->updateObject($entity, $identifiers);
         return $entity;
     }
-    
+
     /**
      * Return the reference corresponding to the assocation in the entity
-     * 
+     *
      * @param string $targetClass
      * @param string $associationKey
      * @param object $associationValue
@@ -35,7 +36,7 @@ abstract class BaseObjectManager implements ObjectManagerInterface
     {
         $targetIdentifier = $this->getSingleIdentifier($targetClass);
         $referenceValue = null;
-        if($associationValue !== null) {
+        if ($associationValue !== null) {
             $referenceValue = $this->readObject($associationValue, $targetIdentifier);
         }
         $referenceKey = $associationKey . '_' . $targetIdentifier;

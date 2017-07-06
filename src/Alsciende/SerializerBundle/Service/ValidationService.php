@@ -9,5 +9,5 @@ namespace Alsciende\SerializerBundle\Service;
  */
 class ValidationService
 {
-    
+
 }

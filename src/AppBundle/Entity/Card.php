@@ -83,6 +83,15 @@ class Card implements SlotElementInterface
     private $name;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="name_canonical", type="string", length=255)
+     *
+     * @JMS\Expose
+     */
+    private $nameCanonical;
+
+    /**
      * @var int
      *
      * @ORM\Column(name="cost", type="integer", nullable=true)
@@ -103,6 +112,15 @@ class Card implements SlotElementInterface
      * @JMS\Expose
      */
     private $text;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="text_canonical", type="text", nullable=true)
+     *
+     * @JMS\Expose
+     */
+    private $textCanonical;
 
     /**
      * @var string
@@ -362,6 +380,12 @@ class Card implements SlotElementInterface
         return $this;
     }
 
+    public function setNameCanonical(string $nameCanonical): self
+    {
+        $this->nameCanonical = $nameCanonical;
+        return $this;
+    }
+
     public function setCost (int $cost): self
     {
         $this->cost = $cost;
@@ -371,6 +395,12 @@ class Card implements SlotElementInterface
     public function setText (string $text): self
     {
         $this->text = $text;
+        return $this;
+    }
+
+    public function setTextCanonical(string $textCanonical): self
+    {
+        $this->textCanonical = $textCanonical;
         return $this;
     }
 
@@ -486,14 +516,24 @@ class Card implements SlotElementInterface
         return $this->name;
     }
 
+    public function getNameCanonical(): string
+    {
+        return $this->nameCanonical;
+    }
+
     public function getCost (): int
     {
         return $this->cost;
     }
 
-    public function getText (): string
+    public function getText (): ?string
     {
         return $this->text;
+    }
+
+    public function getTextCanonical(): ?string
+    {
+        return $this->textCanonical;
     }
 
     public function getType (): string

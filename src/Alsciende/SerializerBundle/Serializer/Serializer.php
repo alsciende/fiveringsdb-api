@@ -48,17 +48,17 @@ class Serializer
     private $objectManager;
 
     /**
-     * 
+     *
      * @param Source $source
      * @return array
      */
     public function importSource (Source $source)
     {
         $result = [];
-        
+
         $blocks = $this->storingService->retrieve($source);
-        if($blocks) {
-            foreach($blocks as $block) {
+        if ($blocks) {
+            foreach ($blocks as $block) {
                 $result = array_merge($result, $this->importBlock($block));
             }
         }
@@ -67,21 +67,21 @@ class Serializer
     }
 
     /**
-     * 
+     *
      * @param Block $block
      * @return array
      */
     public function importBlock (Block $block)
     {
         $result = [];
-        foreach($this->encodingService->decode($block) as $fragment) {
+        foreach ($this->encodingService->decode($block) as $fragment) {
             $result[] = $this->importFragment($fragment);
         }
         return $result;
     }
 
     /**
-     * 
+     *
      * @param Fragment $fragment
      * @throws Exception
      * @return array
@@ -105,6 +105,7 @@ class Serializer
         // update the entity with the values of the denormalized array
 
         $this->objectManager->updateObject($entity, $array);
+        $this->objectManager->mergeObject($entity);
         $result['entity'] = $entity;
 
         return $result;
@@ -114,7 +115,7 @@ class Serializer
     {
         $result = [];
 
-        foreach(array_keys($array) as $property) {
+        foreach (array_keys($array) as $property) {
             $result[$property] = $this->objectManager->readObject($entity, $property);
         }
 

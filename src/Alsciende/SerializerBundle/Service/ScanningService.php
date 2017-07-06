@@ -16,7 +16,7 @@ class ScanningService
 {
 
     /**
-     * @var ObjectManagerInterface 
+     * @var ObjectManagerInterface
      */
     private $objectManager;
 
@@ -34,7 +34,7 @@ class ScanningService
      * @var \Psr\Cache\CacheItemPoolInterface
      */
     private $cache;
-    
+
     /**
      * @var string
      */
@@ -50,15 +50,15 @@ class ScanningService
     }
 
     /**
-     * 
+     *
      * @return Source[]
      */
     public function findSources ()
     {
         $sources = [];
 
-        foreach($this->objectManager->getAllManagedClassNames() as $className) {
-            if($source = $this->buildFromClass($className)) {
+        foreach ($this->objectManager->getAllManagedClassNames() as $className) {
+            if ($source = $this->buildFromClass($className)) {
                 $sources[] = $source;
             }
         }
@@ -67,7 +67,7 @@ class ScanningService
     }
 
     /**
-     * 
+     *
      * @param object $entity
      * @return Source
      */
@@ -76,9 +76,9 @@ class ScanningService
         $className = $this->objectManager->getClassName($entity);
         return $this->buildFromClass($className);
     }
-    
+
     /**
-     * 
+     *
      * @param string $className
      * @return Source
      */
@@ -86,14 +86,14 @@ class ScanningService
     {
         $cacheKey = $this->getCacheKey($className);
         $cacheItem = $this->cache->getItem($cacheKey);
-        
-        if($cacheItem->isHit()) {
+
+        if ($cacheItem->isHit()) {
             return $cacheItem->get();
         }
-        
+
         $reflectionClass = new ReflectionClass($className);
         $annotation = $this->reader->getClassAnnotation($reflectionClass, \Alsciende\SerializerBundle\Annotation\Source::class);
-        if($annotation) {
+        if ($annotation) {
             $source = $this->buildSource($annotation, $reflectionClass);
             $cacheItem->set($source);
             return $source;
@@ -106,16 +106,16 @@ class ScanningService
         $source = new Source($reflectionClass->getName(), $path, $annotation->break);
 
         /* @var $reflectionProperty ReflectionProperty */
-        foreach($reflectionClass->getProperties() as $reflectionProperty) {
+        foreach ($reflectionClass->getProperties() as $reflectionProperty) {
             $annotation = $this->reader->getPropertyAnnotation($reflectionProperty, \Alsciende\SerializerBundle\Annotation\Source::class);
-            if($annotation) {
+            if ($annotation) {
                 $source->addProperty($reflectionProperty->name, $annotation->type);
             }
         }
         return $source;
     }
-    
-    protected function getCacheKey($className)
+
+    protected function getCacheKey ($className)
     {
         return "alsciende_serializer.source." . strtr($className, '\\', '_');
     }

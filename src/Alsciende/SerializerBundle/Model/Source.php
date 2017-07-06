@@ -31,7 +31,7 @@ class Source
     }
 
     /**
-     * 
+     *
      * @return string
      */
     function getBreak ()
@@ -40,7 +40,7 @@ class Source
     }
 
     /**
-     * 
+     *
      * @return string
      */
     function getPath ()
@@ -49,7 +49,7 @@ class Source
     }
 
     /**
-     * 
+     *
      * @return string
      */
     function getClassName ()
@@ -58,7 +58,7 @@ class Source
     }
 
     /**
-     * 
+     *
      * @param string $break
      * @return Source
      */
@@ -70,7 +70,7 @@ class Source
     }
 
     /**
-     * 
+     *
      * @param string $path
      * @return Source
      */
@@ -82,7 +82,7 @@ class Source
     }
 
     /**
-     * 
+     *
      * @param string $className
      * @return Source
      */
@@ -95,7 +95,7 @@ class Source
 
     /**
      * Get properties
-     * 
+     *
      * @return array
      */
     function getProperties ()
@@ -105,7 +105,7 @@ class Source
 
     /**
      * Add a property
-     * 
+     *
      * @param string $name
      * @param string $type
      * @return Source
@@ -113,7 +113,7 @@ class Source
     function addProperty ($name, $type)
     {
         $this->properties[$name] = $type;
-        
+
         return $this;
     }
 
