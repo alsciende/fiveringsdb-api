@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service;
 
+use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -45,7 +46,7 @@ class ApiService
         $this->kernelEnvironment = $kernelEnvironment;
     }
 
-    function buildResponse ($data = null)
+    function buildResponse ($data = null, $groups = [])
     {
         $request = $this->requestStack->getCurrentRequest();
         $isPublic = $request->getMethod() === 'GET' && $this->kernelEnvironment === 'prod';
@@ -68,7 +69,15 @@ class ApiService
         $content['success'] = TRUE;
         $content['last_updated'] = isset($dateUpdate) ? $dateUpdate->format('c') : null;
         
-        $response->setContent($this->serializer->serialize($content, 'json'));
+        $response->setContent(
+            $this
+                ->serializer
+                ->serialize(
+                    $content,
+                    'json',
+                    SerializationContext::create()->setGroups($groups)
+                ))
+        ;
 
         return $response;
     }

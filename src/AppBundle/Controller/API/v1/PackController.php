@@ -15,7 +15,6 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
  */
 class PackController extends BaseApiController
 {
-
     /**
      * Get all Packs
      * 
@@ -29,8 +28,18 @@ class PackController extends BaseApiController
      */
     public function listAction ()
     {
-        $packs = $this->getDoctrine()->getRepository(Pack::class)->findAll();
-        return $this->success($packs);
+        return $this->success(
+            $this
+                ->getDoctrine()
+                ->getRepository(Pack::class)
+                ->findAll(),
+            [
+                'Default',
+                'cycle_group',
+                'cycle' => [
+                    'code_group'
+                ]
+            ]
+        );
     }
-
 }
