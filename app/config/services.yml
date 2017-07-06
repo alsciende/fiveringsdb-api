@@ -10,8 +10,8 @@ services:
 #    _instanceof:
 #        AppBundle\Manager\BaseManager:
 #            arguments:
-#                - "@doctrine.orm.entity_manager"
-#                - "@serializer"
+#              - "@doctrine.orm.entity_manager"
+#              - "@serializer"
 
     AppBundle\Service\DeckCheck\:
         resource: '../../src/AppBundle/Service/DeckCheck'
@@ -22,41 +22,41 @@ services:
     alsciende_security.oauth_authenticator:
         class: Alsciende\SecurityBundle\Security\OauthAuthenticator
         arguments:
-            - "@fos_oauth_server.access_token_manager"
+          - "@fos_oauth_server.access_token_manager"
     
     alsciende_security.form_login_authenticator:
         class: Alsciende\SecurityBundle\Security\FormLoginAuthenticator
         arguments:
-            - "@security.password_encoder"
-            - "@router"
+          - "@security.password_encoder"
+          - "@router"
 
     alsciende_security.client_manager:
         class: Alsciende\SecurityBundle\Service\ClientManager
         arguments:
-            - "@fos_oauth_server.entity_manager"
-            - "%fos_oauth_server.model.client.class%"
+          - "@fos_oauth_server.entity_manager"
+          - "%fos_oauth_server.model.client.class%"
 
     alsciende_security.user_manager:
         class: Alsciende\SecurityBundle\Service\UserManager
         arguments:
-            - "@doctrine.orm.entity_manager"
-            - "@security.password_encoder"
-            - "%secret%"
+          - "@doctrine.orm.entity_manager"
+          - "@security.password_encoder"
+          - "%secret%"
 
     paypal:
         class: AppBundle\Service\PaypalService
         arguments:
-            - "%paypal_classic_api_username%"
-            - "%paypal_classic_api_password%"
-            - "%paypal_classic_api_signature%"
+          - "%paypal_classic_api_username%"
+          - "%paypal_classic_api_password%"
+          - "%paypal_classic_api_signature%"
 
     app.api:
         class: AppBundle\Service\ApiService
         arguments:
-            - "@request_stack"
-            - "@jms_serializer"
-            - "%http_cache_max_age%"
-            - "%kernel.environment%"
+          - "@request_stack"
+          - "@jms_serializer"
+          - "%http_cache_max_age%"
+          - "%kernel.environment%"
 
     app.deck_validator:
         class: AppBundle\Service\DeckValidator
@@ -64,9 +64,9 @@ services:
     app.deck_manager:
         class: AppBundle\Manager\DeckManager
         arguments:
-            - "@doctrine.orm.entity_manager"
-            - "@serializer"
-            - '@app.deck_validator'
+          - "@doctrine.orm.entity_manager"
+          - "@serializer"
+          - '@app.deck_validator'
 
     app.deck_serializer:
         class: AppBundle\Service\DeckSerializer
@@ -74,3 +74,13 @@ services:
           - name: "jms_serializer.handler"
             type: "AppBundle\\Entity\\Deck"
             format: "json"
+
+    app.canonical_fields_updater:
+        class: AppBundle\Util\CanonicalFieldsUpdater
+
+    app.doctrine_card_listener:
+        class: AppBundle\Doctrine\CardListener
+        arguments:
+          - "@app.canonical_fields_updater"
+        tags:
+          - name: "doctrine.event_subscriber"

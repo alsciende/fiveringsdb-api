@@ -22,7 +22,7 @@ class NormalizingService implements NormalizingServiceInterface
     private $objectManager;
 
     /**
-     * 
+     *
      * @param type $entity
      * @param type $propertyMap
      * @return type
@@ -41,7 +41,7 @@ class NormalizingService implements NormalizingServiceInterface
     /**
      * with [ "id" => 3, "name" => "The Dark Side of the Moon", "releasedAt" => (DateTime), "band" => (Band) ]
      * does [ "id" => 3, "name" => "The Dark Side of the Moon", "released_at" => "1973-03-01", "band_code" => "pink-floyd" ]
-     * 
+     *
      * @param type $data
      * @param type $className
      * @param type $propertyMap
@@ -88,7 +88,7 @@ class NormalizingService implements NormalizingServiceInterface
     /**
      * with [ "id" => 3, "name" => "The Dark Side of the Moon", "released_at" => "1973-03-01", "band_code" => "pink-floyd" ]
      * does [ "id" => 3, "name" => "The Dark Side of the Moon", "releasedAt" => (DateTime), "band" => (Band) ]
-     * 
+     *
      * @param type $data
      * @param type $className
      * @param type $propertyMap

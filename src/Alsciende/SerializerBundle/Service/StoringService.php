@@ -16,7 +16,7 @@ class StoringService
 
     /**
      * Retrieve Blocks from a Source configuration
-     * 
+     *
      * @param Source $source
      * @return Block
      */
@@ -26,21 +26,21 @@ class StoringService
         $parts = explode('\\', $source->getClassName());
         $path = $source->getPath() . "/" . array_pop($parts);
 
-        if($source->getBreak() === null) {
-            if(file_exists("$path.json") and is_file("$path.json")) {
+        if ($source->getBreak() === null) {
+            if (file_exists("$path.json") and is_file("$path.json")) {
                 $blocks = $this->scanFile("$path.json");
             } else {
                 return;
             }
         } else {
-            if(file_exists("$path") and is_dir("$path")) {
+            if (file_exists("$path") and is_dir("$path")) {
                 $blocks = $this->scanDirectory("$path");
             } else {
                 throw new Exception("Directory $path not found");
             }
         }
 
-        foreach($blocks as $block) {
+        foreach ($blocks as $block) {
             $block->setSource($source);
         }
 
@@ -48,7 +48,7 @@ class StoringService
     }
 
     /**
-     * 
+     *
      * @param string $path
      * @return Block[]
      */
@@ -57,14 +57,14 @@ class StoringService
         $filenames = glob("$path/*.json");
 
         $blocks = [];
-        foreach($filenames as $filename) {
+        foreach ($filenames as $filename) {
             $blocks = array_merge($blocks, $this->scanFile($filename));
         }
         return $blocks;
     }
 
     /**
-     * 
+     *
      * @param string $path
      * @return Block
      */
