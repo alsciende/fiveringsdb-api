@@ -49,6 +49,17 @@ class PackCard implements \AppBundle\Model\CardSlotInterface
     private $position;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="illustrator", type="string", nullable=true)
+     *
+     * @Source(type="string")
+     *
+     * @JMS\Expose
+     */
+    private $illustrator;
+
+    /**
      * @var \AppBundle\Entity\Card
      *
      * @ORM\Id
@@ -56,6 +67,9 @@ class PackCard implements \AppBundle\Model\CardSlotInterface
      * @ORM\JoinColumn(name="card_code", referencedColumnName="code")
      *
      * @Source(type="association")
+     *
+     * @JMS\Expose
+     * @JMS\Groups({"card_group"})
      */
     private $card;
 
@@ -67,6 +81,9 @@ class PackCard implements \AppBundle\Model\CardSlotInterface
      * @ORM\JoinColumn(name="pack_code", referencedColumnName="code")
      *
      * @Source(type="association")
+     *
+     * @JMS\Expose
+     * @JMS\Groups({"pack_group"})
      */
     private $pack;
 
@@ -80,26 +97,9 @@ class PackCard implements \AppBundle\Model\CardSlotInterface
         return $this->card;
     }
 
-    /**
-     * @JMS\VirtualProperty
-     */
-    function getCardCode (): string
-    {
-        return $this->card ? $this->card->getCode() : null;
-    }
-
-
     function getPack (): Pack
     {
         return $this->pack;
-    }
-
-    /**
-     * @JMS\VirtualProperty
-     */
-    function getPackCode (): string
-    {
-        return $this->pack ? $this->pack->getCode() : null;
     }
 
     function setQuantity ($quantity): self
@@ -126,5 +126,27 @@ class PackCard implements \AppBundle\Model\CardSlotInterface
     function getElement (): SlotElementInterface
     {
         return $this->card;
+    }
+
+    public function getPosition (): int
+    {
+        return $this->position;
+    }
+
+    public function setPosition (int $position): self
+    {
+        $this->position = $position;
+        return $this;
+    }
+
+    public function getIllustrator (): string
+    {
+        return $this->illustrator;
+    }
+
+    public function setIllustrator (string $illustrator): self
+    {
+        $this->illustrator = $illustrator;
+        return $this;
     }
 }

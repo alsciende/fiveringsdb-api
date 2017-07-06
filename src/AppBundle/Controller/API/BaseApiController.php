@@ -12,11 +12,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
  */
 abstract class BaseApiController extends Controller
 {
-    public function success($data = null)
+    public function success($data = null, $groups = [ 'Default' ])
     {
         /* @var $service ApiService */
         $service = $this->get('app.api');
-        return $service->buildResponse($data);
+        return $service->buildResponse($data, $groups);
     }
     
     public function failure($message = "unknown_error", $description = "An unknown error has occured.")

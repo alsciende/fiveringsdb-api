@@ -15,7 +15,6 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
  */
 class CycleController extends BaseApiController
 {
-
     /**
      * Get all Cycles
      * 
@@ -29,8 +28,11 @@ class CycleController extends BaseApiController
      */
     public function listAction ()
     {
-        $cycles = $this->getDoctrine()->getRepository(Cycle::class)->findAll();
-        return $this->success($cycles);
+        return $this->success(
+            $this
+                ->getDoctrine()
+                ->getRepository(Cycle::class)
+                ->findAll()
+        );
     }
-
 }
