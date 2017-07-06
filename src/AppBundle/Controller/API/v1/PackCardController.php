@@ -15,7 +15,6 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
  */
 class PackCardController extends BaseApiController
 {
-
     /**
      * Get all pairs Pack-Card
      * 
@@ -29,8 +28,23 @@ class PackCardController extends BaseApiController
      */
     public function listAction ()
     {
-        $packCards = $this->getDoctrine()->getRepository(PackCard::class)->findAll();
-        return $this->success($packCards);
+        return $this->success(
+            $this
+                ->getDoctrine()
+                ->getRepository(PackCard::class)
+                ->findAll(),
+            [
+                'Default',
+                'card_group',
+                'pack_group',
+                'card' => [
+                    'code_group'
+                ],
+                'pack' => [
+                    'code_group'
+                ],
+            ]
+        );
     }
 
 }

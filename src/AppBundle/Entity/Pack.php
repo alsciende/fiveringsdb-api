@@ -14,10 +14,9 @@ use JMS\Serializer\Annotation as JMS;
  * Pack
  *
  * @ORM\Table(name="packs")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\PackRepository")
  *
- * @Source
- *
+ * @Source()
  * @JMS\ExclusionPolicy("all")
  * @JMS\AccessorOrder("alphabetical")
  *
@@ -38,6 +37,7 @@ class Pack
      * @Source(type="string")
      *
      * @JMS\Expose
+     * @JMS\Groups({"Default","code_group"})
      */
     private $code;
 
@@ -102,6 +102,9 @@ class Pack
      * @ORM\JoinColumn(name="cycle_code", referencedColumnName="code")
      *
      * @Source(type="association")
+     *
+     * @JMS\Expose()
+     * @JMS\Groups({"cycle_group"})
      */
     private $cycle;
 
@@ -109,6 +112,9 @@ class Pack
      * @var PackCard[]
      *
      * @ORM\OneToMany(targetEntity="PackCard", mappedBy="pack", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
+     *
+     * @JMS\Expose()
+     * @JMS\Groups({"cards_group"})
      */
     private $cards;
 
@@ -192,14 +198,6 @@ class Pack
     function getCycle (): Cycle
     {
         return $this->cycle;
-    }
-
-    /**
-     * @JMS\VirtualProperty()
-     */
-    function getCycleCode (): string
-    {
-        return $this->cycle ? $this->cycle->getCode() : null;
     }
 
     function setCycle (Cycle $cycle): self

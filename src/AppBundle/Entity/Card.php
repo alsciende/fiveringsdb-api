@@ -65,7 +65,7 @@ class Card implements SlotElementInterface
      * @Source(type="string")
      *
      * @JMS\Expose
-     * @JMS\Type("string")
+     * @JMS\Groups({"Default","code_group"})
      */
     private $code;
 
@@ -173,17 +173,6 @@ class Card implements SlotElementInterface
      * @JMS\Expose
      */
     private $keywords;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="illustrator", type="string", nullable=true)
-     *
-     * @Source(type="string")
-     *
-     * @JMS\Expose
-     */
-    private $illustrator;
 
     /**
      * @var integer
@@ -324,6 +313,9 @@ class Card implements SlotElementInterface
      * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\OneToMany(targetEntity="PackCard", mappedBy="card", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
+     *
+     * @JMS\Expose
+     * @JMS\Groups({"packs_group"})
      */
     private $packCards;
 
@@ -332,6 +324,9 @@ class Card implements SlotElementInterface
      * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\OneToMany(targetEntity="Review", mappedBy="card", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
+     *
+     * @JMS\Expose
+     * @JMS\Groups({"reviews_group"})
      */
     private $reviews;
 
@@ -340,6 +335,9 @@ class Card implements SlotElementInterface
      * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\OneToMany(targetEntity="Ruling", mappedBy="card", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
+     *
+     * @JMS\Expose
+     * @JMS\Groups({"rulings_group"})
      */
     private $rulings;
 
@@ -409,12 +407,6 @@ class Card implements SlotElementInterface
     public function setKeywords (string $keywords): self
     {
         $this->keywords = $keywords;
-        return $this;
-    }
-
-    public function setIllustrator (string $illustrator): self
-    {
-        $this->illustrator = $illustrator;
         return $this;
     }
 
@@ -532,11 +524,6 @@ class Card implements SlotElementInterface
     public function getKeywords (): string
     {
         return $this->keywords;
-    }
-
-    public function getIllustrator (): string
-    {
-        return $this->illustrator;
     }
 
     public function getMilitary (): int
@@ -666,38 +653,4 @@ class Card implements SlotElementInterface
         $this->rulings = $rulings;
         return $this;
     }
-
-    /**
-     * Packs including the card
-     *
-     * @JMS\VirtualProperty
-     * @JMS\Type("array")
-     * @return array
-     */
-    function getPacks()
-    {
-        return $this->getPackCards()->getQuantities();
-    }
-
-    /**
-     * cycles including the card
-     *
-     * @JMS\VirtualProperty
-     * @JMS\Type("array")
-     * @return array
-     */
-    function getCycles()
-    {
-        $cycles = [];
-        /* @var $packCard PackCard */
-        foreach($this->getPackCards() as $packCard) {
-            $cycleCode = $packCard->getPack()->getCycle()->getCode();
-            if(!key_exists($cycleCode, $cycles)) {
-                $cycles[$cycleCode] = 0;
-            }
-            $cycles[$cycleCode] += $packCard->getQuantity();
-        }
-        return $cycles;
-    }
-
 }

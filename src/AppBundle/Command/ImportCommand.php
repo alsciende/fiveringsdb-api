@@ -54,6 +54,10 @@ class ImportCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwa
 
             $position = $data['position'];
             unset($data['position']);
+
+            $illustrator = $data['illustrator'];
+            unset($data['illustrator']);
+
             ksort($data);
             $json = json_encode(array($data), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
             $filename = "$folder/Card/$slug.json";
@@ -64,6 +68,7 @@ class ImportCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwa
                 'card_code' => $slug,
                 'quantity' => 1,
                 'position' => $position,
+                'illustrator' => $illustrator,
             ];
         }
 
