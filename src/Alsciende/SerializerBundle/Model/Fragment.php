@@ -26,7 +26,7 @@ class Fragment
     }
 
     /**
-     * 
+     *
      * @return array
      */
     function getData ()
@@ -35,7 +35,7 @@ class Fragment
     }
 
     /**
-     * 
+     *
      * @param array $data
      * @return Fragment
      */
@@ -47,7 +47,7 @@ class Fragment
     }
 
     /**
-     * 
+     *
      * @return Block
      */
     function getBlock ()
@@ -56,7 +56,7 @@ class Fragment
     }
 
     /**
-     * 
+     *
      * @param Block $block
      * @return Fragment
      */

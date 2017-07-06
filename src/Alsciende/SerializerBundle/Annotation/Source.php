@@ -3,17 +3,17 @@
 namespace Alsciende\SerializerBundle\Annotation;
 
 /**
- * @Source annotation 
+ * @Source annotation
  *
  * @Annotation
  * @Target({"CLASS","PROPERTY"})
- * 
+ *
  * @author Alsciende <alsciende@icloud.com>
  */
 class Source extends \Doctrine\Common\Annotations\Annotation
 {
-    
-     /* @var string */
+
+    /* @var string */
     public $break;
 
     /* @var string */

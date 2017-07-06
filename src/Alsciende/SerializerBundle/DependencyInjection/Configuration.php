@@ -15,7 +15,7 @@ class Configuration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder ()
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('alsciende_serializer');
@@ -24,9 +24,8 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('path')->isRequired()->cannotBeEmpty()->end()
                 ->scalarNode('group')->defaultValue(null)->end()
-            ->end()
-        ;
-        
+            ->end();
+
         return $treeBuilder;
     }
 }

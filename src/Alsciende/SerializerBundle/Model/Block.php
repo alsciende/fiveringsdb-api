@@ -3,7 +3,7 @@
 namespace Alsciende\SerializerBundle\Model;
 
 /**
- * Represents a data block: some encoded text at a path, 
+ * Represents a data block: some encoded text at a path,
  *      representing one or more objects of the same class,
  *      that must be decoded as a list of Fragments
  *
@@ -26,14 +26,14 @@ class Block
      * @var string
      */
     private $name;
-    
+
     /**
      * @var string
      */
     private $data;
 
     /**
-     * 
+     *
      * @param string $data
      * @param string $path
      */
@@ -41,13 +41,13 @@ class Block
     {
         $this->data = $data;
         $this->path = $path;
-        if(isset($path)) {
+        if (isset($path)) {
             $this->name = pathinfo($path, PATHINFO_FILENAME);
         }
     }
 
     /**
-     * 
+     *
      * @return Source
      */
     function getSource ()
@@ -56,7 +56,7 @@ class Block
     }
 
     /**
-     * 
+     *
      * @return string
      */
     function getPath ()
@@ -65,7 +65,7 @@ class Block
     }
 
     /**
-     * 
+     *
      * @return string
      */
     function getData ()
@@ -74,7 +74,7 @@ class Block
     }
 
     /**
-     * 
+     *
      * @return string
      */
     function getName ()
@@ -83,7 +83,7 @@ class Block
     }
 
     /**
-     * 
+     *
      * @param \Alsciende\SerializerBundle\Model\Source $source
      * @return Block
      */
@@ -95,7 +95,7 @@ class Block
     }
 
     /**
-     * 
+     *
      * @param string $path
      * @return Source
      */
@@ -107,7 +107,7 @@ class Block
     }
 
     /**
-     * 
+     *
      * @param string $data
      * @return Source
      */
@@ -119,14 +119,14 @@ class Block
     }
 
     /**
-     * 
+     *
      * @param string $name
      * @return Source
      */
     function setName ($name)
     {
         $this->name = $name;
-        
+
         return $this;
     }
 
