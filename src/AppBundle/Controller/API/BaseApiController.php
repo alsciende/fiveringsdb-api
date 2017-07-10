@@ -28,5 +28,4 @@ abstract class BaseApiController extends Controller
             "description" => $description,
         ]);
     }
-    
 }

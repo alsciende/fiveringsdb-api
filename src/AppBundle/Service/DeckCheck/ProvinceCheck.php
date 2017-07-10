@@ -17,11 +17,11 @@ class ProvinceCheck implements DeckCheckInterface
     {
         $provinceSlots = $deckCards->filterByType(Card::TYPE_PROVINCE);
 
-        if($provinceSlots->countElements() < 5) {
+        if($provinceSlots->countCards() < 5) {
             return DeckValidator::TOO_FEW_PROVINCE;
         }
 
-        if($provinceSlots->countElements() > 5) {
+        if($provinceSlots->countCards() > 5) {
             return DeckValidator::TOO_MANY_PROVINCE;
         }
 
@@ -39,8 +39,7 @@ class ProvinceCheck implements DeckCheckInterface
 
         $strongholdSlot = $deckCards->findStrongholdSlot();
         if ($strongholdSlot !== null) {
-            /** @var Card $stronghold */
-            $stronghold = $strongholdSlot->getElement();
+            $stronghold = $strongholdSlot->getCard();
             $clan = $stronghold->getClan();
 
             $offClanProvinceSlot = $provinceSlots->find(function ($slot) use ($clan) {

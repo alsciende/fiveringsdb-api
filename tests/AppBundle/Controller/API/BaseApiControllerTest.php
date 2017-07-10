@@ -2,6 +2,8 @@
 
 namespace Tests\AppBundle\Controller\API;
 
+use Symfony\Bundle\FrameworkBundle\Client;
+
 /**
  * Description of BaseApiControllerTest
  *
@@ -10,14 +12,14 @@ namespace Tests\AppBundle\Controller\API;
 abstract class BaseApiControllerTest extends \Tests\AppBundle\Controller\BaseControllerTest
 {
 
-    public function getContent (\Symfony\Bundle\FrameworkBundle\Client $client)
+    public function getContent (Client $client)
     {
         return json_decode($client->getResponse()->getContent(), true);
     }
 
     /**
      * 
-     * @return \Symfony\Component\BrowserKit\Client
+     * @return Client
      */
     public function getAuthenticatedClient ($username = 'user', $password = 'user')
     {
@@ -26,7 +28,7 @@ abstract class BaseApiControllerTest extends \Tests\AppBundle\Controller\BaseCon
         ));
     }
     
-    public function sendJsonRequest(\Symfony\Component\BrowserKit\Client $client, string $method, string $uri, array $data)
+    public function sendJsonRequest(\Symfony\Component\BrowserKit\Client $client, string $method, string $uri, array $data = [])
     {
         $client->request($method, $uri, [], [], [], json_encode($data));
     }

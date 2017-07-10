@@ -2,13 +2,13 @@
 
 namespace AppBundle\Controller\API\v1;
 
-use AppBundle\Manager\DeckManager;
-use AppBundle\Model\CardSlotCollectionDecorator;
+use AppBundle\Controller\API\BaseApiController;
+use AppBundle\Entity\Deck;
 use AppBundle\Service\DeckValidator;
+use JMS\Serializer\Serializer;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class DeckValidatorController extends Controller
+class DeckValidatorController extends BaseApiController
 {
     /**
      * @ApiDoc(
@@ -29,18 +29,13 @@ class DeckValidatorController extends Controller
      */
     public function validateAction(Request $request)
     {
-        $data = json_decode($request->getContent(), TRUE);
-
-        /** @var $manager DeckManager */
-        $manager = $this->get('app.deck_manager');
-
-        $deckCards = $manager->denormalizeDeckCards($data);
-
-        /** @var $validator DeckValidator */
-        $validator = $this->get('app.deck_validator');
+        /** @var Deck $deck */
+        $deck = $this->get('jms_serializer')->fromArray([
+            'cards' => json_decode($request->getContent(), TRUE)
+        ], Deck::class);
 
         return new JsonResponse([
-            'status' => $validator->check(new CardSlotCollectionDecorator($deckCards))
+            'status' => $this->get('app.deck_validator')->check($deck->getDeckCards())
         ]);
     }
 }

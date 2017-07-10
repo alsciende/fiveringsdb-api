@@ -17,7 +17,7 @@ class DynastyDeckCheck implements DeckCheckInterface
     public function check(CardSlotCollectionDecorator $deckCards): int
     {
         $dynastyDeck = $deckCards->filterBySide('dynasty');
-        $dynastyCount = $dynastyDeck->countElements();
+        $dynastyCount = $dynastyDeck->countCards();
 
         if ($dynastyCount < 40) {
             return DeckValidator::TOO_FEW_DYNASTY;
@@ -29,8 +29,7 @@ class DynastyDeckCheck implements DeckCheckInterface
 
         $strongholdSlot = $deckCards->findStrongholdSlot();
         if ($strongholdSlot !== null) {
-            /** @var Card $stronghold */
-            $stronghold = $strongholdSlot->getElement();
+            $stronghold = $strongholdSlot->getCard();
             $clan = $stronghold->getClan();
 
             $offClanSlot = $deckCards->find(function ($slot) use ($clan) {

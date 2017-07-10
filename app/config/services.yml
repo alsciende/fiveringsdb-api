@@ -1,23 +1,10 @@
 services:
-#    _defaults:
-#        autowire: true
-#        public: true
-
     _instanceof:
         AppBundle\Service\DeckCheck\DeckCheckInterface:
-            tags: [ 'app.deck_checker' ]
-
-#    _instanceof:
-#        AppBundle\Manager\BaseManager:
-#            arguments:
-#              - "@doctrine.orm.entity_manager"
-#              - "@serializer"
+            tags: [ 'app.deck_check' ]
 
     AppBundle\Service\DeckCheck\:
         resource: '../../src/AppBundle/Service/DeckCheck'
-
-#    AppBundle\Manager\:
-#        resource: '../../src/AppBundle/Manager'
 
     alsciende_security.oauth_authenticator:
         class: Alsciende\SecurityBundle\Security\OauthAuthenticator
@@ -68,8 +55,28 @@ services:
           - "@serializer"
           - '@app.deck_validator'
 
+    app.comment_manager:
+        class: AppBundle\Manager\CommentManager
+        arguments:
+          - "@doctrine.orm.entity_manager"
+          - "@serializer"
+
+    app.review_manager:
+        class: AppBundle\Manager\ReviewManager
+        arguments:
+          - "@doctrine.orm.entity_manager"
+          - "@serializer"
+
+    app.ruling_manager:
+        class: AppBundle\Manager\RulingManager
+        arguments:
+          - "@doctrine.orm.entity_manager"
+          - "@serializer"
+
     app.deck_serializer:
         class: AppBundle\Service\DeckSerializer
+        arguments:
+          - "@doctrine.orm.entity_manager"
         tags:
           - name: "jms_serializer.handler"
             type: "AppBundle\\Entity\\Deck"

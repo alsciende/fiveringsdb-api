@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Tests\AppBundle\Service;
+namespace Tests\AppBundle;
 
 trait DeckDataTrait
 {
     /** @var array */
     private $deckData = [
-        'name' => 'Test Deck',
+        'name' => 'PHPUnit Test Deck',
         'description' => '',
         'cards' => [
             'shizuka-toshi' => 1,
@@ -23,6 +23,7 @@ trait DeckDataTrait
             'asahina-storyteller' => 3,
             'daidoji-nerishma' => 3,
             'doji-challenger' => 3,
+            'doji-gift-giver' => 3,
             'doji-hotaru' => 3,
             'guest-of-honor' => 3,
             'kakita-asami' => 3,
@@ -43,8 +44,20 @@ trait DeckDataTrait
             'noble-sacrifice' => 3,
             'spies-at-court' => 3,
             'steward-of-law' => 3,
+            'the-perfect-gift' => 3,
             'voice-of-honor' => 3,
             'way-of-the-crane' => 3,
         ]
     ];
+
+    public function getDeckData(array $diff = [])
+    {
+        $data = $this->deckData;
+        foreach($diff as $card_code => $quantity_modifier)
+        {
+            $data[$card_code] += $quantity_modifier;
+        }
+
+        return $data;
+    }
 }

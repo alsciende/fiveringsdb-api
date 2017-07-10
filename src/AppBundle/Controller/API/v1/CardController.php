@@ -56,9 +56,9 @@ class CardController extends BaseApiController
      *  output="AppBundle\Entity\Card",
      *  section="Cards",
      * )
-     * @Route("/cards/{card_code}")
+     * @Route("/cards/{code}")
      * @Method("GET")
-     * @ParamConverter("card", class="AppBundle:Card", options={"id" = "card_code"})
+     * @ParamConverter("card", class="AppBundle:Card", options={"id" = "code"})
      */
     public function getAction (Card $card)
     {

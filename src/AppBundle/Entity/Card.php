@@ -2,8 +2,9 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Model\SlotElementInterface;
+use AppBundle\Model\PackCardSlotCollectionDecorator;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -14,7 +15,7 @@ use JMS\Serializer\Annotation as JMS;
  * Card
  *
  * @ORM\Table(name="cards")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\CardRepository")
+ * @ORM\Entity()
  *
  * @Source(break="code")
  *
@@ -23,7 +24,7 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class Card implements SlotElementInterface
+class Card
 {
     const TYPE_ATTACHMENT = 'attachment';
     const TYPE_CHARACTER = 'character';
@@ -328,7 +329,7 @@ class Card implements SlotElementInterface
     private $deckLimit;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      *
      * @ORM\OneToMany(targetEntity="PackCard", mappedBy="card", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
      *
@@ -339,7 +340,7 @@ class Card implements SlotElementInterface
 
     /**
      *
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      *
      * @ORM\OneToMany(targetEntity="Review", mappedBy="card", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
      *
@@ -350,7 +351,7 @@ class Card implements SlotElementInterface
 
     /**
      *
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      *
      * @ORM\OneToMany(targetEntity="Ruling", mappedBy="card", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
      *
@@ -635,16 +636,16 @@ class Card implements SlotElementInterface
 
     /**
      *
-     * @return \AppBundle\Model\PackCardSlotCollectionDecorator
+     * @return PackCardSlotCollectionDecorator
      */
     function getPackCards ()
     {
-        return new \AppBundle\Model\PackCardSlotCollectionDecorator($this->packCards->toArray());
+        return new PackCardSlotCollectionDecorator($this->packCards->toArray());
     }
 
     /**
      *
-     * @param \AppBundle\Entity\PackCard $packCard
+     * @param PackCard $packCard
      * @return Card
      */
     function addPackCard (PackCard $packCard)
@@ -656,28 +657,28 @@ class Card implements SlotElementInterface
 
     /**
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
-    function getReviews (): \Doctrine\Common\Collections\Collection
+    function getReviews (): Collection
     {
         return $this->reviews;
     }
 
     /**
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
-    function getRulings (): \Doctrine\Common\Collections\Collection
+    function getRulings (): Collection
     {
         return $this->rulings;
     }
 
     /**
      *
-     * @param \Doctrine\Common\Collections\Collection $reviews
+     * @param Collection $reviews
      * @return Card
      */
-    function setReviews (\Doctrine\Common\Collections\Collection $reviews)
+    function setReviews (Collection $reviews)
     {
         $this->reviews = $reviews;
         return $this;
@@ -685,10 +686,10 @@ class Card implements SlotElementInterface
 
     /**
      *
-     * @param \Doctrine\Common\Collections\Collection $rulings
+     * @param Collection $rulings
      * @return Card
      */
-    function setRulings (\Doctrine\Common\Collections\Collection $rulings)
+    function setRulings (Collection $rulings)
     {
         $this->rulings = $rulings;
         return $this;
