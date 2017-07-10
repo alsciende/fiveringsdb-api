@@ -2,11 +2,10 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Model\SlotElementInterface;
+use AppBundle\Model\CardSlotInterface;
 use Doctrine\ORM\Mapping as ORM;
-use AppBundle\Traits\TimestampableEntity;
-use Symfony\Component\Validator\Constraints as Assert;
 use Alsciende\SerializerBundle\Annotation\Source;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 use JMS\Serializer\Annotation as JMS;
 
 /**
@@ -22,7 +21,7 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class PackCard implements \AppBundle\Model\CardSlotInterface
+class PackCard implements CardSlotInterface
 {
     use TimestampableEntity;
 
@@ -121,11 +120,6 @@ class PackCard implements \AppBundle\Model\CardSlotInterface
         $this->pack = $pack;
 
         return $this;
-    }
-
-    function getElement (): SlotElementInterface
-    {
-        return $this->card;
     }
 
     public function getPosition (): int

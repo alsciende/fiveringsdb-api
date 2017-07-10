@@ -5,11 +5,12 @@ namespace AppBundle\Manager;
 use AppBundle\Entity\Card;
 use AppBundle\Entity\Deck;
 use AppBundle\Entity\DeckCard;
+use AppBundle\Entity\DeckLike;
 use AppBundle\Entity\User;
+use AppBundle\Exception\CardNotFoundException;
 use AppBundle\Model\CardSlotCollectionDecorator;
+use AppBundle\Model\CardSlotInterface;
 use AppBundle\Service\DeckValidator;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\Serializer;
 
@@ -23,36 +24,18 @@ class DeckManager extends BaseManager
     /** @var DeckValidator */
     private $deckValidator;
 
-    /** @var \AppBundle\Repository\DeckRepository */
-    private $deckRepository;
-
-    /** @var \AppBundle\Repository\CardRepository */
-    private $cardRepository;
-
-    /** @var \AppBundle\Repository\DeckCardRepository */
-    private $deckCardRepository;
-
     public function __construct (EntityManagerInterface $entityManager, Serializer $serializer, DeckValidator $deckValidator)
     {
-        $this->deckValidator = $deckValidator;
         parent::__construct($entityManager, $serializer);
-        $this->deckRepository = $this->entityManager->getRepository(Deck::class);
-        $this->cardRepository = $this->entityManager->getRepository(Card::class);
-        $this->deckCardRepository = $this->entityManager->getRepository(DeckCard::class);
+        $this->deckValidator = $deckValidator;
     }
 
     /**
      * Create a new deck from $data. It is private.
      */
-    public function createNewInitialDeck (array $data, User $user): Deck
+    public function createNewInitialDeck (Deck $deck, User $user): Deck
     {
-        $deck = new Deck();
         $deck->setUser($user);
-        $deck->setName($data['name']);
-        $deck->setDescription($data['description']);
-        foreach($this->denormalizeDeckCards($data['cards']) as $deckCard) {
-            $deck->addDeckCard($deckCard);
-        }
         $deck->setProblem($this->deckValidator->check($deck->getDeckCards()));
         $this->entityManager->persist($deck);
 
@@ -62,15 +45,9 @@ class DeckManager extends BaseManager
     /**
      * Create a new minor version of $parent from $data. It is private.
      */
-    public function createNewMinorVersion (array $data, Deck $parent): Deck
+    public function createNewMinorVersion (Deck $deck, Deck $parent): Deck
     {
-        $deck = new Deck();
         $deck->setUser($parent->getUser());
-        $deck->setName($data['name']);
-        $deck->setDescription($data['description']);
-        foreach($this->denormalizeDeckCards($data['cards']) as $deckCard) {
-            $deck->addDeckCard($deckCard);
-        }
         $deck->setProblem($this->deckValidator->check($deck->getDeckCards()));
         $deck->setIsPublished(FALSE);
         $deck->setMajorVersion($parent->getMajorVersion());
@@ -144,12 +121,13 @@ class DeckManager extends BaseManager
         if (!$deck->getIsPublished()) {
             throw new \Exception("Cannot update private deck");
         }
-
-        $deck->setDescription($data['description']);
-        $deck->setName($data['name']);
-        $merged = $this->entityManager->merge($deck);
-
-        return $merged;
+        if(isset($data['description'])) {
+            $deck->setDescription();
+        }
+        if(isset($data['name'])) {
+            $deck->setName($data['name']);
+        }
+        return $this->entityManager->merge($deck);
     }
 
     /**
@@ -157,7 +135,7 @@ class DeckManager extends BaseManager
      */
     public function deleteLineage (Deck $deck)
     {
-        $this->deckRepository->removeLineage($deck->getLineage(), $deck->getUser());
+        $this->entityManager->getRepository(Deck::class)->removeLineage($deck->getLineage(), $deck->getUser());
     }
 
     /**
@@ -175,11 +153,11 @@ class DeckManager extends BaseManager
      */
     public function addLike (Deck $deck, User $user): ?int
     {
-        $deckLike = $this->entityManager->getRepository(\AppBundle\Entity\DeckLike::class)->findOneBy(['deck' => $deck, 'user' => $user]);
+        $deckLike = $this->entityManager->getRepository(DeckLike::class)->findOneBy(['deck' => $deck, 'user' => $user]);
         if ($deckLike) {
             return null;
         }
-        $this->entityManager->persist(new \AppBundle\Entity\DeckLike($deck, $user));
+        $this->entityManager->persist(new DeckLike($deck, $user));
         $deck->setNbLikes($deck->getNbLikes() + 1);
 
         return $deck->getNbLikes();
@@ -192,7 +170,7 @@ class DeckManager extends BaseManager
      */
     public function removeLike (Deck $deck, User $user): ?int
     {
-        $deckLike = $this->entityManager->getRepository(\AppBundle\Entity\DeckLike::class)->findOneBy(['deck' => $deck, 'user' => $user]);
+        $deckLike = $this->entityManager->getRepository(DeckLike::class)->findOneBy(['deck' => $deck, 'user' => $user]);
         if (!$deckLike) {
             return null;
         }
@@ -200,19 +178,5 @@ class DeckManager extends BaseManager
         $deck->setNbLikes($deck->getNbLikes() - 1);
 
         return $deck->getNbLikes();
-    }
-
-    public function denormalizeDeckCards(array $data): array
-    {
-        $deckCards = [];
-        foreach($data as $card_code => $quantity) {
-            $card = $this->cardRepository->find($card_code);
-            if (!$card) {
-                throw new \Exception("Card not found: $card_code");
-            }
-            $deckCards[] = new DeckCard($card, $quantity);
-        }
-
-        return $deckCards;
     }
 }

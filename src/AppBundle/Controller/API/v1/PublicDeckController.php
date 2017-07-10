@@ -27,7 +27,7 @@ class PublicDeckController extends BaseApiController
      *  resource=true,
      *  section="Decks (public)",
      * )
-     * @Route("/public_decks")
+     * @Route("/public-decks")
      * @Method("GET")
      */
     public function listAction ()
@@ -43,7 +43,7 @@ class PublicDeckController extends BaseApiController
      *  resource=true,
      *  section="Decks (public)",
      * )
-     * @Route("/public_decks/{id}")
+     * @Route("/public-decks/{id}")
      * @Method("GET")
      */
     public function getAction (Deck $deck)
@@ -61,11 +61,11 @@ class PublicDeckController extends BaseApiController
      *  resource=true,
      *  section="Decks (public)",
      * )
-     * @Route("/public_decks/{id}")
-     * @Method("PUT")
+     * @Route("/public-decks/{id}")
+     * @Method("PATCH")
      * @Security("has_role('ROLE_USER')")
      */
-    public function putAction (Request $request, Deck $deck)
+    public function patchAction (Request $request, Deck $deck)
     {
         if($deck->getUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException();
@@ -91,13 +91,13 @@ class PublicDeckController extends BaseApiController
      *  resource=true,
      *  section="Decks (public)",
      * )
-     * @Route("/public_decks/{id}")
+     * @Route("/public-decks/{id}")
      * @Method("DELETE")
      * @Security("has_role('ROLE_USER')")
      */
     public function deleteAction (Deck $deck)
     {
-        if($deck->getIsPublished()) {
+        if(!$deck->getIsPublished()) {
             throw $this->createNotFoundException();
         }
         if($deck->getUser() !== $this->getUser()) {
@@ -113,5 +113,4 @@ class PublicDeckController extends BaseApiController
         }
         return $this->success();
     }
-
 }

@@ -7,6 +7,7 @@ use AppBundle\Entity\Deck;
 use AppBundle\Manager\DeckManager;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,24 +28,27 @@ class DeckLineageController extends BaseApiController
      *  resource=true,
      *  section="Decks (private)",
      * )
-     * @Route("/private_decks/{id}/lineage")
+     * @Route("/private-decks/{deckId}/lineage")
      * @Method("POST")
      * @Security("has_role('ROLE_USER')")
+     * @ParamConverter("parent", class="AppBundle:Deck", options={"id" = "deckId"})
      */
     public function postAction (Request $request, Deck $parent)
     {
         $data = json_decode($request->getContent(), TRUE);
-        
+        /** @var Deck $deck */
+        $deck = $this->get('jms_serializer')->fromArray($data, Deck::class);
+
         /* @var $manager DeckManager */
         $manager = $this->get('app.deck_manager');
         try {
-            $deck = $manager->createNewMinorVersion($data, $parent);
+            $minor = $manager->createNewMinorVersion($deck, $parent);
             $this->getDoctrine()->getManager()->flush();
         } catch (Exception $ex) {
             return $this->failure($ex->getMessage());
         }
 
-        return $this->success($deck);
+        return $this->success($minor);
     }
 
     /**
@@ -54,9 +58,10 @@ class DeckLineageController extends BaseApiController
      *  resource=true,
      *  section="Decks (private)",
      * )
-     * @Route("/private_decks/{id}/lineage")
+     * @Route("/private-decks/{deckId}/lineage")
      * @Method("GET")
      * @Security("has_role('ROLE_USER')")
+     * @ParamConverter("deck", class="AppBundle:Deck", options={"id" = "deckId"})
      */
     public function listAction (Deck $deck)
     {
@@ -73,9 +78,10 @@ class DeckLineageController extends BaseApiController
      *  resource=true,
      *  section="Decks (private)",
      * )
-     * @Route("/private_decks/{id}/lineage")
+     * @Route("/private-decks/{deckId}/lineage")
      * @Method("DELETE")
      * @Security("has_role('ROLE_USER')")
+     * @ParamConverter("deck", class="AppBundle:Deck", options={"id" = "deckId"})
      */
     public function deleteAction (Deck $deck)
     {

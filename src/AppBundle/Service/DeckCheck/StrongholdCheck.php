@@ -15,7 +15,7 @@ class StrongholdCheck implements DeckCheckInterface
 {
     public function check(CardSlotCollectionDecorator $deckCards): int
     {
-        $strongholdCount = $deckCards->filterByType(Card::TYPE_STRONGHOLD)->countElements();
+        $strongholdCount = $deckCards->filterByType(Card::TYPE_STRONGHOLD)->countCards();
 
         if($strongholdCount < 1) {
             return DeckValidator::TOO_FEW_STRONGHOLD;

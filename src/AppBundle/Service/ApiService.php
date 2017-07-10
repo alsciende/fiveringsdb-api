@@ -50,7 +50,7 @@ class ApiService
     {
         $request = $this->requestStack->getCurrentRequest();
         $isPublic = $request->getMethod() === 'GET' && $this->kernelEnvironment === 'prod';
-        $response = $this->getEmptyResponse($isPublic);
+        $response = $this->getEmptyResponse();
 
         if($isPublic) {
             // make response public and cacheable
@@ -65,24 +65,18 @@ class ApiService
             }
         }
 
-        $content = $this->buildContent($data);
+        $content = $this->buildContent($data, $groups);
         $content['success'] = TRUE;
         $content['last_updated'] = isset($dateUpdate) ? $dateUpdate->format('c') : null;
-        
-        $response->setContent(
-            $this
-                ->serializer
-                ->serialize(
-                    $content,
-                    'json',
-                    SerializationContext::create()->setGroups($groups)
-                ))
-        ;
+
+        $serialized = $this->serializer->serialize($content,'json', SerializationContext::create()->setGroups($groups));
+
+        $response->setContent($serialized);
 
         return $response;
     }
 
-    function buildContent ($data = null)
+    function buildContent ($data = null, $groups = [])
     {
         $content = [];
         if(is_array($data)) {
@@ -91,6 +85,7 @@ class ApiService
         } else {
             $content['record'] = $data;
         }
+
         return $content;
     }
 

@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Model\SlotElementInterface;
+use AppBundle\Model\CardSlotInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @author Alsciende <alsciende@icloud.com>
  */
-class DeckCard implements \AppBundle\Model\CardSlotInterface
+class DeckCard implements CardSlotInterface
 {
     /**
      * @var int
@@ -79,10 +79,5 @@ class DeckCard implements \AppBundle\Model\CardSlotInterface
         $this->deck = $deck;
 
         return $this;
-    }
-
-    function getElement (): SlotElementInterface
-    {
-        return $this->card;
     }
 }

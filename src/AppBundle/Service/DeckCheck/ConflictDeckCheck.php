@@ -16,8 +16,9 @@ class ConflictDeckCheck implements DeckCheckInterface
 {
     public function check(CardSlotCollectionDecorator $deckCards): int
     {
+
         $conflictDeck = $deckCards->filterBySide(Card::SIDE_CONFLICT);
-        $conflictCount = $conflictDeck->countElements();
+        $conflictCount = $conflictDeck->countCards();
 
         if ($conflictCount < 40) {
             return DeckValidator::TOO_FEW_CONFLICT;
@@ -27,14 +28,13 @@ class ConflictDeckCheck implements DeckCheckInterface
             return DeckValidator::TOO_MANY_CONFLICT;
         }
 
-        if($conflictDeck->filterByType(Card::TYPE_CHARACTER)->countElements() > 10) {
+        if($conflictDeck->filterByType(Card::TYPE_CHARACTER)->countCards() > 10) {
             return DeckValidator::TOO_MANY_CHARACTER_IN_CONFLICT;
         }
 
         $strongholdSlot = $deckCards->findStrongholdSlot();
         if ($strongholdSlot !== null) {
-            /** @var Card $stronghold */
-            $stronghold = $strongholdSlot->getElement();
+            $stronghold = $strongholdSlot->getCard();
             $clan = $stronghold->getClan();
             $influencePool = $stronghold->getInfluencePool();
 

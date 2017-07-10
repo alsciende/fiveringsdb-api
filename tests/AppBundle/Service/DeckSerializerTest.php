@@ -10,6 +10,7 @@ use AppBundle\Entity\DeckCard;
 use JMS\Serializer\Serializer;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Container;
+use Tests\AppBundle\DeckDataTrait;
 
 class DeckSerializerTest extends KernelTestCase
 {
@@ -25,7 +26,7 @@ class DeckSerializerTest extends KernelTestCase
         $this->container = self::$kernel->getContainer();
     }
 
-    public function testSerialize()
+    public function testFromArray()
     {
         /** @var Serializer $serializer */
         $serializer = $this->container->get('jms_serializer');
@@ -37,7 +38,7 @@ class DeckSerializerTest extends KernelTestCase
         $this->assertGreaterThan(0, $deck->getDeckCards()->count());
     }
 
-    public function testDeserialize()
+    public function testToArray()
     {
         $deck = new Deck();
         $deck->setName('Test Deck');

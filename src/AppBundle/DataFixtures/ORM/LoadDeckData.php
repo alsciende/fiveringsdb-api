@@ -2,6 +2,7 @@
 
 namespace AppBundle\DataFixtures\ORM;
 
+use AppBundle\Entity\Deck;
 use AppBundle\Entity\User;
 use AppBundle\Manager\DeckManager;
 use Doctrine\Common\DataFixtures\AbstractFixture;
@@ -22,36 +23,58 @@ class LoadDeckData extends AbstractFixture implements OrderedFixtureInterface, C
 
     public function load (ObjectManager $manager)
     {
-        return;
-
         /* @var $deckManager DeckManager */
         $deckManager = $this->container->get('app.deck_manager');
         $user = $this->getReference('user-user');
 
-        $deckManager->createNewInitialDeck([
-            "name" => "The Bloodwoods Queen",
-            "phoenixborn_code" => "jessa-na-ni",
-            "description" => "Pre-built Deck for Jessa Na Ni",
-            "tags" => "prebuilt",
-            "cards" => [
-                "blood-archer" => 3,
-                "blood-transfer" => 3,
-                "cut-the-strings" => 3,
-                "fear" => 3,
-                "final-cry" => 3,
-                "leech-warrior" => 3,
-                "living-doll" => 3,
-                "redirect" => 3,
-                "summon-blood-puppet" => 3,
-                "undying-heart" => 3,
-            ],
-            "dices" => [
-                "ceremonial" => 5,
-                "charm" => 5,
-            ],
-                ], $user);
+        $deck = $this->container->get('jms_serializer')->fromArray([
+            'name' => 'Crane Deck',
+            'description' => 'Crane deck from Core Set',
+            'cards' => [
+                'shizuka-toshi' => 1,
+//                'ancestral-lands' => 1, // Earth Province
+                'elemental-fury' => 1, // Water Province
+                'the-art-of-peace' => 1, // Air Province
+                'night-raid' => 1, // Fire Province
+                'pilgrimage' => 1, // Void Province
+                // start of Dynasty
+                'artisan-academy' => 3,
+                'asahina-artisan' => 3,
+                'asahina-storyteller' => 3,
+                'daidoji-nerishma' => 3,
+                'doji-challenger' => 3,
+                'doji-gift-giver' => 3,
+                'doji-hotaru' => 3,
+                'guest-of-honor' => 3,
+                'kakita-asami' => 3,
+                'kakita-kaezin' => 3,
+                'otomo-courtier' => 3,
+                'savvy-politician' => 3,
+                'wandering-ronin' => 3,
+                // start of Conflict
+                'above-question' => 3,
+                'admit-defeat' => 3,
+                'banzai' => 3,
+                'cloud-the-mind' => 3,
+                'duelist-training' => 3,
+                'fallen-in-battle' => 3,
+                'for-shame' => 3,
+                'good-omen' => 3,
+                'height-of-fashion' => 3,
+                'noble-sacrifice' => 3,
+                'spies-at-court' => 3,
+                'steward-of-law' => 3,
+                'the-perfect-gift' => 3,
+                'voice-of-honor' => 3,
+                'way-of-the-crane' => 3,
+            ]
+        ], Deck::class);
+
+        $deckManager->createNewInitialDeck($deck, $user);
 
         $manager->flush();
+
+        $this->addReference('deck-crane', $deck);
     }
 
     public function getOrder ()

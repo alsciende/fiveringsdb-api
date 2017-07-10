@@ -7,28 +7,43 @@ namespace AppBundle\Service;
 use AppBundle\Entity\Card;
 use AppBundle\Entity\Deck;
 use AppBundle\Entity\DeckCard;
+use AppBundle\Exception\CardNotFoundException;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use JMS\Serializer\Context;
 use JMS\Serializer\JsonDeserializationVisitor;
 use JMS\Serializer\JsonSerializationVisitor;
 
 class DeckSerializer
 {
+    /** @var  EntityRepository */
+    protected $repository;
+
+    public function __construct (EntityManagerInterface $entityManager)
+    {
+        $this->repository = $entityManager->getRepository(Card::class);
+    }
+
     public function deserializeDeckFromJson(JsonDeserializationVisitor $visitor, array $data, array $type): Deck
     {
         $deck = new Deck();
-        $deck->setName($data['name']);
-        if(isset($data['description'])) {
-            $deck->setDescription($data['description']);
-        }
-        if(isset($data['lineage'])) {
-            $deck->setLineage($data['lineage']);
-        }
-        if(isset($data['genus'])) {
-            $deck->setGenus($data['genus']);
+
+        $reflectionClass = new \ReflectionClass(Deck::class);
+
+        /** @var \ReflectionProperty $reflectionProperty */
+        foreach ($reflectionClass->getProperties() as $reflectionProperty) {
+            if(isset($data[$reflectionProperty->getName()])) {
+                $reflectionProperty->setAccessible(true);
+                $reflectionProperty->setValue($deck, $data[$reflectionProperty->getName()]);
+            }
         }
 
         foreach($data['cards'] as $card_code => $quantity) {
-            $deck->addDeckCard(new DeckCard((new Card())->setCode($card_code), $quantity));
+            $card = $this->repository->find($card_code);
+            if($card === null) {
+                throw new CardNotFoundException($card_code);
+            }
+            $deck->addDeckCard(new DeckCard($card, $quantity));
         }
 
         return $deck;
@@ -37,6 +52,7 @@ class DeckSerializer
     public function serializeDeckToJson(JsonSerializationVisitor $visitor, Deck $deck, array $type, Context $context)
     {
         $data = [
+            'id' => $deck->getId(),
             'name' => $deck->getName(),
             'description' => $deck->getDescription(),
             'cards' => [],
@@ -54,6 +70,10 @@ class DeckSerializer
             $data['cards'][$deckCard->getCard()->getCode()] = $deckCard->getQuantity();
         }
 
-        $visitor->setRoot($data);
+        if($visitor->getRoot() === null) {
+            $visitor->setRoot($data);
+        }
+
+        return $data;
     }
 }

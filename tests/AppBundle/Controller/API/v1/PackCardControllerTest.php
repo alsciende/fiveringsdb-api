@@ -16,7 +16,7 @@ class PackCardControllerTest extends BaseApiControllerTest
     public function testGetPackCards ()
     {
         $client = $this->getAnonymousClient();
-        $client->request('GET', "/api/v1/pack_cards");
+        $client->request('GET', "/api/v1/pack-cards");
         $this->assertStandardGetMany($client);
     }
 

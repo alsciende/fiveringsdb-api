@@ -12,7 +12,7 @@ use JMS\Serializer\Annotation as JMS;
  * Cycle
  *
  * @ORM\Table(name="cycles")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\CycleRepository")
+ * @ORM\Entity()
  *
  * @Source()
  * @JMS\ExclusionPolicy("all")

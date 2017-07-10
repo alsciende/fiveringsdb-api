@@ -59,7 +59,7 @@ class Deck
     /**
      * The cards used by the deck
      *
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      * @ORM\OneToMany(targetEntity="DeckCard", mappedBy="deck", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
      */
     private $deckCards;
@@ -80,6 +80,14 @@ class Deck
      * @ORM\Column(name="nb_likes", type="integer", nullable=true)
      */
     private $nbLikes;
+
+    /**
+     * Comments on the deck
+     *
+     * @var Collection
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="deck", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
+     */
+    private $comments;
 
     /**
      * The major version of the deck. Incremented with each publication.
@@ -146,7 +154,7 @@ class Deck
         return sprintf("%s (%s)", $this->name, $this->id ?: "no id");
     }
 
-    function getId (): string
+    function getId (): ?string
     {
         return $this->id;
     }
@@ -158,7 +166,7 @@ class Deck
         return $this;
     }
 
-    function getName (): string
+    function getName (): ?string
     {
         return $this->name;
     }
@@ -182,31 +190,48 @@ class Deck
         return $this->createdAt;
     }
 
-    function getDeckCards (): CardSlotCollectionDecorator
+    public function setDeckCards (Collection $deckCards): self
+    {
+        $this->clearDeckCards();
+        foreach ($deckCards as $deckCard) {
+            $this->addDeckCard($deckCard);
+        }
+
+        return $this;
+    }
+
+    public function addDeckCard (DeckCard $deckCard): self
+    {
+        if ($this->deckCards->contains($deckCard) === false) {
+            $this->deckCards->add($deckCard);
+            $deckCard->setDeck($this);
+        }
+
+        return $this;
+    }
+
+    /** @return Collection|DeckCard[] */
+    public function getDeckCards (): Collection
     {
         return new CardSlotCollectionDecorator($this->deckCards->toArray());
     }
 
-    function setDeckCards (Collection $deckCards): self
+    public function removeDeckCard (DeckCard $deckCard): self
     {
-        $this->deckCards = $deckCards;
-
-        return $this;
-    }
-
-    function clearDeckCards (): self
-    {
-        $this->deckCards = new ArrayCollection();
-
-        return $this;
-    }
-
-    function addDeckCard (DeckCard $deckCard): self
-    {
-        if (!$this->deckCards->contains($deckCard)) {
-            $this->deckCards[] = $deckCard;
-            $deckCard->setDeck($this);
+        if ($this->deckCards->contains($deckCard)) {
+            $this->deckCards->removeElement($deckCard);
+            $deckCard->setDeck(null);
         }
+
+        return $this;
+    }
+
+    public function clearDeckCards (): self
+    {
+        foreach ($this->getDeckCards() as $deckCard) {
+            $this->removeDeckCard($deckCard);
+        }
+        $this->deckCards->clear();
 
         return $this;
     }
@@ -235,6 +260,51 @@ class Deck
         return $this;
     }
 
+    public function setComments (Collection $comments): self
+    {
+        $this->clearComments();
+        foreach ($comments as $comment) {
+            $this->addComment($comment);
+        }
+
+        return $this;
+    }
+
+    public function addComment (Comment $comment): self
+    {
+        if ($this->comments->contains($comment) === false) {
+            $this->comments->add($comment);
+            $comment->setDeck($this);
+        }
+
+        return $this;
+    }
+
+    /** @return Collection|Comment[] */
+    public function getComments (): Collection
+    {
+        return $this->comments;
+    }
+
+    public function removeComment (Comment $comment): self
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
+            $comment->setDeck(null);
+        }
+
+        return $this;
+    }
+
+    public function clearComments (): self
+    {
+        foreach ($this->getComments() as $comment) {
+            $this->removeComment($comment);
+        }
+        $this->comments->clear();
+
+        return $this;
+    }
 
     function getDescription (): ?string
     {

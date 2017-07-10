@@ -1,6 +1,9 @@
 <?php
 
 namespace AppBundle\Manager;
+use AppBundle\Entity\Card;
+use AppBundle\Entity\Ruling;
+use AppBundle\Entity\User;
 
 /**
  * Description of RulingManager
@@ -9,39 +12,26 @@ namespace AppBundle\Manager;
  */
 class RulingManager extends BaseManager
 {
-
-    /**
-     * 
-     * @param array $data
-     * @param \AppBundle\Entity\User $user
-     * @param \AppBundle\Entity\Card $card
-     * @return \AppBundle\Entity\Ruling
-     */
-    public function create (array $data, \AppBundle\Entity\User $user, \AppBundle\Entity\Card $card)
+    public function create (array $data, User $user, Card $card): Ruling
     {
-        $ruling = $this->serializer->denormalize($data, \AppBundle\Entity\Ruling::class);
+        $ruling = $this->serializer->denormalize($data, Ruling::class);
         $ruling->setUser($user);
         $ruling->setCard($card);
         $this->entityManager->persist($ruling);
         return $ruling;
     }
 
-    /**
-     * 
-     * @param array $data
-     * @param int $id
-     * @return \AppBundle\Entity\Ruling
-     */
-    public function update (array $data, $id)
+    public function update (array $data, Ruling $ruling): Ruling
     {
-        $data['id'] = $id;
-        $ruling = $this->serializer->denormalize($data, \AppBundle\Entity\Ruling::class);
+        if(isset($data['text'])) {
+            $ruling->setText($data['text']);
+        }
+
         return $this->entityManager->merge($ruling);
     }
 
-    public function findByCard (\AppBundle\Entity\Card $card)
+    public function findByCard (Card $card)
     {
-        return $this->entityManager->getRepository(\AppBundle\Entity\Ruling::class)->findBy(['card' => $card]);
+        return $this->entityManager->getRepository(Ruling::class)->findBy(['card' => $card]);
     }
-
 }
