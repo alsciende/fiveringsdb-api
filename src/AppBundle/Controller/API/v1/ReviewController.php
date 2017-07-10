@@ -27,10 +27,10 @@ class ReviewController extends BaseApiController
      *  resource=true,
      *  section="Reviews",
      * )
-     * @Route("/cards/{card_code}/reviews")
+     * @Route("/cards/{cardCode}/reviews")
      * @Method("POST")
      * @Security("has_role('ROLE_USER')")
-     * @ParamConverter("card", class="AppBundle:Card", options={"id" = "card_code"})
+     * @ParamConverter("card", class="AppBundle:Card", options={"id" = "cardCode"})
      */
     public function postAction (Request $request, Card $card)
     {
@@ -50,9 +50,9 @@ class ReviewController extends BaseApiController
      *  resource=true,
      *  section="Reviews",
      * )
-     * @Route("/cards/{card_code}/reviews")
+     * @Route("/cards/{cardCode}/reviews")
      * @Method("GET")
-     * @ParamConverter("card", class="AppBundle:Card", options={"id" = "card_code"})
+     * @ParamConverter("card", class="AppBundle:Card", options={"id" = "cardCode"})
      */
     public function listAction (Card $card)
     {
@@ -69,7 +69,7 @@ class ReviewController extends BaseApiController
      *  resource=true,
      *  section="Reviews",
      * )
-     * @Route("/cards/{card_code}/reviews/{id}")
+     * @Route("/cards/{cardCode}/reviews/{id}")
      * @Method("GET")
      */
     public function getAction (Review $review)
@@ -84,11 +84,11 @@ class ReviewController extends BaseApiController
      *  resource=true,
      *  section="Reviews",
      * )
-     * @Route("/cards/{card_code}/reviews/{id}")
-     * @Method("PUT")
+     * @Route("/cards/{cardCode}/reviews/{id}")
+     * @Method("PATCH")
      * @Security("has_role('ROLE_USER')")
      */
-    public function putAction (Request $request, Review $review)
+    public function patchAction (Request $request, Review $review)
     {
         if ($this->getUser() !== $review->getUser()) {
             throw $this->createAccessDeniedException();
@@ -96,9 +96,8 @@ class ReviewController extends BaseApiController
 
         $data = json_decode($request->getContent(), TRUE);
         
-        /* @var $manager \AppBundle\Manager\ReviewManager */
-        $manager = $this->get('app.review_manager');
-        $updated = $manager->update($data, $review->getId());
+        $updated = $this->get('app.review_manager')->update($data, $review);
+        $this->getDoctrine()->getManager()->flush();
         return $this->success($updated);
     }
 

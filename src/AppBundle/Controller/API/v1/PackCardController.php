@@ -23,7 +23,7 @@ class PackCardController extends BaseApiController
      *  output="AppBundle\Entity\PackCard",
      *  section="Cards",
      * )
-     * @Route("/pack_cards")
+     * @Route("/pack-cards")
      * @Method("GET")
      */
     public function listAction ()

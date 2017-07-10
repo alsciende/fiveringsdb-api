@@ -3,8 +3,8 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use AppBundle\Traits\TimestampableEntity;
 use Alsciende\SerializerBundle\Annotation\Source;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 use JMS\Serializer\Annotation as JMS;
 
 /**
@@ -74,7 +74,7 @@ class Review
     /**
      * @JMS\VirtualProperty
      */
-    function getCardCode (): string
+    function getCardCode (): ?string
     {
         return $this->card ? $this->card->getCode() : null;
     }
@@ -82,7 +82,7 @@ class Review
     /**
      * @JMS\VirtualProperty
      */
-    function getUserId (): string
+    function getUserId (): ?string
     {
         return $this->user ? $this->user->getId() : null;
     }

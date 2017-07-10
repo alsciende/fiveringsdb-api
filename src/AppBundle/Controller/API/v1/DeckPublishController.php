@@ -7,6 +7,7 @@ use AppBundle\Entity\Deck;
 use AppBundle\Manager\DeckManager;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,9 +27,10 @@ class DeckPublishController extends BaseApiController
      *  resource=true,
      *  section="Decks (private)",
      * )
-     * @Route("/private_decks/{id}/publish")
+     * @Route("/private-decks/{deckId}/publish")
      * @Method("POST")
      * @Security("has_role('ROLE_USER')")
+     * @ParamConverter("parent", class="AppBundle:Deck", options={"id" = "deckId"})
      */
     public function postAction (Request $request, Deck $parent)
     {
@@ -41,13 +43,13 @@ class DeckPublishController extends BaseApiController
         /* @var $manager DeckManager */
         $manager = $this->get('app.deck_manager');
         try {
-            $deck = $manager->update($data, $manager->createNewMajorVersion($parent));
+            $major = $manager->update($data, $manager->createNewMajorVersion($parent));
             $this->getDoctrine()->getManager()->flush();
         } catch (Exception $ex) {
             return $this->failure($ex->getMessage());
         }
 
-        return $this->success($deck);
+        return $this->success($major);
     }
 
 }

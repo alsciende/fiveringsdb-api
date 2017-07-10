@@ -27,10 +27,10 @@ class RulingController extends BaseApiController
      *  resource=true,
      *  section="Rulings",
      * )
-     * @Route("/cards/{card_code}/rulings")
+     * @Route("/cards/{cardCode}/rulings")
      * @Method("POST")
      * @Security("has_role('ROLE_GURU')")
-     * @ParamConverter("card", class="AppBundle:Card", options={"id" = "card_code"})
+     * @ParamConverter("card", class="AppBundle:Card", options={"id" = "cardCode"})
      */
     public function postAction (Request $request, Card $card)
     {
@@ -50,9 +50,9 @@ class RulingController extends BaseApiController
      *  resource=true,
      *  section="Rulings",
      * )
-     * @Route("/cards/{card_code}/rulings")
+     * @Route("/cards/{cardCode}/rulings")
      * @Method("GET")
-     * @ParamConverter("card", class="AppBundle:Card", options={"id" = "card_code"})
+     * @ParamConverter("card", class="AppBundle:Card", options={"id" = "cardCode"})
      */
     public function listAction (Card $card)
     {
@@ -69,7 +69,7 @@ class RulingController extends BaseApiController
      *  resource=true,
      *  section="Rulings",
      * )
-     * @Route("/cards/{card_code}/rulings/{id}")
+     * @Route("/cards/{cardCode}/rulings/{id}")
      * @Method("GET")
      */
     public function getAction (Ruling $ruling)
@@ -84,11 +84,11 @@ class RulingController extends BaseApiController
      *  resource=true,
      *  section="Rulings",
      * )
-     * @Route("/cards/{card_code}/rulings/{id}")
-     * @Method("PUT")
+     * @Route("/cards/{cardCode}/rulings/{id}")
+     * @Method("PATCH")
      * @Security("has_role('ROLE_GURU')")
      */
-    public function putAction (Request $request, Ruling $ruling)
+    public function patchAction (Request $request, Ruling $ruling)
     {
         if ($this->getUser() !== $ruling->getUser()) {
             throw $this->createAccessDeniedException();
@@ -96,14 +96,8 @@ class RulingController extends BaseApiController
 
         $data = json_decode($request->getContent(), TRUE);
 
-        /* @var $manager \AppBundle\Manager\RulingManager */
-        $manager = $this->get('app.ruling_manager');
-        try {
-            $updated = $manager->update($data, $ruling->getId());
-        } catch (Exception $ex) {
-            return $this->failure($ex->getMessage());
-        }
-
+        $updated = $this->get('app.ruling_manager')->update($data, $ruling);
+        $this->getDoctrine()->getManager()->flush();
         return $this->success($updated);
     }
 

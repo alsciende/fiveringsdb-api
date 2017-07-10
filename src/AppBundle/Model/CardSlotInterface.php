@@ -8,7 +8,9 @@ use AppBundle\Entity\Card;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-interface CardSlotInterface extends SlotInterface
+interface CardSlotInterface
 {
     public function getCard (): Card;
+
+    public function getQuantity (): int;
 }

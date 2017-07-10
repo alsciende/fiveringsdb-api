@@ -27,18 +27,20 @@ class PrivateDeckController extends BaseApiController
      *  resource=true,
      *  section="Decks (private)",
      * )
-     * @Route("/private_decks")
+     * @Route("/private-decks")
      * @Method("POST")
      * @Security("has_role('ROLE_USER')")
      */
     public function postAction (Request $request)
     {
         $data = json_decode($request->getContent(), TRUE);
-        
+        /** @var Deck $deck */
+        $deck = $this->get('jms_serializer')->fromArray($data, Deck::class);
+
         /* @var $manager DeckManager */
         $manager = $this->get('app.deck_manager');
         try {
-            $deck = $manager->createNewInitialDeck($data, $this->getUser());
+            $deck = $manager->createNewInitialDeck($deck, $this->getUser());
             $this->getDoctrine()->getManager()->flush();
         } catch (Exception $ex) {
             return $this->failure($ex->getMessage());
@@ -53,7 +55,7 @@ class PrivateDeckController extends BaseApiController
      *  resource=true,
      *  section="Decks (private)",
      * )
-     * @Route("/private_decks")
+     * @Route("/private-decks")
      * @Method("GET")
      * @Security("has_role('ROLE_USER')")
      */
@@ -70,7 +72,7 @@ class PrivateDeckController extends BaseApiController
      *  resource=true,
      *  section="Decks (private)",
      * )
-     * @Route("/private_decks/{id}")
+     * @Route("/private-decks/{id}")
      * @Method("GET")
      * @Security("has_role('ROLE_USER')")
      */
@@ -92,7 +94,7 @@ class PrivateDeckController extends BaseApiController
      *  resource=true,
      *  section="Decks (private)",
      * )
-     * @Route("/private_decks/{id}")
+     * @Route("/private-decks/{id}")
      * @Method("DELETE")
      * @Security("has_role('ROLE_USER')")
      */

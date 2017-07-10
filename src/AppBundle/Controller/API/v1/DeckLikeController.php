@@ -7,6 +7,7 @@ use AppBundle\Entity\Deck;
 use AppBundle\Manager\DeckManager;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,9 +27,10 @@ class DeckLikeController extends BaseApiController
      *  resource=true,
      *  section="Decks (public)",
      * )
-     * @Route("/public_decks/{id}/like")
+     * @Route("/public-decks/{deckId}/like")
      * @Method("POST")
      * @Security("has_role('ROLE_USER')")
+     * @ParamConverter("deck", class="AppBundle:Deck", options={"id" = "deckId"})
      */
     public function postAction (Deck $deck)
     {
@@ -55,9 +57,10 @@ class DeckLikeController extends BaseApiController
      *  resource=true,
      *  section="Decks (public)",
      * )
-     * @Route("/public_decks/{id}/like")
+     * @Route("/public-decks/{deckId}/like")
      * @Method("DELETE")
      * @Security("has_role('ROLE_USER')")
+     * @ParamConverter("deck", class="AppBundle:Deck", options={"id" = "deckId"})
      */
     public function deleteAction (Deck $deck)
     {
