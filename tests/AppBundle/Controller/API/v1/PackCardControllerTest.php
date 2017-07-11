@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\AppBundle\Controller\API\v1;
 
-use Symfony\Component\HttpFoundation\Response;
+use AppBundle\Controller\API\v1\PackCardController;
 use Tests\AppBundle\Controller\API\BaseApiControllerTest;
 
 /**
@@ -12,12 +14,13 @@ use Tests\AppBundle\Controller\API\BaseApiControllerTest;
  */
 class PackCardControllerTest extends BaseApiControllerTest
 {
-
-    public function testGetPackCards ()
+    /**
+     * @covers PackCardController::listAction()
+     */
+    public function testPackCardControllerListAction ()
     {
         $client = $this->getAnonymousClient();
         $client->request('GET', "/api/v1/pack-cards");
         $this->assertStandardGetMany($client);
     }
-
 }

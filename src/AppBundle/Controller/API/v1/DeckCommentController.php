@@ -7,6 +7,7 @@ namespace AppBundle\Controller\API\v1;
 use AppBundle\Controller\API\BaseApiController;
 use AppBundle\Entity\Comment;
 use AppBundle\Entity\Deck;
+use AppBundle\Form\CommentType;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -33,13 +34,18 @@ class DeckCommentController extends BaseApiController
      */
     public function postAction (Request $request, Deck $deck)
     {
-        $data = json_decode($request->getContent(), TRUE);
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->submit(json_decode($request->getContent(), true), false);
 
-        /* @var $manager \AppBundle\Manager\CommentManager */
-        $manager = $this->get('app.comment_manager');
-        $comment = $manager->create($data, $this->getUser(), $deck);
-        $this->getDoctrine()->getManager()->flush();
-        return $this->success($comment);
+        if($form->isSubmitted() && $form->isValid()) {
+            $comment->setUser($this->getUser())->setDeck($deck);
+            $this->getDoctrine()->getManager()->persist($comment);
+            $this->getDoctrine()->getManager()->flush();
+            return $this->success($comment);
+        }
+
+        return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors()));
     }
 
     /**
@@ -55,9 +61,10 @@ class DeckCommentController extends BaseApiController
      */
     public function listAction (Deck $deck)
     {
-        /* @var $manager \AppBundle\Manager\CommentManager */
-        $manager = $this->get('app.comment_manager');
-        $comments = $manager->findByDeck($deck);
+        $comments = $this
+            ->get('doctrine')
+            ->getRepository(Comment::class)
+            ->findBy(['deck' => $deck]);
         return $this->success($comments);
     }
 
@@ -93,10 +100,14 @@ class DeckCommentController extends BaseApiController
             throw $this->createAccessDeniedException();
         }
 
-        $data = json_decode($request->getContent(), TRUE);
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->submit(json_decode($request->getContent(), true), false);
 
-        $updated = $this->get('app.comment_manager')->update($data, $comment);
-        $this->getDoctrine()->getManager()->flush();
-        return $this->success($updated);
+        if($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+            return $this->success($comment);
+        }
+
+        return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors()));
     }
 }

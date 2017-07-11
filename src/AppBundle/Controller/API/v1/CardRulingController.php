@@ -5,6 +5,7 @@ namespace AppBundle\Controller\API\v1;
 use AppBundle\Controller\API\BaseApiController;
 use AppBundle\Entity\Card;
 use AppBundle\Entity\Ruling;
+use AppBundle\Form\RulingType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -17,7 +18,7 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class RulingController extends BaseApiController
+class CardRulingController extends BaseApiController
 {
 
     /**
@@ -34,13 +35,18 @@ class RulingController extends BaseApiController
      */
     public function postAction (Request $request, Card $card)
     {
-        $data = json_decode($request->getContent(), TRUE);
+        $ruling = new Ruling();
+        $form = $this->createForm(RulingType::class, $ruling);
+        $form->submit(json_decode($request->getContent(), true), false);
 
-        /* @var $manager \AppBundle\Manager\RulingManager */
-        $manager = $this->get('app.ruling_manager');
-        $ruling = $manager->create($data, $this->getUser(), $card);
-        $this->getDoctrine()->getManager()->flush();
-        return $this->success($ruling);
+        if($form->isSubmitted() && $form->isValid()) {
+            $ruling->setUser($this->getUser())->setCard($card);
+            $this->getDoctrine()->getManager()->persist($ruling);
+            $this->getDoctrine()->getManager()->flush();
+            return $this->success($ruling);
+        }
+
+        return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors()));
     }
 
     /**
@@ -56,9 +62,10 @@ class RulingController extends BaseApiController
      */
     public function listAction (Card $card)
     {
-        /* @var $manager \AppBundle\Manager\RulingManager */
-        $manager = $this->get('app.ruling_manager');
-        $rulings = $manager->findByCard($card);
+        $rulings = $this
+            ->get('doctrine')
+            ->getRepository(Ruling::class)
+            ->findBy(['card' => $card]);
         return $this->success($rulings);
     }
 
@@ -94,11 +101,15 @@ class RulingController extends BaseApiController
             throw $this->createAccessDeniedException();
         }
 
-        $data = json_decode($request->getContent(), TRUE);
+        $form = $this->createForm(RulingType::class, $ruling);
+        $form->submit(json_decode($request->getContent(), true), false);
 
-        $updated = $this->get('app.ruling_manager')->update($data, $ruling);
-        $this->getDoctrine()->getManager()->flush();
-        return $this->success($updated);
+        if($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+            return $this->success($ruling);
+        }
+
+        return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors()));
     }
 
 }

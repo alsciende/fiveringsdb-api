@@ -55,7 +55,7 @@ class User implements UserInterface
      *
      * @var boolean
      * 
-     * @ORM\Column(name="is_enabled",type="boolean")
+     * @ORM\Column(name="enabled",type="boolean")
      */
     private $enabled;
     

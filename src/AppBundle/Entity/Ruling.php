@@ -87,7 +87,7 @@ class Ruling
         return $this->user ? $this->user->getId() : null;
     }
 
-    public function getText (): string
+    public function getText (): ?string
     {
         return $this->text;
     }
@@ -98,7 +98,7 @@ class Ruling
         return $this;
     }
 
-    public function getCard (): Card
+    public function getCard (): ?Card
     {
         return $this->card;
     }
@@ -109,7 +109,7 @@ class Ruling
         return $this;
     }
 
-    public function getUser (): User
+    public function getUser (): ?User
     {
         return $this->user;
     }

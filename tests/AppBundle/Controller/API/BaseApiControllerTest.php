@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\AppBundle\Controller\API;
 
 use Symfony\Bundle\FrameworkBundle\Client;

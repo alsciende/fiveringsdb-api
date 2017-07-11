@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\AppBundle\Controller\API\v1;
 
-use Symfony\Component\HttpFoundation\Response;
+use AppBundle\Controller\API\v1\PackController;
 use Tests\AppBundle\Controller\API\BaseApiControllerTest;
 
 /**
@@ -12,12 +14,13 @@ use Tests\AppBundle\Controller\API\BaseApiControllerTest;
  */
 class PackControllerTest extends BaseApiControllerTest
 {
-
-    public function testGetPacks ()
+    /**
+     * @covers PackController::listAction()
+     */
+    public function testPackControllerListAction ()
     {
         $client = $this->getAnonymousClient();
         $client->request('GET', "/api/v1/packs");
         $this->assertStandardGetMany($client);
     }
-
 }

@@ -5,6 +5,7 @@ namespace AppBundle\Controller\API\v1;
 use AppBundle\Controller\API\BaseApiController;
 use AppBundle\Entity\Card;
 use AppBundle\Entity\Review;
+use AppBundle\Form\ReviewType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -17,9 +18,8 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class ReviewController extends BaseApiController
+class CardReviewController extends BaseApiController
 {
-
     /**
      * Create a review on a card
      * 
@@ -34,13 +34,18 @@ class ReviewController extends BaseApiController
      */
     public function postAction (Request $request, Card $card)
     {
-        $data = json_decode($request->getContent(), TRUE);
-        
-        /* @var $manager \AppBundle\Manager\ReviewManager */
-        $manager = $this->get('app.review_manager');
-        $review = $manager->create($data, $this->getUser(), $card);
-        $this->getDoctrine()->getManager()->flush();
-        return $this->success($review);
+        $review = new Review();
+        $form = $this->createForm(ReviewType::class, $review);
+        $form->submit(json_decode($request->getContent(), true), false);
+
+        if($form->isSubmitted() && $form->isValid()) {
+            $review->setUser($this->getUser())->setCard($card);
+            $this->getDoctrine()->getManager()->persist($review);
+            $this->getDoctrine()->getManager()->flush();
+            return $this->success($review);
+        }
+
+        return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors()));
     }
 
     /**
@@ -56,9 +61,10 @@ class ReviewController extends BaseApiController
      */
     public function listAction (Card $card)
     {
-        /* @var $manager \AppBundle\Manager\ReviewManager */
-        $manager = $this->get('app.review_manager');
-        $reviews = $manager->findByCard($card);
+        $reviews = $this
+            ->get('doctrine')
+            ->getRepository(Review::class)
+            ->findBy(['card' => $card]);
         return $this->success($reviews);
     }
 
@@ -94,11 +100,14 @@ class ReviewController extends BaseApiController
             throw $this->createAccessDeniedException();
         }
 
-        $data = json_decode($request->getContent(), TRUE);
-        
-        $updated = $this->get('app.review_manager')->update($data, $review);
-        $this->getDoctrine()->getManager()->flush();
-        return $this->success($updated);
-    }
+        $form = $this->createForm(ReviewType::class, $review);
+        $form->submit(json_decode($request->getContent(), true), false);
 
+        if($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+            return $this->success($review);
+        }
+
+        return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors()));
+    }
 }

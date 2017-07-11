@@ -53,7 +53,7 @@ class DeckControllerTest extends BaseApiControllerTest
     }
 
     /**
-     * @covers DeckCopyController::postAction()
+     * @covers  DeckCopyController::postAction()
      * @depends testPrivateDeckControllerPostAction
      */
     public function testDeckCopyControllerPostAction ($deck)
@@ -101,10 +101,10 @@ class DeckControllerTest extends BaseApiControllerTest
     }
 
     /**
-     * @covers DeckLineageController::postAction()
+     * @covers  DeckLineageController::postAction()
      * @depends testPrivateDeckControllerPostAction
      */
-    public function testDeckLineageControllerPostAction($deck)
+    public function testDeckLineageControllerPostAction ($deck)
     {
         $client = $this->getAuthenticatedClient();
 
@@ -145,10 +145,10 @@ class DeckControllerTest extends BaseApiControllerTest
     }
 
     /**
-     * @covers DeckLineageController::listAction()
+     * @covers  DeckLineageController::listAction()
      * @depends testDeckLineageControllerPostAction
      */
-    public function testDeckLineageControllerListAction($deck)
+    public function testDeckLineageControllerListAction ($deck)
     {
         $client = $this->getAuthenticatedClient();
 
@@ -169,10 +169,10 @@ class DeckControllerTest extends BaseApiControllerTest
     }
 
     /**
-     * @covers DeckLineageController::deleteAction()
+     * @covers  DeckLineageController::deleteAction()
      * @depends testDeckLineageControllerListAction
      */
-    public function testDeckLineageControllerDeleteAction($decks)
+    public function testDeckLineageControllerDeleteAction ($decks)
     {
         $client = $this->getAuthenticatedClient();
 
@@ -187,10 +187,10 @@ class DeckControllerTest extends BaseApiControllerTest
     }
 
     /**
-     * @covers DeckPublishController::postAction()
+     * @covers  DeckPublishController::postAction()
      * @depends testDeckCopyControllerPostAction
      */
-    public function testDeckPublishControllerPostAction($deck)
+    public function testDeckPublishControllerPostAction ($deck)
     {
         $client = $this->getAuthenticatedClient();
 
@@ -199,21 +199,32 @@ class DeckControllerTest extends BaseApiControllerTest
         $this->sendJsonRequest(
             $client,
             'POST',
-            "/api/v1/private-decks/$id/publish"
+            "/api/v1/private-decks/$id/publish", [
+                'name' => 'Published name',
+                'description' => 'Published description'
+            ]
         );
         $record = $this->assertStandardGetOne($client);
         $this->assertEquals(
             '1.0',
             $record['version']
         );
+        $this->assertEquals(
+            'Published name',
+            $record['name']
+        );
+        $this->assertEquals(
+            'Published description',
+            $record['description']
+        );
         return $record;
     }
 
     /**
-     * @covers PublicDeckController::listAction()
+     * @covers  PublicDeckController::listAction()
      * @depends testDeckPublishControllerPostAction
      */
-    public function testPublicDeckControllerListAction($deck)
+    public function testPublicDeckControllerListAction ($deck)
     {
         $client = $this->getAuthenticatedClient();
 
@@ -226,10 +237,10 @@ class DeckControllerTest extends BaseApiControllerTest
     }
 
     /**
-     * @covers PublicDeckController::getAction()
+     * @covers  PublicDeckController::getAction()
      * @depends testDeckPublishControllerPostAction
      */
-    public function testPublicDeckControllerGetAction($deck)
+    public function testPublicDeckControllerGetAction ($deck)
     {
         $client = $this->getAuthenticatedClient();
 
@@ -248,10 +259,10 @@ class DeckControllerTest extends BaseApiControllerTest
     }
 
     /**
-     * @covers PublicDeckController::patchAction()
+     * @covers  PublicDeckController::patchAction()
      * @depends testDeckPublishControllerPostAction
      */
-    public function testPublicDeckControllerPatchAction($deck)
+    public function testPublicDeckControllerPatchAction ($deck)
     {
         $client = $this->getAuthenticatedClient();
 
@@ -262,7 +273,8 @@ class DeckControllerTest extends BaseApiControllerTest
             'PATCH',
             "/api/v1/public-decks/$id",
             [
-                'name' => 'Updated Name'
+                'name' => 'Updated Name',
+                'description' => 'Updated description'
             ]
         );
         $record = $this->assertStandardGetOne($client);
@@ -270,13 +282,17 @@ class DeckControllerTest extends BaseApiControllerTest
             'Updated Name',
             $record['name']
         );
+        $this->assertEquals(
+            'Updated description',
+            $record['description']
+        );
     }
 
     /**
-     * @covers DeckLikeController::postAction()
+     * @covers  DeckLikeController::postAction()
      * @depends testDeckPublishControllerPostAction
      */
-    public function testDeckLikeControllerPostAction($deck)
+    public function testDeckLikeControllerPostAction ($deck)
     {
         $client = $this->getAuthenticatedClient();
 
@@ -296,10 +312,10 @@ class DeckControllerTest extends BaseApiControllerTest
     }
 
     /**
-     * @covers DeckLikeController::deleteAction()
+     * @covers  DeckLikeController::deleteAction()
      * @depends testDeckLikeControllerPostAction
      */
-    public function testDeckLikeControllerDeleteAction($deck)
+    public function testDeckLikeControllerDeleteAction ($deck)
     {
         $client = $this->getAuthenticatedClient();
 
@@ -314,10 +330,10 @@ class DeckControllerTest extends BaseApiControllerTest
     }
 
     /**
-     * @covers DeckCommentController::postAction()
+     * @covers  DeckCommentController::postAction()
      * @depends testDeckPublishControllerPostAction
      */
-    public function testDeckCommentControllerPostAction($deck)
+    public function testDeckCommentControllerPostAction ($deck)
     {
         $client = $this->getAuthenticatedClient();
 
@@ -352,10 +368,10 @@ class DeckControllerTest extends BaseApiControllerTest
     }
 
     /**
-     * @covers DeckCommentController::listAction()
+     * @covers  DeckCommentController::listAction()
      * @depends testDeckCommentControllerPostAction
      */
-    public function testDeckCommentControllerListAction($comment)
+    public function testDeckCommentControllerListAction ($comment)
     {
         $client = $this->getAuthenticatedClient();
 
@@ -375,10 +391,10 @@ class DeckControllerTest extends BaseApiControllerTest
     }
 
     /**
-     * @covers DeckCommentController::getAction()
+     * @covers  DeckCommentController::getAction()
      * @depends testDeckCommentControllerPostAction
      */
-    public function testDeckCommentControllerGetAction($comment)
+    public function testDeckCommentControllerGetAction ($comment)
     {
         $client = $this->getAuthenticatedClient();
 
@@ -397,16 +413,16 @@ class DeckControllerTest extends BaseApiControllerTest
         );
         $this->assertEquals(
             true,
-            $record['is_visible']
+            $record['visible']
         );
         return $record;
     }
 
     /**
-     * @covers DeckCommentController::putAction()
+     * @covers  DeckCommentController::patchAction()
      * @depends testDeckCommentControllerPostAction
      */
-    public function testDeckCommentControllerPatchAction($comment)
+    public function testDeckCommentControllerPatchAction ($comment)
     {
         $client = $this->getAuthenticatedClient();
 
@@ -419,7 +435,7 @@ class DeckControllerTest extends BaseApiControllerTest
             "/api/v1/public-decks/$deckId/comments/$id",
             [
                 'text' => 'Updated text',
-                'is_visible' => false
+                'visible' => false
             ]
         );
         $record = $this->assertStandardGetOne($client);
@@ -429,7 +445,7 @@ class DeckControllerTest extends BaseApiControllerTest
         );
         $this->assertEquals(
             false,
-            $record['is_visible']
+            $record['visible']
         );
         $this->assertEquals(
             $comment['id'],
@@ -447,10 +463,10 @@ class DeckControllerTest extends BaseApiControllerTest
     }
 
     /**
-     * @covers PublicDeckController::deleteAction()
+     * @covers  PublicDeckController::deleteAction()
      * @depends testDeckPublishControllerPostAction
      */
-    public function testPublicDeckControllerDeleteAction($deck)
+    public function testPublicDeckControllerDeleteAction ($deck)
     {
         $client = $this->getAuthenticatedClient();
 
