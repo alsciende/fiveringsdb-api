@@ -7,7 +7,6 @@ use AppBundle\Entity\Card;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 /**
  * Description of CardsController
@@ -18,12 +17,6 @@ class CardController extends BaseApiController
 {
     /**
      * Get all Cards
-     * 
-     * @ApiDoc(
-     *  resource=true,
-     *  output="AppBundle\Entity\Card",
-     *  section="Cards",
-     * )
      * @Route("/cards")
      * @Method("GET")
      */
@@ -50,12 +43,6 @@ class CardController extends BaseApiController
     
     /**
      * Get a Card
-     * 
-     * @ApiDoc(
-     *  resource=true,
-     *  output="AppBundle\Entity\Card",
-     *  section="Cards",
-     * )
      * @Route("/cards/{code}")
      * @Method("GET")
      * @ParamConverter("card", class="AppBundle:Card", options={"id" = "code"})

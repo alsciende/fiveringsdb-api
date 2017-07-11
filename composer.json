@@ -35,7 +35,6 @@
         "symfony/cache": "^3.2",
         "cocur/slugify": "^2.5",
         "jms/serializer-bundle": "^1.4",
-        "nelmio/api-doc-bundle": "^2.13",
         "ramsey/uuid": "^3.6"
     },
     "require-dev": {

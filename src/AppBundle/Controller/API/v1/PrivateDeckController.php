@@ -10,7 +10,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 /**
  * Private decks
@@ -22,11 +21,6 @@ class PrivateDeckController extends BaseApiController
 
     /**
      * Create a deck in initial version (0.1)
-     * 
-     * @ApiDoc(
-     *  resource=true,
-     *  section="Decks (private)",
-     * )
      * @Route("/private-decks")
      * @Method("POST")
      * @Security("has_role('ROLE_USER')")
@@ -51,11 +45,6 @@ class PrivateDeckController extends BaseApiController
 
     /**
      * Get all private decks
-     * 
-     * @ApiDoc(
-     *  resource=true,
-     *  section="Decks (private)",
-     * )
      * @Route("/private-decks")
      * @Method("GET")
      * @Security("has_role('ROLE_USER')")
@@ -68,11 +57,6 @@ class PrivateDeckController extends BaseApiController
 
     /**
      * Get a private deck
-     * 
-     * @ApiDoc(
-     *  resource=true,
-     *  section="Decks (private)",
-     * )
      * @Route("/private-decks/{id}")
      * @Method("GET")
      * @Security("has_role('ROLE_USER')")
@@ -90,11 +74,6 @@ class PrivateDeckController extends BaseApiController
 
     /**
      * Delete a private deck. Other versions are untouched.
-     * 
-     * @ApiDoc(
-     *  resource=true,
-     *  section="Decks (private)",
-     * )
      * @Route("/private-decks/{id}")
      * @Method("DELETE")
      * @Security("has_role('ROLE_USER')")

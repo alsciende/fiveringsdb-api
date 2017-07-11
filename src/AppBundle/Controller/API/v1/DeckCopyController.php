@@ -10,8 +10,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\HttpFoundation\Request;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 /**
  * Description of DeckCopyController
@@ -22,11 +20,6 @@ class DeckCopyController extends BaseApiController
 {
     /**
      * Create a private deck in initial version (0.1) from an existing deck
-     * 
-     * @ApiDoc(
-     *  resource=true,
-     *  section="Decks (private)",
-     * )
      * @Route("/private-decks/{deckId}/copy")
      * @Method("POST")
      * @Security("has_role('ROLE_USER')")
