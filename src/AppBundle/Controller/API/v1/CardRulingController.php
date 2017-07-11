@@ -11,7 +11,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 /**
  * Description of RulingController
@@ -23,11 +22,6 @@ class CardRulingController extends BaseApiController
 
     /**
      * Create a ruling on a card
-     * 
-     * @ApiDoc(
-     *  resource=true,
-     *  section="Rulings",
-     * )
      * @Route("/cards/{cardCode}/rulings")
      * @Method("POST")
      * @Security("has_role('ROLE_GURU')")
@@ -51,11 +45,6 @@ class CardRulingController extends BaseApiController
 
     /**
      * Get all rulings on a card
-     * 
-     * @ApiDoc(
-     *  resource=true,
-     *  section="Rulings",
-     * )
      * @Route("/cards/{cardCode}/rulings")
      * @Method("GET")
      * @ParamConverter("card", class="AppBundle:Card", options={"id" = "cardCode"})
@@ -71,11 +60,6 @@ class CardRulingController extends BaseApiController
 
     /**
      * Get a ruling on a card
-     * 
-     * @ApiDoc(
-     *  resource=true,
-     *  section="Rulings",
-     * )
      * @Route("/cards/{cardCode}/rulings/{id}")
      * @Method("GET")
      */
@@ -86,11 +70,6 @@ class CardRulingController extends BaseApiController
 
     /**
      * Edit a ruling on a card
-     * 
-     * @ApiDoc(
-     *  resource=true,
-     *  section="Rulings",
-     * )
      * @Route("/cards/{cardCode}/rulings/{id}")
      * @Method("PATCH")
      * @Security("has_role('ROLE_GURU')")

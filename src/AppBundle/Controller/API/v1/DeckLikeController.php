@@ -10,8 +10,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\HttpFoundation\Request;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 /**
  * Description of DeckLikeController
@@ -22,11 +20,6 @@ class DeckLikeController extends BaseApiController
 {
     /**
      * Create a like from a public deck
-     * 
-     * @ApiDoc(
-     *  resource=true,
-     *  section="Decks (public)",
-     * )
      * @Route("/public-decks/{deckId}/like")
      * @Method("POST")
      * @Security("has_role('ROLE_USER')")
@@ -52,11 +45,6 @@ class DeckLikeController extends BaseApiController
 
     /**
      * Delete a like from a public deck
-     * 
-     * @ApiDoc(
-     *  resource=true,
-     *  section="Decks (public)",
-     * )
      * @Route("/public-decks/{deckId}/like")
      * @Method("DELETE")
      * @Security("has_role('ROLE_USER')")

@@ -8,7 +8,6 @@ use AppBundle\Controller\API\BaseApiController;
 use AppBundle\Entity\Comment;
 use AppBundle\Entity\Deck;
 use AppBundle\Form\CommentType;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -22,11 +21,6 @@ class DeckCommentController extends BaseApiController
 {
     /**
      * Create a comment on a deck
-     *
-     * @ApiDoc(
-     *  resource=true,
-     *  section="Comments",
-     * )
      * @Route("/public-decks/{deckId}/comments")
      * @Method("POST")
      * @Security("has_role('ROLE_USER')")
@@ -50,11 +44,6 @@ class DeckCommentController extends BaseApiController
 
     /**
      * List all comments on a deck
-     *
-     * @ApiDoc(
-     *  resource=true,
-     *  section="Comments",
-     * )
      * @Route("/public-decks/{deckId}/comments")
      * @Method("GET")
      * @ParamConverter("deck", class="AppBundle:Deck", options={"id" = "deckId"})
@@ -70,11 +59,6 @@ class DeckCommentController extends BaseApiController
 
     /**
      * Get a comment on a deck
-     *
-     * @ApiDoc(
-     *  resource=true,
-     *  section="Comments",
-     * )
      * @Route("/public-decks/{deckId}/comments/{id}")
      * @Method("GET")
      */
@@ -85,11 +69,6 @@ class DeckCommentController extends BaseApiController
 
     /**
      * Edit a comment on a deck
-     *
-     * @ApiDoc(
-     *  resource=true,
-     *  section="Comments",
-     * )
      * @Route("/public-decks/{deckId}/comments/{id}")
      * @Method("PATCH")
      * @Security("has_role('ROLE_USER')")
