@@ -4,6 +4,7 @@ namespace AppBundle\Controller\API\v1;
 
 use AppBundle\Controller\API\BaseApiController;
 use AppBundle\Entity\Deck;
+use AppBundle\Form\DeckType;
 use AppBundle\Manager\DeckManager;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -37,19 +38,19 @@ class DeckPublishController extends BaseApiController
         if($parent->getUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException();
         }
-        
-        $data = json_decode($request->getContent(), TRUE);
-        
-        /* @var $manager DeckManager */
-        $manager = $this->get('app.deck_manager');
-        try {
-            $major = $manager->update($data, $manager->createNewMajorVersion($parent));
+
+        // publication
+        $deck = $this->get('app.deck_manager')->createNewMajorVersion($parent);
+
+        // update with provided name and description
+        $form = $this->createForm(DeckType::class, $deck);
+        $form->submit(json_decode($request->getContent(), true), false);
+
+        if($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
-        } catch (Exception $ex) {
-            return $this->failure($ex->getMessage());
+            return $this->success($deck);
         }
 
-        return $this->success($major);
+        return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors()));
     }
-
 }

@@ -46,11 +46,11 @@ class Comment
     /**
      * @var boolean
      *
-     * @ORM\Column(name="is_visible", type="boolean", nullable=false)
+     * @ORM\Column(name="visible", type="boolean", nullable=false)
      *
      * @JMS\Expose()
      */
-    private $isVisible;
+    private $visible;
 
     /**
      * @var Deck
@@ -76,7 +76,7 @@ class Comment
 
     public function __construct ()
     {
-        $this->isVisible = true;
+        $this->visible = true;
     }
 
     public function setText (string $text): self
@@ -121,29 +121,29 @@ class Comment
         return $this->id;
     }
 
-    public function getText (): string
+    public function getText (): ?string
     {
         return $this->text;
     }
 
-    public function getDeck (): Deck
+    public function getDeck (): ?Deck
     {
         return $this->deck;
     }
 
-    public function getUser (): User
+    public function getUser (): ?User
     {
         return $this->user;
     }
 
-    public function getIsVisible (): bool
+    public function isVisible (): bool
     {
-        return $this->isVisible;
+        return $this->visible;
     }
 
-    public function setIsVisible (bool $isVisible): self
+    public function setVisible (bool $visible): self
     {
-        $this->isVisible = $isVisible;
+        $this->visible = $visible;
 
         return $this;
     }

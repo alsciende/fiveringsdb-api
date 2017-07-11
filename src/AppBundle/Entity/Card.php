@@ -126,7 +126,7 @@ class Card
     /**
      * @var string
      *
-     * @ORM\Column(name="type_code", type="text", nullable=false)
+     * @ORM\Column(name="type", type="text", nullable=false)
      *
      * @Source(type="string")
      *
@@ -138,7 +138,7 @@ class Card
     /**
      * @var string
      *
-     * @ORM\Column(name="clan_code", type="text", nullable=false)
+     * @ORM\Column(name="clan", type="text", nullable=false)
      *
      * @Source(type="string")
      *
@@ -150,7 +150,7 @@ class Card
     /**
      * @var string
      *
-     * @ORM\Column(name="element_code", type="text", nullable=true)
+     * @ORM\Column(name="element", type="text", nullable=true)
      *
      * @Source(type="string")
      *
@@ -162,18 +162,18 @@ class Card
     /**
      * @var boolean
      *
-     * @ORM\Column(name="is_unique", type="boolean", nullable=false)
+     * @ORM\Column(name="unicity", type="boolean", nullable=false)
      *
      * @Source(type="boolean")
      *
      * @JMS\Expose
      */
-    private $isUnique;
+    private $unicity;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="side_code", type="string", nullable=true)
+     * @ORM\Column(name="side", type="string", nullable=true)
      *
      * @Source(type="string")
      *
@@ -423,9 +423,9 @@ class Card
         return $this;
     }
 
-    public function setIsUnique (bool $isUnique): self
+    public function setUnicity (bool $unicity): self
     {
-        $this->isUnique = $isUnique;
+        $this->unicity = $unicity;
         return $this;
     }
 
@@ -552,9 +552,9 @@ class Card
         return $this->element;
     }
 
-    public function isUnique (): bool
+    public function isUnicity (): bool
     {
-        return $this->isUnique;
+        return $this->unicity;
     }
 
     public function getSide (): ?string

@@ -33,18 +33,19 @@ class PrivateDeckController extends BaseApiController
      */
     public function postAction (Request $request)
     {
-        $data = json_decode($request->getContent(), TRUE);
         /** @var Deck $deck */
-        $deck = $this->get('jms_serializer')->fromArray($data, Deck::class);
+        $deck = $this->get('jms_serializer')->fromArray(
+            json_decode($request->getContent(), true),
+            Deck::class
+        );
 
-        /* @var $manager DeckManager */
-        $manager = $this->get('app.deck_manager');
         try {
-            $deck = $manager->createNewInitialDeck($deck, $this->getUser());
+            $deck = $this->get('app.deck_manager')->createNewInitialDeck($deck, $this->getUser());
             $this->getDoctrine()->getManager()->flush();
         } catch (Exception $ex) {
             return $this->failure($ex->getMessage());
         }
+
         return $this->success($deck);
     }
 
@@ -78,7 +79,7 @@ class PrivateDeckController extends BaseApiController
      */
     public function getAction (Deck $deck)
     {
-        if($deck->getIsPublished()) {
+        if($deck->isPublished()) {
             throw $this->createNotFoundException();
         }
         if($deck->getUser() !== $this->getUser()) {
@@ -100,7 +101,7 @@ class PrivateDeckController extends BaseApiController
      */
     public function deleteAction (Deck $deck)
     {
-        if($deck->getIsPublished()) {
+        if($deck->isPublished()) {
             throw $this->createNotFoundException();
         }
         if($deck->getUser() !== $this->getUser()) {

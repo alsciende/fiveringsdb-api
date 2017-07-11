@@ -28,7 +28,7 @@ class PaypalController extends Controller
 
         $result = $paypalService->setExpressCheckout(10, 'EUR', 'SALE');
 
-        if(!isset($result['TOKEN'])) {
+        if(isset($result['TOKEN']) === false) {
             dump($result);
             die;
         }
