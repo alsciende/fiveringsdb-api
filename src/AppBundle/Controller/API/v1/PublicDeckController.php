@@ -11,7 +11,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 /**
  * Description of PublicDeckController
@@ -23,11 +22,6 @@ class PublicDeckController extends BaseApiController
     
     /**
      * Get all public decks
-     * 
-     * @ApiDoc(
-     *  resource=true,
-     *  section="Decks (public)",
-     * )
      * @Route("/public-decks")
      * @Method("GET")
      */
@@ -39,11 +33,6 @@ class PublicDeckController extends BaseApiController
 
     /**
      * Get a public deck
-     * 
-     * @ApiDoc(
-     *  resource=true,
-     *  section="Decks (public)",
-     * )
      * @Route("/public-decks/{id}")
      * @Method("GET")
      */
@@ -57,11 +46,6 @@ class PublicDeckController extends BaseApiController
 
     /**
      * Update a public deck - only name and description can be updated
-     * 
-     * @ApiDoc(
-     *  resource=true,
-     *  section="Decks (public)",
-     * )
      * @Route("/public-decks/{id}")
      * @Method("PATCH")
      * @Security("has_role('ROLE_USER')")
@@ -88,11 +72,6 @@ class PublicDeckController extends BaseApiController
     
     /**
      * Delete a public deck
-     * 
-     * @ApiDoc(
-     *  resource=true,
-     *  section="Decks (public)",
-     * )
      * @Route("/public-decks/{id}")
      * @Method("DELETE")
      * @Security("has_role('ROLE_USER')")

@@ -11,7 +11,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 /**
  * Description of DeckLineageController
@@ -23,11 +22,6 @@ class DeckLineageController extends BaseApiController
     
     /**
      * Create a minor version
-     * 
-     * @ApiDoc(
-     *  resource=true,
-     *  section="Decks (private)",
-     * )
      * @Route("/private-decks/{deckId}/lineage")
      * @Method("POST")
      * @Security("has_role('ROLE_USER')")
@@ -53,11 +47,6 @@ class DeckLineageController extends BaseApiController
 
     /**
      * Get all private versions of a deck
-     * 
-     * @ApiDoc(
-     *  resource=true,
-     *  section="Decks (private)",
-     * )
      * @Route("/private-decks/{deckId}/lineage")
      * @Method("GET")
      * @Security("has_role('ROLE_USER')")
@@ -73,11 +62,6 @@ class DeckLineageController extends BaseApiController
 
     /**
      * Delete a lineage: all private versions of a deck
-     * 
-     * @ApiDoc(
-     *  resource=true,
-     *  section="Decks (private)",
-     * )
      * @Route("/private-decks/{deckId}/lineage")
      * @Method("DELETE")
      * @Security("has_role('ROLE_USER')")

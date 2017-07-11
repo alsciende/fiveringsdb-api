@@ -5,14 +5,11 @@ namespace AppBundle\Controller\API\v1;
 use AppBundle\Controller\API\BaseApiController;
 use AppBundle\Entity\Deck;
 use AppBundle\Form\DeckType;
-use AppBundle\Manager\DeckManager;
-use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 /**
  * Description of DeckPublishController
@@ -23,11 +20,6 @@ class DeckPublishController extends BaseApiController
 {
     /**
      * Create a public deck from an existing deck
-     * 
-     * @ApiDoc(
-     *  resource=true,
-     *  section="Decks (private)",
-     * )
      * @Route("/private-decks/{deckId}/publish")
      * @Method("POST")
      * @Security("has_role('ROLE_USER')")
