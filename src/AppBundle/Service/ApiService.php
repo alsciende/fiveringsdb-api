@@ -91,7 +91,7 @@ class ApiService
 
     function getDateUpdate ($data)
     {
-        if(!is_array($data)) {
+        if(is_array($data) === false) {
             $data = array($data);
         }
         return array_reduce($data, function($carry, $item) {

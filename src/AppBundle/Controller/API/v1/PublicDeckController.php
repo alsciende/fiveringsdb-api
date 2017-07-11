@@ -4,6 +4,7 @@ namespace AppBundle\Controller\API\v1;
 
 use AppBundle\Controller\API\BaseApiController;
 use AppBundle\Entity\Deck;
+use AppBundle\Form\DeckType;
 use AppBundle\Manager\DeckManager;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -32,7 +33,7 @@ class PublicDeckController extends BaseApiController
      */
     public function listAction ()
     {
-        $decks = $this->getDoctrine()->getRepository(Deck::class)->findBy(['isPublished' => TRUE]);
+        $decks = $this->getDoctrine()->getRepository(Deck::class)->findBy(['published' => TRUE]);
         return $this->success($decks);
     }
 
@@ -48,7 +49,7 @@ class PublicDeckController extends BaseApiController
      */
     public function getAction (Deck $deck)
     {
-        if(!$deck->getIsPublished()) {
+        if(!$deck->isPublished()) {
             throw $this->createNotFoundException();
         }
         return $this->success($deck);
@@ -67,21 +68,22 @@ class PublicDeckController extends BaseApiController
      */
     public function patchAction (Request $request, Deck $deck)
     {
+        if($deck->isPublished() === false) {
+            throw $this->createNotFoundException();
+        }
         if($deck->getUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException();
         }
 
-        $data = json_decode($request->getContent(), TRUE);
-        
-        /* @var $manager DeckManager */
-        $manager = $this->get('app.deck_manager');
-        try {
-            $updated = $manager->update($data, $deck);
-        } catch (Exception $ex) {
-            return $this->failure($ex->getMessage());
+        $form = $this->createForm(DeckType::class, $deck);
+        $form->submit(json_decode($request->getContent(), true), false);
+
+        if($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+            return $this->success($deck);
         }
 
-        return $this->success($updated);
+        return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors()));
     }
     
     /**
@@ -97,7 +99,7 @@ class PublicDeckController extends BaseApiController
      */
     public function deleteAction (Deck $deck)
     {
-        if(!$deck->getIsPublished()) {
+        if($deck->isPublished() === false) {
             throw $this->createNotFoundException();
         }
         if($deck->getUser() !== $this->getUser()) {

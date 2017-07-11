@@ -34,7 +34,7 @@ class DeckLikeController extends BaseApiController
      */
     public function postAction (Deck $deck)
     {
-        if(!$deck->getIsPublished()) {
+        if($deck->isPublished() === false) {
             throw $this->createNotFoundException();
         }
         
@@ -64,7 +64,7 @@ class DeckLikeController extends BaseApiController
      */
     public function deleteAction (Deck $deck)
     {
-        if(!$deck->getIsPublished()) {
+        if($deck->isPublished() === false) {
             throw $this->createNotFoundException();
         }
         

@@ -4,6 +4,7 @@ namespace AppBundle\Controller\API;
 
 use AppBundle\Service\ApiService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormErrorIterator;
 
 /**
  * Description of ApiController
@@ -27,5 +28,14 @@ abstract class BaseApiController extends Controller
             "message" => $message,
             "description" => $description,
         ]);
+    }
+
+    public function formatValidationErrors(FormErrorIterator $errors)
+    {
+        $messages = [];
+        foreach($errors as $error) {
+            $messages[] = $error->getMessage();
+        }
+        return implode(' ', $messages);
     }
 }

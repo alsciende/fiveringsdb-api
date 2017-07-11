@@ -19,14 +19,21 @@ use Symfony\Component\Serializer\Serializer;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class DeckManager extends BaseManager
+class DeckManager
 {
+    /** @var EntityManagerInterface */
+    protected $entityManager;
+
+    /** @var Serializer */
+    protected $serializer;
+
     /** @var DeckValidator */
     private $deckValidator;
 
     public function __construct (EntityManagerInterface $entityManager, Serializer $serializer, DeckValidator $deckValidator)
     {
-        parent::__construct($entityManager, $serializer);
+        $this->entityManager = $entityManager;
+        $this->serializer = $serializer;
         $this->deckValidator = $deckValidator;
     }
 
@@ -49,7 +56,7 @@ class DeckManager extends BaseManager
     {
         $deck->setUser($parent->getUser());
         $deck->setProblem($this->deckValidator->check($deck->getDeckCards()));
-        $deck->setIsPublished(FALSE);
+        $deck->setPublished(FALSE);
         $deck->setMajorVersion($parent->getMajorVersion());
         $deck->setMinorVersion($parent->getMinorVersion() + 1);
         $deck->setGenus($parent->getGenus());
@@ -73,7 +80,7 @@ class DeckManager extends BaseManager
             $deck->addDeckCard($deckCard);
         }
         $deck->setProblem($this->deckValidator->check($deck->getDeckCards()));
-        $deck->setIsPublished(FALSE);
+        $deck->setPublished(FALSE);
         $deck->setMajorVersion(0);
         $deck->setMinorVersion(1);
         $deck->setGenus($parent->getGenus());
@@ -97,7 +104,7 @@ class DeckManager extends BaseManager
             $deck->addDeckCard($deckCard);
         }
         $deck->setProblem($this->deckValidator->check($deck->getDeckCards()));
-        $deck->setIsPublished(TRUE);
+        $deck->setPublished(TRUE);
         $deck->setMajorVersion($parent->getMajorVersion() + 1);
         $deck->setMinorVersion(0);
         $deck->setGenus($parent->getGenus());
@@ -109,25 +116,6 @@ class DeckManager extends BaseManager
         $parent->setMinorVersion(1);
 
         return $deck;
-    }
-
-    /**
-     * Update a deck from $data.
-     * Throws if deck is not published.
-     * Can only update name and description.
-     */
-    public function update (array $data, Deck $deck): Deck
-    {
-        if (!$deck->getIsPublished()) {
-            throw new \Exception("Cannot update private deck");
-        }
-        if(isset($data['description'])) {
-            $deck->setDescription();
-        }
-        if(isset($data['name'])) {
-            $deck->setName($data['name']);
-        }
-        return $this->entityManager->merge($deck);
     }
 
     /**
@@ -171,7 +159,7 @@ class DeckManager extends BaseManager
     public function removeLike (Deck $deck, User $user): ?int
     {
         $deckLike = $this->entityManager->getRepository(DeckLike::class)->findOneBy(['deck' => $deck, 'user' => $user]);
-        if (!$deckLike) {
+        if ($deckLike === null) {
             return null;
         }
         $this->entityManager->remove($deckLike);

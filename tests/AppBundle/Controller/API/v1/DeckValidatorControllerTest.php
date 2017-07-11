@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\AppBundle\Controller\API\v1;
 
+use AppBundle\Controller\API\v1\DeckValidatorController;
 use AppBundle\Service\DeckValidator;
 use Tests\AppBundle\Controller\API\BaseApiControllerTest;
 use Tests\AppBundle\DeckDataTrait;
@@ -12,7 +13,10 @@ class DeckValidatorControllerTest extends BaseApiControllerTest
 {
     use DeckDataTrait;
 
-    public function testPostValidateAction ()
+    /**
+     * @covers DeckValidatorController::validateAction()
+     */
+    public function testDeckValidatorControllerValidateAction ()
     {
         $client = $this->getAnonymousClient();
         $this->sendJsonRequest(

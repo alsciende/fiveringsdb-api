@@ -16,7 +16,7 @@ class DeckCheckPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         // always first check if the primary service is defined
-        if (!$container->has('app.deck_validator')) {
+        if ($container->has('app.deck_validator') === false) {
             return;
         }
 

@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\AppBundle\Controller\API\v1;
 
-use Symfony\Component\HttpFoundation\Response;
+use AppBundle\Controller\API\v1\CardController;
 use Tests\AppBundle\Controller\API\BaseApiControllerTest;
 
 /**
@@ -12,18 +14,25 @@ use Tests\AppBundle\Controller\API\BaseApiControllerTest;
  */
 class CardControllerTest extends BaseApiControllerTest
 {
-
-    public function testGetCards ()
+    /**
+     * @covers CardController::listAction()
+     */
+    public function testCardControllerListAction ()
     {
         $client = $this->getAnonymousClient();
-        $client->request('GET', "/api/v1/cards");
-        $this->assertStandardGetMany($client);
+        $client->request('GET', '/api/v1/cards');
+        $records = $this->assertStandardGetMany($client);
+        return $records;
     }
 
-    public function testGetOneCard ()
+    /**
+     * @covers  CardController::getAction()
+     * @depends testCardControllerListAction
+     */
+    public function testCardControllerGetAction ($cards)
     {
         $client = $this->getAnonymousClient();
-        $client->request('GET', "/api/v1/cards/above-question");
+        $client->request('GET', '/api/v1/cards/' . $cards[0]['code']);
         $this->assertStandardGetOne($client);
     }
 }

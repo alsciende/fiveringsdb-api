@@ -19,7 +19,7 @@ class DeckRepository extends EntityRepository
     {
         $decks = $this->findByLineage($lineage, $user);
         foreach ($decks as $deck) {
-            if (!$deck->getIsPublished()) {
+            if ($deck->isPublished() === false) {
                 $this->getEntityManager()->remove($deck);
             }
         }
@@ -32,7 +32,7 @@ class DeckRepository extends EntityRepository
     {
         $decks = $this->findByLineage($lineage, $user);
         foreach ($decks as $deck) {
-            if (!$deck->getIsPublished()) {
+            if ($deck->isPublished() === false) {
                 return $deck;
             }
         }
@@ -46,6 +46,6 @@ class DeckRepository extends EntityRepository
      */
     public function findByLineage (string $lineage, User $user): array
     {
-        return $this->findBy(['lineage' => $lineage, 'user' => $user, 'isPublished' => FALSE], ['createdAt' => 'DESC']);
+        return $this->findBy(['lineage' => $lineage, 'user' => $user, 'published' => FALSE], ['createdAt' => 'DESC']);
     }
 }

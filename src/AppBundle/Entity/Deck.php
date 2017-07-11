@@ -109,9 +109,9 @@ class Deck
      * Whether the deck is published
      *
      * @var boolean
-     * @ORM\Column(name="is_published", type="boolean", nullable=false)
+     * @ORM\Column(name="published", type="boolean", nullable=false)
      */
-    private $isPublished;
+    private $published;
 
     /**
      * A number indicating a problem with the deck
@@ -142,7 +142,7 @@ class Deck
         $this->nbLikes = 0;
         $this->majorVersion = 0;
         $this->minorVersion = 1;
-        $this->isPublished = false;
+        $this->published = false;
         $this->createdAt = new \DateTime();
         $this->deckCards = new ArrayCollection();
         $this->lineage = \Ramsey\Uuid\Uuid::uuid4();
@@ -211,7 +211,7 @@ class Deck
     }
 
     /** @return Collection|DeckCard[] */
-    public function getDeckCards (): Collection
+    public function getDeckCards (): CardSlotCollectionDecorator
     {
         return new CardSlotCollectionDecorator($this->deckCards->toArray());
     }
@@ -342,14 +342,14 @@ class Deck
         return $this;
     }
 
-    function getIsPublished (): bool
+    function isPublished (): bool
     {
-        return $this->isPublished;
+        return $this->published;
     }
 
-    function setIsPublished (bool $isPublished): self
+    function setPublished (bool $published): self
     {
-        $this->isPublished = $isPublished;
+        $this->published = $published;
 
         return $this;
     }
