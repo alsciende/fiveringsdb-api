@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -xv
+
+aglio -i documentation.apib -o docs/index.html
