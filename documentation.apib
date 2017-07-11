@@ -1,0 +1,55 @@
+FORMAT: 1A
+HOST: https://fiveringsdb.com/api/v1
+
+# FiveRingsDB
+
+An API to access cards and decks data from https://fiveringsdb.com
+
+# Group Cards
+
+Resources related to cards.
+
+## Card Collection [/cards]
+
+### List All Cards [GET]
+
++ Response 200 (application/json)
+
+        {
+        	"success": true,
+        	"size": 1,
+        	"records": [
+		        {
+		            "clan": "crane",
+		            "code": "above-question",
+		            "cost": 1,
+		            "deck_limit": 3,
+		            "influence_cost": 2,
+		            "keywords": [
+		                "condition"
+		            ],
+		            "military_bonus": "+0",
+		            "name": "Above Question",
+		            "name_canonical": "above question",
+		            "pack_cards": [
+		                {
+		                    "illustrator": "Stu Barnes",
+		                    "pack": {
+		                        "code": "core"
+		                    },
+		                    "position": 141,
+		                    "quantity": 1
+		                }
+		            ],
+		            "political_bonus": "+0",
+		            "side": "conflict",
+		            "text": "Attached character cannot be chosen as a target of an opponent's event.",
+		            "text_canonical": "attached character cannot be chosen as a target of an opponent's event.",
+		            "type": "attachment",
+		            "unicity": false
+		        }
+ 	       ]
+        }
+
+
+
