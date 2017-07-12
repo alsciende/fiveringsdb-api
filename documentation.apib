@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: https://fiveringsdb.com/
+HOST: https://fiveringsdb.com
 
 # FiveRingsDB
 
@@ -13,43 +13,120 @@ Resources related to cards.
 
 ### List All Cards [GET]
 
+Anonymous access.
+
+Whenever possible, use this action and put the data into cache if you need card data.
+Send the If-Modified-Since request header, and use the Cache-Control and Last-Modified response headers.
+
 + Response 200 (application/json)
 
-        {
-            "success": true,
-            "size": 1,
-            "records": [
-                {
-                    "clan": "unicorn",
-                    "code": "border-rider",
-                    "cost": 2,
-                    "deck_limit": 3,
-                    "glory": 1,
-                    "keywords": [
-                        "bushi",
-                        "cavalry"
-                    ],
-                    "military": 2,
-                    "name": "Border Rider",
-                    "name_canonical": "border rider",
-                    "pack_cards": [
-                        {
-                            "illustrator": "Charles Urbach",
-                            "pack": {
-                                "code": "core"
-                            },
-                            "position": 112,
-                            "quantity": 1
-                        }
-                    ],
-                    "political": 1,
-                    "side": "dynasty",
-                    "text": "<b>Action:</b> Ready this character.",
-                    "text_canonical": "action: ready this character.",
-                    "type": "character",
-                    "unicity": false
-                }
-            ]
-        }
+## Card [/cards/{code}]
+
++ Parameters
+    + code (string) - ID of the Card in the form of a string slug ("a-card-code")
+
+### View a Card Detail [GET]
+
+Anonymous access.
+
+Get the data of one card. Don't use this action unless you really can't use the previous action.
+
++ Response 200 (application/json)
+
+# Group Card Rulings
+
+Resources related to cards rulings. Write access is protected by the ROLE_RULINGS permission.
+
+## Card Ruling Collection [/cards/{card_code}/rulings]
+
++ Parameters
+    + card_code (string) - ID of the Card in the form of a string slug ("example-card-code")
+
+### Create a Ruling [POST]
+
+Requires ROLE_RULINGS.
+
+Text may be Markdown, but is not parsed.
+
++ Response 200 (application/json)
+
+### List Rulings By Card [GET]
+
+Anonymous access.
+
+Text may be raw Markdown.
+
++ Response 200 (application/json)
+
+## Card Ruling [/cards/{card_code}/rulings/{id}]
+
++ Parameters
+    + card_code (string) - ID of the Card in the form of a string slug ("example-card-code")
+    + id (integer) - ID of the Ruling in the form of an integer
+
+### Edit a Ruling [PATCH]
+
+Requires ROLE_RULINGS, and user must be the ruling's creator.
+
+Text may be Markdown, but is not parsed.
+
++ Response 200 (application/json)
+
+### View a Ruling Detail [GET]
+
+Anonymous access.
+
+Text may be raw Markdown.
+
++ Response 200 (application/json)
+
+# Group Card Reviews
+
+Resources related to cards reviews. Write access is protected by the ROLE_REVIEWS permission.
+
+## Card Review Collection [/cards/{card_code}/reviews]
+
++ Parameters
+    + card_code (string) - ID of the Card in the form of a string slug ("example-card-code")
+
+### Create a Review [POST]
+
+Requires ROLE_REVIEWS.
+
+Text may be Markdown, but is not parsed.
+
++ Response 200 (application/json)
+
+### List Reviews By Card [GET]
+
+Anonymous access.
+
+Text may be raw Markdown.
+
++ Response 200 (application/json)
+
+## Card Review [/cards/{card_code}/reviews/{id}]
+
++ Parameters
+    + card_code (string) - ID of the Card in the form of a string slug ("example-card-code")
+    + id (integer) - ID of the Review in the form of an integer
+
+### Edit a Review [PATCH]
+
+Requires ROLE_REVIEWS, and user must be the review's creator.
+
+Text may be Markdown, but is not parsed.
+
++ Response 200 (application/json)
+
+### View a Review Detail [GET]
+
+Anonymous access.
+
+Text may be raw Markdown.
+
++ Response 200 (application/json)
+
+# Group Deck Validation
 
 
