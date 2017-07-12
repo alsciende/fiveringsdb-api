@@ -18,16 +18,6 @@ security:
             pattern: ^/oauth/v2/token
             security: false
 
-        api:
-            context: my_security_context
-            pattern: ^/api
-            anonymous: ~
-            guard:
-                provider:
-                    my_user_provider
-                authenticators:
-                    - alsciende_security.oauth_authenticator
-
         main:
             context: my_security_context
             anonymous: ~
@@ -36,5 +26,5 @@ security:
                 provider:
                     my_user_provider
                 authenticators:
-                    - alsciende_security.form_login_authenticator
-            
+                    - alsciende_security.oauth_authenticator
+
