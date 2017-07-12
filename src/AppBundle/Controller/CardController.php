@@ -17,7 +17,7 @@ class CardController extends BaseApiController
 {
     /**
      * Get all Cards
-     * @Route("/cards")
+     * @Route("/cards", name="listCards")
      * @Method("GET")
      */
     public function listAction ()
@@ -43,7 +43,7 @@ class CardController extends BaseApiController
     
     /**
      * Get a Card
-     * @Route("/cards/{code}")
+     * @Route("/cards/{code}", name="getCard")
      * @Method("GET")
      * @ParamConverter("card", class="AppBundle:Card", options={"id" = "code"})
      */
