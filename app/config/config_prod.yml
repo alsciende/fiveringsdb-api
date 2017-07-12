@@ -19,8 +19,3 @@ monolog:
             level: debug
         console:
             type:  console
-
-nelmio_api_doc:
-    cache:
-        enabled: true
-
