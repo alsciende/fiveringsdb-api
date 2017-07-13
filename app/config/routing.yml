@@ -10,11 +10,6 @@ app:
     resource: "@AppBundle/Controller/"
     type:     annotation
 
-api_v1:
-    resource: "@AppBundle/Controller/API/v1"
-    type:     annotation
-    prefix:   /api/v1
-
 fos_oauth_server_token:
     resource: "@FOSOAuthServerBundle/Resources/config/routing/token.xml"
 
