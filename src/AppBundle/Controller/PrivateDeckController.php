@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Controller\BaseApiController;
 use AppBundle\Entity\Deck;
+use AppBundle\Form\Type\DeckType;
 use AppBundle\Manager\DeckManager;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -27,6 +28,12 @@ class PrivateDeckController extends BaseApiController
      */
     public function postAction (Request $request)
     {
+      dump(json_decode($request->getContent(), true));
+      $deck = new Deck();
+      $form = $this->createForm(DeckType::class, $deck);
+      $form->submit(json_decode($request->getContent(), true), false);
+      dump($deck);die;
+
         /** @var Deck $deck */
         $deck = $this->get('jms_serializer')->fromArray(
             json_decode($request->getContent(), true),

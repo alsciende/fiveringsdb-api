@@ -1,0 +1,5 @@
+AppBundle\Entity\Deck:
+    properties:
+        name:
+            - Type: string
+            - NotBlank: ~

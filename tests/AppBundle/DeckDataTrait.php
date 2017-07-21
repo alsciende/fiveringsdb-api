@@ -10,7 +10,7 @@ trait DeckDataTrait
     private $deckData = [
         'name' => 'PHPUnit Test Deck',
         'description' => '',
-        'cards' => [
+        'deckCards' => [
             'shizuka-toshi' => 1,
 //            'ancestral-lands' => 1, // Earth Province
             'elemental-fury' => 1, // Water Province

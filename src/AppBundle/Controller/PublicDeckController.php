@@ -4,7 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Controller\BaseApiController;
 use AppBundle\Entity\Deck;
-use AppBundle\Form\DeckType;
+use AppBundle\Form\Type\DeckType;
 use AppBundle\Manager\DeckManager;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class PublicDeckController extends BaseApiController
 {
-    
+
     /**
      * Get all public decks
      * @Route("/public-decks")
@@ -69,7 +69,7 @@ class PublicDeckController extends BaseApiController
 
         return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors()));
     }
-    
+
     /**
      * Delete a public deck
      * @Route("/public-decks/{id}")

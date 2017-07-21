@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AppBundle\Form;
+namespace AppBundle\Form\Type;
 
 use AppBundle\Entity\Ruling;
 use Symfony\Component\Form\AbstractType;

@@ -4,7 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Controller\BaseApiController;
 use AppBundle\Entity\Deck;
-use AppBundle\Form\DeckType;
+use AppBundle\Form\Type\DeckType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
