@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Alsciende\SerializerBundle\Annotation\Source;
 use JMS\Serializer\Annotation as JMS;
+use AppBundle\Behavior\Entity\ToStringNameTrait;
 
 /**
  * Card
@@ -53,6 +54,7 @@ class Card
     const CLAN_UNICORN = 'unicorn';
 
     use TimestampableEntity;
+    use ToStringNameTrait;
 
     /**
      * @var string

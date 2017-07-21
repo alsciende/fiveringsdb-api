@@ -1,0 +1,121 @@
+AppBundle\Entity\Card:
+    properties:
+        name:
+            - Type: string
+            - NotBlank: ~
+            - Length:
+                min: 2
+                max: 255
+        clan:
+            - Type: string
+            - Choice:
+                - crab
+                - crane
+                - dragon
+                - lion
+                - neutral
+                - phoenix
+                - scorpion
+                - unicorn
+        type:
+            - Type: string
+            - Choice:
+                - attachment
+                - character
+                - event
+                - holding
+                - province
+                - role
+                - stronghold
+        element:
+            - Type: string
+            - Choice:
+                - air
+                - earth
+                - fire
+                - void
+                - water
+            - Expression:
+                expression: "this.getType() in ['province'] or value === null"
+        side:
+            - Type: string
+            - Choice:
+                - conflict
+                - dynasty
+            - Expression:
+                expression: "(value === 'conflict' and this.getType() in ['attachment','character','event']) or (value === 'dynasty' and this.getType() in ['character','holding']) or (value === null and this.getType() in ['role','province','stronghold'])"
+        cost:
+            - Type: integer
+            - GreaterThanOrEqual: 0
+            - Expression:
+                expression: "this.getType() in ['holding','province','role','stronghold'] or value !== null"
+        text:
+            - Type: string
+            - Expression:
+                expression: "this.getType() in ['character'] or value !== null"
+        unicity:
+            - Type: boolean
+            - Expression:
+                expression: "this.getType() in ['attachment','character','stronghold'] or value === false"
+        keywords:
+            - Type: array
+            - All:
+                - Type: string
+                - NotBlank: ~
+        military:
+            - Type: integer
+            - GreaterThanOrEqual: 0
+            - Expression:
+                expression: "this.getType() in ['character'] or value === null"
+        political:
+            - Type: integer
+            - GreaterThanOrEqual: 0
+            - Expression:
+                expression: "this.getType() in ['character'] or value === null"
+        strength:
+            - Type: integer
+            - GreaterThanOrEqual: 0
+            - Expression:
+                expression: "this.getType() in ['province'] or value === null"
+        militaryBonus:
+            - Type: string
+            - Expression:
+                expression: "this.getType() in ['attachment'] or value === null"
+        politicalBonus:
+            - Type: string
+            - Expression:
+                expression: "this.getType() in ['attachment'] or value === null"
+        strengthBonus:
+            - Type: string
+            - Expression:
+                expression: "this.getType() in ['holding','stronghold'] or value === null"
+        glory:
+            - Type: integer
+            - GreaterThanOrEqual: 0
+            - Expression:
+                expression: "this.getType() in ['character'] or value === null"
+        honor:
+            - Type: integer
+            - GreaterThanOrEqual: 0
+            - Expression:
+                expression: "this.getType() in ['stronghold'] or value === null"
+        fate:
+            - Type: integer
+            - GreaterThanOrEqual: 0
+            - Expression:
+                expression: "this.getType() in ['stronghold'] or value === null"
+        influencePool:
+            - Type: integer
+            - GreaterThanOrEqual: 0
+            - Expression:
+                expression: "this.getType() in ['stronghold'] or value === null"
+        influenceCost:
+            - Type: integer
+            - GreaterThanOrEqual: 0
+            - Expression:
+                expression: "this.getSide() === 'conflict' or value === null"
+        deckLimit:
+            - Type: integer
+            - Range:
+                min: 1
+                max: 3
