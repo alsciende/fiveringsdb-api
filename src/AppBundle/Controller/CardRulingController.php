@@ -5,7 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Controller\BaseApiController;
 use AppBundle\Entity\Card;
 use AppBundle\Entity\Ruling;
-use AppBundle\Form\RulingType;
+use AppBundle\Form\Type\RulingType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;

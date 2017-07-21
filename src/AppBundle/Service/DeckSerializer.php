@@ -13,15 +13,16 @@ use Doctrine\ORM\EntityRepository;
 use JMS\Serializer\Context;
 use JMS\Serializer\JsonDeserializationVisitor;
 use JMS\Serializer\JsonSerializationVisitor;
+use Symfony\Component\Form\DataTransformerInterface;
 
 class DeckSerializer
 {
-    /** @var  EntityRepository */
-    protected $repository;
+    /** @var DataTransformerInterface */
+    private $transformer;
 
-    public function __construct (EntityManagerInterface $entityManager)
+    public function __construct (DataTransformerInterface $transformer)
     {
-        $this->repository = $entityManager->getRepository(Card::class);
+      $this->transformer = $transformer;
     }
 
     public function deserializeDeckFromJson(JsonDeserializationVisitor $visitor, array $data, array $type): Deck
@@ -38,13 +39,7 @@ class DeckSerializer
             }
         }
 
-        foreach($data['cards'] as $card_code => $quantity) {
-            $card = $this->repository->find($card_code);
-            if($card === null) {
-                throw new CardNotFoundException($card_code);
-            }
-            $deck->addDeckCard(new DeckCard($card, $quantity));
-        }
+        $deck->setDeckCards($this->transformer->reverseTransform($data['cards']));
 
         return $deck;
     }
@@ -55,7 +50,7 @@ class DeckSerializer
             'id' => $deck->getId(),
             'name' => $deck->getName(),
             'description' => $deck->getDescription(),
-            'cards' => [],
+            'cards' => $this->transformer->transform($deck->getDeckCards()),
             'created_at' => $deck->getCreatedAt()->format('c'),
             'user_id' => $deck->getUser() ? $deck->getUser()->getId() : null,
             'nb_likes' => $deck->getNbLikes(),
@@ -64,11 +59,6 @@ class DeckSerializer
             'lineage' =>$deck->getLineage(),
             'genus' => $deck->getGenus(),
         ];
-
-        /** @var DeckCard $deckCard */
-        foreach($deck->getDeckCards() as $deckCard) {
-            $data['cards'][$deckCard->getCard()->getCode()] = $deckCard->getQuantity();
-        }
 
         if($visitor->getRoot() === null) {
             $visitor->setRoot($data);
