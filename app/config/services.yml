@@ -10,7 +10,7 @@ services:
         class: Alsciende\SecurityBundle\Security\OauthAuthenticator
         arguments:
           - "@fos_oauth_server.access_token_manager"
-    
+
     alsciende_security.form_login_authenticator:
         class: Alsciende\SecurityBundle\Security\FormLoginAuthenticator
         arguments:
@@ -76,7 +76,7 @@ services:
     app.deck_serializer:
         class: AppBundle\Service\DeckSerializer
         arguments:
-          - "@doctrine.orm.entity_manager"
+          - "@app.data_transformer.card_slots"
         tags:
           - name: "jms_serializer.handler"
             type: "AppBundle\\Entity\\Deck"
@@ -91,3 +91,15 @@ services:
           - "@app.canonical_fields_updater"
         tags:
           - name: "doctrine.event_subscriber"
+
+    app.data_transformer.card_slots:
+        class: AppBundle\Form\DataTransformer\CardSlotsTransformer
+        arguments:
+          - "@doctrine.orm.entity_manager"
+
+    app.form_type.deck:
+        class: AppBundle\Form\Type\DeckType
+        arguments:
+          - "@app.data_transformer.card_slots"
+        tags:
+          - "form.type"

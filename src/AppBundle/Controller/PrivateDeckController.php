@@ -28,26 +28,18 @@ class PrivateDeckController extends BaseApiController
      */
     public function postAction (Request $request)
     {
-      dump(json_decode($request->getContent(), true));
       $deck = new Deck();
       $form = $this->createForm(DeckType::class, $deck);
       $form->submit(json_decode($request->getContent(), true), false);
-      dump($deck);die;
 
-        /** @var Deck $deck */
-        $deck = $this->get('jms_serializer')->fromArray(
-            json_decode($request->getContent(), true),
-            Deck::class
-        );
+      if($form->isSubmitted() && $form->isValid()) {
+        $deck = $this->get('app.deck_manager')->createNewInitialDeck($deck, $this->getUser());
+        $this->getDoctrine()->getManager()->flush();
 
-        try {
-            $deck = $this->get('app.deck_manager')->createNewInitialDeck($deck, $this->getUser());
-            $this->getDoctrine()->getManager()->flush();
-        } catch (Exception $ex) {
-            return $this->failure($ex->getMessage());
-        }
+          return $this->success($deck);
+      }
 
-        return $this->success($deck);
+      return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors()));
     }
 
     /**
