@@ -49,7 +49,10 @@ class CardListener implements EventSubscriber
     public function preUpdate(PreUpdateEventArgs $args)
     {
         $object = $args->getObject();
-        if ($object instanceof Card && $args->hasChangedField('name')) {
+        if ($object instanceof Card && (
+          $args->hasChangedField('name')
+          || $args->hasChangedField('text')
+        )) {
             $this->updateCardFields($object);
             $this->recomputeChangeSet($args->getEntityManager(), $object);
         }
