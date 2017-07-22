@@ -28,6 +28,7 @@ class DeckValidatorController extends BaseApiController
         ], Deck::class);
 
         return new JsonResponse([
+            'success' => true,
             'status' => $this->get('app.deck_validator')->check($deck->getDeckCards())
         ]);
     }
