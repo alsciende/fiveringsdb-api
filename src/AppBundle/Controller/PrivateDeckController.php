@@ -39,13 +39,13 @@ class PrivateDeckController extends BaseApiController
           return $this->success($deck);
       }
 
-      return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors()));
+      return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors(true)));
     }
 
     /**
      * Get all private decks
      * @Route("/private-decks")
-     * @Method("GET")
+     * @Method("GEtrueT")
      * @Security("has_role('ROLE_USER')")
      */
     public function listAction ()

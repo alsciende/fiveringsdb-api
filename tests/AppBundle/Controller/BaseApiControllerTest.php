@@ -28,7 +28,14 @@ abstract class BaseApiControllerTest extends WebTestCase
 
     public function getContent (Client $client)
     {
-        return json_decode($client->getResponse()->getContent(), true);
+        $content = json_decode($client->getResponse()->getContent(), true);
+        if($content['success'] === false) {
+          dump($content);
+        }
+        $this->assertTrue(
+                $content['success']
+        );
+        return $content;
     }
 
     public function sendJsonRequest(\Symfony\Component\BrowserKit\Client $client, string $method, string $uri, array $data = [])
@@ -42,9 +49,6 @@ abstract class BaseApiControllerTest extends WebTestCase
                 \Symfony\Component\HttpFoundation\Response::HTTP_OK, $client->getResponse()->getStatusCode()
         );
         $content = $this->getContent($client);
-        $this->assertTrue(
-                $content['success']
-        );
         $this->assertGreaterThan(
                 0, $content['size']
         );
@@ -60,9 +64,6 @@ abstract class BaseApiControllerTest extends WebTestCase
                 \Symfony\Component\HttpFoundation\Response::HTTP_OK, $client->getResponse()->getStatusCode()
         );
         $content = $this->getContent($client);
-        $this->assertTrue(
-                $content['success']
-        );
         $this->assertArrayHasKey(
                 'record', $content
         );
@@ -75,8 +76,5 @@ abstract class BaseApiControllerTest extends WebTestCase
                 \Symfony\Component\HttpFoundation\Response::HTTP_OK, $client->getResponse()->getStatusCode()
         );
         $content = $this->getContent($client);
-        $this->assertTrue(
-                $content['success']
-        );
     }
 }
