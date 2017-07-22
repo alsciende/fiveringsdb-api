@@ -19,7 +19,7 @@ abstract class BaseApiController extends Controller
         $service = $this->get('app.api');
         return $service->buildResponse($data, $groups);
     }
-    
+
     public function failure($message = "unknown_error", $description = "An unknown error has occured.")
     {
         $this->get('logger')->info($message);
@@ -34,8 +34,12 @@ abstract class BaseApiController extends Controller
     {
         $messages = [];
         foreach($errors as $error) {
-            $messages[] = $error->getMessage();
+            $messages[] = [
+              "property_path" =>              $error->getCause()->getPropertyPath(),
+              "invalid_value" => $error->getCause()->getInvalidValue(),
+              "error_message" => $error->getMessage(),
+            ];
         }
-        return implode(' ', $messages);
+        return $messages;
     }
 }
