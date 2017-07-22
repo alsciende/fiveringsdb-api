@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Controller\BaseApiController;
 use AppBundle\Entity\Deck;
+use AppBundle\Form\Type\DeckType;
 use AppBundle\Manager\DeckManager;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -19,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class DeckLineageController extends BaseApiController
 {
-    
+
     /**
      * Create a minor version
      * @Route("/private-decks/{deckId}/lineage")
@@ -29,20 +30,18 @@ class DeckLineageController extends BaseApiController
      */
     public function postAction (Request $request, Deck $parent)
     {
-        $data = json_decode($request->getContent(), TRUE);
-        /** @var Deck $deck */
-        $deck = $this->get('jms_serializer')->fromArray($data, Deck::class);
+      $deck = new Deck();
+      $form = $this->createForm(DeckType::class, $deck);
+      $form->submit(json_decode($request->getContent(), true), false);
 
-        /* @var $manager DeckManager */
-        $manager = $this->get('app.deck_manager');
-        try {
-            $minor = $manager->createNewMinorVersion($deck, $parent);
-            $this->getDoctrine()->getManager()->flush();
-        } catch (Exception $ex) {
-            return $this->failure($ex->getMessage());
-        }
+      if($form->isSubmitted() && $form->isValid()) {
+        $deck = $this->get('app.deck_manager')->createNewMinorVersion($deck, $parent);
+        $this->getDoctrine()->getManager()->flush();
 
-        return $this->success($minor);
+          return $this->success($deck);
+      }
+
+      return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors(true)));
     }
 
     /**
@@ -81,7 +80,7 @@ class DeckLineageController extends BaseApiController
         } catch (Exception $ex) {
             return $this->failure($ex->getMessage());
         }
-        
+
         return $this->success();
     }
 }
