@@ -114,11 +114,15 @@ class DeckControllerTest extends BaseApiControllerTest
             $client,
             'POST',
             "/private-decks/$id/lineage",
-            $deck
+            [
+              'name' => 'PHPUnit Test Deck 0.2',
+              'description' => 'New minor version',
+              'cards' => $deck['cards']
+            ]
         );
         $record = $this->assertStandardGetOne($client);
         $this->assertEquals(
-            'PHPUnit Test Deck',
+            'PHPUnit Test Deck 0.2',
             $record['name']
         );
         $this->assertEquals(
