@@ -18,7 +18,7 @@ class DeckValidatorControllerTest extends BaseApiControllerTest
      */
     public function testDeckValidatorControllerValidateAction ()
     {
-        $client = $this->getAnonymousClient();
+        $client = $this->getClient();
         $this->sendJsonRequest(
             $client,
             'POST',

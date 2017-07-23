@@ -22,8 +22,10 @@ class LoadAccessTokenData extends AbstractFixture implements OrderedFixtureInter
         $this->loadAccessToken($manager, $client, 'admin');
         $this->loadAccessToken($manager, $client, 'guru');
         $this->loadAccessToken($manager, $client, 'user');
+        $this->loadAccessToken($manager, $client, 'user2');
+        $this->loadAccessToken($manager, $client, 'pirate');
     }
-    
+
     public function loadAccessToken(ObjectManager $manager, Client $client, string $username)
     {
         $user = $this->getReference("user-".$username);
@@ -38,7 +40,7 @@ class LoadAccessTokenData extends AbstractFixture implements OrderedFixtureInter
         $manager->persist($token);
         $manager->flush();
     }
-    
+
     public function getOrder()
     {
         return 2;

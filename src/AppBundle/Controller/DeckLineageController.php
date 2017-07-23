@@ -30,6 +30,10 @@ class DeckLineageController extends BaseApiController
      */
     public function postAction (Request $request, Deck $parent)
     {
+      if($parent->getUser() !== $this->getUser()) {
+          throw $this->createAccessDeniedException();
+      }
+
       $deck = new Deck();
       $form = $this->createForm(DeckType::class, $deck);
       $form->submit(json_decode($request->getContent(), true), false);
@@ -53,6 +57,10 @@ class DeckLineageController extends BaseApiController
      */
     public function listAction (Deck $deck)
     {
+        if($deck->getUser() !== $this->getUser()) {
+            throw $this->createAccessDeniedException();
+        }
+
         /* @var $repository \AppBundle\Repository\DeckRepository */
         $repository = $this->getDoctrine()->getRepository(Deck::class);
         $decks = $repository->findByLineage($deck->getLineage(), $deck->getUser());

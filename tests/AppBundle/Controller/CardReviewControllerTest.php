@@ -14,7 +14,7 @@ class CardReviewControllerTest extends BaseApiControllerTest
      */
     public function testCardReviewControllerPostAction()
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getClient('user');
 
         $this->sendJsonRequest(
             $client,
@@ -50,7 +50,7 @@ class CardReviewControllerTest extends BaseApiControllerTest
      */
     public function testCardReviewControllerListAction()
     {
-        $client = $this->getAnonymousClient();
+        $client = $this->getClient();
         $this->sendJsonRequest(
             $client,
             'GET',
@@ -69,7 +69,7 @@ class CardReviewControllerTest extends BaseApiControllerTest
      */
     public function testCardReviewControllerGetAction($review)
     {
-        $client = $this->getAnonymousClient();
+        $client = $this->getClient();
         $id = $review['id'];
         $this->sendJsonRequest(
             $client,
@@ -89,7 +89,7 @@ class CardReviewControllerTest extends BaseApiControllerTest
      */
     public function testCardReviewControllerPatchAction($review)
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getClient('user');
         $id = $review['id'];
         $this->sendJsonRequest(
             $client,

@@ -27,6 +27,8 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface, C
         $this->loadUser($userManager, 'admin', 'admin', ['ROLE_ADMIN']);
         $this->loadUser($userManager, 'guru', 'guru', ['ROLE_GURU']);
         $this->loadUser($userManager, 'user', 'user');
+        $this->loadUser($userManager, 'user2', 'user2');
+        $this->loadUser($userManager, 'pirate', 'pirate');
     }
 
     private function loadUser (UserManager $userManager, $username, $password, $roles = [])

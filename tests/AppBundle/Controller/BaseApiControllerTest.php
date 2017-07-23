@@ -14,18 +14,15 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 abstract class BaseApiControllerTest extends WebTestCase
 {
-    public function getAnonymousClient (): Client
-    {
-        return static::createClient();
+  public function getClient(string $username = null): Client
+  {
+    $headers = [];
+    if($username !== null) {
+      $headers['HTTP_X-Access-Token'] = $username.'-access-token';
     }
-
-    public function getAuthenticatedClient ($username = 'user', $password = 'user'): Client
-    {
-        return static::createClient(array(), array(
-                    'HTTP_X-Access-Token' => $username."-access-token",
-        ));
-    }
-
+    return static::createClient([], $headers);
+  }
+  
     public function getContent (Client $client)
     {
         $content = json_decode($client->getResponse()->getContent(), true);
@@ -38,12 +35,12 @@ abstract class BaseApiControllerTest extends WebTestCase
         return $content;
     }
 
-    public function sendJsonRequest(\Symfony\Component\BrowserKit\Client $client, string $method, string $uri, array $data = [])
+    public function sendJsonRequest(Client $client, string $method, string $uri, array $data = [])
     {
         $client->request($method, $uri, [], [], [], json_encode($data));
     }
 
-    public function assertStandardGetMany (\Symfony\Bundle\FrameworkBundle\Client $client)
+    public function assertStandardGetMany (Client $client)
     {
         $this->assertEquals(
                 \Symfony\Component\HttpFoundation\Response::HTTP_OK, $client->getResponse()->getStatusCode()
@@ -58,7 +55,7 @@ abstract class BaseApiControllerTest extends WebTestCase
         return $content['records'];
     }
 
-    public function assertStandardGetOne (\Symfony\Bundle\FrameworkBundle\Client $client)
+    public function assertStandardGetOne (Client $client)
     {
         $this->assertEquals(
                 \Symfony\Component\HttpFoundation\Response::HTTP_OK, $client->getResponse()->getStatusCode()
@@ -70,7 +67,7 @@ abstract class BaseApiControllerTest extends WebTestCase
         return $content['record'];
     }
 
-    public function assertStandardGetNone (\Symfony\Bundle\FrameworkBundle\Client $client)
+    public function assertStandardGetNone (Client $client)
     {
         $this->assertEquals(
                 \Symfony\Component\HttpFoundation\Response::HTTP_OK, $client->getResponse()->getStatusCode()

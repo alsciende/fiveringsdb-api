@@ -14,7 +14,7 @@ class CardRulingControllerTest extends BaseApiControllerTest
      */
     public function testCardRulingControllerPostAction()
     {
-        $client = $this->getAuthenticatedClient('guru', 'guru');
+        $client = $this->getClient('guru');
 
         $this->sendJsonRequest(
             $client,
@@ -50,7 +50,7 @@ class CardRulingControllerTest extends BaseApiControllerTest
      */
     public function testCardRulingControllerListAction()
     {
-        $client = $this->getAnonymousClient();
+        $client = $this->getClient();
         $this->sendJsonRequest(
             $client,
             'GET',
@@ -69,7 +69,7 @@ class CardRulingControllerTest extends BaseApiControllerTest
      */
     public function testCardRulingControllerGetAction($ruling)
     {
-        $client = $this->getAnonymousClient();
+        $client = $this->getClient();
         $id = $ruling['id'];
         $this->sendJsonRequest(
             $client,
@@ -89,7 +89,7 @@ class CardRulingControllerTest extends BaseApiControllerTest
      */
     public function testCardRulingControllerPatchAction($ruling)
     {
-        $client = $this->getAuthenticatedClient('guru', 'guru   ');
+        $client = $this->getClient('guru');
         $id = $ruling['id'];
         $this->sendJsonRequest(
             $client,

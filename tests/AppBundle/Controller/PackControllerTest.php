@@ -19,7 +19,7 @@ class PackControllerTest extends BaseApiControllerTest
      */
     public function testPackControllerListAction ()
     {
-        $client = $this->getAnonymousClient();
+        $client = $this->getClient();
         $client->request('GET', "/packs");
         $this->assertStandardGetMany($client);
     }
