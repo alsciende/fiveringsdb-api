@@ -10,11 +10,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * A Deck, private (minorVersion > 0) or public (minorVersion == 0)
- * Decks are (mostly) immutable objects (exception: name and description of published decks)
- * Whenever a deck is created, a unique lineage id is generated for it, which will be shared by all its descendants
- * Whenever a deck is saved, a new Deck is created with an incremented minorVersion and the same Lineage
- * Whenever a deck is published, a new Deck is created with an incremented majorVersion and minorVersion=0 and the same Lineage
- * Whenever a deck is copied, a new Deck is created with a version of 0.1 and the same Lineage
  *
  * @ORM\Table(name="decks")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\DeckRepository")
@@ -60,7 +55,7 @@ class Deck
      * The cards used by the deck
      *
      * @var Collection
-     * @ORM\OneToMany(targetEntity="DeckCard", mappedBy="deck", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="DeckCard", mappedBy="deck", cascade={"persist", "remove", "merge"})
      */
     private $deckCards;
 
@@ -72,6 +67,15 @@ class Deck
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
+
+    /**
+     * The strain of the deck
+     *
+     * @var Strain
+     * @ORM\ManyToOne(targetEntity="Strain", inversedBy="decks")
+     * @ORM\JoinColumn(name="strain_id", referencedColumnName="id")
+     */
+    private $strain;
 
     /**
      * The number of likes, for a public deck
@@ -121,22 +125,6 @@ class Deck
      */
     private $problem;
 
-    /**
-     * Unique identifier for different versions of a same deck by a single User
-     *
-     * @var string
-     * @ORM\Column(name="lineage", type="string", nullable=false)
-     */
-    private $lineage;
-
-    /**
-     * Identifier for all decks that share a common ancestor across Users
-     *
-     * @var string
-     * @ORM\Column(name="genus", type="string", nullable=false)
-     */
-    private $genus;
-
     function __construct ()
     {
         $this->nbLikes = 0;
@@ -145,8 +133,6 @@ class Deck
         $this->published = false;
         $this->createdAt = new \DateTime();
         $this->deckCards = new ArrayCollection();
-        $this->lineage = \Ramsey\Uuid\Uuid::uuid4();
-        $this->genus = \Ramsey\Uuid\Uuid::uuid4();
     }
 
     function __toString ()
@@ -236,6 +222,18 @@ class Deck
         return $this;
     }
 
+    function getDeck (): ?Deck
+    {
+        return $this->deck;
+    }
+
+    function setDeck (Deck $deck): self
+    {
+        $this->deck = $deck;
+
+        return $this;
+    }
+
     function getUser (): ?User
     {
         return $this->user;
@@ -244,6 +242,18 @@ class Deck
     function setUser (User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    function getStrain (): ?Strain
+    {
+        return $this->strain;
+    }
+
+    function setStrain (Strain $strain): self
+    {
+        $this->strain = $strain;
 
         return $this;
     }
@@ -362,30 +372,6 @@ class Deck
     function setProblem (int $problem): self
     {
         $this->problem = $problem;
-
-        return $this;
-    }
-
-    function getLineage (): string
-    {
-        return $this->lineage;
-    }
-
-    function setLineage (string $lineage): self
-    {
-        $this->lineage = $lineage;
-
-        return $this;
-    }
-
-    function getGenus (): string
-    {
-        return $this->genus;
-    }
-
-    function setGenus (string $genus): self
-    {
-        $this->genus = $genus;
 
         return $this;
     }

@@ -45,7 +45,7 @@ class PrivateDeckController extends BaseApiController
     /**
      * Get all private decks
      * @Route("/private-decks")
-     * @Method("GEtrueT")
+     * @Method("GET")
      * @Security("has_role('ROLE_USER')")
      */
     public function listAction ()

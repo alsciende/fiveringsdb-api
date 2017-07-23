@@ -20,23 +20,24 @@ class DeckCopyController extends BaseApiController
 {
     /**
      * Create a private deck in initial version (0.1) from an existing deck
-     * @Route("/private-decks/{deckId}/copy")
+     * @Route("/decks/{id}/copy")
      * @Method("POST")
      * @Security("has_role('ROLE_USER')")
-     * @ParamConverter("parent", class="AppBundle:Deck", options={"id" = "deckId"})
      */
-    public function postAction (Deck $parent)
+    public function postAction (Deck $deck)
     {
         /* @var $manager DeckManager */
         $manager = $this->get('app.deck_manager');
-        try {
-            $copy = $manager->createNewCopy($parent, $this->getUser());
-            $this->getDoctrine()->getManager()->flush();
-        } catch (Exception $ex) {
-            return $this->failure($ex->getMessage());
-        }
+
+        $strain = $manager->createNewStrain($this->getUser());
+
+        $copy = new Deck();
+        $copy->setUser($this->getUser())->setStrain($strain);
+
+        $manager->copy($copy, $deck)->persist($copy);
+
+        $this->getDoctrine()->getManager()->flush();
 
         return $this->success($copy);
     }
-
 }

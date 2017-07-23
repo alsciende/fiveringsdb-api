@@ -12,40 +12,4 @@ use Doctrine\ORM\EntityRepository;
 class DeckRepository extends EntityRepository
 {
 
-    /**
-     * Remove all private decks of a lineage
-     */
-    public function removeLineage (string $lineage, User $user): void
-    {
-        $decks = $this->findByLineage($lineage, $user);
-        foreach ($decks as $deck) {
-            if ($deck->isPublished() === false) {
-                $this->getEntityManager()->remove($deck);
-            }
-        }
-    }
-
-    /**
-     * Return the last private deck of a lineage
-     */
-    public function getLastMinorVersion (string $lineage, User $user): ?Deck
-    {
-        $decks = $this->findByLineage($lineage, $user);
-        foreach ($decks as $deck) {
-            if ($deck->isPublished() === false) {
-                return $deck;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Return all private decks of a lineage
-     *
-     * @return \AppBundle\Entity\Deck[]
-     */
-    public function findByLineage (string $lineage, User $user): array
-    {
-        return $this->findBy(['lineage' => $lineage, 'user' => $user, 'published' => FALSE], ['createdAt' => 'DESC']);
-    }
 }
