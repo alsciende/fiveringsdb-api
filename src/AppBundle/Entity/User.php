@@ -9,12 +9,12 @@ use JMS\Serializer\Annotation as JMS;
 
 /**
  * Description of User
- * 
+ *
  * @ORM\Entity
  * @ORM\Table(name="users")
- * 
+ *
  * @author Alsciende <alsciende@icloud.com>
- * 
+ *
  * @JMS\ExclusionPolicy("all")
  * @JMS\AccessorOrder("alphabetical")
  */
@@ -25,14 +25,14 @@ class User implements UserInterface
      * @ORM\Column(name="id", type="string", length=255, unique=true)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="UUID")
-     * 
+     *
      * @JMS\Expose
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", unique=true)
-     * 
+     *
      * @Source(type="string")
      */
     private $username;
@@ -46,24 +46,24 @@ class User implements UserInterface
     /**
      *
      * @var array
-     * 
+     *
      * @ORM\Column(name="roles",type="simple_array")
      */
     private $roles;
-    
+
     /**
      *
      * @var boolean
-     * 
+     *
      * @ORM\Column(name="enabled",type="boolean")
      */
     private $enabled;
-    
+
     function __construct ()
     {
         $this->roles = ['ROLE_USER'];
     }
-    
+
     function getId ()
     {
         return $this->id;
@@ -110,6 +110,11 @@ class User implements UserInterface
         return $this;
     }
 
+    function hasRole (string $role): bool
+    {
+      return in_array($role, $this->roles);
+    }
+
     public function isEnabled (): bool
     {
         return $this->enabled;
@@ -123,7 +128,7 @@ class User implements UserInterface
 
     public function eraseCredentials ()
     {
-        
+
     }
 
     public function getSalt ()
