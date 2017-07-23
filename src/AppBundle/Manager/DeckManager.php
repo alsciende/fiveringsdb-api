@@ -53,7 +53,7 @@ class DeckManager
         $deck->setProblem($this->deckValidator->check($deck->getDeckCards()));
         $deck->setPublished(false);
         $deck->setMajorVersion($head === null ? 0 : $head->getMajorVersion());
-        $deck->setMinorVersion($head === null ? 1 : $head->getMinorVersion());
+        $deck->setMinorVersion($head === null ? 1 : $head->getMinorVersion() + 1);
         $this->entityManager->persist($deck);
 
         $deck->getStrain()->setHead($deck);
@@ -69,25 +69,6 @@ class DeckManager
         }
 
         return $this;
-    }
-
-    /**
-     * Create a new copy of $parent. It is private.
-     */
-    public function createNewCopy (Deck $deck, Deck $parent): Deck
-    {
-        $deck->setName($parent->getName());
-        $deck->setDescription($parent->getDescription());
-        foreach($parent->getDeckCards() as $deckCard) {
-            $deck->addDeckCard($deckCard);
-        }
-        $deck->setProblem($this->deckValidator->check($deck->getDeckCards()));
-        $deck->setPublished(false);
-        $deck->setMajorVersion(0);
-        $deck->setMinorVersion(1);
-        $this->entityManager->persist($deck);
-
-        return $deck;
     }
 
     /**
@@ -107,8 +88,6 @@ class DeckManager
         $deck->setPublished(TRUE);
         $deck->setMajorVersion($parent->getMajorVersion() + 1);
         $deck->setMinorVersion(0);
-        $deck->setGenus($parent->getGenus());
-        $deck->setLineage($parent->getLineage());
         $this->entityManager->persist($deck);
 
         // the parent's version changes
@@ -116,14 +95,6 @@ class DeckManager
         $parent->setMinorVersion(1);
 
         return $deck;
-    }
-
-    /**
-     * Delete a lineage
-     */
-    public function deleteLineage (Deck $deck)
-    {
-        $this->entityManager->getRepository(Deck::class)->removeLineage($deck->getLineage(), $deck->getUser());
     }
 
     /**

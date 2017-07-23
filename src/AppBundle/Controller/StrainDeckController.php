@@ -17,7 +17,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class StrainDeckController extends BaseApiController
 {
-
     /**
      * Create a minor version
      * @Route("/strains/{id}/decks")
