@@ -56,8 +56,6 @@ class DeckSerializer
             'nb_likes' => $deck->getNbLikes(),
             'version' => $deck->getMajorVersion() . '.' . $deck->getMinorVersion(),
             'problem' => $deck->getProblem(),
-            'lineage' =>$deck->getLineage(),
-            'genus' => $deck->getGenus(),
         ];
 
         if($visitor->getRoot() === null) {

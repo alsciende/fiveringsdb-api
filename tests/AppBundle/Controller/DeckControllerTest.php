@@ -21,58 +21,103 @@ class DeckControllerTest extends BaseApiControllerTest
     use DeckDataTrait;
 
     /**
-     * @covers PrivateDeckController::postAction()
+     * @covers StrainController::postAction()
      */
-    public function testPrivateDeckControllerPostAction ()
-    {
-        $client = $this->getClient('user');
-        $this->sendJsonRequest(
-            $client,
-            'POST',
-            "/private-decks",
-            $this->getDeckData()
-        );
-        $deck = $this->assertStandardGetOne($client);
-        $this->assertEquals(
-            'PHPUnit Test Deck',
-            $deck['name']
-        );
-        $this->assertEquals(
-            33,
-            count($deck['cards'])
-        );
-        $this->assertEquals(
-            '0.1',
-            $deck['version']
-        );
-        $this->assertArrayHasKey(
-            'id',
-            $deck
-        );
-        return $deck;
-    }
-
-    /**
-     * @covers PrivateDeckController::postAction()
-     */
-    public function testPrivateDeckControllerPostAction401 ()
+    public function testStrainControllerPostActionAnonymous ()
     {
         $client = $this->getClient();
         $this->sendJsonRequest(
             $client,
             'POST',
-            "/private-decks",
+            "/strains"
+        );
+        $this->assertStatusCode($client, 401);
+    }
+
+    /**
+     * @covers StrainController::postAction()
+     */
+    public function testStrainControllerPostAction ()
+    {
+        $client = $this->getClient('user');
+        $this->sendJsonRequest(
+            $client,
+            'POST',
+            "/strains"
+        );
+        $record = $this->assertStandardGetOne($client);
+        return $record;
+    }
+
+    /**
+     * @covers StrainDeckController::postAction()
+     * @depends testStrainControllerPostAction
+     */
+    public function testStrainDeckControllerPostActionPirate ($strain)
+    {
+        $client = $this->getClient('pirate');
+        $strainId = $strain['id'];
+        $this->sendJsonRequest(
+            $client,
+            'POST',
+            "/strains/$strainId/decks",
             $this->getDeckData()
         );
-        $this->assertEquals(
-          401,
-          $client->getResponse()->getStatusCode()
+        $this->assertStatusCode($client, 403);
+    }
+
+    /**
+     * @covers StrainDeckController::postAction()
+     * @depends testStrainControllerPostAction
+     */
+    public function testStrainDeckControllerPostAction ($strain)
+    {
+        $client = $this->getClient('user');
+        $strainId = $strain['id'];
+        $this->sendJsonRequest(
+            $client,
+            'POST',
+            "/strains/$strainId/decks",
+            $this->getDeckData()
         );
+        $record = $this->assertStandardGetOne($client);
+        $this->assertEquals(
+            'PHPUnit Test Deck',
+            $record['name']
+        );
+        $this->assertEquals(
+            33,
+            count($record['cards'])
+        );
+        $this->assertEquals(
+            '0.1',
+            $record['version']
+        );
+        $this->assertArrayHasKey(
+            'id',
+            $record
+        );
+        return $record;
+    }
+
+    /**
+     * @covers StrainController::listAction()
+     * @depends testStrainControllerPostAction
+     */
+    public function testStrainControllerListAction ()
+    {
+        $client = $this->getClient('user');
+        $this->sendJsonRequest(
+            $client,
+            'GET',
+            "/strains"
+        );
+        $records = $this->assertStandardGetMany($client);
     }
 
     /**
      * @covers  DeckCopyController::postAction()
-     * @depends testPrivateDeckControllerPostAction
+     * @depends testStrainDeckControllerPostAction
      */
     public function testDeckCopyControllerPostAction ($deck)
     {
@@ -83,7 +128,7 @@ class DeckControllerTest extends BaseApiControllerTest
         $this->sendJsonRequest(
             $client,
             'POST',
-            "/private-decks/$id/copy"
+            "/decks/$id/copy"
         );
         $response = $client->getResponse();
         $this->assertEquals(
@@ -107,20 +152,12 @@ class DeckControllerTest extends BaseApiControllerTest
             $record['id'],
             $deck['id']
         );
-        $this->assertNotEquals(
-            $record['lineage'],
-            $deck['lineage']
-        );
-        $this->assertEquals(
-            $record['genus'],
-            $deck['genus']
-        );
         return $record;
     }
 
     /**
      * @covers  DeckLineageController::postAction()
-     * @depends testPrivateDeckControllerPostAction
+     * @depends testStrainDeckControllerPostAction
      */
     public function testDeckLineageControllerPostActionAnonymous ($deck)
     {
@@ -146,7 +183,7 @@ class DeckControllerTest extends BaseApiControllerTest
 
     /**
      * @covers  DeckLineageController::postAction()
-     * @depends testPrivateDeckControllerPostAction
+     * @depends testStrainDeckControllerPostAction
      */
     public function testDeckLineageControllerPostActionPirate ($deck)
     {
@@ -172,7 +209,7 @@ class DeckControllerTest extends BaseApiControllerTest
 
     /**
      * @covers  DeckLineageController::postAction()
-     * @depends testPrivateDeckControllerPostAction
+     * @depends testStrainDeckControllerPostAction
      */
     public function testDeckLineageControllerPostAction ($deck)
     {
@@ -739,6 +776,22 @@ class DeckControllerTest extends BaseApiControllerTest
             $client,
             'DELETE',
             "/public-decks/$id"
+        );
+        $this->assertStandardGetNone($client);
+    }
+
+    /**
+     * @covers StrainController::deleteAction()
+     * @depends testStrainControllerPostAction
+     */
+    public function testStrainControllerDeleteAction ($strain)
+    {
+        $client = $this->getClient('user');
+        $id = $strain['id'];
+        $this->sendJsonRequest(
+            $client,
+            'DELETE',
+            "/strains/$id"
         );
         $this->assertStandardGetNone($client);
     }

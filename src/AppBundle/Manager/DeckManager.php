@@ -6,6 +6,7 @@ use AppBundle\Entity\Card;
 use AppBundle\Entity\Deck;
 use AppBundle\Entity\DeckCard;
 use AppBundle\Entity\DeckLike;
+use AppBundle\Entity\Strain;
 use AppBundle\Entity\User;
 use AppBundle\Exception\CardNotFoundException;
 use AppBundle\Model\CardSlotCollectionDecorator;
@@ -37,54 +38,53 @@ class DeckManager
         $this->deckValidator = $deckValidator;
     }
 
-    /**
-     * Create a new deck from $data. It is private.
-     */
-    public function createNewInitialDeck (Deck $deck, User $user): Deck
+    public function createNewStrain(User $user): Strain
     {
-        $deck->setUser($user);
-        $deck->setProblem($this->deckValidator->check($deck->getDeckCards()));
-        $this->entityManager->persist($deck);
+      // @TODO: quota
+      $strain = new Strain($user);
+      $this->entityManager->persist($strain);
 
-        return $deck;
+      return $strain;
     }
 
-    /**
-     * Create a new minor version of $parent from $data. It is private.
-     */
-    public function createNewMinorVersion (Deck $deck, Deck $parent): Deck
+    public function persist (Deck $deck): self
     {
-        $deck->setUser($parent->getUser());
+        $head = $deck->getStrain()->getHead();
         $deck->setProblem($this->deckValidator->check($deck->getDeckCards()));
-        $deck->setPublished(FALSE);
-        $deck->setMajorVersion($parent->getMajorVersion());
-        $deck->setMinorVersion($parent->getMinorVersion() + 1);
-        $deck->setGenus($parent->getGenus());
-        $deck->setLineage($parent->getLineage());
+        $deck->setPublished(false);
+        $deck->setMajorVersion($head === null ? 0 : $head->getMajorVersion());
+        $deck->setMinorVersion($head === null ? 1 : $head->getMinorVersion());
         $this->entityManager->persist($deck);
 
-        return $deck;
+        $deck->getStrain()->setHead($deck);
+        return $this;
+    }
+
+    public function copy (Deck $deck, Deck $parent): self
+    {
+        $deck->setName($parent->getName());
+        $deck->setDescription($parent->getDescription());
+        foreach($parent->getDeckCards() as $deckCard) {
+            $deck->addDeckCard($deckCard);
+        }
+
+        return $this;
     }
 
     /**
      * Create a new copy of $parent. It is private.
      */
-    public function createNewCopy (Deck $parent, User $user): Deck
+    public function createNewCopy (Deck $deck, Deck $parent): Deck
     {
-        /* @var $deck Deck */
-        $deck = new Deck();
-        $deck->setUser($user);
         $deck->setName($parent->getName());
         $deck->setDescription($parent->getDescription());
         foreach($parent->getDeckCards() as $deckCard) {
             $deck->addDeckCard($deckCard);
         }
         $deck->setProblem($this->deckValidator->check($deck->getDeckCards()));
-        $deck->setPublished(FALSE);
+        $deck->setPublished(false);
         $deck->setMajorVersion(0);
         $deck->setMinorVersion(1);
-        $deck->setGenus($parent->getGenus());
-        $deck->setLineage(\Ramsey\Uuid\Uuid::uuid4());
         $this->entityManager->persist($deck);
 
         return $deck;

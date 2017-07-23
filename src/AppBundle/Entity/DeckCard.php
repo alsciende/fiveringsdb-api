@@ -22,7 +22,7 @@ class DeckCard implements CardSlotInterface
     private $quantity;
 
     /**
-     * @var \AppBundle\Entity\Card
+     * @var Card
      *
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Card")
@@ -31,7 +31,7 @@ class DeckCard implements CardSlotInterface
     private $card;
 
     /**
-     * @var \AppBundle\Entity\Deck
+     * @var Deck
      *
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Deck", inversedBy="deckCards")
