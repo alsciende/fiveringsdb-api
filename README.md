@@ -71,3 +71,13 @@ bin/phpunit
 cd vue
 npm run dev
 ```
+
+# Coding Guidelines
+
+## Status code vs Error message
+
+When to response with a non-200 status code and when to return a response with `"success"=false` and an error message?
+
+Use a status code when nothing can be done to change the result of the request. Example: `POST /decks/{id}/publish` is requested but `id` references a public deck: return 404. `POST /decks/{id}/publish` is requested but `id` references a deck of another user: return 403.
+
+Use an error message to communicate what is wrong, when the user can fix the situation. Example: `POST /strains/{id}` is requested but the user has reached their quota for the number of decks: return an error message informing the user that their quota is reached.

@@ -47,7 +47,7 @@ class Strain
      * The last minor deck of the strain
      *
      * @var Deck
-     * @ORM\ManyToOne(targetEntity="Deck")
+     * @ORM\OneToOne(targetEntity="Deck", fetch="EAGER")
      * @ORM\JoinColumn(name="deck_id", referencedColumnName="id")
      * @JMS\Expose
      * @JMS\Groups({"head_group"})
