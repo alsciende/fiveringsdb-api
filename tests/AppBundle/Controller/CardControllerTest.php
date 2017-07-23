@@ -19,7 +19,7 @@ class CardControllerTest extends BaseApiControllerTest
      */
     public function testCardControllerListAction ()
     {
-        $client = $this->getAnonymousClient();
+        $client = $this->getClient();
         $client->request('GET', '/cards');
         $records = $this->assertStandardGetMany($client);
         return $records;
@@ -31,7 +31,7 @@ class CardControllerTest extends BaseApiControllerTest
      */
     public function testCardControllerGetAction ($cards)
     {
-        $client = $this->getAnonymousClient();
+        $client = $this->getClient();
         $client->request('GET', '/cards/' . $cards[0]['code']);
         $this->assertStandardGetOne($client);
     }

@@ -25,7 +25,7 @@ class DeckControllerTest extends BaseApiControllerTest
      */
     public function testPrivateDeckControllerPostAction ()
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getClient('user');
         $this->sendJsonRequest(
             $client,
             'POST',
@@ -53,12 +53,30 @@ class DeckControllerTest extends BaseApiControllerTest
     }
 
     /**
+     * @covers PrivateDeckController::postAction()
+     */
+    public function testPrivateDeckControllerPostAction401 ()
+    {
+        $client = $this->getClient();
+        $this->sendJsonRequest(
+            $client,
+            'POST',
+            "/private-decks",
+            $this->getDeckData()
+        );
+        $this->assertEquals(
+          401,
+          $client->getResponse()->getStatusCode()
+        );
+    }
+
+    /**
      * @covers  DeckCopyController::postAction()
      * @depends testPrivateDeckControllerPostAction
      */
     public function testDeckCopyControllerPostAction ($deck)
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getClient('user');
 
         $id = $deck['id'];
 
@@ -104,9 +122,61 @@ class DeckControllerTest extends BaseApiControllerTest
      * @covers  DeckLineageController::postAction()
      * @depends testPrivateDeckControllerPostAction
      */
+    public function testDeckLineageControllerPostActionAnonymous ($deck)
+    {
+        $client = $this->getClient();
+
+        $id = $deck['id'];
+
+        $this->sendJsonRequest(
+            $client,
+            'POST',
+            "/private-decks/$id/lineage",
+            [
+              'name' => 'PHPUnit Test Deck 0.2',
+              'description' => 'New minor version',
+              'cards' => $deck['cards']
+            ]
+        );
+        $this->assertEquals(
+            401,
+            $client->getResponse()->getStatusCode()
+        );
+    }
+
+    /**
+     * @covers  DeckLineageController::postAction()
+     * @depends testPrivateDeckControllerPostAction
+     */
+    public function testDeckLineageControllerPostActionPirate ($deck)
+    {
+        $client = $this->getClient('pirate');
+
+        $id = $deck['id'];
+
+        $this->sendJsonRequest(
+            $client,
+            'POST',
+            "/private-decks/$id/lineage",
+            [
+              'name' => 'PHPUnit Test Deck 0.2',
+              'description' => 'New minor version',
+              'cards' => $deck['cards']
+            ]
+        );
+        $this->assertEquals(
+            403,
+            $client->getResponse()->getStatusCode()
+        );
+    }
+
+    /**
+     * @covers  DeckLineageController::postAction()
+     * @depends testPrivateDeckControllerPostAction
+     */
     public function testDeckLineageControllerPostAction ($deck)
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getClient('user');
 
         $id = $deck['id'];
 
@@ -152,9 +222,30 @@ class DeckControllerTest extends BaseApiControllerTest
      * @covers  DeckLineageController::listAction()
      * @depends testDeckLineageControllerPostAction
      */
+    public function testDeckLineageControllerListActionPirate ($deck)
+    {
+        $client = $this->getClient('pirate');
+
+        $id = $deck['id'];
+
+        $this->sendJsonRequest(
+            $client,
+            'GET',
+            "/private-decks/$id/lineage"
+        );
+        $this->assertEquals(
+          403,
+          $client->getResponse()->getStatusCode()
+        );
+    }
+
+    /**
+     * @covers  DeckLineageController::listAction()
+     * @depends testDeckLineageControllerPostAction
+     */
     public function testDeckLineageControllerListAction ($deck)
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getClient('user');
 
         $id = $deck['id'];
 
@@ -176,9 +267,30 @@ class DeckControllerTest extends BaseApiControllerTest
      * @covers  DeckLineageController::deleteAction()
      * @depends testDeckLineageControllerListAction
      */
+    public function testDeckLineageControllerDeleteActionPirate ($decks)
+    {
+        $client = $this->getClient('pirate');
+
+        $id = $decks[0]['id'];
+
+        $this->sendJsonRequest(
+            $client,
+            'DELETE',
+            "/private-decks/$id/lineage"
+        );
+        $this->assertEquals(
+          403,
+          $client->getResponse()->getStatusCode()
+        );
+    }
+
+    /**
+     * @covers  DeckLineageController::deleteAction()
+     * @depends testDeckLineageControllerListAction
+     */
     public function testDeckLineageControllerDeleteAction ($decks)
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getClient('user');
 
         $id = $decks[0]['id'];
 
@@ -194,9 +306,33 @@ class DeckControllerTest extends BaseApiControllerTest
      * @covers  DeckPublishController::postAction()
      * @depends testDeckCopyControllerPostAction
      */
+    public function testDeckPublishControllerPostActionPirate ($deck)
+    {
+        $client = $this->getClient('pirate');
+
+        $id = $deck['id'];
+
+        $this->sendJsonRequest(
+            $client,
+            'POST',
+            "/private-decks/$id/publish", [
+                'name' => 'Published name',
+                'description' => 'Published description'
+            ]
+        );
+        $this->assertEquals(
+          403,
+          $client->getResponse()->getStatusCode()
+        );
+    }
+
+    /**
+     * @covers  DeckPublishController::postAction()
+     * @depends testDeckCopyControllerPostAction
+     */
     public function testDeckPublishControllerPostAction ($deck)
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getClient('user');
 
         $id = $deck['id'];
 
@@ -230,7 +366,7 @@ class DeckControllerTest extends BaseApiControllerTest
      */
     public function testPublicDeckControllerListAction ($deck)
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getClient();
 
         $this->sendJsonRequest(
             $client,
@@ -246,7 +382,7 @@ class DeckControllerTest extends BaseApiControllerTest
      */
     public function testPublicDeckControllerGetAction ($deck)
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getClient();
 
         $id = $deck['id'];
 
@@ -266,9 +402,34 @@ class DeckControllerTest extends BaseApiControllerTest
      * @covers  PublicDeckController::patchAction()
      * @depends testDeckPublishControllerPostAction
      */
+    public function testPublicDeckControllerPatchActionPirate ($deck)
+    {
+        $client = $this->getClient('pirate');
+
+        $id = $deck['id'];
+
+        $this->sendJsonRequest(
+            $client,
+            'PATCH',
+            "/public-decks/$id",
+            [
+                'name' => 'Updated Name',
+                'description' => 'Updated description'
+            ]
+        );
+        $this->assertEquals(
+          403,
+          $client->getResponse()->getStatusCode()
+        );
+    }
+
+    /**
+     * @covers  PublicDeckController::patchAction()
+     * @depends testDeckPublishControllerPostAction
+     */
     public function testPublicDeckControllerPatchAction ($deck)
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getClient('user');
 
         $id = $deck['id'];
 
@@ -298,7 +459,7 @@ class DeckControllerTest extends BaseApiControllerTest
      */
     public function testDeckLikeControllerPostAction ($deck)
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getClient('user');
 
         $id = $deck['id'];
 
@@ -321,7 +482,7 @@ class DeckControllerTest extends BaseApiControllerTest
      */
     public function testDeckLikeControllerDeleteAction ($deck)
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getClient('user');
 
         $id = $deck['id'];
 
@@ -339,7 +500,7 @@ class DeckControllerTest extends BaseApiControllerTest
      */
     public function testDeckCommentControllerPostAction ($deck)
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getClient('user');
 
         $id = $deck['id'];
 
@@ -377,7 +538,7 @@ class DeckControllerTest extends BaseApiControllerTest
      */
     public function testDeckCommentControllerListAction ($comment)
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getClient();
 
         $id = $comment['deck_id'];
 
@@ -400,7 +561,7 @@ class DeckControllerTest extends BaseApiControllerTest
      */
     public function testDeckCommentControllerGetAction ($comment)
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getClient();
 
         $deckId = $comment['deck_id'];
         $id = $comment['id'];
@@ -426,9 +587,35 @@ class DeckControllerTest extends BaseApiControllerTest
      * @covers  DeckCommentController::patchAction()
      * @depends testDeckCommentControllerPostAction
      */
+    public function testDeckCommentControllerPatchActionPirate ($comment)
+    {
+        $client = $this->getClient('pirate');
+
+        $deckId = $comment['deck_id'];
+        $id = $comment['id'];
+
+        $this->sendJsonRequest(
+            $client,
+            'PATCH',
+            "/public-decks/$deckId/comments/$id",
+            [
+                'text' => 'Updated text',
+                'visible' => false
+            ]
+        );
+        $this->assertEquals(
+          403,
+          $client->getResponse()->getStatusCode()
+        );
+    }
+
+    /**
+     * @covers  DeckCommentController::patchAction()
+     * @depends testDeckCommentControllerPostAction
+     */
     public function testDeckCommentControllerPatchAction ($comment)
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getClient('user');
 
         $deckId = $comment['deck_id'];
         $id = $comment['id'];
@@ -470,9 +657,30 @@ class DeckControllerTest extends BaseApiControllerTest
      * @covers  PublicDeckController::deleteAction()
      * @depends testDeckPublishControllerPostAction
      */
+    public function testPublicDeckControllerDeleteActionPirate ($deck)
+    {
+        $client = $this->getClient('pirate');
+
+        $id = $deck['id'];
+
+        $this->sendJsonRequest(
+            $client,
+            'DELETE',
+            "/public-decks/$id"
+        );
+        $this->assertEquals(
+          403,
+          $client->getResponse()->getStatusCode()
+        );
+    }
+
+    /**
+     * @covers  PublicDeckController::deleteAction()
+     * @depends testDeckPublishControllerPostAction
+     */
     public function testPublicDeckControllerDeleteAction ($deck)
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getClient('user');
 
         $id = $deck['id'];
 
