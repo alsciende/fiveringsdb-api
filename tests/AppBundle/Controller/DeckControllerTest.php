@@ -459,7 +459,7 @@ class DeckControllerTest extends BaseApiControllerTest
      */
     public function testDeckLikeControllerPostAction ($deck)
     {
-        $client = $this->getClient('user');
+        $client = $this->getClient('user2');
 
         $id = $deck['id'];
 
@@ -482,7 +482,7 @@ class DeckControllerTest extends BaseApiControllerTest
      */
     public function testDeckLikeControllerDeleteAction ($deck)
     {
-        $client = $this->getClient('user');
+        $client = $this->getClient('user2');
 
         $id = $deck['id'];
 
@@ -500,7 +500,7 @@ class DeckControllerTest extends BaseApiControllerTest
      */
     public function testDeckCommentControllerPostAction ($deck)
     {
-        $client = $this->getClient('user');
+        $client = $this->getClient('user2');
 
         $id = $deck['id'];
 
@@ -528,6 +528,10 @@ class DeckControllerTest extends BaseApiControllerTest
         $this->assertArrayHasKey(
             'user_id',
             $record
+        );
+        $this->assertNotEquals(
+          $record['user_id'],
+          $deck['user_id']
         );
         return $record;
     }
@@ -615,7 +619,7 @@ class DeckControllerTest extends BaseApiControllerTest
      */
     public function testDeckCommentControllerPatchAction ($comment)
     {
-        $client = $this->getClient('user');
+        $client = $this->getClient('user2');
 
         $deckId = $comment['deck_id'];
         $id = $comment['id'];
@@ -625,8 +629,7 @@ class DeckControllerTest extends BaseApiControllerTest
             'PATCH',
             "/public-decks/$deckId/comments/$id",
             [
-                'text' => 'Updated text',
-                'visible' => false
+                'text' => 'Updated text'
             ]
         );
         $record = $this->assertStandardGetOne($client);
@@ -635,7 +638,7 @@ class DeckControllerTest extends BaseApiControllerTest
             $record['text']
         );
         $this->assertEquals(
-            false,
+            true,
             $record['visible']
         );
         $this->assertEquals(
@@ -651,6 +654,54 @@ class DeckControllerTest extends BaseApiControllerTest
             $record['user_id']
         );
         return $record;
+    }
+
+    /**
+     * @covers  DeckCommentController::visibilityPatchAction()
+     * @depends testDeckCommentControllerPostAction
+     */
+    public function testDeckCommentVisibilityControllerPatchActionUser2 ($comment)
+    {
+        $client = $this->getClient('user2');
+
+        $deckId = $comment['deck_id'];
+        $id = $comment['id'];
+
+        $this->sendJsonRequest(
+            $client,
+            'PATCH',
+            "/public-decks/$deckId/comments/$id/visibility",
+            [
+                'visible' => false
+            ]
+        );
+        $this->assertStatusCode($client, 403);
+    }
+
+    /**
+     * @covers  DeckCommentController::visibilityPatchAction()
+     * @depends testDeckCommentControllerPostAction
+     */
+    public function testDeckCommentVisibilityControllerPatchAction ($comment)
+    {
+        $client = $this->getClient('user');
+
+        $deckId = $comment['deck_id'];
+        $id = $comment['id'];
+
+        $this->sendJsonRequest(
+            $client,
+            'PATCH',
+            "/public-decks/$deckId/comments/$id/visibility",
+            [
+                'visible' => false
+            ]
+        );
+        $record = $this->assertStandardGetOne($client);
+        $this->assertEquals(
+            false,
+            $record['visible']
+        );
     }
 
     /**

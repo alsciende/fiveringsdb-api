@@ -10,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 /**
  * Description of BaseApiControllerTest
  *
- * @author Cédric Bertolini <cedric.bertolini@proximedia.fr>
+ * @author Alsciende <alsciende@icloud.com>
  */
 abstract class BaseApiControllerTest extends WebTestCase
 {
@@ -22,7 +22,7 @@ abstract class BaseApiControllerTest extends WebTestCase
     }
     return static::createClient([], $headers);
   }
-  
+
     public function getContent (Client $client)
     {
         $content = json_decode($client->getResponse()->getContent(), true);
@@ -73,5 +73,13 @@ abstract class BaseApiControllerTest extends WebTestCase
                 \Symfony\Component\HttpFoundation\Response::HTTP_OK, $client->getResponse()->getStatusCode()
         );
         $content = $this->getContent($client);
+    }
+
+    public function assertStatusCode(Client $client, int $statusCode)
+    {
+      $this->assertEquals(
+        $statusCode,
+        $client->getResponse()->getStatusCode()
+      );
     }
 }
