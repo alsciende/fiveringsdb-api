@@ -99,9 +99,10 @@ class DeckCommentController extends BaseApiController
      */
     public function visibilityPatchAction (Request $request, Comment $comment)
     {
-        if ($this->getUser() !== $comment->getDeck()->getUser()) {
-            throw $this->createAccessDeniedException();
-        }
+      if($this->isGranted('COMMENT_VISIBILITY', $comment) === false) {
+        throw $this->createAccessDeniedException();
+      }
+        
 
         $form = $this->createForm(CommentVisibilityType::class, $comment);
         $form->submit(json_decode($request->getContent(), true), false);

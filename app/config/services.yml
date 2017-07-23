@@ -103,3 +103,9 @@ services:
           - "@app.data_transformer.card_slots"
         tags:
           - "form.type"
+
+    app.security_voter.comment_visibility:
+        class: AppBundle\Security\CommentVisibilityVoter
+        tags:
+          - "security.voter"
+          
