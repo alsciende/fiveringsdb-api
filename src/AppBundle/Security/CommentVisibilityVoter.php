@@ -23,10 +23,14 @@ class CommentVisibilityVoter extends Voter
 
     protected function voteOnAttribute($attribute, $object, TokenInterface $token)
     {
-      if ($token->getUser() !== $object->getDeck()->getUser()) {
-        return false;
+      if ($token->getUser() === $object->getDeck()->getUser()) {
+        return true;
       }
 
-      return true;
+      if ($token->getUser()->hasRole('ROLE_MODERATOR')) {
+        return true;
+      }
+
+      return false;
     }
 }
