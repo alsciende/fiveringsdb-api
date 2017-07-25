@@ -77,28 +77,17 @@ class PublicDeckControllerTest extends BaseApiControllerTest
     {
         $client = $this->getClient('user');
 
-        $id = $deck['id'];
+        $id = $deck['strain'];
 
         $this->sendJsonRequest(
             $client,
-            'POST',
-            "/private-decks/$id/publish", [
-                'name' => 'Published name',
-                'description' => 'Published description'
-            ]
+            'PATCH',
+            "/strains/$id/publish"
         );
         $record = $this->assertStandardGetOne($client);
         $this->assertEquals(
             '1.0',
             $record['version']
-        );
-        $this->assertEquals(
-            'Published name',
-            $record['name']
-        );
-        $this->assertEquals(
-            'Published description',
-            $record['description']
         );
         return $record;
     }
@@ -114,7 +103,7 @@ class PublicDeckControllerTest extends BaseApiControllerTest
         $this->sendJsonRequest(
             $client,
             'GET',
-            "/public-decks"
+            "/decks"
         );
         $record = $this->assertStandardGetMany($client);
     }
@@ -132,7 +121,7 @@ class PublicDeckControllerTest extends BaseApiControllerTest
         $this->sendJsonRequest(
             $client,
             'GET',
-            "/public-decks/$id"
+            "/decks/$id"
         );
         $record = $this->assertStandardGetOne($client);
         $this->assertEquals(
@@ -154,7 +143,7 @@ class PublicDeckControllerTest extends BaseApiControllerTest
         $this->sendJsonRequest(
             $client,
             'PATCH',
-            "/public-decks/$id",
+            "/decks/$id",
             [
                 'name' => 'Updated Name',
                 'description' => 'Updated description'
@@ -179,7 +168,7 @@ class PublicDeckControllerTest extends BaseApiControllerTest
         $this->sendJsonRequest(
             $client,
             'PATCH',
-            "/public-decks/$id",
+            "/decks/$id",
             [
                 'name' => 'Updated Name',
                 'description' => 'Updated description'
@@ -209,7 +198,7 @@ class PublicDeckControllerTest extends BaseApiControllerTest
         $this->sendJsonRequest(
             $client,
             'POST',
-            "/public-decks/$id/like"
+            "/decks/$id/like"
         );
         $record = $this->assertStandardGetOne($client);
         $this->assertEquals(
@@ -232,7 +221,7 @@ class PublicDeckControllerTest extends BaseApiControllerTest
         $this->sendJsonRequest(
             $client,
             'DELETE',
-            "/public-decks/$id/like"
+            "/decks/$id/like"
         );
         $this->assertStandardGetNone($client);
     }
@@ -250,7 +239,7 @@ class PublicDeckControllerTest extends BaseApiControllerTest
         $this->sendJsonRequest(
             $client,
             'POST',
-            "/public-decks/$id/comments",
+            "/decks/$id/comments",
             [
                 'text' => 'Test comment text'
             ]
@@ -292,7 +281,7 @@ class PublicDeckControllerTest extends BaseApiControllerTest
         $this->sendJsonRequest(
             $client,
             'GET',
-            "/public-decks/$id/comments"
+            "/decks/$id/comments"
         );
         $records = $this->assertStandardGetMany($client);
         $this->assertEquals(
@@ -316,7 +305,7 @@ class PublicDeckControllerTest extends BaseApiControllerTest
         $this->sendJsonRequest(
             $client,
             'GET',
-            "/public-decks/$deckId/comments/$id"
+            "/decks/$deckId/comments/$id"
         );
         $record = $this->assertStandardGetOne($client);
         $this->assertEquals(
@@ -344,7 +333,7 @@ class PublicDeckControllerTest extends BaseApiControllerTest
         $this->sendJsonRequest(
             $client,
             'PATCH',
-            "/public-decks/$deckId/comments/$id",
+            "/decks/$deckId/comments/$id",
             [
                 'text' => 'Updated text',
                 'visible' => false
@@ -370,7 +359,7 @@ class PublicDeckControllerTest extends BaseApiControllerTest
         $this->sendJsonRequest(
             $client,
             'PATCH',
-            "/public-decks/$deckId/comments/$id",
+            "/decks/$deckId/comments/$id",
             [
                 'text' => 'Updated text'
             ]
@@ -413,7 +402,7 @@ class PublicDeckControllerTest extends BaseApiControllerTest
         $this->sendJsonRequest(
             $client,
             'PATCH',
-            "/public-decks/$deckId/comments/$id/visibility",
+            "/decks/$deckId/comments/$id/visibility",
             [
                 'visible' => false
             ]
@@ -435,7 +424,7 @@ class PublicDeckControllerTest extends BaseApiControllerTest
         $this->sendJsonRequest(
             $client,
             'PATCH',
-            "/public-decks/$deckId/comments/$id/visibility",
+            "/decks/$deckId/comments/$id/visibility",
             [
                 'visible' => false
             ]
@@ -460,7 +449,7 @@ class PublicDeckControllerTest extends BaseApiControllerTest
         $this->sendJsonRequest(
             $client,
             'DELETE',
-            "/public-decks/$id"
+            "/decks/$id"
         );
         $this->assertEquals(
           403,
@@ -481,7 +470,7 @@ class PublicDeckControllerTest extends BaseApiControllerTest
         $this->sendJsonRequest(
             $client,
             'DELETE',
-            "/public-decks/$id"
+            "/decks/$id"
         );
         $this->assertStandardGetNone($client);
     }

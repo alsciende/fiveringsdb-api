@@ -75,14 +75,15 @@ class DeckCopyControllerTest extends BaseApiControllerTest
      */
     public function testDeckCopyControllerPostAction ($deck)
     {
-        $client = $this->getClient('user');
-
-        $id = $deck['id'];
+        $client = $this->getClient('user2');
 
         $this->sendJsonRequest(
             $client,
             'POST',
-            "/decks/$id/copy"
+            "/strains",
+            [
+              'origin' => $deck['id']
+            ]
         );
         $response = $client->getResponse();
         $this->assertEquals(
@@ -90,38 +91,26 @@ class DeckCopyControllerTest extends BaseApiControllerTest
             $response->getStatusCode()
         );
         $record = $this->assertStandardGetOne($client);
+        $this->assertArrayHasKey(
+          'head',
+          $record
+        );
+        $head = $record['head'];
         $this->assertEquals(
             'PHPUnit Test Deck',
-            $record['name']
+            $head['name']
         );
         $this->assertEquals(
             33,
-            count($record['cards'])
+            count($head['cards'])
         );
         $this->assertEquals(
             '0.1',
-            $record['version']
+            $head['version']
         );
         $this->assertNotEquals(
-            $record['id'],
+            $head['id'],
             $deck['id']
         );
-        return $record;
-    }
-
-    /**
-     * @covers StrainController::deleteAction()
-     * @depends testStrainControllerPostAction
-     */
-    public function testStrainControllerDeleteAction ($strain)
-    {
-        $client = $this->getClient('user');
-        $id = $strain['id'];
-        $this->sendJsonRequest(
-            $client,
-            'DELETE',
-            "/strains/$id"
-        );
-        $this->assertStandardGetNone($client);
     }
 }

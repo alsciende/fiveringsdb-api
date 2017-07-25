@@ -3,13 +3,10 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Controller\BaseApiController;
-use AppBundle\Entity\Deck;
-use AppBundle\Form\Type\DeckType;
+use AppBundle\Entity\Strain;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Description of DeckPublishController
@@ -19,30 +16,23 @@ use Symfony\Component\HttpFoundation\Request;
 class DeckPublishController extends BaseApiController
 {
     /**
-     * Create a public deck from an existing deck
-     * @Route("/private-decks/{deckId}/publish")
-     * @Method("POST")
+     * Publish the head of the strain
+     * @Route("/strains/{id}/publish")
+     * @Method("PATCH")
      * @Security("has_role('ROLE_USER')")
-     * @ParamConverter("parent", class="AppBundle:Deck", options={"id" = "deckId"})
      */
-    public function postAction (Request $request, Deck $parent)
+    public function postAction (Strain $strain)
     {
-        if($parent->getUser() !== $this->getUser()) {
+        if($strain->getUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException();
         }
-
-        // publication
-        $deck = $this->get('app.deck_manager')->createNewMajorVersion($parent);
-
-        // update with provided name and description
-        $form = $this->createForm(DeckType::class, $deck);
-        $form->submit(json_decode($request->getContent(), true), false);
-
-        if($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-            return $this->success($deck);
+        if($strain->getHead()->isPublished()) {
+          throw $this->createNotFoundException();
         }
 
-        return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors()));
+        $this->get('app.deck_manager')->publish($strain->getHead());
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->success($strain->getHead());
     }
 }

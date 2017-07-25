@@ -22,7 +22,7 @@ class DeckCommentController extends BaseApiController
 {
     /**
      * Create a comment on a deck
-     * @Route("/public-decks/{deckId}/comments")
+     * @Route("/decks/{deckId}/comments")
      * @Method("POST")
      * @Security("has_role('ROLE_USER')")
      * @ParamConverter("deck", class="AppBundle:Deck", options={"id" = "deckId"})
@@ -45,7 +45,7 @@ class DeckCommentController extends BaseApiController
 
     /**
      * List all comments on a deck
-     * @Route("/public-decks/{deckId}/comments")
+     * @Route("/decks/{deckId}/comments")
      * @Method("GET")
      * @ParamConverter("deck", class="AppBundle:Deck", options={"id" = "deckId"})
      */
@@ -60,7 +60,7 @@ class DeckCommentController extends BaseApiController
 
     /**
      * Get a comment on a deck
-     * @Route("/public-decks/{deckId}/comments/{id}")
+     * @Route("/decks/{deckId}/comments/{id}")
      * @Method("GET")
      */
     public function getAction (Comment $comment)
@@ -70,7 +70,7 @@ class DeckCommentController extends BaseApiController
 
     /**
      * Edit a comment on a deck
-     * @Route("/public-decks/{deckId}/comments/{id}")
+     * @Route("/decks/{deckId}/comments/{id}")
      * @Method("PATCH")
      * @Security("has_role('ROLE_USER')")
      */
@@ -93,7 +93,7 @@ class DeckCommentController extends BaseApiController
 
     /**
      * Show/Hide a comment on a deck
-     * @Route("/public-decks/{deckId}/comments/{id}/visibility")
+     * @Route("/decks/{deckId}/comments/{id}/visibility")
      * @Method("PATCH")
      * @Security("has_role('ROLE_USER')")
      */

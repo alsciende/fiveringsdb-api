@@ -63,4 +63,42 @@ class StrainDeckController extends BaseApiController
 
         return $this->success($decks);
     }
+
+    /**
+     * Get a private deck
+     * @Route("/strains/{strainId}/decks/{id}")
+     * @Method("GET")
+     * @Security("has_role('ROLE_USER')")
+     */
+    public function getAction (Deck $deck)
+    {
+        if($deck->getUser() !== $this->getUser()) {
+            throw $this->createAccessDeniedException();
+        }
+
+        return $this->success($deck);
+    }
+
+    /**
+     * Delete a private deck. Other versions are untouched.
+     * @Route("/strains/{strainId}/decks/{id}")
+     * @Method("DELETE")
+     * @Security("has_role('ROLE_USER')")
+     */
+    public function deleteAction (Deck $deck)
+    {
+        if($deck->isPublished()) {
+            throw $this->createNotFoundException();
+        }
+        if($deck->getUser() !== $this->getUser()) {
+            throw $this->createAccessDeniedException();
+        }
+
+        try {
+            $this->get('app.deck_manager')->deleteDeck($deck);
+        } catch (Exception $ex) {
+            return $this->failure($ex->getMessage());
+        }
+        return $this->success();
+    }
 }
