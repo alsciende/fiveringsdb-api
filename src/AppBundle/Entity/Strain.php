@@ -34,6 +34,8 @@ class Strain
      */
     private $id;
 
+    private $origin;
+
     /**
      * The owner of the strain
      *
@@ -77,6 +79,18 @@ class Strain
     function setId (string $id): self
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    function getOrigin (): ?string
+    {
+        return $this->origin;
+    }
+
+    function setOrigin (string $origin): self
+    {
+        $this->origin = $origin;
 
         return $this;
     }

@@ -72,29 +72,15 @@ class DeckManager
     }
 
     /**
-     * Create a new major version of $parent. It is public.
+     * Set $deck as a major version. It becomes public.
      */
-    public function createNewMajorVersion (Deck $parent): Deck
+    public function publish (Deck $deck): self
     {
-        /* @var $deck Deck */
-        $deck = new Deck();
-        $deck->setUser($parent->getUser());
-        $deck->setName($parent->getName());
-        $deck->setDescription($parent->getDescription());
-        foreach($parent->getDeckCards() as $deckCard) {
-            $deck->addDeckCard($deckCard);
-        }
-        $deck->setProblem($this->deckValidator->check($deck->getDeckCards()));
-        $deck->setPublished(TRUE);
-        $deck->setMajorVersion($parent->getMajorVersion() + 1);
+        $deck->setPublished(true);
+        $deck->setMajorVersion($deck->getMajorVersion() + 1);
         $deck->setMinorVersion(0);
-        $this->entityManager->persist($deck);
 
-        // the parent's version changes
-        $parent->setMajorVersion($deck->getMajorVersion());
-        $parent->setMinorVersion(1);
-
-        return $deck;
+        return $this;
     }
 
     /**

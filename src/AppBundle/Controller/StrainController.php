@@ -5,7 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Controller\BaseApiController;
 use AppBundle\Entity\Deck;
 use AppBundle\Entity\Strain;
-use AppBundle\Form\Type\DeckType;
+use AppBundle\Form\Type\StrainType;
 use AppBundle\Manager\DeckManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -17,9 +17,11 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class StrainController extends BaseApiController
 {
-
     /**
      * Create a strain
+     * If 'origin' is set in the request body,
+     * find the deck whose id 'origin' is
+     * and create a first deck in the strain as a copy of that deck
      * @Route("/strains")
      * @Method("POST")
      * @Security("has_role('ROLE_USER')")
@@ -27,10 +29,32 @@ class StrainController extends BaseApiController
      */
     public function postAction (Request $request)
     {
-        $strain = $this->get('app.deck_manager')->createNewStrain($this->getUser());
+      $strain = new Strain($this->getUser());
+      $form = $this->createForm(StrainType::class, $strain);
+      $form->submit(json_decode($request->getContent(), true), false);
+
+      if($form->isSubmitted() && $form->isValid()) {
+        $this->getDoctrine()->getManager()->persist($strain);
+        if($strain->getOrigin() !== null) {
+          $origin = $this->getDoctrine()->getManager()->getRepository(Deck::class)->find($strain->getOrigin());
+          if($origin !== null) {
+            $copy = new Deck();
+            $copy->setUser($this->getUser())->setStrain($strain);
+            $this->get('app.deck_manager')->copy($copy, $origin)->persist($copy);
+          }
+        }
         $this->getDoctrine()->getManager()->flush();
 
-        return $this->success($strain);
+        return $this->success($strain, [
+            'Default',
+            'head_group',
+            'head' => [
+                'Default'
+            ]
+        ]);
+      }
+
+      return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors(true)));
     }
 
     /**

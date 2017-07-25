@@ -22,7 +22,7 @@ class PublicDeckController extends BaseApiController
 
     /**
      * Get all public decks
-     * @Route("/public-decks")
+     * @Route("/decks")
      * @Method("GET")
      */
     public function listAction ()
@@ -33,7 +33,7 @@ class PublicDeckController extends BaseApiController
 
     /**
      * Get a public deck
-     * @Route("/public-decks/{id}")
+     * @Route("/decks/{id}")
      * @Method("GET")
      */
     public function getAction (Deck $deck)
@@ -46,7 +46,7 @@ class PublicDeckController extends BaseApiController
 
     /**
      * Update a public deck - only name and description can be updated
-     * @Route("/public-decks/{id}")
+     * @Route("/decks/{id}")
      * @Method("PATCH")
      * @Security("has_role('ROLE_USER')")
      */
@@ -72,7 +72,7 @@ class PublicDeckController extends BaseApiController
 
     /**
      * Delete a public deck
-     * @Route("/public-decks/{id}")
+     * @Route("/decks/{id}")
      * @Method("DELETE")
      * @Security("has_role('ROLE_USER')")
      */

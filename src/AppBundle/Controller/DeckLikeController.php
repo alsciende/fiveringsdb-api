@@ -20,7 +20,7 @@ class DeckLikeController extends BaseApiController
 {
     /**
      * Create a like from a public deck
-     * @Route("/public-decks/{deckId}/like")
+     * @Route("/decks/{deckId}/like")
      * @Method("POST")
      * @Security("has_role('ROLE_USER')")
      * @ParamConverter("deck", class="AppBundle:Deck", options={"id" = "deckId"})
@@ -45,7 +45,7 @@ class DeckLikeController extends BaseApiController
 
     /**
      * Delete a like from a public deck
-     * @Route("/public-decks/{deckId}/like")
+     * @Route("/decks/{deckId}/like")
      * @Method("DELETE")
      * @Security("has_role('ROLE_USER')")
      * @ParamConverter("deck", class="AppBundle:Deck", options={"id" = "deckId"})
