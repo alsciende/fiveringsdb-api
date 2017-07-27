@@ -27,3 +27,9 @@ database:
 test:
   override:
     - phpunit -d memory_limit=128M --verbose --debug
+
+deployment:
+  production:
+    branch: master
+    commands:
+      - ./deploy.sh
