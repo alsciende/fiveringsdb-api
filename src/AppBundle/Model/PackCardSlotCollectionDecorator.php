@@ -23,7 +23,7 @@ class PackCardSlotCollectionDecorator extends CardSlotCollectionDecorator
     {
         $quantities = [];
         foreach ($this->toArray() as $slot) {
-            $quantities[$slot->getPack()->getCode()] = $slot->getQuantity();
+            $quantities[$slot->getPack()->getId()] = $slot->getQuantity();
         }
         ksort($quantities);
 

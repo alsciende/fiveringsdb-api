@@ -32,7 +32,7 @@ class CardControllerTest extends BaseApiControllerTest
     public function testCardControllerGetAction ($cards)
     {
         $client = $this->getClient();
-        $client->request('GET', '/cards/' . $cards[0]['code']);
+        $client->request('GET', '/cards/' . $cards[0]['id']);
         $this->assertStandardGetOne($client);
     }
 }

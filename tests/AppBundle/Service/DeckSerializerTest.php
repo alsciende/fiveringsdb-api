@@ -42,7 +42,7 @@ class DeckSerializerTest extends KernelTestCase
     {
         $deck = new Deck();
         $deck->setName('Test Deck');
-        $deck->addDeckCard(new DeckCard((new Card())->setCode('test-card'), 3));
+        $deck->addDeckCard(new DeckCard((new Card())->setId('test-card'), 3));
 
         /** @var Serializer $serializer */
         $serializer = $this->container->get('jms_serializer');

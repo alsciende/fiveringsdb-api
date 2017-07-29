@@ -22,10 +22,9 @@ class CardRulingController extends BaseApiController
 
     /**
      * Create a ruling on a card
-     * @Route("/cards/{cardCode}/rulings", name="createCardRuling")
+     * @Route("/cards/{id}/rulings", name="createCardRuling")
      * @Method("POST")
      * @Security("has_role('ROLE_GURU')")
-     * @ParamConverter("card", class="AppBundle:Card", options={"id" = "cardCode"})
      */
     public function postAction (Request $request, Card $card)
     {
@@ -45,9 +44,8 @@ class CardRulingController extends BaseApiController
 
     /**
      * Get all rulings on a card
-     * @Route("/cards/{cardCode}/rulings", name="listCardRulings")
+     * @Route("/cards/{id}/rulings", name="listCardRulings")
      * @Method("GET")
-     * @ParamConverter("card", class="AppBundle:Card", options={"id" = "cardCode"})
      */
     public function listAction (Card $card)
     {
@@ -60,7 +58,7 @@ class CardRulingController extends BaseApiController
 
     /**
      * Get a ruling on a card
-     * @Route("/cards/{cardCode}/rulings/{id}", name="getCardRuling")
+     * @Route("/cards/{cardId}/rulings/{id}", name="getCardRuling")
      * @Method("GET")
      */
     public function getAction (Ruling $ruling)
@@ -70,7 +68,7 @@ class CardRulingController extends BaseApiController
 
     /**
      * Edit a ruling on a card
-     * @Route("/cards/{cardCode}/rulings/{id}", name="patchCardRuling")
+     * @Route("/cards/{cardId}/rulings/{id}", name="patchCardRuling")
      * @Method("PATCH")
      * @Security("has_role('ROLE_GURU')")
      */

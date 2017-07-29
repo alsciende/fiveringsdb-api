@@ -30,16 +30,16 @@ class Pack
      * @var string
      * @Assert\NotBlank()
      *
-     * @ORM\Column(name="code", type="string", length=255, unique=true)
+     * @ORM\Column(name="id", type="string", length=255, unique=true)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      *
      * @Source(type="string")
      *
      * @JMS\Expose
-     * @JMS\Groups({"Default","code_group"})
+     * @JMS\Groups({"Default","id_group"})
      */
-    private $code;
+    private $id;
 
     /**
      * @var string
@@ -99,7 +99,7 @@ class Pack
      * @var Cycle
      *
      * @ORM\ManyToOne(targetEntity="Cycle")
-     * @ORM\JoinColumn(name="cycle_code", referencedColumnName="code")
+     * @ORM\JoinColumn(name="cycle_id", referencedColumnName="id", nullable=false)
      *
      * @Source(type="association")
      *
@@ -123,16 +123,16 @@ class Pack
         $this->cards = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
-    public function setCode (string $code): self
+    public function setId (string $id): self
     {
-        $this->code = $code;
+        $this->id = $id;
 
         return $this;
     }
 
-    public function getCode (): string
+    public function getId (): string
     {
-        return $this->code;
+        return $this->id;
     }
 
     public function setName (string $name): self

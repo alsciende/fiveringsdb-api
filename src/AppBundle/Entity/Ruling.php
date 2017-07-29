@@ -50,7 +50,7 @@ class Ruling
      * @var Card
      *
      * @ORM\ManyToOne(targetEntity="Card", inversedBy="rulings")
-     * @ORM\JoinColumn(name="card_code", referencedColumnName="code")
+     * @ORM\JoinColumn(name="card_id", referencedColumnName="id")
      *
      * @Source(type="association")
      */
@@ -74,9 +74,9 @@ class Ruling
     /**
      * @JMS\VirtualProperty
      */
-    function getCardCode (): ?string
+    function getCardId (): ?string
     {
-        return $this->card ? $this->card->getCode() : null;
+        return $this->card ? $this->card->getId() : null;
     }
 
     /**

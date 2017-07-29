@@ -2,11 +2,9 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Controller\BaseApiController;
 use AppBundle\Entity\Card;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 /**
  * Description of CardsController
@@ -34,7 +32,7 @@ class CardController extends BaseApiController
                     'Default',
                     'pack_group',
                     'pack' => [
-                        'code_group'
+                        'id_group'
                     ]
                 ]
             ]
@@ -43,9 +41,8 @@ class CardController extends BaseApiController
     
     /**
      * Get a Card
-     * @Route("/cards/{code}", name="getCard")
+     * @Route("/cards/{id}", name="getCard")
      * @Method("GET")
-     * @ParamConverter("card", class="AppBundle:Card", options={"id" = "code"})
      */
     public function getAction (Card $card)
     {

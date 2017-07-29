@@ -26,7 +26,7 @@ class DeckCard implements CardSlotInterface
      *
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Card")
-     * @ORM\JoinColumn(name="card_code", referencedColumnName="code")
+     * @ORM\JoinColumn(name="card_id", referencedColumnName="id")
      */
     private $card;
 

@@ -46,7 +46,7 @@ class ImportCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwa
 
         foreach($data as $card) {
             $data = $this->import($card);
-            $slug = $data['code'];
+            $slug = $data['id'];
 
             if(!file_exists("$folder/../images/$slug.png")) {
                 continue;
@@ -65,7 +65,7 @@ class ImportCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwa
             $output->writeln("File $filename written.");
 
             $packCards[] = [
-                'card_code' => $slug,
+                'card_id' => $slug,
                 'quantity' => 1,
                 'position' => $position,
                 'illustrator' => $illustrator,
@@ -81,12 +81,12 @@ class ImportCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwa
     {
         $slug = $this->slugify->slugify($data['Title']);
 
-        $keywords = empty($data['Traits']) ? [] : array_map(function ($trait) {
+        $traits = empty($data['Traits']) ? [] : array_map(function ($trait) {
             return $this->slugify->slugify(str_replace('.', '', $trait));
         }, explode(' ',  $data['Traits']));
 
         $card = [
-            'code' => $slug,
+            'id' => $slug,
             'name' => $data['Title'],
             'cost' => $data['Cost'] ?? null,
             'text' => isset($data['Text']) ? $this->markupText($data['Text']) : null,
@@ -95,7 +95,7 @@ class ImportCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwa
             'element' => isset($data['Element']) ? strtolower($data['Element']) : null,
             'unicity' => $data['Unique'] === 'Yes',
             'side' => $this->getSide($data['Deck']),
-            'keywords' => $keywords,
+            'traits' => $traits,
             'illustrator' => $data['Illustrator'] ?? null,
             'military' => $this->getValue($data, 'Military Strength', 'Character'),
             'political' => $this->getValue($data, 'Political Strength', 'Character'),
