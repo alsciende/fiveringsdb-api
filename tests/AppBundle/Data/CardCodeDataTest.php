@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Tests\AppBundle\Data;
 
 /**
- * Description of CardCodeDataTest
+ * Description of CardIdDataTest
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class CardCodeDataTest extends \Symfony\Bundle\FrameworkBundle\Test\KernelTestCase
+class CardIdDataTest extends \Symfony\Bundle\FrameworkBundle\Test\KernelTestCase
 {
     /**
      *
@@ -24,7 +24,7 @@ class CardCodeDataTest extends \Symfony\Bundle\FrameworkBundle\Test\KernelTestCa
         $this->container = self::$kernel->getContainer();
     }
     
-    public function testCodes()
+    public function testIds()
     {
         /* @var $doctrine \Doctrine\Bundle\DoctrineBundle\Registry */
         $doctrine = $this->container->get('doctrine');
@@ -35,7 +35,7 @@ class CardCodeDataTest extends \Symfony\Bundle\FrameworkBundle\Test\KernelTestCa
         /* @var $cards \AppBundle\Entity\Card[] */
         $cards = $doctrine->getManager()->getRepository(\AppBundle\Entity\Card::class)->findAll();
         foreach($cards as $card) {
-            $this->assertEquals($card->getCode(), $slugify->slugify($card->getName()));
+            $this->assertEquals($card->getId(), $slugify->slugify($card->getName()));
         }
             
     }

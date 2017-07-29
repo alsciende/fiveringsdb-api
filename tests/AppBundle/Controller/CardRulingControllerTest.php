@@ -35,7 +35,7 @@ class CardRulingControllerTest extends BaseApiControllerTest
         );
         $this->assertEquals(
             'above-question',
-            $record['card_code']
+            $record['card_id']
         );
         $this->assertArrayHasKey(
             'user_id',
@@ -105,8 +105,8 @@ class CardRulingControllerTest extends BaseApiControllerTest
             $record['id']
         );
         $this->assertEquals(
-            $ruling['card_code'],
-            $record['card_code']
+            $ruling['card_id'],
+            $record['card_id']
         );
         $this->assertEquals(
             'Updated ruling text',

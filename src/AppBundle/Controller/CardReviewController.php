@@ -21,10 +21,9 @@ class CardReviewController extends BaseApiController
 {
     /**
      * Create a review on a card
-     * @Route("/cards/{cardCode}/reviews", name="createCardReview")
+     * @Route("/cards/{id}/reviews", name="createCardReview")
      * @Method("POST")
      * @Security("has_role('ROLE_USER')")
-     * @ParamConverter("card", class="AppBundle:Card", options={"id" = "cardCode"})
      */
     public function postAction (Request $request, Card $card)
     {
@@ -44,9 +43,8 @@ class CardReviewController extends BaseApiController
 
     /**
      * List all reviews on a card
-     * @Route("/cards/{cardCode}/reviews", name="listCardReviews")
+     * @Route("/cards/{id}/reviews", name="listCardReviews")
      * @Method("GET")
-     * @ParamConverter("card", class="AppBundle:Card", options={"id" = "cardCode"})
      */
     public function listAction (Card $card)
     {
@@ -59,7 +57,7 @@ class CardReviewController extends BaseApiController
 
     /**
      * Get a review on a card
-     * @Route("/cards/{cardCode}/reviews/{id}", name="getCardReview")
+     * @Route("/cards/{cardId}/reviews/{id}", name="getCardReview")
      * @Method("GET")
      */
     public function getAction (Review $review)
@@ -69,7 +67,7 @@ class CardReviewController extends BaseApiController
 
     /**
      * Edit a review on a card
-     * @Route("/cards/{cardCode}/reviews/{id}", name="patchCardReview")
+     * @Route("/cards/{cardId}/reviews/{id}", name="patchCardReview")
      * @Method("PATCH")
      * @Security("has_role('ROLE_USER')")
      */

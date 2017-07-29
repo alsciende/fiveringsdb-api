@@ -57,7 +57,7 @@ AppBundle\Entity\Card:
             - Type: boolean
             - Expression:
                 expression: "this.getType() in ['attachment','character','stronghold'] or value === false"
-        keywords:
+        traits:
             - Type: array
             - All:
                 - Type: string

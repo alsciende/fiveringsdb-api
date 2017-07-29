@@ -27,16 +27,16 @@ class Cycle
     /**
      * @var string
      *
-     * @ORM\Column(name="code", type="string", length=255, unique=true)
+     * @ORM\Column(name="id", type="string", length=255, unique=true)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      *
      * @Source(type="string")
      *
      * @JMS\Expose
-     * @JMS\Groups({"Default","code_group"})
+     * @JMS\Groups({"Default","id_group"})
      */
-    private $code;
+    private $id;
 
     /**
      * @var string
@@ -71,9 +71,9 @@ class Cycle
      */
     private $size;
 
-    public function setCode (string $code): self
+    public function setId (string $id): self
     {
-        $this->code = $code;
+        $this->id = $id;
         return $this;
     }
 
@@ -95,9 +95,9 @@ class Cycle
         return $this;
     }
 
-    public function getCode (): string
+    public function getId (): string
     {
-        return $this->code;
+        return $this->id;
     }
 
     public function getName (): string

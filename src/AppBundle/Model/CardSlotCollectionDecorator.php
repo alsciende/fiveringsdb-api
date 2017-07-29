@@ -51,42 +51,42 @@ class CardSlotCollectionDecorator extends ArrayCollection
     {
         $content = [];
         foreach ($this->toArray() as $slot) {
-            $content[$slot->getCard()->getCode()] = $slot->getQuantity();
+            $content[$slot->getCard()->getId()] = $slot->getQuantity();
         }
         ksort($content);
 
         return $content;
     }
 
-    function filterByType(string $type_code): self
+    function filterByType(string $type): self
     {
-        return $this->filter(function ($slot) use ($type_code) {
+        return $this->filter(function ($slot) use ($type) {
             /** @var $slot CardSlotInterface */
-            return $slot->getCard()->getType() === $type_code;
+            return $slot->getCard()->getType() === $type;
         });
     }
 
-    function filterBySide(string $side_code): self
+    function filterBySide(string $side): self
     {
-        return $this->filter(function ($slot) use ($side_code) {
+        return $this->filter(function ($slot) use ($side) {
             /** @var $slot CardSlotInterface */
-            return $slot->getCard()->getSide() === $side_code;
+            return $slot->getCard()->getSide() === $side;
         });
     }
 
-    function filterByClan(string $clan_code = null): self
+    function filterByClan(string $clan = null): self
     {
-        return $this->filter(function ($slot) use ($clan_code) {
+        return $this->filter(function ($slot) use ($clan) {
             /** @var $slot CardSlotInterface */
-            return $slot->getCard()->getClan() === $clan_code;
+            return $slot->getCard()->getClan() === $clan;
         });
     }
 
-    function filterByElement(string $card_code = null): self
+    function filterByElement(string $element = null): self
     {
-        return $this->filter(function ($slot) use ($card_code) {
+        return $this->filter(function ($slot) use ($element) {
             /** @var $slot CardSlotInterface */
-            return $slot->getCard()->getElement() === $card_code;
+            return $slot->getCard()->getElement() === $element;
         });
     }
 

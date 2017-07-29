@@ -31,10 +31,10 @@ class PackCardController extends BaseApiController
                 'card_group',
                 'pack_group',
                 'card' => [
-                    'code_group'
+                    'id_group'
                 ],
                 'pack' => [
-                    'code_group'
+                    'id_group'
                 ],
             ]
         );

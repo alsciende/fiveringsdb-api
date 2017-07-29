@@ -53,9 +53,9 @@ trait DeckDataTrait
     public function getDeckData(array $diff = [])
     {
         $data = $this->deckData;
-        foreach($diff as $card_code => $quantity_modifier)
+        foreach($diff as $card_id => $quantity_modifier)
         {
-            $data[$card_code] += $quantity_modifier;
+            $data[$card_id] += $quantity_modifier;
         }
 
         return $data;

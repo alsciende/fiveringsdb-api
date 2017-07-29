@@ -35,7 +35,7 @@ class CardReviewControllerTest extends BaseApiControllerTest
         );
         $this->assertEquals(
             'above-question',
-            $record['card_code']
+            $record['card_id']
         );
         $this->assertArrayHasKey(
             'user_id',
@@ -105,8 +105,8 @@ class CardReviewControllerTest extends BaseApiControllerTest
             $record['id']
         );
         $this->assertEquals(
-            $review['card_code'],
-            $record['card_code']
+            $review['card_id'],
+            $record['card_id']
         );
         $this->assertEquals(
             'Updated review text',

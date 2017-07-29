@@ -18,7 +18,7 @@ use AppBundle\Behavior\Entity\ToStringNameTrait;
  * @ORM\Table(name="cards")
  * @ORM\Entity()
  *
- * @Source(break="code")
+ * @Source(break="id")
  *
  * @JMS\ExclusionPolicy("all")
  * @JMS\AccessorOrder("alphabetical")
@@ -61,16 +61,16 @@ class Card
      *
      * @Assert\NotBlank()
      *
-     * @ORM\Column(name="code", type="string", length=255, unique=true)
+     * @ORM\Column(name="id", type="string", length=255, unique=true)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      *
      * @Source(type="string")
      *
      * @JMS\Expose
-     * @JMS\Groups({"Default","code_group"})
+     * @JMS\Groups({"Default","id_group"})
      */
-    private $code;
+    private $id;
 
     /**
      * @var string
@@ -187,13 +187,13 @@ class Card
     /**
      * @var string
      *
-     * @ORM\Column(name="keywords", type="simple_array", nullable=true)
+     * @ORM\Column(name="traits", type="simple_array", nullable=true)
      *
      * @Source(type="array")
      *
      * @JMS\Expose
      */
-    private $keywords;
+    private $traits;
 
     /**
      * @var integer
@@ -368,12 +368,12 @@ class Card
         $this->reviews = new ArrayCollection();
         $this->rulings = new ArrayCollection();
         $this->deckLimit = 3;
-        $this->keywords = [];
+        $this->traits = [];
     }
 
-    public function setCode (string $code): self
+    public function setId (string $id): self
     {
-        $this->code = $code;
+        $this->id = $id;
         return $this;
     }
 
@@ -437,9 +437,9 @@ class Card
         return $this;
     }
 
-    public function setKeywords (string $keywords): self
+    public function setTraits (string $traits): self
     {
-        $this->keywords = $keywords;
+        $this->traits = $traits;
         return $this;
     }
 
@@ -509,9 +509,9 @@ class Card
         return $this;
     }
 
-    public function getCode (): string
+    public function getId (): string
     {
-        return $this->code;
+        return $this->id;
     }
 
     public function getName (): string
@@ -564,9 +564,9 @@ class Card
         return $this->side;
     }
 
-    public function getKeywords (): string
+    public function getTraits (): string
     {
-        return $this->keywords;
+        return $this->traits;
     }
 
     public function getMilitary (): int

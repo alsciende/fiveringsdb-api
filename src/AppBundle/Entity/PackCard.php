@@ -14,7 +14,7 @@ use JMS\Serializer\Annotation as JMS;
  * @ORM\Table(name="pack_cards")
  * @ORM\Entity
  *
- * @Source(break="pack_code")
+ * @Source(break="pack_id")
  *
  * @JMS\ExclusionPolicy("all")
  * @JMS\AccessorOrder("alphabetical")
@@ -63,7 +63,7 @@ class PackCard implements CardSlotInterface
      *
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Card", inversedBy="packCards")
-     * @ORM\JoinColumn(name="card_code", referencedColumnName="code")
+     * @ORM\JoinColumn(name="card_id", referencedColumnName="id")
      *
      * @Source(type="association")
      *
@@ -77,7 +77,7 @@ class PackCard implements CardSlotInterface
      *
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Pack", inversedBy="cards")
-     * @ORM\JoinColumn(name="pack_code", referencedColumnName="code")
+     * @ORM\JoinColumn(name="pack_id", referencedColumnName="id")
      *
      * @Source(type="association")
      *

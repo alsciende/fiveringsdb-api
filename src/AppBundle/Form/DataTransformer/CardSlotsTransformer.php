@@ -24,7 +24,7 @@ class CardSlotsTransformer implements DataTransformerInterface
     {
         $data = [];
         foreach($deckCards as $deckCard) {
-            $data[$deckCard->getCard()->getCode()] = $deckCard->getQuantity();
+            $data[$deckCard->getCard()->getId()] = $deckCard->getQuantity();
         }
 
         return $data;
@@ -33,12 +33,12 @@ class CardSlotsTransformer implements DataTransformerInterface
     public function reverseTransform($data)
     {
       $deckCards = [];
-        foreach($data as $card_code => $quantity) {
-            $card = $this->repository->find($card_code);
+        foreach($data as $card_id => $quantity) {
+            $card = $this->repository->find($card_id);
             if($card === null) {
                 throw new TransformationFailedException(sprintf(
                     'A card with the identifier "%s" does not exist!',
-                    $card_code
+                    $card_id
                 ));
             }
             $deckCards[] = new DeckCard($card, $quantity);
