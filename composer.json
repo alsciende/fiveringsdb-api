@@ -30,7 +30,6 @@
         "incenteev/composer-parameter-handler": "^2.0",
         "symfony/serializer": "^3.2",
         "stof/doctrine-extensions-bundle": "^1.2",
-        "friendsofsymfony/oauth-server-bundle": "^1.5",
         "guzzlehttp/guzzle": "^6.2",
         "symfony/cache": "^3.2",
         "cocur/slugify": "^2.5",
