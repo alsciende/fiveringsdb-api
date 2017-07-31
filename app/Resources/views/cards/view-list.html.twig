@@ -1,9 +1,0 @@
-{% extends 'cards/view-many.html.twig' %}
-
-{% block cards %}
-    <table class="table">
-        {% for card in cards %}
-            <tr><td>{{card.name}}</td></tr>
-        {% endfor %}
-    </table>
-{% endblock %}

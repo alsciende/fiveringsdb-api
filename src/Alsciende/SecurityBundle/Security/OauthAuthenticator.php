@@ -2,7 +2,7 @@
 
 namespace Alsciende\SecurityBundle\Security;
 
-use FOS\OAuthServerBundle\Entity\AccessTokenManager;
+use Alsciende\SecurityBundle\Service\UserManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,13 +19,12 @@ use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
  */
 class OauthAuthenticator extends AbstractGuardAuthenticator
 {
-    
-    /** @var AccessTokenManager */
-    private $accessTokenManager;
-    
-    function __construct (AccessTokenManager $accessTokenManager)
+    /** @var UserManager $userManager */
+    private $userManager;
+
+    function __construct (UserManager $userManager)
     {
-        $this->accessTokenManager = $accessTokenManager;
+        $this->userManager = $userManager;
     }
 
     /**
@@ -37,7 +36,7 @@ class OauthAuthenticator extends AbstractGuardAuthenticator
         $token = $request->headers->get('X-Access-Token');
         if(!$token) {
             // no token? Return null and no other methods will be called
-            return;
+            return null;
         }
 
         // What you return here will be passed to getUser() as $credentials
@@ -50,14 +49,9 @@ class OauthAuthenticator extends AbstractGuardAuthenticator
     {
         $token = $credentials['token'];
 
-        $accessToken = $this->accessTokenManager->findTokenByToken($token);
-        if(!$accessToken) {
-            return null;
-        }
-        
         // if null, authentication will fail
         // if a User object, checkCredentials() is called
-        return $accessToken->getUser();
+        return $this->userManager->findUserByUsername($token);
     }
 
     public function checkCredentials ($credentials, UserInterface $user)

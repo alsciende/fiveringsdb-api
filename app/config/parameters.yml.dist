@@ -13,11 +13,6 @@ parameters:
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
 
-    # Oauth2 credentials for the test app
-    oauth_test_client_id: ~
-    oauth_test_client_secret: ~
-    oauth_test_redirect_uri: ~
-
     # Paypal
     paypal_rest_api_client_id: ~
     paypal_rest_api_secret: ~
