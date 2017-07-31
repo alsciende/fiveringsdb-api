@@ -1,10 +1,7 @@
-alsciende_security:
-    resource: "@AlsciendeSecurityBundle/Controller/"
-    type:     annotation
-    prefix:   /
-
-logout:
-   path: /logout
+#alsciende_security:
+#    resource: "@AlsciendeSecurityBundle/Controller/"
+#    type:     annotation
+#    prefix:   /
 
 app:
     resource: "@AppBundle/Controller/"
