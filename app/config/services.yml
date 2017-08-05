@@ -79,3 +79,6 @@ services:
           - "@doctrine.orm.entity_manager"
           - "@security.password_encoder"
           - "%secret%"
+
+    metagame:
+        class: AppBundle\Service\Metagame

@@ -1,5 +1,7 @@
 <script type="text/javascript">
-  alert('@TODO: secure origin');
-  var token = '{{ access_token }}';
-  console.log(token);
+    window.opener.postMessage({
+      'type': 'access_token',
+      'access_token': '{{ access_token }}'
+    }, 'http://localhost:8081');
+    window.close();
 </script>
