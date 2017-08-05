@@ -47,8 +47,11 @@ class ImportCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwa
         foreach($data as $card) {
             $data = $this->import($card);
             $slug = $data['id'];
+            $filename = "$folder/Card/$slug.json";
+            $imagename = "$folder/../images/$slug.png";
 
-            if(!file_exists("$folder/../images/$slug.png") && $data['type'] !== 'role') {
+            if(!file_exists($imagename) && $data['type'] !== 'role') {
+                $output->writeln("Image $imagename does not exist.");
                 continue;
             }
 
@@ -60,7 +63,6 @@ class ImportCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwa
 
             ksort($data);
             $json = json_encode(array($data), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-            $filename = "$folder/Card/$slug.json";
             file_put_contents($filename, $json);
             $output->writeln("File $filename written.");
 

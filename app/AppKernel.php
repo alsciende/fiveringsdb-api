@@ -20,7 +20,6 @@ class AppKernel extends Kernel
             new Cocur\Slugify\Bridge\Symfony\CocurSlugifyBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
             new AppBundle\AppBundle(),
-            new Alsciende\SecurityBundle\AlsciendeSecurityBundle(),
             new Alsciende\SerializerBundle\AlsciendeSerializerBundle(),
         ];
 

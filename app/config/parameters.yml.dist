@@ -25,3 +25,8 @@ parameters:
 
     # Json Data Repository
     path_to_json_data: "%kernel.root_dir%/../../data"
+
+    # Oauth2 credentials for Metagame
+    metagame_client_id: ~
+    metagame_client_secret: ~
+    metagame_redirect_uri: ~
