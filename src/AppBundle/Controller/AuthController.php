@@ -55,16 +55,13 @@ class AuthController extends Controller
         $code = $request->get('code');
 
         // request the access-token to the oauth server
-        $url = 'http://metagame.local:8080/app_dev.php/oauth/v2/token?' . http_build_query([
+        $res = $this->get('metagame')->get('oauth/v2/token', [
             'client_id' => $this->getParameter('metagame_client_id'),
             'client_secret' => $this->getParameter('metagame_client_secret'),
             'redirect_uri' => $this->getParameter('metagame_redirect_uri'),
             'grant_type' => 'authorization_code',
             'code' => $code
         ]);
-
-        $client = new Client();
-        $res = $client->request('GET', $url);
         if($res->getStatusCode() !== 200) {
             throw new \Exception($res->getReasonPhrase());
         }
