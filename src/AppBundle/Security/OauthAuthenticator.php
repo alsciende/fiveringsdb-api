@@ -2,7 +2,8 @@
 
 namespace AppBundle\Security;
 
-use AppBundle\Service\UserManager;
+use AppBundle\Entity\Token;
+use AppBundle\Service\TokenManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,12 +20,12 @@ use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
  */
 class OauthAuthenticator extends AbstractGuardAuthenticator
 {
-    /** @var UserManager $userManager */
-    private $userManager;
+    /** @var TokenManager $tokenManager */
+    private $tokenManager;
 
-    function __construct (UserManager $userManager)
+    function __construct (TokenManager $tokenManager)
     {
-        $this->userManager = $userManager;
+        $this->tokenManager = $tokenManager;
     }
 
     /**
@@ -33,9 +34,13 @@ class OauthAuthenticator extends AbstractGuardAuthenticator
      */
     public function getCredentials (Request $request)
     {
-        $token = $request->headers->get('X-Access-Token');
-        if(!$token) {
-            // no token? Return null and no other methods will be called
+        if($request->headers->has('Authorization') === false) {
+            return null;
+        }
+
+        list($type, $token) = explode(' ', $request->headers->get('Authorization'), 2);
+
+        if($type !== 'Bearer') {
             return null;
         }
 
@@ -47,11 +52,12 @@ class OauthAuthenticator extends AbstractGuardAuthenticator
 
     public function getUser ($credentials, UserProviderInterface $userProvider)
     {
-        $token = $credentials['token'];
+        $token = $this->tokenManager->findToken($credentials['token']);
+        if($token instanceof Token) {
+            return $token->getUser();
+        }
 
-        // if null, authentication will fail
-        // if a User object, checkCredentials() is called
-        return $this->userManager->findUserByUsername($token);
+        return null;
     }
 
     public function checkCredentials ($credentials, UserInterface $user)
