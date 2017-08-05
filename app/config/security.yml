@@ -14,17 +14,19 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        oauth_token:
-            pattern: ^/oauth/v2/token
+        auth:
+            pattern: ^/auth
             security: false
+            stateless: false
 
         main:
-            context: my_security_context
+            security: true
+            stateless: true
             anonymous: ~
             logout: ~
             guard:
                 provider:
                     my_user_provider
                 authenticators:
-                    - alsciende_security.oauth_authenticator
+                    - app.security.oauth_authenticator
 

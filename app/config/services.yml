@@ -67,3 +67,15 @@ services:
         tags:
           - "security.voter"
           
+
+    app.security.oauth_authenticator:
+        class: AppBundle\Security\OauthAuthenticator
+        arguments:
+          - "@app.security.user_manager"
+
+    app.security.user_manager:
+        class: AppBundle\Service\UserManager
+        arguments:
+          - "@doctrine.orm.entity_manager"
+          - "@security.password_encoder"
+          - "%secret%"
