@@ -27,23 +27,12 @@ class UserManager
         $this->salt = $salt;
     }
 
-    /**
-     * 
-     * @param string $username
-     * @return User
-     */
-    public function findUserByUsername ($username)
+    public function findUserByUsername (string $username): ?User
     {
         return $this->em->getRepository(User::class)->findOneBy(['username' => $username]);
     }
     
-    /**
-     * 
-     * @param string $username
-     * @param string $plainPassword
-     * @return User
-     */
-    public function createUser ($username, $plainPassword)
+    public function createUser (string $username, string $plainPassword): User
     {
         $user = new User();
         $user->setUsername($username);
@@ -51,10 +40,6 @@ class UserManager
         return $user;
     }
     
-    /**
-     * 
-     * @param User $user
-     */
     public function updateUser(User $user)
     {
         $this->em->persist($user);
