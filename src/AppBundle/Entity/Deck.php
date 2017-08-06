@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * A Deck, private (minorVersion > 0) or public (minorVersion == 0)
@@ -18,6 +19,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class Deck
 {
+    use TimestampableEntity;
+
     /**
      * Unique identifier of the deck
      *
@@ -43,13 +46,6 @@ class Deck
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
-
-    /**
-     * @var \DateTime
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime",nullable=false)
-     */
-    protected $createdAt;
 
     /**
      * The cards used by the deck
@@ -162,18 +158,6 @@ class Deck
         $this->name = $name;
 
         return $this;
-    }
-
-    public function setCreatedAt (\DateTime $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getCreatedAt (): \DateTime
-    {
-        return $this->createdAt;
     }
 
     public function setDeckCards (Collection $deckCards): self
