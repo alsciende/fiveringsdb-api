@@ -18,7 +18,7 @@ abstract class BaseApiControllerTest extends WebTestCase
   {
     $headers = [];
     if($username !== null) {
-      $headers['HTTP_X-Access-Token'] = $username;
+      $headers['HTTP_Authorization'] = "Bearer $username";
     }
     return static::createClient([], $headers);
   }

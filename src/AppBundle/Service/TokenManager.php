@@ -3,11 +3,10 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Token;
+use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * Description of TokenManager
- *
  * @author Alsciende <alsciende@icloud.com>
  */
 class TokenManager
@@ -20,13 +19,22 @@ class TokenManager
         $this->em = $entityManager;
     }
 
-    /**
-     *
-     * @param string $token
-     * @return Token
-     */
-    public function findToken ($token)
+    public function findToken (string $token): ?Token
     {
         return $this->em->getRepository(Token::class)->find($token);
+    }
+
+    public function createToken (string $value, User $user): Token
+    {
+        $token = new Token();
+        $token->setId($value);
+        $token->setUser($user);
+        return $token;
+    }
+
+    public function updateToken(Token $token)
+    {
+        $this->em->persist($token);
+        $this->em->flush();
     }
 }
