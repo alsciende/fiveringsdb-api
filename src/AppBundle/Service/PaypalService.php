@@ -48,8 +48,8 @@ class PaypalService
                     "PAYMENTREQUEST_0_AMT" => $amount,
                     "PAYMENTREQUEST_0_CURRENCYCODE" => $currency,
                     "PAYMENTREQUEST_0_PAYMENTACTION" => $paymentAction,
-                    "cancelUrl" => "http://fiveringsdb.local/app_dev.php/paypal/cancel",
-                    "returnUrl" => "http://fiveringsdb.local/app_dev.php/paypal/success",
+                    "cancelUrl" => "http://fiveringsdb.dev/app_dev.php/paypal/cancel",
+                    "returnUrl" => "http://fiveringsdb.dev/app_dev.php/paypal/success",
         ]);
     }
 

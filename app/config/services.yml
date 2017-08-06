@@ -5,6 +5,7 @@ services:
 
     AppBundle\Service\DeckCheck\:
         resource: '../../src/AppBundle/Service/DeckCheck'
+        public: false
 
     paypal:
         class: AppBundle\Service\PaypalService
@@ -19,7 +20,6 @@ services:
           - "@request_stack"
           - "@jms_serializer"
           - "%http_cache_max_age%"
-          - "%kernel.environment%"
 
     app.deck_validator:
         class: AppBundle\Service\DeckValidator
@@ -87,3 +87,8 @@ services:
 
     metagame:
         class: AppBundle\Service\Metagame
+        arguments:
+          - "%metagame_base_uri%"
+          - "%kernel.logs_dir%"
+          - "%kernel.environment%"
+          - "%kernel.debug%"
