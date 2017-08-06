@@ -29,7 +29,7 @@ framework:
         handler_id:  session.handler.native_file
         save_path:   "%kernel.root_dir%/../var/sessions/%kernel.environment%"
     fragments:       ~
-    http_method_override: true
+    http_method_override: false
     assets:
         packages:
             img:
@@ -97,8 +97,7 @@ cocur_slugify:
 nelmio_cors:
     paths:
         '^/':
-            origin_regex: true
+            allow_origin: ['*']
             allow-headers: ['content-type']
-            allow_origin: ['^http://localhost:[0-9]+']
-            allow_methods: ['POST', 'PUT', 'GET', 'DELETE']
+            allow_methods: ['POST', 'PUT', 'PATCH', 'GET', 'DELETE']
             max_age: 3600

@@ -38,18 +38,17 @@ class ApiService
      */
     private $kernelEnvironment;
     
-    function __construct (RequestStack $requestStack, \JMS\Serializer\Serializer $serializer, $httpCacheMaxAge, $kernelEnvironment)
+    function __construct (RequestStack $requestStack, \JMS\Serializer\Serializer $serializer, $httpCacheMaxAge)
     {
         $this->requestStack = $requestStack;
         $this->serializer = $serializer;
         $this->httpCacheMaxAge = $httpCacheMaxAge;
-        $this->kernelEnvironment = $kernelEnvironment;
     }
 
     function buildResponse ($data = null, $groups = [])
     {
         $request = $this->requestStack->getCurrentRequest();
-        $isPublic = $request->getMethod() === 'GET' && $this->kernelEnvironment === 'prod';
+        $isPublic = $request->getMethod() === 'GET';
         $response = $this->getEmptyResponse();
 
         if($isPublic) {
@@ -106,9 +105,8 @@ class ApiService
     function getEmptyResponse ()
     {
         $response = new Response();
-        $response->headers->set('Access-Control-Allow-Origin', '*');
+//        $response->headers->set('Access-Control-Allow-Origin', '*');
         $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
         return $response;
     }
-
 }
