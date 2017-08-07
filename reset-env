@@ -1,13 +1,8 @@
 #!/usr/bin/env bash
 set -xv
-export SYMFONY_ENV=$1
 
-bin/console doctrine:database:drop --force
-bin/console doctrine:database:create
-bin/console doctrine:schema:update --force
-if [ $1 != "prod" ]; then
-  bin/console doctrine:fixtures:load --append
-else
-  bin/console app:data:import
-fi
-bin/console cache:clear
+bin/console doctrine:database:drop --force --env=$1
+bin/console doctrine:database:create --env=$1
+bin/console doctrine:schema:update --force --env=$1
+bin/console doctrine:fixtures:load --append --env=$1
+bin/console cache:clear --env=$1

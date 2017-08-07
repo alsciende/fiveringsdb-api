@@ -4,80 +4,64 @@ fiveringsdb
 ===========
 A deckbuilder for **Legend of the Five Rings LCG**
 
-## Prerequisites
+## Installation
 
-php 7.x, mysql, git, composer, node 6.x, npm
+### Prerequisites
 
-Install php DOM extension:
+- php 7.x and various extensions (see composer.json)
+- mysql (or compatible)
+- git
+- composer
+- node 6.x (currently, the Ubuntu 16 official repo has node 4.x)
+- npm
 
-``` bash
-sudo apt-get install php-xml php-zip php-mbstring
-```
+### Installation
 
-Create a database in MySQL:
+- Create a database in MySQL: `mysql -uroot -p -e "create database fiveringsdb"`
+- Clone the code repository: `git clone https://github.com/Alsciende/fiveringsdb.git`
+- Clone the data repository: `git clone https://github.com/Alsciende/fiveringsdb-data data`
+- Go to the code repository: `cd fiveringsdb`
 
-``` bash
-mysql -uroot -p -e "create database fiveringsdb"
-```
+### Back-end
 
-## Checkout
+- Install the vendors: `composer install`
+- Create the schema and fixtures: `./reset-env dev`
+- Run the Symfony server: `bin/console server:start localhost:8642`
 
-Clone the code repository (this repository) to a location, e.g. `/var/www/fiveringsdb`. Also clone the data repository to e.g. `/home/toto/fiveringsdb-data`.
+### Images (optional)
 
-## Apache config
+- Symlink to a folder containing the card images: `ln -s /path/to/card/images web/bundles/card_images`
 
-``` bash
-sudo a2enmod rewrite
-sudo cp fiveringsdb.conf.dist /etc/apache2/sites-available/fiveringsdb.conf
-sudo a2ensite fiveringsdb.conf
-sudo service apache2 reload
-```
+### Front-end
 
-## Back-end
+- Go to the frond-end project: `cd vue`
+- Install the vendors: `npm install --no-optional`
+- Export the API URL: `export FIVERINGSDB_API_URL=http://localhost:8642/app_dev.php`
+- (optional) Export the card images folder URL: `export FIVERINGSDB_IMG_URL=http://localhost:8642/bundles/card_images`
+- Run the Webpack server: `npm run dev`
 
-``` bash
-export SYMFONY_ENV=prod
-composer install --no-dev
-./reset-env prod
-```
+### Tests
 
-Then [fix Symfony permissions](http://symfony.com/doc/current/setup/file_permissions.html).
+#### Back-end
 
-## Images
-
-``` bash
-ln -s /path/to/card/images web/bundles/card_images
-```
-
-## Front-end
-
-``` bash
-cd vue
-npm install
-npm run build
-```
-
-## Tests
-
-``` bash
+```bash
 ./reset-env test
-bin/phpunit
+./vendor/phpunit/phpunit/phpunit
 ```
 
-## Dev
+#### Front-end
 
-``` bash
-./reset-env dev
+Soon...
+
+### Code Quality
+
+#### Back-end
+
+Soon...
+
+#### Front-end
+
+```bash
 cd vue
-npm run dev
+./node_modules/.bin/eslint src/
 ```
-
-# Coding Guidelines
-
-## Status code vs Error message
-
-When to response with a non-200 status code and when to return a response with `"success"=false` and an error message?
-
-Use a status code when nothing can be done to change the result of the request. Example: `POST /decks/{id}/publish` is requested but `id` references a public deck: return 404. `POST /decks/{id}/publish` is requested but `id` references a deck of another user: return 403.
-
-Use an error message to communicate what is wrong, when the user can fix the situation. Example: `POST /strains/{id}` is requested but the user has reached their quota for the number of decks: return an error message informing the user that their quota is reached.
