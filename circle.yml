@@ -7,25 +7,20 @@ machine:
 checkout:
   post:
     - git clone git@github.com:Alsciende/fiveringsdb-data.git /home/ubuntu/fiveringsdb-data
-    - cp vue/config/prod.env.js.dist vue/config/prod.env.js
 
 dependencies:
   pre:
     - cp app/config/parameters.circle.yml app/config/parameters.yml
-  post:
-    - sudo cp app/config/apache.circle.conf /etc/apache2/sites-available/fiveringsdb.conf
-    - sudo rm /etc/apache2/mods-enabled/php5.load
-    - sudo a2ensite fiveringsdb
-    - sudo service apache2 restart
 
 database:
-  post:
+  override:
     - bin/console doctrine:schema:update --no-interaction  --force
     - bin/console doctrine:fixtures:load --no-interaction
     - bin/console app:data:import --no-interaction
 
 test:
   override:
+    - bin/console server:start localhost:8080
     - phpunit -d memory_limit=128M --verbose --debug
 
 deployment:
