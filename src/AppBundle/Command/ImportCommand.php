@@ -48,7 +48,7 @@ class ImportCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwa
             $data = $this->import($card);
             $slug = $data['id'];
 
-            if(!file_exists("$folder/../images/$slug.png")) {
+            if(!file_exists("$folder/../images/$slug.png") && $data['type'] !== 'role') {
                 continue;
             }
 
