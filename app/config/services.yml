@@ -72,6 +72,7 @@ services:
         class: AppBundle\Security\OauthAuthenticator
         arguments:
           - "@app.security.token_manager"
+          - "@logger"
 
     app.security.user_manager:
         class: AppBundle\Service\UserManager
@@ -84,6 +85,7 @@ services:
         class: AppBundle\Service\TokenManager
         arguments:
           - "@doctrine.orm.entity_manager"
+          - "@logger"
 
     metagame:
         class: AppBundle\Service\Metagame

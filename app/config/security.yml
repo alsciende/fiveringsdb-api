@@ -19,6 +19,11 @@ security:
             security: false
             stateless: false
 
+        tokens:
+            pattern: ^/tokens
+            security: false
+            stateless: true
+
         main:
             security: true
             stateless: true

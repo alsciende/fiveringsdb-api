@@ -5,6 +5,7 @@ namespace AppBundle\Service;
 use AppBundle\Entity\Token;
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Monolog\Logger;
 
 /**
  * @author Alsciende <alsciende@icloud.com>
@@ -14,9 +15,10 @@ class TokenManager
     /** @var EntityManagerInterface */
     private $em;
 
-    public function __construct (EntityManagerInterface $entityManager)
+    public function __construct (EntityManagerInterface $entityManager, Logger $logger)
     {
         $this->em = $entityManager;
+        $this->logger = $logger;
     }
 
     public function findToken (string $token): ?Token
