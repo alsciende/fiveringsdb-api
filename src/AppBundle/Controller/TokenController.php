@@ -43,7 +43,14 @@ class TokenController extends BaseApiController
                 $token->setUser($user);
                 $this->getDoctrine()->getManager()->persist($token);
                 $this->getDoctrine()->getManager()->flush();
-                return $this->success($token);
+                return $this->success($token,
+                    [
+                        'Default',
+                        'user_group',
+                        'user' => [
+                            'Default',
+                        ]
+                    ]);
             }
 
             return $this->failure('user_not_found', $data['username']);

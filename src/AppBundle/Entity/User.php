@@ -34,6 +34,8 @@ class User implements UserInterface
      * @ORM\Column(type="string", unique=true)
      *
      * @Source(type="string")
+     *
+     * @JMS\Expose()
      */
     private $username;
 
@@ -48,6 +50,8 @@ class User implements UserInterface
      * @var array
      *
      * @ORM\Column(name="roles",type="simple_array")
+     *
+     * @JMS\Expose()
      */
     private $roles;
 
