@@ -52,7 +52,7 @@ AppBundle\Entity\Card:
         text:
             - Type: string
             - Expression:
-                expression: "this.getType() in ['character'] or value !== null"
+                expression: "this.getType() in ['character','attachment'] or value !== null"
         unicity:
             - Type: boolean
             - Expression:

@@ -44,6 +44,7 @@ class DataImportCommand extends ContainerAwareCommand
                 $entity = $imported['entity'];
                 $errors = $validator->validate($entity);
                 if(count($errors) > 0) {
+                    dump($errors);
                     $errorsString = (string) $errors;
                     throw new \Exception($errorsString);
                 }
