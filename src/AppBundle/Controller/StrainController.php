@@ -37,8 +37,7 @@ class StrainController extends BaseApiController
             $this->getDoctrine()->getManager()->persist($strain);
             if ($strain->getOrigin() !== null) {
                 $origin = $this->getDoctrine()->getManager()->getRepository(Deck::class)->find($strain->getOrigin());
-                if ($origin instanceof Deck
-                    && $this->isGranted('READ_DECK', $origin)) {
+                if ($origin instanceof Deck) {
                     $copy = new Deck();
                     $copy->setUser($this->getUser())->setStrain($strain);
                     $this->get('app.deck_manager')->copy($copy, $origin)->persist($copy);
