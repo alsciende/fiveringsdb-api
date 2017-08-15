@@ -2,6 +2,7 @@
 
 namespace AppBundle\Model;
 
+use AppBundle\Entity\Card;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -90,11 +91,32 @@ class CardSlotCollectionDecorator extends ArrayCollection
         });
     }
 
-    function findStrongholdSlot(): ?CardSlotInterface
+    function findStronghold(): ?Card
     {
-        return $this->find(function ($slot) {
+        $slot = $this->find(function ($slot) {
             /** @var $slot CardSlotInterface */
             return $slot->getCard()->getType() === 'stronghold';
         });
+
+        if($slot instanceof CardSlotInterface) {
+            return $slot->getCard();
+        }
+
+        return null;
     }
+
+    function findRole(): ?Card
+    {
+        $slot = $this->find(function ($slot) {
+            /** @var $slot CardSlotInterface */
+            return $slot->getCard()->getType() === 'role';
+        });
+
+        if($slot instanceof CardSlotInterface) {
+            return $slot->getCard();
+        }
+
+        return null;
+    }
+
 }

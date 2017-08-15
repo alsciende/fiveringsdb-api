@@ -50,7 +50,7 @@ class DeckManager
     public function persist (Deck $deck): self
     {
         $head = $deck->getStrain()->getHead();
-        $deck->setProblem($this->deckValidator->check($deck->getDeckCards()));
+        $deck->setProblem($this->deckValidator->check($deck->getDeckCards(), $deck->getFormat()));
         $deck->setPublished(false);
         $deck->setMajorVersion($head === null ? 0 : $head->getMajorVersion());
         $deck->setMinorVersion($head === null ? 1 : $head->getMinorVersion() + 1);
@@ -64,6 +64,7 @@ class DeckManager
     {
         $deck->setName($parent->getName());
         $deck->setDescription($parent->getDescription());
+        $deck->setFormat($parent->getFormat());
         foreach($parent->getDeckCards() as $deckCard) {
             $deck->addDeckCard($deckCard);
         }

@@ -3,6 +3,7 @@
 namespace AppBundle\Service\DeckCheck;
 
 use AppBundle\Entity\Card;
+use AppBundle\Entity\Deck;
 use AppBundle\Model\CardSlotCollectionDecorator;
 use AppBundle\Model\CardSlotInterface;
 use AppBundle\Service\DeckValidator;
@@ -14,27 +15,29 @@ use AppBundle\Service\DeckValidator;
  */
 class DynastyDeckCheck implements DeckCheckInterface
 {
-    public function check(CardSlotCollectionDecorator $deckCards): int
+    public function check(CardSlotCollectionDecorator $deckCards, string $format): int
     {
         $dynastyDeck = $deckCards->filterBySide('dynasty');
         $dynastyCount = $dynastyDeck->countCards();
 
-        if ($dynastyCount < 40) {
+        $minCount = $format === Deck::FORMAT_SINGLE_CORE ? 30 : 40;
+        if ($dynastyCount < $minCount) {
             return DeckValidator::TOO_FEW_DYNASTY;
         }
 
-        if ($dynastyCount > 45) {
+        $maxCount = $format === Deck::FORMAT_SINGLE_CORE ? 30 : 45;
+        if ($dynastyCount > $maxCount) {
             return DeckValidator::TOO_MANY_DYNASTY;
         }
 
-        $strongholdSlot = $deckCards->findStrongholdSlot();
-        if ($strongholdSlot !== null) {
-            $stronghold = $strongholdSlot->getCard();
+        $stronghold = $deckCards->findStronghold();
+        if ($stronghold instanceof Card) {
             $clan = $stronghold->getClan();
 
             $offClanSlot = $deckCards->find(function ($slot) use ($clan) {
                 /** @var CardSlotInterface $slot */
-                return $slot->getCard()->getClan() !== 'neutral'
+                return $slot->getCard()->getSide() === 'dynasty'
+                    && $slot->getCard()->getClan() !== 'neutral'
                     && $slot->getCard()->getClan() !== $clan;
             });
 

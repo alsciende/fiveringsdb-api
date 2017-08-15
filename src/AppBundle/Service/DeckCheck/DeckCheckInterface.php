@@ -9,5 +9,5 @@ use AppBundle\Model\CardSlotCollectionDecorator;
  */
 interface DeckCheckInterface
 {
-    public function check(CardSlotCollectionDecorator $deckCards): int;
+    public function check(CardSlotCollectionDecorator $deckCards, string $format): int;
 }

@@ -2,7 +2,6 @@
 
 namespace AppBundle\DataFixtures\ORM;
 
-use AppBundle\Entity\Format;
 use AppBundle\Entity\User;
 use AppBundle\Manager\DeckManager;
 use AppBundle\Service\DeckSerializer;
@@ -32,19 +31,18 @@ class LoadDeckData extends AbstractFixture implements OrderedFixtureInterface, C
     {
         $this->manager = $this->container->get('app.deck_manager');
         $this->serializer = $this->container->get('app.deck_serializer');
-        $format = $manager->getRepository(Format::class)->find('single-core');
         $user = $this->getReference('user-user');
 
         $data = Yaml::parse(file_get_contents(__DIR__.'/fixtures/deck.yml'));
 
         foreach($data as $name => $cards) {
-            $this->loadDeck($user, $format, $name, $cards);
+            $this->loadDeck($user, 'single-core', $name, $cards);
         }
 
         $manager->flush();
     }
 
-    public function loadDeck(User $user, Format $format, string $name, array $cards)
+    public function loadDeck(User $user, string $format, string $name, array $cards)
     {
         $deck = $this->serializer->deserialize([
             'name' => $name,

@@ -52,13 +52,18 @@ Suggested Starting Crane Deck:
     outwit: 2
 
 Suggested Starting Dragon Deck:
+    # stronghold
     mountain-s-anvil-castle: 1
+    # role
     keeper-of-fire: 1
+    # provinces
     manicured-garden: 1
     entrenched-position: 1
     restoration-of-balance: 1
     elemental-fury: 1
     pilgrimage: 1
+    # dynasty
+    # dragon
     doomed-shugenja: 1
     togashi-initiate: 1
     agasha-swordsmith: 1
@@ -66,6 +71,22 @@ Suggested Starting Dragon Deck:
     niten-adept: 1
     seeker-of-enlightenment: 1
     enlightened-warrior: 1
+    kitsuki-investigator: 1
+    mirumoto-raitsugu: 1
+    ascetic-visionary: 1
+    niten-master: 1
+    togashi-yokuni: 1
+    secluded-temple: 1
+    # neutral
+    otomo-courtier: 3
+    seppun-guardsman: 3
+    keeper-initiate: 2
+    miya-mystic: 3
+    wandering-ronin: 3
+    favorable-ground: 2
+    imperial-storehouse: 1
+    # conflict
+    # dragon
     tattooed-wanderer: 1
     togashi-kazue: 1
     ancestral-daisho: 1
@@ -77,19 +98,15 @@ Suggested Starting Dragon Deck:
     tranquility: 1
     indomitable-will: 1
     mirumoto-s-fury: 1
-    kitsuki-investigator: 1
-    mirumoto-raitsugu: 1
-    ascetic-visionary: 1
-    niten-master: 1
-    togashi-yokuni: 1
-    secluded-temple: 1
-    otomo-courtier: 3
-    seppun-guardsman: 3
-    keeper-initiate: 2
-    miya-mystic: 3
-    wandering-ronin: 3
-    favorable-ground: 2
-    imperial-storehouse: 1
+    # crane
+    steward-of-law: 1
+    political-rival: 1
+    above-question: 1
+    duelist-training: 1
+    height-of-fashion: 1
+    the-perfect-gift: 1
+    admit-defeat: 1
+    # neutral
     fine-katana: 2
     ornate-fan: 2
     banzai: 1

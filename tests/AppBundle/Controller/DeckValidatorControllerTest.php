@@ -22,7 +22,7 @@ class DeckValidatorControllerTest extends BaseApiControllerTest
         $this->sendJsonRequest(
             $client,
             'POST',
-            "/deck-validation",
+            "/deck-validation/standard",
             $this->getDeckData()['cards']
         );
         $response = $client->getResponse();
