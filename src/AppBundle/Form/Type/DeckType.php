@@ -7,7 +7,9 @@ namespace AppBundle\Form\Type;
 use AppBundle\Entity\Deck;
 use AppBundle\Entity\DeckCard;
 use AppBundle\Entity\Card;
+use AppBundle\Entity\Format;
 use AppBundle\Form\DeckCardsType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -33,6 +35,9 @@ class DeckType extends AbstractType
         $builder
             ->add('name', TextType::class)
             ->add('description', TextType::class)
+            ->add('format', EntityType::class, [
+                'class' => Format::class,
+            ])
             ->add('cards', TextType::class, [
               'property_path' => 'deckCards'
             ])

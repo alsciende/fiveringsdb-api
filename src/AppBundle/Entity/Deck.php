@@ -60,7 +60,7 @@ class Deck
      *
      * @var User
      * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      */
     private $user;
 
@@ -69,7 +69,7 @@ class Deck
      *
      * @var Strain
      * @ORM\ManyToOne(targetEntity="Strain", inversedBy="decks")
-     * @ORM\JoinColumn(name="strain_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="strain_id", referencedColumnName="id", nullable=false)
      */
     private $strain;
 
@@ -120,6 +120,13 @@ class Deck
      * @ORM\Column(name="problem", type="integer", nullable=false)
      */
     private $problem;
+
+    /**
+     * @var Format|null
+     * @ORM\ManyToOne(targetEntity="Format", inversedBy="decks")
+     * @ORM\JoinColumn(name="format_id", referencedColumnName="id", nullable=false)
+     */
+    protected $format;
 
     function __construct ()
     {
@@ -358,5 +365,20 @@ class Deck
         $this->problem = $problem;
 
         return $this;
+    }
+
+    public function setFormat(Format $format = null): self
+    {
+        $this->format = $format;
+        if ($format instanceof Format) {
+            $format->addDeck($this);
+        }
+
+        return $this;
+    }
+
+    public function getFormat(): ?Format
+    {
+        return $this->format;
     }
 }

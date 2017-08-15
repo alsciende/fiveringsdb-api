@@ -38,7 +38,8 @@
         "cocur/slugify": "^2.5",
         "jms/serializer-bundle": "^1.4",
         "ramsey/uuid": "^3.6",
-        "nelmio/cors-bundle": "^1.5"
+        "nelmio/cors-bundle": "^1.5",
+        "javiereguiluz/easyadmin-bundle": "^1.16"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",

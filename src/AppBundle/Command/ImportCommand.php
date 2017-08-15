@@ -52,7 +52,7 @@ class ImportCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwa
 
             if(!file_exists($imagename) && $data['type'] !== 'role') {
                 $output->writeln("Image $imagename does not exist.");
-                continue;
+//                continue;
             }
 
             $position = $data['position'];
