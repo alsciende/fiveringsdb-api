@@ -35,10 +35,13 @@ services:
         class: AppBundle\Service\DeckSerializer
         arguments:
           - "@app.data_transformer.card_slots"
+
+    app.deck_serialization_subscriber:
+        class: AppBundle\EventSubscriber\Serializer\DeckSerializationHandler
+        arguments:
+            - "@app.deck_serializer"
         tags:
-          - name: "jms_serializer.handler"
-            type: "AppBundle\\Entity\\Deck"
-            format: "json"
+            - { name: jms_serializer.subscribing_handler }
 
     app.canonical_fields_updater:
         class: AppBundle\Util\CanonicalFieldsUpdater

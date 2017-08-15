@@ -4,15 +4,7 @@ declare(strict_types=1);
 
 namespace AppBundle\Service;
 
-use AppBundle\Entity\Card;
 use AppBundle\Entity\Deck;
-use AppBundle\Entity\DeckCard;
-use AppBundle\Exception\CardNotFoundException;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
-use JMS\Serializer\Context;
-use JMS\Serializer\JsonDeserializationVisitor;
-use JMS\Serializer\JsonSerializationVisitor;
 use Symfony\Component\Form\DataTransformerInterface;
 
 class DeckSerializer
@@ -25,7 +17,7 @@ class DeckSerializer
       $this->transformer = $transformer;
     }
 
-    public function deserializeDeckFromJson(JsonDeserializationVisitor $visitor, array $data, array $type): Deck
+    public function deserialize(array $data): Deck
     {
         $deck = new Deck();
 
@@ -44,9 +36,9 @@ class DeckSerializer
         return $deck;
     }
 
-    public function serializeDeckToJson(JsonSerializationVisitor $visitor, Deck $deck, array $type, Context $context)
+    public function serialize(Deck $deck)
     {
-        $data = [
+        return [
             'id' => $deck->getId(),
             'name' => $deck->getName(),
             'description' => $deck->getDescription(),
@@ -58,11 +50,5 @@ class DeckSerializer
             'problem' => $deck->getProblem(),
             'strain' => $deck->getStrain() ? $deck->getStrain()->getId() : null
         ];
-
-        if($visitor->getRoot() === null) {
-            $visitor->setRoot($data);
-        }
-
-        return $data;
     }
 }

@@ -55,7 +55,7 @@ class PublicDeckControllerTest extends BaseApiControllerTest
             $record['name']
         );
         $this->assertEquals(
-            33,
+            34,
             count($record['cards'])
         );
         $this->assertEquals(
