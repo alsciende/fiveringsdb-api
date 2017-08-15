@@ -34,7 +34,11 @@ class Strain
      */
     private $id;
 
+    /**
+     * @var string
+     */
     private $origin;
+
 
     /**
      * The owner of the strain
@@ -71,55 +75,55 @@ class Strain
         $this->decks = new ArrayCollection;
     }
 
-    function getId (): ?string
+    public function getId (): ?string
     {
         return $this->id;
     }
 
-    function setId (string $id): self
+    public function setId (string $id): self
     {
         $this->id = $id;
 
         return $this;
     }
 
-    function getOrigin (): ?string
+    public function getOrigin (): ?string
     {
         return $this->origin;
     }
 
-    function setOrigin (string $origin): self
+    public function setOrigin (string $origin): self
     {
         $this->origin = $origin;
 
         return $this;
     }
 
-    function getUser (): ?User
+    public function getUser (): ?User
     {
         return $this->user;
     }
 
-    function setUser (User $user): self
+    public function setUser (User $user): self
     {
         $this->user = $user;
 
         return $this;
     }
 
-    function getHead (): ?Deck
+    public function getHead (): ?Deck
     {
         return $this->head;
     }
 
-    function setHead (Deck $head): self
+    public function setHead (Deck $head): self
     {
         $this->head = $head;
 
         return $this;
     }
 
-    function clearHead (): self
+    public function clearHead (): self
     {
         $this->head = null;
 

@@ -2,11 +2,11 @@
 
 namespace AppBundle\Security;
 
-use AppBundle\Entity\Comment;
+use AppBundle\Entity\Deck;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
-class CommentVisibilityVoter extends Voter
+class ReadDeckVoter extends Voter
 {
     /**
      * @param string $attribute
@@ -15,11 +15,11 @@ class CommentVisibilityVoter extends Voter
      */
     protected function supports($attribute, $object)
     {
-      if ($attribute !== 'COMMENT_VISIBILITY') {
+        if ($attribute !== 'READ_DECK') {
             return false;
         }
 
-        if (!$object instanceof Comment) {
+        if (!$object instanceof Deck) {
             return false;
         }
 
@@ -28,20 +28,20 @@ class CommentVisibilityVoter extends Voter
 
     /**
      * @param string $attribute
-     * @param Comment $object
+     * @param Deck $object
      * @param TokenInterface $token
      * @return bool
      */
     protected function voteOnAttribute($attribute, $object, TokenInterface $token)
     {
-      if ($token->getUser() === $object->getDeck()->getUser()) {
-        return true;
-      }
+        if ($token->getUser() === $object->getUser()) {
+            return true;
+        }
 
-      if ($token->getUser()->hasRole('ROLE_MODERATOR')) {
-        return true;
-      }
+        if ($object->isPublished()) {
+            return true;
+        }
 
-      return false;
+        return false;
     }
 }

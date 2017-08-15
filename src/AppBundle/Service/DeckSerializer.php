@@ -42,6 +42,7 @@ class DeckSerializer
             'id' => $deck->getId(),
             'name' => $deck->getName(),
             'description' => $deck->getDescription(),
+            'format' => $deck->getFormat(),
             'cards' => $this->transformer->transform($deck->getDeckCards()),
             'created_at' => $deck->getCreatedAt()->format('c'),
             'user_id' => $deck->getUser() ? $deck->getUser()->getId() : null,
