@@ -25,36 +25,37 @@ class StrainController extends BaseApiController
      * @Route("/strains")
      * @Method("POST")
      * @Security("has_role('ROLE_USER')")
-     * @TODO : check quota
+     * @TODO check quota
      */
     public function postAction (Request $request)
     {
-      $strain = new Strain($this->getUser());
-      $form = $this->createForm(StrainType::class, $strain);
-      $form->submit(json_decode($request->getContent(), true), false);
+        $strain = new Strain($this->getUser());
+        $form = $this->createForm(StrainType::class, $strain);
+        $form->submit(json_decode($request->getContent(), true), false);
 
-      if($form->isSubmitted() && $form->isValid()) {
-        $this->getDoctrine()->getManager()->persist($strain);
-        if($strain->getOrigin() !== null) {
-          $origin = $this->getDoctrine()->getManager()->getRepository(Deck::class)->find($strain->getOrigin());
-          if($origin !== null) {
-            $copy = new Deck();
-            $copy->setUser($this->getUser())->setStrain($strain);
-            $this->get('app.deck_manager')->copy($copy, $origin)->persist($copy);
-          }
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->persist($strain);
+            if ($strain->getOrigin() !== null) {
+                $origin = $this->getDoctrine()->getManager()->getRepository(Deck::class)->find($strain->getOrigin());
+                if ($origin instanceof Deck
+                    && $this->isGranted('READ_DECK', $origin)) {
+                    $copy = new Deck();
+                    $copy->setUser($this->getUser())->setStrain($strain);
+                    $this->get('app.deck_manager')->copy($copy, $origin)->persist($copy);
+                }
+            }
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->success($strain, [
+                'Default',
+                'head_group',
+                'head' => [
+                    'Default'
+                ]
+            ]);
         }
-        $this->getDoctrine()->getManager()->flush();
 
-        return $this->success($strain, [
-            'Default',
-            'head_group',
-            'head' => [
-                'Default'
-            ]
-        ]);
-      }
-
-      return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors(true)));
+        return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors(true)));
     }
 
     /**
@@ -85,7 +86,7 @@ class StrainController extends BaseApiController
      */
     public function deleteAction (Strain $strain)
     {
-        if($strain->getUser() !== $this->getUser()) {
+        if ($strain->getUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException();
         }
 

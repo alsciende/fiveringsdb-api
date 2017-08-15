@@ -59,42 +59,37 @@ class CardSlotCollectionDecorator extends ArrayCollection
         return $content;
     }
 
-    function filterByType(string $type): self
+    public function filterByType(string $type): self
     {
-        return $this->filter(function ($slot) use ($type) {
-            /** @var $slot CardSlotInterface */
+        return $this->filter(function (CardSlotInterface $slot) use ($type) {
             return $slot->getCard()->getType() === $type;
         });
     }
 
-    function filterBySide(string $side): self
+    public function filterBySide(string $side): self
     {
-        return $this->filter(function ($slot) use ($side) {
-            /** @var $slot CardSlotInterface */
+        return $this->filter(function (CardSlotInterface $slot) use ($side) {
             return $slot->getCard()->getSide() === $side;
         });
     }
 
-    function filterByClan(string $clan = null): self
+    public function filterByClan(string $clan = null): self
     {
-        return $this->filter(function ($slot) use ($clan) {
-            /** @var $slot CardSlotInterface */
+        return $this->filter(function (CardSlotInterface $slot) use ($clan) {
             return $slot->getCard()->getClan() === $clan;
         });
     }
 
-    function filterByElement(string $element = null): self
+    public function filterByElement(string $element = null): self
     {
-        return $this->filter(function ($slot) use ($element) {
-            /** @var $slot CardSlotInterface */
+        return $this->filter(function (CardSlotInterface $slot) use ($element) {
             return $slot->getCard()->getElement() === $element;
         });
     }
 
-    function findStronghold(): ?Card
+    public function findStronghold(): ?Card
     {
-        $slot = $this->find(function ($slot) {
-            /** @var $slot CardSlotInterface */
+        $slot = $this->find(function (CardSlotInterface $slot) {
             return $slot->getCard()->getType() === 'stronghold';
         });
 
@@ -105,10 +100,9 @@ class CardSlotCollectionDecorator extends ArrayCollection
         return null;
     }
 
-    function findRole(): ?Card
+    public function findRole(): ?Card
     {
-        $slot = $this->find(function ($slot) {
-            /** @var $slot CardSlotInterface */
+        $slot = $this->find(function (CardSlotInterface $slot) {
             return $slot->getCard()->getType() === 'role';
         });
 
@@ -119,4 +113,15 @@ class CardSlotCollectionDecorator extends ArrayCollection
         return null;
     }
 
+    /**
+     * Return true if all quantities are 1
+     */
+    public function isDistinct(): bool
+    {
+        $alien = $this->find(function (CardSlotInterface $slot) {
+            return $slot->getQuantity() > 1;
+        });
+
+        return $alien === null;
+    }
 }

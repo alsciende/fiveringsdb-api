@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 set -xv
 
-aglio -i documentation.apib -o docs/index.html
+aglio -i documentation.apib -o docs/index.html --theme-variables slate

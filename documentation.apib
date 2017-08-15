@@ -129,4 +129,119 @@ Text may be raw Markdown.
 
 # Group Deck Validation
 
+## Deck Validation [/deck-validation/{format}]
+
++ Attributes DeckContent
+    - *card-id* (string)
+        - copies (integer)
+
++ Parameters
+    + format (string) - Format of the deck to validate (possible values: `standard`, `single-core`)
+
+### Validate a deck [POST]
+
+The request must be a JSON representation of a deck cards. Open the **Request** section below to see an example.
+
+The response is a JSON object. The value of the `status` key is the result of the validation.
+The following table describes the possible values of `status`:
+
+| status | description    |
+|--------|----------------|
+| 0      | Deck is valid  |
+| 1      | Deck has too many copies of one or more cards  |
+| 2      | Deck has too few Strongholds  |
+| 3      | Deck has too many Strongholds  |
+| 4      | Deck has too many Roles  |
+| 5      | Deck has too few Dynasty cards  |
+| 6      | Deck has too many Dynasty cards  |
+| 7      | Deck has off-clan Dynasty cards  |
+| 8      | Deck has too few Conflict cards  |
+| 9      | Deck has too many Conflict cards  |
+| 10      | Deck does not have enough influence for its off-clan Conflict cards  |
+| 11      | Deck has more than one off-clan in its Conflict deck |
+| 12      | Deck  has too many Character cards in its Conflict deck |
+| 13      | Deck has too few Provinces  |
+| 14      | Deck has too many Provinces  |
+| 15      | Deck has too many Provinces of one Element  |
+| 16      | Deck has an off-clan Province |
+| 17      | Deck has a duplicate Province |
+
+
++ Request
+    + Body
+```json
+            {
+                "shizuka-toshi": 1,
+                "ancestral-lands": 1,
+                "elemental-fury": 1,
+                "the-art-of-peace": 1,
+                "night-raid": 1,
+                "pilgrimage": 1
+            }
+```
+
++ Response 200 (application/json)
+
+# Group Deck Strains
+
+A Deck Strain is a series of Decks that are different versions of the same deck. 
+
+To create a Deck, one must first create a Deck Strain. Then a Deck can be added to the Strain.
+
+The first Deck of a Strain is version 0.1. The second is version 0.2, etc.
+
+The last Deck in a Strain is called the Head of the Strain.
+
+## Strain Collection [/strains]
+
++ Attribute Deck
+    + id (string)
+    + name (string)
+    + description (string)
+    + format (string)
+    + cards: (DeckContent)
+    + created_at: (datetime)
+    + user_id: (string)
+    + nb_likes: (integer)
+    + version: (string)
+    + problem: (integer)
+    + strain: (string)
+
++ Attribute Strain
+    + id (string)
+    + head (Deck)
+
+### Create a Strain [POST]
+
+If the User has not reached her quota, a Strain is created and returned.
+
+If `origin` was passed in the JSON body and a Deck can be found with this ID and that Deck can be read by the User,
+then a Deck is created in the Strain as a copy of that Deck.
+
++ Request
+    + Attributes
+        + origin (string) - Optional ID of the Deck which will be copied to create the first Deck in the Strain
+    + Body
+```json
+            {
+                "origin": "8979b558-8193-11e7-84b2-685b35b003e2"
+            }
+```
+
++ Response 200 (application/json)
+
+### List all Strains [GET]
+
++ Response 200 (application/json)
+
+## Strain [/strains/{id}]
+
++ Parameters
+    + id (uuid) - ID of the Strain
+
+### Delete a Strain [DELETE]
+
+Delete a Strain and all its Decks.
+
++ Response 200 (application/json)
 
