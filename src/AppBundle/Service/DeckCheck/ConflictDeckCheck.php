@@ -3,6 +3,7 @@
 namespace AppBundle\Service\DeckCheck;
 
 use AppBundle\Entity\Card;
+use AppBundle\Entity\Deck;
 use AppBundle\Model\CardSlotCollectionDecorator;
 use AppBundle\Model\CardSlotInterface;
 use AppBundle\Service\DeckValidator;
@@ -14,17 +15,19 @@ use AppBundle\Service\DeckValidator;
  */
 class ConflictDeckCheck implements DeckCheckInterface
 {
-    public function check(CardSlotCollectionDecorator $deckCards): int
+    public function check(CardSlotCollectionDecorator $deckCards, string $format): int
     {
 
         $conflictDeck = $deckCards->filterBySide(Card::SIDE_CONFLICT);
         $conflictCount = $conflictDeck->countCards();
 
-        if ($conflictCount < 40) {
+        $minCount = $format === Deck::FORMAT_SINGLE_CORE ? 30 : 40;
+        if ($conflictCount < $minCount) {
             return DeckValidator::TOO_FEW_CONFLICT;
         }
 
-        if ($conflictCount > 45) {
+        $maxCount = $format === Deck::FORMAT_SINGLE_CORE ? 30 : 45;
+        if ($conflictCount > $maxCount) {
             return DeckValidator::TOO_MANY_CONFLICT;
         }
 
@@ -32,11 +35,15 @@ class ConflictDeckCheck implements DeckCheckInterface
             return DeckValidator::TOO_MANY_CHARACTER_IN_CONFLICT;
         }
 
-        $strongholdSlot = $deckCards->findStrongholdSlot();
-        if ($strongholdSlot !== null) {
-            $stronghold = $strongholdSlot->getCard();
+        $stronghold = $deckCards->findStronghold();
+        if ($stronghold instanceof Card) {
             $clan = $stronghold->getClan();
             $influencePool = $stronghold->getInfluencePool();
+
+            $role = $deckCards->findRole();
+            if($role instanceof Card && $role->hasTrait('keeper')) {
+                $influencePool += 3;
+            }
 
             $offClanSlots = $deckCards->filter(function ($slot) use ($clan) {
                 /** @var CardSlotInterface $slot */

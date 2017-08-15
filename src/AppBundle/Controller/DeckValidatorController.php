@@ -17,10 +17,10 @@ use Symfony\Component\HttpFoundation\Request;
 class DeckValidatorController extends BaseApiController
 {
     /**
-     * @Route("/deck-validation")
+     * @Route("/deck-validation/{format}")
      * @Method("POST")
      */
-    public function validateAction(Request $request)
+    public function validateAction(Request $request, string $format)
     {
         /** @var Deck $deck */
         $deck = $this->get('jms_serializer')->fromArray([
@@ -29,7 +29,7 @@ class DeckValidatorController extends BaseApiController
 
         return new JsonResponse([
             'success' => true,
-            'status' => $this->get('app.deck_validator')->check($deck->getDeckCards())
+            'status' => $this->get('app.deck_validator')->check($deck->getDeckCards(), $format)
         ]);
     }
 }

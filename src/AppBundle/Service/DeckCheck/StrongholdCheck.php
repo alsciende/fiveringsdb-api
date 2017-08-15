@@ -13,7 +13,7 @@ use AppBundle\Service\DeckValidator;
  */
 class StrongholdCheck implements DeckCheckInterface
 {
-    public function check(CardSlotCollectionDecorator $deckCards): int
+    public function check(CardSlotCollectionDecorator $deckCards, string $format): int
     {
         $strongholdCount = $deckCards->filterByType(Card::TYPE_STRONGHOLD)->countCards();
 

@@ -4,6 +4,7 @@ namespace AppBundle\Service\DeckCheck;
 
 use AppBundle\Entity\Card;
 use AppBundle\Model\CardSlotCollectionDecorator;
+use AppBundle\Model\CardSlotInterface;
 use AppBundle\Service\DeckValidator;
 
 /**
@@ -13,7 +14,7 @@ use AppBundle\Service\DeckValidator;
  */
 class ProvinceCheck implements DeckCheckInterface
 {
-    public function check(CardSlotCollectionDecorator $deckCards): int
+    public function check(CardSlotCollectionDecorator $deckCards, string $format): int
     {
         $provinceSlots = $deckCards->filterByType(Card::TYPE_PROVINCE);
 
@@ -27,19 +28,31 @@ class ProvinceCheck implements DeckCheckInterface
 
         $provinceElements = array_unique(
             array_map(
-                function ($slot) {
+                function (CardSlotInterface $slot) {
                     return $slot->getCard()->getElement();
                 },
                 $provinceSlots->toArray()
             )
         );
+
         if(count($provinceElements) < 5) {
-            return DeckValidator::DUPLICATE_ELEMENT;
+            $seekerException = false;
+
+            $role = $deckCards->findRole();
+            if($role instanceof Card
+                && $role->hasTrait('seeker')
+                && count(array_diff($provinceElements, $role->getTraits())) === 3
+            ) {
+                $seekerException = true;
+            }
+
+            if($seekerException === false) {
+                return DeckValidator::DUPLICATE_ELEMENT;
+            }
         }
 
-        $strongholdSlot = $deckCards->findStrongholdSlot();
-        if ($strongholdSlot !== null) {
-            $stronghold = $strongholdSlot->getCard();
+        $stronghold = $deckCards->findStronghold();
+        if ($stronghold instanceof Card) {
             $clan = $stronghold->getClan();
 
             $offClanProvinceSlot = $provinceSlots->find(function ($slot) use ($clan) {

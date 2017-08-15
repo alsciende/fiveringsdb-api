@@ -15,7 +15,7 @@ abstract class AbstractDeckCheckTest extends TestCase
     public function assertCheck(DeckCheckInterface $checker, int $expectedValue, array $deckCards) {
         $this->assertEquals(
             $expectedValue,
-            $checker->check(new CardSlotCollectionDecorator($deckCards))
+            $checker->check(new CardSlotCollectionDecorator($deckCards), 'standard')
         );
     }
 

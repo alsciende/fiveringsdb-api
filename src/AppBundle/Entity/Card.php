@@ -185,7 +185,7 @@ class Card
     private $side;
 
     /**
-     * @var string
+     * @var array
      *
      * @ORM\Column(name="traits", type="simple_array", nullable=true)
      *
@@ -437,7 +437,7 @@ class Card
         return $this;
     }
 
-    public function setTraits (string $traits): self
+    public function setTraits (array $traits): self
     {
         $this->traits = $traits;
         return $this;
@@ -564,9 +564,14 @@ class Card
         return $this->side;
     }
 
-    public function getTraits (): string
+    public function getTraits (): array
     {
         return $this->traits;
+    }
+
+    public function hasTrait ($trait): bool
+    {
+        return in_array($trait, $this->traits);
     }
 
     public function getMilitary (): int

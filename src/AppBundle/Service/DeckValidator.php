@@ -54,10 +54,10 @@ class DeckValidator
     /**
      * Returns null if the deck is legal, or a string
      */
-    public function check (CardSlotCollectionDecorator $deckCards)
+    public function check (CardSlotCollectionDecorator $deckCards, string $format)
     {
         foreach ($this->DeckChecks as $DeckCheck) {
-            $result = $DeckCheck->check($deckCards);
+            $result = $DeckCheck->check($deckCards, $format);
             if ($result !== self::VALID_DECK) {
                 return $result;
             }

@@ -19,6 +19,9 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
  */
 class Deck
 {
+    const FORMAT_STANDARD = 'standard';
+    const FORMAT_SINGLE_CORE = 'single-core';
+
     use TimestampableEntity;
 
     /**
@@ -122,9 +125,8 @@ class Deck
     private $problem;
 
     /**
-     * @var Format|null
-     * @ORM\ManyToOne(targetEntity="Format", inversedBy="decks")
-     * @ORM\JoinColumn(name="format_id", referencedColumnName="id", nullable=false)
+     * @var string
+     * @ORM\Column(type="string", nullable=false)
      */
     protected $format;
 
@@ -367,18 +369,14 @@ class Deck
         return $this;
     }
 
-    public function setFormat(Format $format = null): self
-    {
-        $this->format = $format;
-        if ($format instanceof Format) {
-            $format->addDeck($this);
-        }
-
-        return $this;
-    }
-
-    public function getFormat(): ?Format
+    public function getFormat (): ?string
     {
         return $this->format;
+    }
+
+    public function setFormat (string $format): self
+    {
+        $this->format = $format;
+        return $this;
     }
 }
