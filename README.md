@@ -36,8 +36,8 @@ A deckbuilder for **Legend of the Five Rings LCG**
 
 - Go to the frond-end project: `cd vue`
 - Install the vendors: `npm install --no-optional`
-- Export the API URL: `export FIVERINGSDB_API_URL=http://localhost:8642/app_dev.php`
-- (optional) Export the card images folder URL: `export FIVERINGSDB_IMG_URL=http://localhost:8642/bundles/card_images`
+- Export the API URL: `export FIVERINGSDB_API_URL=http://localhost:8642/app_dev.php/` (trailing slash mandatory)
+- (optional) Export the card images folder URL: `export FIVERINGSDB_IMG_URL=http://localhost:8642/bundles/card_images/` (trailing slash mandatory)
 - Run the Webpack server: `npm run dev`
 
 ### Tests
