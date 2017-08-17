@@ -57,3 +57,4 @@
 /vue/yarn-error.log*
 /vue/selenium-debug.log
 
+.web-server-pid
