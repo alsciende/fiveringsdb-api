@@ -26,8 +26,10 @@ class AuthController extends Controller
     {
         $request->getSession()->start();
 
+        $metagameBaseUri = $this->getParameter('metagame_base_uri');
+
         return [
-            'uri' => 'http://metagame.dev:8080/app_dev.php/oauth/v2/auth',
+            'uri' => $metagameBaseUri.'oauth/v2/auth',
             'query' => http_build_query([
                 'client_id' => $this->getParameter('metagame_client_id'),
                 'redirect_uri' => $this->getParameter('metagame_redirect_uri'),
