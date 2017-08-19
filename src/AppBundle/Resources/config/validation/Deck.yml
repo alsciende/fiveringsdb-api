@@ -3,3 +3,6 @@ AppBundle\Entity\Deck:
         name:
             - Type: string
             - NotBlank: ~
+        format:
+            - Type: string
+            - NotBlank: ~

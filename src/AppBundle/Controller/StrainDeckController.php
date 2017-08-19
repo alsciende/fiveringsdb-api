@@ -25,23 +25,23 @@ class StrainDeckController extends BaseApiController
      */
     public function postAction (Request $request, Strain $strain)
     {
-      if($strain->getUser() !== $this->getUser()) {
-          throw $this->createAccessDeniedException();
-      }
+        if ($strain->getUser() !== $this->getUser()) {
+            throw $this->createAccessDeniedException();
+        }
 
-      $deck = new Deck();
-      $form = $this->createForm(DeckType::class, $deck);
-      $form->submit(json_decode($request->getContent(), true), false);
+        $deck = new Deck();
+        $form = $this->createForm(DeckType::class, $deck);
+        $form->submit(json_decode($request->getContent(), true), true);
 
-      if($form->isSubmitted() && $form->isValid()) {
-        $deck->setUser($this->getUser())->setStrain($strain);
-        $this->get('app.deck_manager')->persist($deck);
-        $this->getDoctrine()->getManager()->flush();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $deck->setUser($this->getUser())->setStrain($strain);
+            $this->get('app.deck_manager')->persist($deck);
+            $this->getDoctrine()->getManager()->flush();
 
-        return $this->success($deck);
-      }
+            return $this->success($deck);
+        }
 
-      return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors(true)));
+        return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors(true)));
     }
 
     /**
@@ -52,14 +52,14 @@ class StrainDeckController extends BaseApiController
      */
     public function listAction (Strain $strain)
     {
-        if($strain->getUser() !== $this->getUser()) {
+        if ($strain->getUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException();
         }
 
         $decks = $this
-          ->getDoctrine()
-          ->getRepository(Deck::class)
-          ->findBy(['strain' => $strain], ['createdAt' => 'ASC']);
+            ->getDoctrine()
+            ->getRepository(Deck::class)
+            ->findBy(['strain' => $strain], ['createdAt' => 'ASC']);
 
         return $this->success($decks);
     }
@@ -72,7 +72,7 @@ class StrainDeckController extends BaseApiController
      */
     public function getAction (Deck $deck)
     {
-        if($deck->getUser() !== $this->getUser()) {
+        if ($deck->getUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException();
         }
 
@@ -87,10 +87,10 @@ class StrainDeckController extends BaseApiController
      */
     public function deleteAction (Deck $deck)
     {
-        if($deck->isPublished()) {
+        if ($deck->isPublished()) {
             throw $this->createNotFoundException();
         }
-        if($deck->getUser() !== $this->getUser()) {
+        if ($deck->getUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException();
         }
 

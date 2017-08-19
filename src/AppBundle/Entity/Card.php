@@ -503,7 +503,7 @@ class Card
         return $this;
     }
 
-    public function setInfluenceCost (int $influenceCost): self
+    public function setInfluenceCost (int $influenceCost = null): self
     {
         $this->influenceCost = $influenceCost;
         return $this;
@@ -624,7 +624,7 @@ class Card
         return $this->influencePool;
     }
 
-    public function getInfluenceCost (): int
+    public function getInfluenceCost (): ?int
     {
         return $this->influenceCost;
     }

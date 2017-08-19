@@ -31,7 +31,7 @@ class StrainController extends BaseApiController
     {
         $strain = new Strain($this->getUser());
         $form = $this->createForm(StrainType::class, $strain);
-        $form->submit(json_decode($request->getContent(), true), false);
+        $form->submit(json_decode($request->getContent(), true), true);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->persist($strain);

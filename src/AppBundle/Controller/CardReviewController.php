@@ -29,7 +29,7 @@ class CardReviewController extends BaseApiController
     {
         $review = new Review();
         $form = $this->createForm(ReviewType::class, $review);
-        $form->submit(json_decode($request->getContent(), true), false);
+        $form->submit(json_decode($request->getContent(), true), true);
 
         if($form->isSubmitted() && $form->isValid()) {
             $review->setUser($this->getUser())->setCard($card);
