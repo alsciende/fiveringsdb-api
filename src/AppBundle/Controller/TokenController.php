@@ -25,7 +25,7 @@ class TokenController extends BaseApiController
     {
         $token = new Token();
         $form = $this->createForm(TokenType::class, $token);
-        $form->submit(json_decode($request->getContent(), true), false);
+        $form->submit(json_decode($request->getContent(), true), true);
 
         if($form->isSubmitted() && $form->isValid()) {
             if($this->getDoctrine()->getRepository(Token::class)->find($token->getId()) instanceof Token) {

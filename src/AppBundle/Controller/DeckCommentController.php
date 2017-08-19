@@ -31,7 +31,7 @@ class DeckCommentController extends BaseApiController
     {
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
-        $form->submit(json_decode($request->getContent(), true), false);
+        $form->submit(json_decode($request->getContent(), true), true);
 
         if($form->isSubmitted() && $form->isValid()) {
             $comment->setUser($this->getUser())->setDeck($deck);

@@ -159,12 +159,13 @@ The following table describes the possible values of `status`:
 | 9      | Deck has too many Conflict cards  |
 | 10      | Deck does not have enough influence for its off-clan Conflict cards  |
 | 11      | Deck has more than one off-clan in its Conflict deck |
-| 12      | Deck  has too many Character cards in its Conflict deck |
+| 12      | Deck has too many Character cards in its Conflict deck |
 | 13      | Deck has too few Provinces  |
 | 14      | Deck has too many Provinces  |
 | 15      | Deck has too many Provinces of one Element  |
 | 16      | Deck has an off-clan Province |
 | 17      | Deck has a duplicate Province |
+| 18      | Deck has an off-clan Conflict card with no influence cost |
 
 
 + Request
@@ -245,3 +246,30 @@ Delete a Strain and all its Decks.
 
 + Response 200 (application/json)
 
+# Group Strain Deck
+
+## Strain Deck Collection [/strains/{id}/decks]
+
+### List all Decks of a Strain [GET]
+
++ Response 200 (application/json)
+
+### Create a Strain Deck [POST]
+
+Excepts a Deck as request body.
+
++ Response 200 (application/json)
+
+## Strain Deck [/strains/{id}/decks/{id}]
+
+### Get details about a Deck [GET]
+
++ Response 200 (application/json)
+
+### Delete a Strain Deck [DELETE]
+
++ Response 200 (application/json)
+
+
+
+    

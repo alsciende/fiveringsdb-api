@@ -17,7 +17,6 @@ class ConflictDeckCheck implements DeckCheckInterface
 {
     public function check(CardSlotCollectionDecorator $deckCards, string $format): int
     {
-
         $conflictDeck = $deckCards->filterBySide(Card::SIDE_CONFLICT);
         $conflictCount = $conflictDeck->countCards();
 
@@ -45,14 +44,17 @@ class ConflictDeckCheck implements DeckCheckInterface
                 $influencePool += 3;
             }
 
-            $offClanSlots = $deckCards->filter(function ($slot) use ($clan) {
-                /** @var CardSlotInterface $slot */
+            $offClanSlots = $deckCards->filter(function (CardSlotInterface $slot) use ($clan) {
                 return $slot->getCard()->getClan() !== 'neutral'
                     && $slot->getCard()->getClan() !== $clan;
             });
 
             foreach($offClanSlots as $slot) {
                 /** @var CardSlotInterface $slot */
+                if($slot->getCard()->getInfluenceCost() === null) {
+                    return DeckValidator::FORBIDDEN_SPLASH;
+                }
+
                 $influencePool -= $slot->getQuantity() * $slot->getCard()->getInfluenceCost();
             }
 
@@ -63,8 +65,7 @@ class ConflictDeckCheck implements DeckCheckInterface
             if(count(
                 array_unique(
                     array_map(
-                        function ($slot) {
-                            /** @var CardSlotInterface $slot */
+                        function (CardSlotInterface $slot) {
                             return $slot->getCard()->getClan();
                         },
                         $offClanSlots->toArray()

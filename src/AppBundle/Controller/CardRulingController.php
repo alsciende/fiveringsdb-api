@@ -30,7 +30,7 @@ class CardRulingController extends BaseApiController
     {
         $ruling = new Ruling();
         $form = $this->createForm(RulingType::class, $ruling);
-        $form->submit(json_decode($request->getContent(), true), false);
+        $form->submit(json_decode($request->getContent(), true), true);
 
         if($form->isSubmitted() && $form->isValid()) {
             $ruling->setUser($this->getUser())->setCard($card);
