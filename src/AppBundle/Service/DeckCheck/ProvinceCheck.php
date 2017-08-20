@@ -26,10 +26,6 @@ class ProvinceCheck implements DeckCheckInterface
             return DeckValidator::TOO_MANY_PROVINCE;
         }
 
-        if($provinceSlots->isDistinct() === false) {
-            return DeckValidator::DUPLICATE_PROVINCE;
-        }
-
         $provinceElements = array_unique(
             array_map(
                 function (CardSlotInterface $slot) {

@@ -44,7 +44,7 @@ class ConflictDeckCheck implements DeckCheckInterface
                 $influencePool += 3;
             }
 
-            $offClanSlots = $deckCards->filter(function (CardSlotInterface $slot) use ($clan) {
+            $offClanSlots = $conflictDeck->filter(function (CardSlotInterface $slot) use ($clan) {
                 return $slot->getCard()->getClan() !== 'neutral'
                     && $slot->getCard()->getClan() !== $clan;
             });

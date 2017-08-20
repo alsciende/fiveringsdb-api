@@ -34,10 +34,9 @@ class DynastyDeckCheck implements DeckCheckInterface
         if ($stronghold instanceof Card) {
             $clan = $stronghold->getClan();
 
-            $offClanSlot = $deckCards->find(function ($slot) use ($clan) {
+            $offClanSlot = $dynastyDeck->find(function ($slot) use ($clan) {
                 /** @var CardSlotInterface $slot */
-                return $slot->getCard()->getSide() === 'dynasty'
-                    && $slot->getCard()->getClan() !== 'neutral'
+                return $slot->getCard()->getClan() !== 'neutral'
                     && $slot->getCard()->getClan() !== $clan;
             });
 

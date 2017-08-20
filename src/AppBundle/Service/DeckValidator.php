@@ -29,8 +29,7 @@ class DeckValidator
     const TOO_MANY_PROVINCE = 14;
     const DUPLICATE_ELEMENT = 15;
     const OFF_CLAN_PROVINCE = 16;
-    const DUPLICATE_PROVINCE = 17;
-    const FORBIDDEN_SPLASH = 18;
+    const FORBIDDEN_SPLASH = 17;
 
     /** @var DeckCheckInterface[] */
     private $DeckChecks;
