@@ -89,6 +89,8 @@ jms_serializer:
         json:
             # JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
             options: 448
+    metadata:
+        auto_detection: true
 
 cocur_slugify:
     rulesets:

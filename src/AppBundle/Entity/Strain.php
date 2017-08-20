@@ -6,15 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use JMS\Serializer\Annotation as JMS;
 
 /**
  * A strain of private decks
  *
  * @ORM\Table(name="strains")
  * @ORM\Entity()
- *
- * @JMS\ExclusionPolicy("all")
  *
  * @author Alsciende <alsciende@icloud.com>
  */
@@ -29,8 +26,6 @@ class Strain
      * @ORM\Column(name="id", type="string", length=255, unique=true)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="UUID")
-     * @JMS\Expose
-     * @JMS\Groups({"Default"})
      */
     private $id;
 
@@ -38,7 +33,6 @@ class Strain
      * @var string
      */
     private $origin;
-
 
     /**
      * The owner of the strain
@@ -55,8 +49,6 @@ class Strain
      * @var Deck
      * @ORM\OneToOne(targetEntity="Deck", fetch="EAGER")
      * @ORM\JoinColumn(name="deck_id", referencedColumnName="id")
-     * @JMS\Expose
-     * @JMS\Groups({"head_group"})
      */
     private $head;
 
