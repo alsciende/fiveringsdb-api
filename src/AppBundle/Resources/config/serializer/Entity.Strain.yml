@@ -1,0 +1,10 @@
+AppBundle\Entity\Strain:
+    exclusion_policy: ALL
+    properties:
+        id:
+            expose: true
+        createdAt:
+            expose: true
+        head:
+            expose: true
+            groups: [head_group]
