@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Alsciende\SerializerBundle\Annotation\Source;
@@ -33,7 +34,7 @@ class Cycle
      *
      * @Source(type="string")
      *
-     * @JMS\Expose
+     * @JMS\Expose()
      * @JMS\Groups({"Default","id_group"})
      */
     private $id;
@@ -45,7 +46,7 @@ class Cycle
      *
      * @Source(type="string")
      *
-     * @JMS\Expose
+     * @JMS\Expose()
      */
     private $name;
 
@@ -56,7 +57,7 @@ class Cycle
      *
      * @Source(type="integer")
      *
-     * @JMS\Expose
+     * @JMS\Expose()
      */
     private $position;
 
@@ -67,9 +68,18 @@ class Cycle
      *
      * @Source(type="integer")
      *
-     * @JMS\Expose
+     * @JMS\Expose()
      */
     private $size;
+
+    /**
+     * @var Collection|Pack[]
+     * @ORM\OneToMany(targetEntity="Pack", mappedBy="cycle")
+     *
+     * @JMS\Expose()
+     * @JMS\Groups({"packs_group"})
+     */
+    private $packs;
 
     public function setId (string $id): self
     {
@@ -113,5 +123,52 @@ class Cycle
     public function getSize (): int
     {
         return $this->size;
+    }
+
+    /** @param Collection|Pack[] $packs */
+    public function setPacks (Collection $packs): self
+    {
+        $this->clearPacks();
+        foreach ($packs as $pack) {
+            $this->addPack($pack);
+        }
+
+        return $this;
+    }
+
+    public function addPack (Pack $pack): self
+    {
+        if ($this->packs->contains($pack) === false) {
+            $this->packs->add($pack);
+            $pack->setCycle($this);
+        }
+
+        return $this;
+    }
+
+    /** @return Collection|Pack[] */
+    public function getPacks (): Collection
+    {
+        return $this->packs;
+    }
+
+    public function removePack (Pack $pack): self
+    {
+        if ($this->packs->contains($pack)) {
+            $this->packs->removeElement($pack);
+            $pack->setCycle(null);
+        }
+
+        return $this;
+    }
+
+    public function clearPacks (): self
+    {
+        foreach ($this->getPacks() as $pack) {
+            $this->removePack($pack);
+        }
+        $this->packs->clear();
+
+        return $this;
     }
 }

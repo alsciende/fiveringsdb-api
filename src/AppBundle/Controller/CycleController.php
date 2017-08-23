@@ -25,7 +25,10 @@ class CycleController extends BaseApiController
             $this
                 ->getDoctrine()
                 ->getRepository(Cycle::class)
-                ->findAll()
+                ->findAll(),
+            [
+                'Default'
+            ]
         );
     }
 }
