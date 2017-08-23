@@ -98,7 +98,7 @@ class Pack
     /**
      * @var Cycle
      *
-     * @ORM\ManyToOne(targetEntity="Cycle")
+     * @ORM\ManyToOne(targetEntity="Cycle", inversedBy="packs")
      * @ORM\JoinColumn(name="cycle_id", referencedColumnName="id", nullable=false)
      *
      * @Source(type="association")
