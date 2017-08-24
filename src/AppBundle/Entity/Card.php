@@ -331,6 +331,18 @@ class Card
     private $deckLimit;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="role_restriction", type="string", nullable=true)
+     *
+     * @Source(type="string")
+     *
+     * @JMS\Expose()
+     * @JMS\Type("string")
+     */
+    private $roleRestriction;
+
+    /**
      * @var Collection
      *
      * @ORM\OneToMany(targetEntity="PackCard", mappedBy="card", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
@@ -639,6 +651,18 @@ class Card
     public function getDeckLimit (): int
     {
         return $this->deckLimit;
+    }
+
+    public function getRoleRestriction (): string
+    {
+        return $this->roleRestriction;
+    }
+
+    public function setRoleRestriction (string $roleRestriction): self
+    {
+        $this->roleRestriction = $roleRestriction;
+
+        return $this;
     }
 
     /**
