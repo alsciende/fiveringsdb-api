@@ -42,7 +42,7 @@ class ImageFetchCommand extends ContainerAwareCommand
         $packCards = $em->getRepository(PackCard::class)->findAll();
 
         foreach($packCards as $packCard) {
-            $url = sprintf("%s/%s_%d.jpg",
+            $url = sprintf("%s/%s_%s.jpg",
                 $baseURL,
                 $packCard->getPack()->getFfgId(),
                 $packCard->getPosition()

@@ -37,11 +37,11 @@ class PackCard implements CardSlotInterface
     private $quantity;
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="position", type="integer", nullable=false)
+     * @ORM\Column(name="position", type="string", nullable=false)
      *
-     * @Source(type="integer")
+     * @Source(type="string")
      *
      * @JMS\Expose
      */
@@ -122,12 +122,12 @@ class PackCard implements CardSlotInterface
         return $this;
     }
 
-    public function getPosition (): int
+    public function getPosition (): string
     {
         return $this->position;
     }
 
-    public function setPosition (int $position): self
+    public function setPosition (string $position): self
     {
         $this->position = $position;
         return $this;
