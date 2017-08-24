@@ -86,12 +86,12 @@ class Pack
      */
     private $releasedAt;
 
-    /*
-     * @var int
+    /**
+     * @var string
      *
-     * @ORM\Column(name="ffg_id", type="integer", nullable=true)
+     * @ORM\Column(name="ffg_id", type="string", nullable=true)
      *
-     * @Source(type="integer")
+     * @Source(type="string")
      */
     private $ffgId;
 
@@ -183,14 +183,14 @@ class Pack
         return $this;
     }
 
-    public function setFfgId (int $ffgId): self
+    public function setFfgId (string $ffgId): self
     {
         $this->ffgId = $ffgId;
 
         return $this;
     }
 
-    public function getFfgId (): int
+    public function getFfgId (): string
     {
         return $this->ffgId;
     }
