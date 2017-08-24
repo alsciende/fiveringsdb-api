@@ -190,7 +190,7 @@ class Pack
         return $this;
     }
 
-    public function getFfgId (): string
+    public function getFfgId (): ?string
     {
         return $this->ffgId;
     }
