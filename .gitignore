@@ -58,3 +58,6 @@
 /vue/selenium-debug.log
 
 .web-server-pid
+
+# Images linked to static
+/vue/static/cards
