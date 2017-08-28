@@ -59,6 +59,17 @@ class PackCard implements CardSlotInterface
     private $illustrator;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="flavor", type="string", nullable=true)
+     *
+     * @Source(type="string")
+     *
+     * @JMS\Expose
+     */
+    private $flavor;
+
+    /**
      * @var \AppBundle\Entity\Card
      *
      * @ORM\Id
@@ -141,6 +152,18 @@ class PackCard implements CardSlotInterface
     public function setIllustrator (string $illustrator): self
     {
         $this->illustrator = $illustrator;
+        return $this;
+    }
+
+    public function getFlavor(): string
+    {
+        return $this->flavor;
+    }
+
+    public function setFlavor(string $flavor): self
+    {
+        $this->flavor = $flavor;
+
         return $this;
     }
 }
