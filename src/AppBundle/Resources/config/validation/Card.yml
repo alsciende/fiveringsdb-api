@@ -56,7 +56,7 @@ AppBundle\Entity\Card:
         unicity:
             - Type: boolean
             - Expression:
-                expression: "this.getType() in ['attachment','character','stronghold'] or value === false"
+                expression: "this.getType() in ['attachment','character','stronghold','holding'] or value === false"
         traits:
             - Type: array
             - All:

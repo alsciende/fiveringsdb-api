@@ -26,6 +26,9 @@ parameters:
     # Json Data Repository
     path_to_json_data: "%kernel.root_dir%/../../data"
 
+    # Card Images Repository
+    path_to_card_images: "%kernel.root_dir%/../../images"
+
     # Communication with Metagame server
     # Base URI, with trailing slash
     metagame_base_uri: 'https://metagame.cards/'

@@ -381,6 +381,7 @@ class Card
         $this->rulings = new ArrayCollection();
         $this->deckLimit = 3;
         $this->traits = [];
+        $this->unicity = false;
     }
 
     public function setId (string $id): self
@@ -531,12 +532,12 @@ class Card
         return $this->name;
     }
 
-    public function getNameCanonical(): string
+    public function getNameCanonical(): ?string
     {
         return $this->nameCanonical;
     }
 
-    public function getCost (): int
+    public function getCost (): ?int
     {
         return $this->cost;
     }
@@ -586,52 +587,52 @@ class Card
         return in_array($trait, $this->traits);
     }
 
-    public function getMilitary (): int
+    public function getMilitary (): ?int
     {
         return $this->military;
     }
 
-    public function getPolitical (): int
+    public function getPolitical (): ?int
     {
         return $this->political;
     }
 
-    public function getStrength (): int
+    public function getStrength (): ?int
     {
         return $this->strength;
     }
 
-    public function getMilitaryBonus (): string
+    public function getMilitaryBonus (): ?string
     {
         return $this->militaryBonus;
     }
 
-    public function getPoliticalBonus (): string
+    public function getPoliticalBonus (): ?string
     {
         return $this->politicalBonus;
     }
 
-    public function getStrengthBonus (): string
+    public function getStrengthBonus (): ?string
     {
         return $this->strengthBonus;
     }
 
-    public function getGlory (): int
+    public function getGlory (): ?int
     {
         return $this->glory;
     }
 
-    public function getHonor (): int
+    public function getHonor (): ?int
     {
         return $this->honor;
     }
 
-    public function getFate (): int
+    public function getFate (): ?int
     {
         return $this->fate;
     }
 
-    public function getInfluencePool (): int
+    public function getInfluencePool (): ?int
     {
         return $this->influencePool;
     }
@@ -648,12 +649,12 @@ class Card
         return $this;
     }
 
-    public function getDeckLimit (): int
+    public function getDeckLimit (): ?int
     {
         return $this->deckLimit;
     }
 
-    public function getRoleRestriction (): string
+    public function getRoleRestriction (): ?string
     {
         return $this->roleRestriction;
     }
