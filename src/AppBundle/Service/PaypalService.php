@@ -31,7 +31,7 @@ class PaypalService
         $parameters['METHOD'] = $method;
         $parameters['VERSION'] = $version;
 
-        foreach($parameters as $key => $value) {
+        foreach ($parameters as $key => $value) {
             $exec .= " -d $key=$value";
         }
 
@@ -44,13 +44,15 @@ class PaypalService
 
     public function setExpressCheckout ($amount, $currency, $paymentAction)
     {
-        return $this->createRequest("SetExpressCheckout", 98, [
-                    "PAYMENTREQUEST_0_AMT" => $amount,
-                    "PAYMENTREQUEST_0_CURRENCYCODE" => $currency,
-                    "PAYMENTREQUEST_0_PAYMENTACTION" => $paymentAction,
-                    "cancelUrl" => "http://fiveringsdb.dev/app_dev.php/paypal/cancel",
-                    "returnUrl" => "http://fiveringsdb.dev/app_dev.php/paypal/success",
-        ]);
+        return $this->createRequest(
+            "SetExpressCheckout", 98, [
+            "PAYMENTREQUEST_0_AMT"           => $amount,
+            "PAYMENTREQUEST_0_CURRENCYCODE"  => $currency,
+            "PAYMENTREQUEST_0_PAYMENTACTION" => $paymentAction,
+            "cancelUrl"                      => "http://fiveringsdb.dev/app_dev.php/paypal/cancel",
+            "returnUrl"                      => "http://fiveringsdb.dev/app_dev.php/paypal/success",
+        ]
+        );
     }
 
     public function getExpressCheckoutRedirectUrl ($token)
@@ -60,27 +62,33 @@ class PaypalService
 
     public function getExpressCheckoutDetails ($token)
     {
-        return $this->createRequest("GetExpressCheckoutDetails", 93, [
-                    "TOKEN" => $token,
-        ]);
+        return $this->createRequest(
+            "GetExpressCheckoutDetails", 93, [
+            "TOKEN" => $token,
+        ]
+        );
     }
 
     public function doExpressCheckoutPayment ($token, $payerID, $amount, $currency, $paymentAction)
     {
-        return $this->createRequest("DoExpressCheckoutPayment", 93, [
-                    "TOKEN" => $token,
-                    "PAYERID" => $payerID,
-                    "PAYMENTREQUEST_0_AMT" => $amount,
-                    "PAYMENTREQUEST_0_CURRENCYCODE" => $currency,
-                    "PAYMENTREQUEST_0_PAYMENTACTION" => $paymentAction,
-        ]);
+        return $this->createRequest(
+            "DoExpressCheckoutPayment", 93, [
+            "TOKEN"                          => $token,
+            "PAYERID"                        => $payerID,
+            "PAYMENTREQUEST_0_AMT"           => $amount,
+            "PAYMENTREQUEST_0_CURRENCYCODE"  => $currency,
+            "PAYMENTREQUEST_0_PAYMENTACTION" => $paymentAction,
+        ]
+        );
     }
 
     public function getTransactionDetails ($transactionId)
     {
-        return $this->createRequest("GetTransactionDetails", 78, [
-                    "TransactionID" => $transactionId,
-        ]);
+        return $this->createRequest(
+            "GetTransactionDetails", 78, [
+            "TransactionID" => $transactionId,
+        ]
+        );
     }
 
 }

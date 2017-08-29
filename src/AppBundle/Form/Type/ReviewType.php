@@ -15,15 +15,16 @@ class ReviewType extends AbstractType
     public function buildForm (FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('text', TextType::class)
-        ;
+            ->add('text', TextType::class);
     }
 
     public function configureOptions (OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'data_class' => Review::class,
-            'csrf_protection' => false,
-        ]);
+        $resolver->setDefaults(
+            [
+                'data_class'      => Review::class,
+                'csrf_protection' => false,
+            ]
+        );
     }
 }

@@ -13,9 +13,9 @@ class CommentVisibilityVoter extends Voter
      * @param mixed $object
      * @return bool
      */
-    protected function supports($attribute, $object)
+    protected function supports ($attribute, $object)
     {
-      if ($attribute !== 'COMMENT_VISIBILITY') {
+        if ($attribute !== 'COMMENT_VISIBILITY') {
             return false;
         }
 
@@ -32,16 +32,16 @@ class CommentVisibilityVoter extends Voter
      * @param TokenInterface $token
      * @return bool
      */
-    protected function voteOnAttribute($attribute, $object, TokenInterface $token)
+    protected function voteOnAttribute ($attribute, $object, TokenInterface $token)
     {
-      if ($token->getUser() === $object->getDeck()->getUser()) {
-        return true;
-      }
+        if ($token->getUser() === $object->getDeck()->getUser()) {
+            return true;
+        }
 
-      if ($token->getUser()->hasRole('ROLE_MODERATOR')) {
-        return true;
-      }
+        if ($token->getUser()->hasRole('ROLE_MODERATOR')) {
+            return true;
+        }
 
-      return false;
+        return false;
     }
 }

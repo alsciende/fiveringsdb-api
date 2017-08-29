@@ -36,7 +36,7 @@ class DeckValidator
 
     public function __construct ()
     {
-        $this->DeckChecks = array();
+        $this->DeckChecks = [];
     }
 
     /**
@@ -47,7 +47,7 @@ class DeckValidator
         $this->DeckChecks[] = $DeckCheck;
     }
 
-    public function getDeckCheckCount()
+    public function getDeckCheckCount ()
     {
         return count($this->DeckChecks);
     }

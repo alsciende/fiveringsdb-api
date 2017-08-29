@@ -84,24 +84,28 @@ class Cycle
     public function setId (string $id): self
     {
         $this->id = $id;
+
         return $this;
     }
 
     public function setName (string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
     public function setPosition (int $position): self
     {
         $this->position = $position;
+
         return $this;
     }
 
     public function setSize (int $size): self
     {
         $this->size = $size;
+
         return $this;
     }
 

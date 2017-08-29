@@ -30,8 +30,8 @@ class PackController extends BaseApiController
                 'Default',
                 'cycle_group',
                 'cycle' => [
-                    'id_group'
-                ]
+                    'id_group',
+                ],
             ]
         );
     }

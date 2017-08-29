@@ -33,21 +33,23 @@ class LoadDeckData extends AbstractFixture implements OrderedFixtureInterface, C
         $this->serializer = $this->container->get('app.deck_serializer');
         $user = $this->getReference('user-user');
 
-        $data = Yaml::parse(file_get_contents(__DIR__.'/fixtures/deck.yml'));
+        $data = Yaml::parse(file_get_contents(__DIR__ . '/fixtures/deck.yml'));
 
-        foreach($data as $name => $cards) {
+        foreach ($data as $name => $cards) {
             $this->loadDeck($user, 'single-core', $name, $cards);
         }
 
         $manager->flush();
     }
 
-    public function loadDeck(User $user, string $format, string $name, array $cards)
+    public function loadDeck (User $user, string $format, string $name, array $cards)
     {
-        $deck = $this->serializer->deserialize([
-            'name' => $name,
-            'cards' => $cards,
-        ]);
+        $deck = $this->serializer->deserialize(
+            [
+                'name'  => $name,
+                'cards' => $cards,
+            ]
+        );
         $deck->setFormat($format);
         $deck->setUser($user);
 

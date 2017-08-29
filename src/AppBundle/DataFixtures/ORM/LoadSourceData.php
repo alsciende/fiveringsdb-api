@@ -20,7 +20,7 @@ class LoadSourceData extends AbstractFixture implements OrderedFixtureInterface,
 {
 
     use  ContainerAwareTrait;
-    
+
     public function load (ObjectManager $manager)
     {
         /* @var $scanningService ScanningService */
@@ -34,13 +34,13 @@ class LoadSourceData extends AbstractFixture implements OrderedFixtureInterface,
         /* @var $validator RecursiveValidator */
         $validator = $this->container->get('validator');
 
-        foreach($sources as $source) {
+        foreach ($sources as $source) {
             $result = $serializer->importSource($source);
-            foreach($result as $imported) {
+            foreach ($result as $imported) {
                 $entity = $imported['entity'];
                 $errors = $validator->validate($entity);
-                if(count($errors) > 0) {
-                    $errorsString = (string) $errors;
+                if (count($errors) > 0) {
+                    $errorsString = (string)$errors;
                     throw new \Exception($errorsString);
                 }
             }
@@ -49,7 +49,7 @@ class LoadSourceData extends AbstractFixture implements OrderedFixtureInterface,
         }
     }
 
-    public function getOrder()
+    public function getOrder ()
     {
         return 3;
     }

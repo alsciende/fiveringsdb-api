@@ -16,15 +16,16 @@ class TokenType extends AbstractType
     public function buildForm (FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('id', TextType::class)
-        ;
+            ->add('id', TextType::class);
     }
 
     public function configureOptions (OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'data_class' => Token::class,
-            'csrf_protection' => false,
-        ]);
+        $resolver->setDefaults(
+            [
+                'data_class'      => Token::class,
+                'csrf_protection' => false,
+            ]
+        );
     }
 }

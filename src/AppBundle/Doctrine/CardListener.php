@@ -19,23 +19,23 @@ class CardListener implements EventSubscriber
 {
     private $canonicalFieldsUpdater;
 
-    public function __construct(CanonicalFieldsUpdater $canonicalFieldsUpdater)
+    public function __construct (CanonicalFieldsUpdater $canonicalFieldsUpdater)
     {
         $this->canonicalFieldsUpdater = $canonicalFieldsUpdater;
     }
 
-    public function getSubscribedEvents()
+    public function getSubscribedEvents ()
     {
-        return array(
+        return [
             'prePersist',
             'preUpdate',
-        );
+        ];
     }
 
     /**
      * Pre persist listener based on doctrine common.
      */
-    public function prePersist(LifecycleEventArgs $args)
+    public function prePersist (LifecycleEventArgs $args)
     {
         $object = $args->getObject();
         if ($object instanceof Card) {
@@ -46,13 +46,13 @@ class CardListener implements EventSubscriber
     /**
      * Pre update listener based on doctrine common.
      */
-    public function preUpdate(PreUpdateEventArgs $args)
+    public function preUpdate (PreUpdateEventArgs $args)
     {
         $object = $args->getObject();
         if ($object instanceof Card && (
-          $args->hasChangedField('name')
-          || $args->hasChangedField('text')
-        )) {
+                $args->hasChangedField('name')
+                || $args->hasChangedField('text')
+            )) {
             $this->updateCardFields($object);
             $this->recomputeChangeSet($args->getEntityManager(), $object);
         }
@@ -61,7 +61,7 @@ class CardListener implements EventSubscriber
     /**
      * Updates the card properties.
      */
-    private function updateCardFields(Card $card)
+    private function updateCardFields (Card $card)
     {
         $this->canonicalFieldsUpdater->updateCanonicalFields($card);
     }
@@ -69,7 +69,7 @@ class CardListener implements EventSubscriber
     /**
      * Recomputes change set for Doctrine implementations not doing it automatically after the event.
      */
-    private function recomputeChangeSet(EntityManagerInterface $em, Card $card)
+    private function recomputeChangeSet (EntityManagerInterface $em, Card $card)
     {
         $meta = $em->getClassMetadata(Card::class);
         $em->getUnitOfWork()->recomputeSingleEntityChangeSet($meta, $card);

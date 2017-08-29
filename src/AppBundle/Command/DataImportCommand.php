@@ -17,8 +17,8 @@ class DataImportCommand extends ContainerAwareCommand
     protected function configure ()
     {
         $this
-                ->setName('app:data:import')
-                ->setDescription("Import data from JSON files to the database")
+            ->setName('app:data:import')
+            ->setDescription("Import data from JSON files to the database")
         ;
     }
 
@@ -38,14 +38,14 @@ class DataImportCommand extends ContainerAwareCommand
         /* @var $validator \Symfony\Component\Validator\Validator\RecursiveValidator */
         $validator = $this->getContainer()->get('validator');
 
-        foreach($sources as $source) {
+        foreach ($sources as $source) {
             $result = $serializer->importSource($source);
-            foreach($result as $imported) {
+            foreach ($result as $imported) {
                 $entity = $imported['entity'];
                 $errors = $validator->validate($entity);
-                if(count($errors) > 0) {
+                if (count($errors) > 0) {
                     dump($errors);
-                    $errorsString = (string) $errors;
+                    $errorsString = (string)$errors;
                     throw new \Exception($errorsString);
                 }
             }

@@ -18,20 +18,20 @@ use JMS\Serializer\JsonSerializationVisitor;
  */
 class DeckSerializationHandler implements SubscribingHandlerInterface
 {
-    public static function getSubscribingMethods()
+    public static function getSubscribingMethods ()
     {
         return [
             [
                 'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
-                'format' => 'json',
-                'type' => 'AppBundle\Entity\Deck',
-                'method' => 'serializeDeckToJson',
+                'format'    => 'json',
+                'type'      => 'AppBundle\Entity\Deck',
+                'method'    => 'serializeDeckToJson',
             ],
             [
                 'direction' => GraphNavigator::DIRECTION_DESERIALIZATION,
-                'format' => 'json',
-                'type' => 'AppBundle\Entity\Deck',
-                'method' => 'deserializeDeckFromJson',
+                'format'    => 'json',
+                'type'      => 'AppBundle\Entity\Deck',
+                'method'    => 'deserializeDeckFromJson',
             ],
         ];
     }
@@ -44,20 +44,20 @@ class DeckSerializationHandler implements SubscribingHandlerInterface
         $this->serializer = $serializer;
     }
 
-    public function deserializeDeckFromJson(JsonDeserializationVisitor $visitor, array $data, array $type): Deck
+    public function deserializeDeckFromJson (JsonDeserializationVisitor $visitor, array $data, array $type): Deck
     {
-        if($type['name'] !== Deck::class) {
+        if ($type['name'] !== Deck::class) {
             throw new InvalidArgumentException();
         }
 
         return $this->serializer->deserialize($data);
     }
 
-    public function serializeDeckToJson(JsonSerializationVisitor $visitor, Deck $deck, array $type, Context $context)
+    public function serializeDeckToJson (JsonSerializationVisitor $visitor, Deck $deck, array $type, Context $context)
     {
         $data = $this->serializer->serialize($deck);
 
-        if($visitor->getRoot() === null) {
+        if ($visitor->getRoot() === null) {
             $visitor->setRoot($data);
         }
 

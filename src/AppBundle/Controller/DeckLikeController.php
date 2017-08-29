@@ -27,10 +27,10 @@ class DeckLikeController extends BaseApiController
      */
     public function postAction (Deck $deck)
     {
-        if($deck->isPublished() === false) {
+        if ($deck->isPublished() === false) {
             throw $this->createNotFoundException();
         }
-        
+
         /* @var $manager DeckManager */
         $manager = $this->get('app.deck_manager');
         try {
@@ -52,10 +52,10 @@ class DeckLikeController extends BaseApiController
      */
     public function deleteAction (Deck $deck)
     {
-        if($deck->isPublished() === false) {
+        if ($deck->isPublished() === false) {
             throw $this->createNotFoundException();
         }
-        
+
         /* @var $manager DeckManager */
         $manager = $this->get('app.deck_manager');
         try {

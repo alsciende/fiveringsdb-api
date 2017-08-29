@@ -13,10 +13,10 @@ class SlugifyCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAw
     protected function configure ()
     {
         $this
-                ->setName('app:slugify')
-                ->setDescription("Converts a string into a slug.")
-                ->addArgument("string", \Symfony\Component\Console\Input\InputArgument::REQUIRED, "String to convert")
-                ->addOption("ruleset", "r", \Symfony\Component\Console\Input\InputOption::VALUE_REQUIRED, "Ruleset for conversion")
+            ->setName('app:slugify')
+            ->setDescription("Converts a string into a slug.")
+            ->addArgument("string", \Symfony\Component\Console\Input\InputArgument::REQUIRED, "String to convert")
+            ->addOption("ruleset", "r", \Symfony\Component\Console\Input\InputOption::VALUE_REQUIRED, "Ruleset for conversion")
         ;
     }
 
@@ -26,7 +26,7 @@ class SlugifyCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAw
         $ruleset = $input->getOption('ruleset');
 
         $slugify = new \Cocur\Slugify\Slugify();
-        if($ruleset) {
+        if ($ruleset) {
             $slugify->activateRuleset($ruleset);
         }
         $output->writeln($slugify->slugify($string));

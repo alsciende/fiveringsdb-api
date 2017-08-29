@@ -33,6 +33,7 @@ class ImageLinkCommand extends ContainerAwareCommand
         $sourceFolder = $this->getContainer()->getParameter('path_to_card_images');
         if (file_exists($sourceFolder) === false || is_dir($sourceFolder) === false) {
             $output->writeln('<error>Bad configuration: path_to_card_images</error>');
+
             return;
         }
 
@@ -44,33 +45,36 @@ class ImageLinkCommand extends ContainerAwareCommand
         $packCards = $em->getRepository(PackCard::class)->findAll();
 
         /** @var PackCard $packCard */
-        foreach($packCards as $packCard) {
-            $source = sprintf("%s/%s/%s.jpg",
+        foreach ($packCards as $packCard) {
+            $source = sprintf(
+                "%s/%s/%s.jpg",
                 $sourceFolder,
                 $packCard->getPack()->getId(),
                 $packCard->getCard()->getId()
             );
 
-            if(file_exists($source) === false) {
-                $output->writeln(sprintf('<comment>Image missing for %s</comment>', (string) $packCard));
+            if (file_exists($source) === false) {
+                $output->writeln(sprintf('<comment>Image missing for %s</comment>', (string)$packCard));
                 continue;
             }
 
-            $dir = sprintf('%s/%s',
+            $dir = sprintf(
+                '%s/%s',
                 $targetFolder,
                 $packCard->getPack()->getId()
             );
 
-            if(file_exists($dir) === false) {
-                mkdir($dir) or die('Cannot create folder: '.$dir);
+            if (file_exists($dir) === false) {
+                mkdir($dir) or die('Cannot create folder: ' . $dir);
             }
 
-            $target = sprintf('%s/%s.jpg',
+            $target = sprintf(
+                '%s/%s.jpg',
                 $dir,
                 $packCard->getCard()->getId()
             );
 
-            if(file_exists($target) === false) {
+            if (file_exists($target) === false) {
                 link($source, $target);
             }
         }

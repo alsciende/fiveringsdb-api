@@ -38,13 +38,13 @@ class DeckManager
         $this->deckValidator = $deckValidator;
     }
 
-    public function createNewStrain(User $user): Strain
+    public function createNewStrain (User $user): Strain
     {
-      // @TODO: quota
-      $strain = new Strain($user);
-      $this->entityManager->persist($strain);
+        // @TODO: quota
+        $strain = new Strain($user);
+        $this->entityManager->persist($strain);
 
-      return $strain;
+        return $strain;
     }
 
     public function persist (Deck $deck): self
@@ -57,6 +57,7 @@ class DeckManager
         $this->entityManager->persist($deck);
 
         $deck->getStrain()->setHead($deck);
+
         return $this;
     }
 
@@ -65,7 +66,7 @@ class DeckManager
         $deck->setName($parent->getName());
         $deck->setDescription($parent->getDescription());
         $deck->setFormat($parent->getFormat());
-        foreach($parent->getDeckCards() as $deckCard) {
+        foreach ($parent->getDeckCards() as $deckCard) {
             $deck->addDeckCard($deckCard);
         }
 

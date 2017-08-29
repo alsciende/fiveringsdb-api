@@ -15,7 +15,7 @@ use AppBundle\Service\DeckValidator;
  */
 class ConflictDeckCheck implements DeckCheckInterface
 {
-    public function check(CardSlotCollectionDecorator $deckCards, string $format): int
+    public function check (CardSlotCollectionDecorator $deckCards, string $format): int
     {
         $conflictDeck = $deckCards->filterBySide(Card::SIDE_CONFLICT);
         $conflictCount = $conflictDeck->countCards();
@@ -30,7 +30,7 @@ class ConflictDeckCheck implements DeckCheckInterface
             return DeckValidator::TOO_MANY_CONFLICT;
         }
 
-        if($conflictDeck->filterByType(Card::TYPE_CHARACTER)->countCards() > 10) {
+        if ($conflictDeck->filterByType(Card::TYPE_CHARACTER)->countCards() > 10) {
             return DeckValidator::TOO_MANY_CHARACTER_IN_CONFLICT;
         }
 
@@ -40,38 +40,40 @@ class ConflictDeckCheck implements DeckCheckInterface
             $influencePool = $stronghold->getInfluencePool();
 
             $role = $deckCards->findRole();
-            if($role instanceof Card && $role->hasTrait('keeper')) {
+            if ($role instanceof Card && $role->hasTrait('keeper')) {
                 $influencePool += 3;
             }
 
-            $offClanSlots = $conflictDeck->filter(function (CardSlotInterface $slot) use ($clan) {
-                return $slot->getCard()->getClan() !== 'neutral'
-                    && $slot->getCard()->getClan() !== $clan;
-            });
+            $offClanSlots = $conflictDeck->filter(
+                function (CardSlotInterface $slot) use ($clan) {
+                    return $slot->getCard()->getClan() !== 'neutral'
+                        && $slot->getCard()->getClan() !== $clan;
+                }
+            );
 
-            foreach($offClanSlots as $slot) {
+            foreach ($offClanSlots as $slot) {
                 /** @var CardSlotInterface $slot */
-                if($slot->getCard()->getInfluenceCost() === null) {
+                if ($slot->getCard()->getInfluenceCost() === null) {
                     return DeckValidator::FORBIDDEN_SPLASH;
                 }
 
                 $influencePool -= $slot->getQuantity() * $slot->getCard()->getInfluenceCost();
             }
 
-            if($influencePool < 0) {
+            if ($influencePool < 0) {
                 return DeckValidator::NOT_ENOUGH_INFLUENCE;
             }
 
-            if(count(
-                array_unique(
-                    array_map(
-                        function (CardSlotInterface $slot) {
-                            return $slot->getCard()->getClan();
-                        },
-                        $offClanSlots->toArray()
+            if (count(
+                    array_unique(
+                        array_map(
+                            function (CardSlotInterface $slot) {
+                                return $slot->getCard()->getClan();
+                            },
+                            $offClanSlots->toArray()
+                        )
                     )
-                )
-            ) > 1) {
+                ) > 1) {
                 return DeckValidator::TOO_MANY_OFF_CLANS;
             }
         }

@@ -15,7 +15,7 @@ use AppBundle\Service\DeckValidator;
  */
 class DynastyDeckCheck implements DeckCheckInterface
 {
-    public function check(CardSlotCollectionDecorator $deckCards, string $format): int
+    public function check (CardSlotCollectionDecorator $deckCards, string $format): int
     {
         $dynastyDeck = $deckCards->filterBySide('dynasty');
         $dynastyCount = $dynastyDeck->countCards();
@@ -34,13 +34,15 @@ class DynastyDeckCheck implements DeckCheckInterface
         if ($stronghold instanceof Card) {
             $clan = $stronghold->getClan();
 
-            $offClanSlot = $dynastyDeck->find(function ($slot) use ($clan) {
-                /** @var CardSlotInterface $slot */
-                return $slot->getCard()->getClan() !== 'neutral'
-                    && $slot->getCard()->getClan() !== $clan;
-            });
+            $offClanSlot = $dynastyDeck->find(
+                function ($slot) use ($clan) {
+                    /** @var CardSlotInterface $slot */
+                    return $slot->getCard()->getClan() !== 'neutral'
+                        && $slot->getCard()->getClan() !== $clan;
+                }
+            );
 
-            if($offClanSlot !== null) {
+            if ($offClanSlot !== null) {
                 return DeckValidator::OFF_CLAN_DYNASTY;
             }
         }

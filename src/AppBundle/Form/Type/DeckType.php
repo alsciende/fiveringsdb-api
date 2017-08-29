@@ -15,38 +15,46 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class DeckType extends AbstractType
 {
-  /** @var DataTransformerInterface */
-  private $transformer;
+    /** @var DataTransformerInterface */
+    private $transformer;
 
-  public function __construct(DataTransformerInterface $transformer)
-  {
-    $this->transformer = $transformer;
-  }
+    public function __construct (DataTransformerInterface $transformer)
+    {
+        $this->transformer = $transformer;
+    }
 
     public function buildForm (FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', TextType::class, [
+            ->add(
+                'name', TextType::class, [
                 'required' => true,
-            ])
+            ]
+            )
             ->add('description', TextType::class)
-            ->add('format', TextType::class, [
+            ->add(
+                'format', TextType::class, [
                 'required' => true,
-            ])
-            ->add('cards', TextType::class, [
-              'property_path' => 'deckCards'
-            ])
-            ;
+            ]
+            )
+            ->add(
+                'cards', TextType::class, [
+                'property_path' => 'deckCards',
+            ]
+            )
+        ;
 
         $builder->get('cards')->addModelTransformer($this->transformer);
     }
 
     public function configureOptions (OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'data_class' => Deck::class,
-            'csrf_protection' => false,
-            'allow_extra_fields' => true,
-        ]);
+        $resolver->setDefaults(
+            [
+                'data_class'         => Deck::class,
+                'csrf_protection'    => false,
+                'allow_extra_fields' => true,
+            ]
+        );
     }
 }

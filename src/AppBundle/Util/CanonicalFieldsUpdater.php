@@ -12,17 +12,19 @@ class CanonicalFieldsUpdater
     /** @var Slugify */
     private $slugify;
 
-    public function __construct()
+    public function __construct ()
     {
-        $this->slugify = new Slugify([
-            'regexp' => '/([^[:ascii:]])+/',
-        ]);
+        $this->slugify = new Slugify(
+            [
+                'regexp' => '/([^[:ascii:]])+/',
+            ]
+        );
     }
 
-    public function updateCanonicalFields(Card $card)
+    public function updateCanonicalFields (Card $card)
     {
         $card->setNameCanonical($this->slugify->slugify($card->getName()));
-        if($card->getText() !== null) {
+        if ($card->getText() !== null) {
             $card->setTextCanonical($this->slugify->slugify(strip_tags($card->getText())));
         }
     }

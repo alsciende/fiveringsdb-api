@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class DeckCheckPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public function process (ContainerBuilder $container)
     {
         // always first check if the primary service is defined
         if ($container->has('app.deck_validator') === false) {
@@ -27,7 +27,7 @@ class DeckCheckPass implements CompilerPassInterface
 
         foreach ($taggedServices as $id => $tags) {
             // add the transport service to the ChainTransport service
-            $definition->addMethodCall('addDeckCheck', array(new Reference($id)));
+            $definition->addMethodCall('addDeckCheck', [new Reference($id)]);
         }
     }
 }

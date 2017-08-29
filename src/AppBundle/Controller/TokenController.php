@@ -27,30 +27,33 @@ class TokenController extends BaseApiController
         $form = $this->createForm(TokenType::class, $token);
         $form->submit(json_decode($request->getContent(), true), true);
 
-        if($form->isSubmitted() && $form->isValid()) {
-            if($this->getDoctrine()->getRepository(Token::class)->find($token->getId()) instanceof Token) {
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($this->getDoctrine()->getRepository(Token::class)->find($token->getId()) instanceof Token) {
                 return $this->success($token);
             }
 
             $res = $this->get('metagame')->get('api/users/me', [], $token->getId());
-            if($res->getStatusCode() !== 200) {
-                return $this->failure('token_error', (string) $res->getBody());
+            if ($res->getStatusCode() !== 200) {
+                return $this->failure('token_error', (string)$res->getBody());
             }
 
-            $data = json_decode((string) $res->getBody(), true);
+            $data = json_decode((string)$res->getBody(), true);
             $user = $this->get('app.security.user_manager')->findUserByUsername($data['username']);
             if ($user instanceof User) {
                 $token->setUser($user);
                 $this->getDoctrine()->getManager()->persist($token);
                 $this->getDoctrine()->getManager()->flush();
-                return $this->success($token,
+
+                return $this->success(
+                    $token,
                     [
                         'Default',
                         'user_group',
                         'user' => [
                             'Default',
-                        ]
-                    ]);
+                        ],
+                    ]
+                );
             }
 
             return $this->failure('user_not_found', $data['username']);

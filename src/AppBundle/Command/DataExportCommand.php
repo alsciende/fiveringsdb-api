@@ -20,8 +20,8 @@ class DataExportCommand extends ContainerAwareCommand
     protected function configure ()
     {
         $this
-                ->setName('app:data:export')
-                ->setDescription("Export data from the database to JSON files")
+            ->setName('app:data:export')
+            ->setDescription("Export data from the database to JSON files")
         ;
     }
 

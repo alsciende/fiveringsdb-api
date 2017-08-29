@@ -13,9 +13,9 @@ class PaypalTransactionCommand extends \Symfony\Bundle\FrameworkBundle\Command\C
     protected function configure ()
     {
         $this
-                ->setName('app:paypal:transaction')
-                ->setDescription("Fetch and display details about a PayPal Transaction")
-                ->addArgument('transaction_id', \Symfony\Component\Console\Input\InputArgument::REQUIRED, "ID of the Paypal transaction")
+            ->setName('app:paypal:transaction')
+            ->setDescription("Fetch and display details about a PayPal Transaction")
+            ->addArgument('transaction_id', \Symfony\Component\Console\Input\InputArgument::REQUIRED, "ID of the Paypal transaction")
         ;
     }
 
@@ -25,9 +25,9 @@ class PaypalTransactionCommand extends \Symfony\Bundle\FrameworkBundle\Command\C
 
         /* @var $service \AppBundle\Service\PaypalService */
         $service = $this->getContainer()->get('paypal');
-        
+
         $result = $service->getTransactionDetails($transactionId);
-        
+
         dump($result);
     }
 
