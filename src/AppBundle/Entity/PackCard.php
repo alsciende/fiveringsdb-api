@@ -97,6 +97,11 @@ class PackCard implements CardSlotInterface
      */
     private $pack;
 
+    public function __toString()
+    {
+        return $this->getCard()->getName() . ' (' . $this->getPack()->getName() . ')';
+    }
+
     function getQuantity (): int
     {
         return $this->quantity;

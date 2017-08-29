@@ -22,7 +22,11 @@ class EncodingService
     public function decode (Block $block)
     {
         $list = json_decode($block->getData(), true);
-        if (!$list || !is_array($list) || (!empty($list) && !is_array($list[0]))) {
+        $valid = isset($list)
+            && is_array($list)
+            && (count($list) === 0 || array_key_exists(0, $list))
+        ;
+        if ($valid === false) {
             throw new UnexpectedValueException("Block data cannot be decoded to a numeric array: " . $block->getData());
         }
         $fragments = [];

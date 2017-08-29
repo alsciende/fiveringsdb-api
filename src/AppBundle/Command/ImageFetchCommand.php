@@ -23,15 +23,18 @@ class ImageFetchCommand extends ContainerAwareCommand
     protected function configure ()
     {
         $this
-            ->setName('app:image:fetch')
-            ->setDescription("Fetch images from official servers")
-            ->addArgument('folder', InputArgument::REQUIRED, "Folder where the images are")
+            ->setName('app:images:fetch')
+            ->setDescription("Fetch missing images from official servers")
         ;
     }
 
     protected function execute (InputInterface $input, OutputInterface $output)
     {
-        $imageFolder = $input->getArgument('folder');
+        $imageFolder = $this->getContainer()->getParameter('path_to_card_images');
+        if (file_exists($imageFolder) === false || is_dir($imageFolder) === false) {
+            $output->writeln('<error>Bad configuration: path_to_card_images</error>');
+            return;
+        }
 
         // example http://lcg-cdn.fantasyflightgames.com/l5r/L5C01_1.jpg
         $baseURL = "http://lcg-cdn.fantasyflightgames.com/l5r";
@@ -41,19 +44,28 @@ class ImageFetchCommand extends ContainerAwareCommand
 
         $packCards = $em->getRepository(PackCard::class)->findAll();
 
+        /** @var PackCard $packCard */
         foreach($packCards as $packCard) {
-            $url = sprintf("%s/%s_%s.jpg",
-                $baseURL,
-                $packCard->getPack()->getFfgId(),
-                $packCard->getPosition()
-            );
             $path = sprintf("%s/%s/%s.jpg",
                 $imageFolder,
                 $packCard->getPack()->getId(),
                 $packCard->getCard()->getId()
             );
-            $this->downloadImage($url, $path);
-            $output->writeln("Downloaded image for [".$packCard->getCard()->getName()."]");
+
+            if(file_exists($path)) {
+                continue;
+            }
+
+            $url = sprintf("%s/%s_%s.jpg",
+                $baseURL,
+                $packCard->getPack()->getFfgId(),
+                $packCard->getPosition()
+            );
+            if($this->downloadImage($url, $path)) {
+                $output->writeln(sprintf('<info>Downloaded image for %s</info>', (string) $packCard));
+            } else {
+                $output->writeln(sprintf('<error>Cannot downloaded image for %s</error>', (string) $packCard));
+            }
         }
     }
 
@@ -65,6 +77,10 @@ class ImageFetchCommand extends ContainerAwareCommand
         $curl->get($url);
         $curl->setOpt(CURLOPT_FILE, null);
         fclose($file_handle);
+
+        if ($curl->error) {
+            unlink($path);
+        }
     }
 
 }
