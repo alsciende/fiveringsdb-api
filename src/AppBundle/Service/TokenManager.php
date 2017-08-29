@@ -31,10 +31,11 @@ class TokenManager
         $token = new Token();
         $token->setId($value);
         $token->setUser($user);
+
         return $token;
     }
 
-    public function updateToken(Token $token)
+    public function updateToken (Token $token)
     {
         $this->em->persist($token);
         $this->em->flush();

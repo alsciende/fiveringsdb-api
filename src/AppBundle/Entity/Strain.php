@@ -17,7 +17,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
  */
 class Strain
 {
-  use TimestampableEntity;
+    use TimestampableEntity;
 
     /**
      * Unique identifier of the strain
@@ -61,7 +61,7 @@ class Strain
      */
     private $decks;
 
-    public function __construct(User $user)
+    public function __construct (User $user)
     {
         $this->user = $user;
         $this->decks = new ArrayCollection;

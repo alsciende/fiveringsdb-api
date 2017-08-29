@@ -45,13 +45,15 @@ class StrainController extends BaseApiController
             }
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->success($strain, [
+            return $this->success(
+                $strain, [
                 'Default',
                 'head_group',
                 'head' => [
-                    'Default'
-                ]
-            ]);
+                    'Default',
+                ],
+            ]
+            );
         }
 
         return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors(true)));
@@ -66,13 +68,16 @@ class StrainController extends BaseApiController
     public function listAction ()
     {
         $strains = $this->getDoctrine()->getRepository(Strain::class)->findBy(['user' => $this->getUser()]);
-        return $this->success($strains, [
+
+        return $this->success(
+            $strains, [
             'Default',
             'head_group',
             'head' => [
-                'Default'
-            ]
-        ]);
+                'Default',
+            ],
+        ]
+        );
     }
 
     /**

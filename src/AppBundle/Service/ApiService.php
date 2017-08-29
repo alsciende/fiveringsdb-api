@@ -37,7 +37,7 @@ class ApiService
      * @var string
      */
     private $kernelEnvironment;
-    
+
     function __construct (RequestStack $requestStack, \JMS\Serializer\Serializer $serializer, $httpCacheMaxAge)
     {
         $this->requestStack = $requestStack;
@@ -51,7 +51,7 @@ class ApiService
         $isPublic = $request->getMethod() === 'GET';
         $response = $this->getEmptyResponse();
 
-        if($isPublic) {
+        if ($isPublic) {
             // make response public and cacheable
             $response->setPublic();
             $response->setMaxAge($this->httpCacheMaxAge);
@@ -59,16 +59,16 @@ class ApiService
             $dateUpdate = $this->getDateUpdate($data);
             $response->setLastModified($dateUpdate);
             // compare to request header
-            if($response->isNotModified($request)) {
+            if ($response->isNotModified($request)) {
                 return $response;
             }
         }
 
         $content = $this->buildContent($data, $groups);
-        $content['success'] = TRUE;
+        $content['success'] = true;
         $content['last_updated'] = isset($dateUpdate) ? $dateUpdate->format('c') : null;
 
-        $serialized = $this->serializer->serialize($content,'json', SerializationContext::create()->setGroups($groups));
+        $serialized = $this->serializer->serialize($content, 'json', SerializationContext::create()->setGroups($groups));
 
         $response->setContent($serialized);
 
@@ -78,7 +78,7 @@ class ApiService
     function buildContent ($data = null, $groups = [])
     {
         $content = [];
-        if(is_array($data)) {
+        if (is_array($data)) {
             $content['records'] = $data;
             $content['size'] = count($content['records']);
         } else {
@@ -90,16 +90,19 @@ class ApiService
 
     function getDateUpdate ($data)
     {
-        if(is_array($data) === false) {
-            $data = array($data);
+        if (is_array($data) === false) {
+            $data = [$data];
         }
-        return array_reduce($data, function($carry, $item) {
-            if($carry && $item->getUpdatedAt() < $carry) {
+
+        return array_reduce(
+            $data, function ($carry, $item) {
+            if ($carry && $item->getUpdatedAt() < $carry) {
                 return $carry;
             } else {
                 return $item->getUpdatedAt();
             }
-        });
+        }
+        );
     }
 
     function getEmptyResponse ()
@@ -107,6 +110,7 @@ class ApiService
         $response = new Response();
 //        $response->headers->set('Access-Control-Allow-Origin', '*');
         $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
+
         return $response;
     }
 }

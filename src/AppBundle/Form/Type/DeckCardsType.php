@@ -11,18 +11,18 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DeckCardsType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm (FormBuilderInterface $builder, array $options)
     {
         dump($builder);
 //        dump($options);
         die;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions (OptionsResolver $resolver)
     {
     }
 
-    public function getParent()
+    public function getParent ()
     {
         return CollectionType::class;
     }

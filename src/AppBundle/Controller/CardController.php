@@ -32,13 +32,13 @@ class CardController extends BaseApiController
                     'Default',
                     'pack_group',
                     'pack' => [
-                        'id_group'
-                    ]
-                ]
+                        'id_group',
+                    ],
+                ],
             ]
         );
     }
-    
+
     /**
      * Get a Card
      * @Route("/cards/{id}", name="getCard")

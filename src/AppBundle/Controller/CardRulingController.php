@@ -32,10 +32,11 @@ class CardRulingController extends BaseApiController
         $form = $this->createForm(RulingType::class, $ruling);
         $form->submit(json_decode($request->getContent(), true), true);
 
-        if($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $ruling->setUser($this->getUser())->setCard($card);
             $this->getDoctrine()->getManager()->persist($ruling);
             $this->getDoctrine()->getManager()->flush();
+
             return $this->success($ruling);
         }
 
@@ -52,7 +53,9 @@ class CardRulingController extends BaseApiController
         $rulings = $this
             ->get('doctrine')
             ->getRepository(Ruling::class)
-            ->findBy(['card' => $card]);
+            ->findBy(['card' => $card])
+        ;
+
         return $this->success($rulings);
     }
 
@@ -81,8 +84,9 @@ class CardRulingController extends BaseApiController
         $form = $this->createForm(RulingType::class, $ruling);
         $form->submit(json_decode($request->getContent(), true), false);
 
-        if($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
+
             return $this->success($ruling);
         }
 

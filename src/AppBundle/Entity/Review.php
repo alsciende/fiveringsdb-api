@@ -95,6 +95,7 @@ class Review
     public function setText (string $text): self
     {
         $this->text = $text;
+
         return $this;
     }
 
@@ -106,6 +107,7 @@ class Review
     public function setCard (Card $card): self
     {
         $this->card = $card;
+
         return $this;
     }
 
@@ -117,6 +119,7 @@ class Review
     public function setUser (User $user): self
     {
         $this->user = $user;
+
         return $this;
     }
 }

@@ -15,15 +15,16 @@ class RulingType extends AbstractType
     public function buildForm (FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('text', TextType::class)
-        ;
+            ->add('text', TextType::class);
     }
 
     public function configureOptions (OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'data_class' => Ruling::class,
-            'csrf_protection' => false,
-        ]);
+        $resolver->setDefaults(
+            [
+                'data_class'      => Ruling::class,
+                'csrf_protection' => false,
+            ]
+        );
     }
 }

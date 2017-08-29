@@ -27,7 +27,8 @@ class PublicDeckController extends BaseApiController
      */
     public function listAction ()
     {
-        $decks = $this->getDoctrine()->getRepository(Deck::class)->findBy(['published' => TRUE]);
+        $decks = $this->getDoctrine()->getRepository(Deck::class)->findBy(['published' => true]);
+
         return $this->success($decks);
     }
 
@@ -38,9 +39,10 @@ class PublicDeckController extends BaseApiController
      */
     public function getAction (Deck $deck)
     {
-        if(!$deck->isPublished()) {
+        if (!$deck->isPublished()) {
             throw $this->createNotFoundException();
         }
+
         return $this->success($deck);
     }
 
@@ -52,18 +54,19 @@ class PublicDeckController extends BaseApiController
      */
     public function patchAction (Request $request, Deck $deck)
     {
-        if($deck->isPublished() === false) {
+        if ($deck->isPublished() === false) {
             throw $this->createNotFoundException();
         }
-        if($deck->getUser() !== $this->getUser()) {
+        if ($deck->getUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException();
         }
 
         $form = $this->createForm(DeckType::class, $deck);
         $form->submit(json_decode($request->getContent(), true), false);
 
-        if($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
+
             return $this->success($deck);
         }
 
@@ -78,10 +81,10 @@ class PublicDeckController extends BaseApiController
      */
     public function deleteAction (Deck $deck)
     {
-        if($deck->isPublished() === false) {
+        if ($deck->isPublished() === false) {
             throw $this->createNotFoundException();
         }
-        if($deck->getUser() !== $this->getUser()) {
+        if ($deck->getUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException();
         }
 
@@ -92,6 +95,7 @@ class PublicDeckController extends BaseApiController
         } catch (Exception $ex) {
             return $this->failure($ex->getMessage());
         }
+
         return $this->success();
     }
 }

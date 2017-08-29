@@ -13,9 +13,9 @@ use AppBundle\Service\DeckValidator;
  */
 class RoleCheck implements DeckCheckInterface
 {
-    public function check(CardSlotCollectionDecorator $deckCards, string $format): int
+    public function check (CardSlotCollectionDecorator $deckCards, string $format): int
     {
-        if($deckCards->filterByType(Card::TYPE_ROLE)->countCards() > 1) {
+        if ($deckCards->filterByType(Card::TYPE_ROLE)->countCards() > 1) {
             return DeckValidator::TOO_MANY_ROLE;
         }
 

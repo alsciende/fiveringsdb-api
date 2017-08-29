@@ -13,11 +13,13 @@ use AppBundle\Service\DeckValidator;
  */
 class CardCopiesCheck implements DeckCheckInterface
 {
-    public function check(CardSlotCollectionDecorator $deckCards, string $format): int
+    public function check (CardSlotCollectionDecorator $deckCards, string $format): int
     {
-        $slot = $deckCards->find(function (CardSlotInterface $slot) {
-            return $slot->getQuantity() > $slot->getCard()->getDeckLimit();
-        });
+        $slot = $deckCards->find(
+            function (CardSlotInterface $slot) {
+                return $slot->getQuantity() > $slot->getCard()->getDeckLimit();
+            }
+        );
 
         if ($slot) {
             return DeckValidator::TOO_MANY_COPIES;

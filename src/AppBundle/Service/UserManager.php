@@ -31,16 +31,17 @@ class UserManager
     {
         return $this->em->getRepository(User::class)->findOneBy(['username' => $username]);
     }
-    
+
     public function createUser (string $username, string $plainPassword): User
     {
         $user = new User();
         $user->setUsername($username);
         $user->setPassword($this->encoder->encodePassword($user, $plainPassword));
+
         return $user;
     }
-    
-    public function updateUser(User $user)
+
+    public function updateUser (User $user)
     {
         $this->em->persist($user);
         $this->em->flush();

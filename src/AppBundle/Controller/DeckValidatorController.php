@@ -20,16 +20,21 @@ class DeckValidatorController extends BaseApiController
      * @Route("/deck-validation/{format}")
      * @Method("POST")
      */
-    public function validateAction(Request $request, string $format)
+    public function validateAction (Request $request, string $format)
     {
         /** @var Deck $deck */
-        $deck = $this->get('jms_serializer')->fromArray([
-            'cards' => json_decode($request->getContent(), TRUE)
-        ], Deck::class);
+        $deck = $this->get('jms_serializer')->fromArray(
+            [
+                'cards' => json_decode($request->getContent(), true),
+            ], Deck::class
+        )
+        ;
 
-        return new JsonResponse([
-            'success' => true,
-            'status' => $this->get('app.deck_validator')->check($deck->getDeckCards(), $format)
-        ]);
+        return new JsonResponse(
+            [
+                'success' => true,
+                'status'  => $this->get('app.deck_validator')->check($deck->getDeckCards(), $format),
+            ]
+        );
     }
 }

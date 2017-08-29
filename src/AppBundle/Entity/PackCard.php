@@ -97,7 +97,7 @@ class PackCard implements CardSlotInterface
      */
     private $pack;
 
-    public function __toString()
+    public function __toString ()
     {
         return $this->getCard()->getName() . ' (' . $this->getPack()->getName() . ')';
     }
@@ -146,6 +146,7 @@ class PackCard implements CardSlotInterface
     public function setPosition (string $position): self
     {
         $this->position = $position;
+
         return $this;
     }
 
@@ -157,15 +158,16 @@ class PackCard implements CardSlotInterface
     public function setIllustrator (string $illustrator): self
     {
         $this->illustrator = $illustrator;
+
         return $this;
     }
 
-    public function getFlavor(): string
+    public function getFlavor (): string
     {
         return $this->flavor;
     }
 
-    public function setFlavor(string $flavor): self
+    public function setFlavor (string $flavor): self
     {
         $this->flavor = $flavor;
 

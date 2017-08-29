@@ -33,6 +33,7 @@ class ImageFetchCommand extends ContainerAwareCommand
         $imageFolder = $this->getContainer()->getParameter('path_to_card_images');
         if (file_exists($imageFolder) === false || is_dir($imageFolder) === false) {
             $output->writeln('<error>Bad configuration: path_to_card_images</error>');
+
             return;
         }
 
@@ -45,31 +46,33 @@ class ImageFetchCommand extends ContainerAwareCommand
         $packCards = $em->getRepository(PackCard::class)->findAll();
 
         /** @var PackCard $packCard */
-        foreach($packCards as $packCard) {
-            $path = sprintf("%s/%s/%s.jpg",
+        foreach ($packCards as $packCard) {
+            $path = sprintf(
+                "%s/%s/%s.jpg",
                 $imageFolder,
                 $packCard->getPack()->getId(),
                 $packCard->getCard()->getId()
             );
 
-            if(file_exists($path)) {
+            if (file_exists($path)) {
                 continue;
             }
 
-            $url = sprintf("%s/%s_%s.jpg",
+            $url = sprintf(
+                "%s/%s_%s.jpg",
                 $baseURL,
                 $packCard->getPack()->getFfgId(),
                 $packCard->getPosition()
             );
-            if($this->downloadImage($url, $path)) {
-                $output->writeln(sprintf('<info>Downloaded image for %s</info>', (string) $packCard));
+            if ($this->downloadImage($url, $path)) {
+                $output->writeln(sprintf('<info>Downloaded image for %s</info>', (string)$packCard));
             } else {
-                $output->writeln(sprintf('<error>Cannot downloaded image for %s</error>', (string) $packCard));
+                $output->writeln(sprintf('<error>Cannot downloaded image for %s</error>', (string)$packCard));
             }
         }
     }
 
-    protected function downloadImage($url, $path)
+    protected function downloadImage ($url, $path)
     {
         $curl = new Curl();
         $file_handle = fopen($path, 'w+');

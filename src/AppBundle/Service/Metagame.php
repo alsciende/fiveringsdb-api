@@ -38,7 +38,7 @@ class Metagame
         $this->debug = $debug;
     }
 
-    private function getDebugStack(): HandlerStack
+    private function getDebugStack (): HandlerStack
     {
         $logger = new Logger('guzzle');
         $logger->pushHandler(
@@ -51,6 +51,7 @@ class Metagame
         $stack = HandlerStack::create();
         $stack->push(Middleware::log($logger, new MessageFormatter('{response}')));
         $stack->push(Middleware::log($logger, new MessageFormatter('{request}')));
+
         return $stack;
     }
 
@@ -60,7 +61,7 @@ class Metagame
             'base_uri' => $this->baseUri,
         ];
 
-        if($this->debug) {
+        if ($this->debug) {
             $options['handler'] = $this->getDebugStack();
         }
 
@@ -73,15 +74,21 @@ class Metagame
 
     public function get ($url, $parameters = [], $token = null): Response
     {
-        return $this->getClient($token)->request('GET', $url, [
-            'query' => $parameters
-        ]);
+        return $this->getClient($token)->request(
+            'GET', $url, [
+            'query' => $parameters,
+        ]
+        )
+            ;
     }
 
     public function post ($url, $parameters = [], $token = null): Response
     {
-        return $this->getClient($token)->request('POST', $url, [
-            'json' => $parameters
-        ]);
+        return $this->getClient($token)->request(
+            'POST', $url, [
+            'json' => $parameters,
+        ]
+        )
+            ;
     }
 }

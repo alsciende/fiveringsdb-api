@@ -44,6 +44,7 @@ class Token
     public function setId (string $id): self
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -55,6 +56,7 @@ class Token
     public function setUser (User $user): self
     {
         $this->user = $user;
+
         return $this;
     }
 }

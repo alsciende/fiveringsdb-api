@@ -20,15 +20,16 @@ class StrainType extends AbstractType
     public function buildForm (FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('origin', TextType::class)
-            ;
+            ->add('origin', TextType::class);
     }
 
     public function configureOptions (OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'data_class' => Strain::class,
-            'csrf_protection' => false,
-        ]);
+        $resolver->setDefaults(
+            [
+                'data_class'      => Strain::class,
+                'csrf_protection' => false,
+            ]
+        );
     }
 }

@@ -31,10 +31,11 @@ class CardReviewController extends BaseApiController
         $form = $this->createForm(ReviewType::class, $review);
         $form->submit(json_decode($request->getContent(), true), true);
 
-        if($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $review->setUser($this->getUser())->setCard($card);
             $this->getDoctrine()->getManager()->persist($review);
             $this->getDoctrine()->getManager()->flush();
+
             return $this->success($review);
         }
 
@@ -51,7 +52,9 @@ class CardReviewController extends BaseApiController
         $reviews = $this
             ->get('doctrine')
             ->getRepository(Review::class)
-            ->findBy(['card' => $card]);
+            ->findBy(['card' => $card])
+        ;
+
         return $this->success($reviews);
     }
 
@@ -80,8 +83,9 @@ class CardReviewController extends BaseApiController
         $form = $this->createForm(ReviewType::class, $review);
         $form->submit(json_decode($request->getContent(), true), false);
 
-        if($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
+
             return $this->success($review);
         }
 

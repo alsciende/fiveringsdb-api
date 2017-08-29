@@ -27,7 +27,7 @@ class CycleController extends BaseApiController
                 ->getRepository(Cycle::class)
                 ->findAll(),
             [
-                'Default'
+                'Default',
             ]
         );
     }

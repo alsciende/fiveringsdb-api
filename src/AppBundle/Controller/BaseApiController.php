@@ -13,33 +13,38 @@ use Symfony\Component\Form\FormErrorIterator;
  */
 abstract class BaseApiController extends Controller
 {
-    public function success($data = null, $groups = [ 'Default' ])
+    public function success ($data = null, $groups = ['Default'])
     {
         /* @var $service ApiService */
         $service = $this->get('app.api');
+
         return $service->buildResponse($data, $groups);
     }
 
-    public function failure($message = "unknown_error", $description = "An unknown error has occured.")
+    public function failure ($message = "unknown_error", $description = "An unknown error has occured.")
     {
         $this->get('logger')->info($message);
-        return new \Symfony\Component\HttpFoundation\JsonResponse([
-            "success" => FALSE,
-            "message" => $message,
-            "description" => $description,
-        ]);
+
+        return new \Symfony\Component\HttpFoundation\JsonResponse(
+            [
+                "success"     => false,
+                "message"     => $message,
+                "description" => $description,
+            ]
+        );
     }
 
-    public function formatValidationErrors(FormErrorIterator $errors)
+    public function formatValidationErrors (FormErrorIterator $errors)
     {
         $messages = [];
-        foreach($errors as $error) {
+        foreach ($errors as $error) {
             $messages[] = [
-              "property_path" =>              $error->getCause()->getPropertyPath(),
-              "invalid_value" => $error->getCause()->getInvalidValue(),
-              "error_message" => $error->getMessage(),
+                "property_path" => $error->getCause()->getPropertyPath(),
+                "invalid_value" => $error->getCause()->getInvalidValue(),
+                "error_message" => $error->getMessage(),
             ];
         }
+
         return $messages;
     }
 }

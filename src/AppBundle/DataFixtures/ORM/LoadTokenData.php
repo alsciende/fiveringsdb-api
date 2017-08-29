@@ -31,7 +31,7 @@ class LoadTokenData extends AbstractFixture implements OrderedFixtureInterface, 
         $this->loadToken($tokenManager, 'pirate', 'pirate');
     }
 
-    private function loadToken(TokenManager $tokenManager, string $value, string $username)
+    private function loadToken (TokenManager $tokenManager, string $value, string $username)
     {
         $token = $tokenManager->createToken($value, $this->getReference("user-$username"));
         $tokenManager->updateToken($token);

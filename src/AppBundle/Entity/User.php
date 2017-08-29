@@ -81,6 +81,7 @@ class User implements UserInterface
     public function setUsername ($username): self
     {
         $this->username = $username;
+
         return $this;
     }
 
@@ -92,6 +93,7 @@ class User implements UserInterface
     public function setPassword ($password): self
     {
         $this->password = $password;
+
         return $this;
     }
 
@@ -103,6 +105,7 @@ class User implements UserInterface
     public function setRoles (array $roles): self
     {
         $this->roles = $roles;
+
         return $this;
     }
 
@@ -111,12 +114,13 @@ class User implements UserInterface
         $roles = $this->roles;
         $roles[] = $role;
         $this->roles = array_unique($roles);
+
         return $this;
     }
 
     function hasRole (string $role): bool
     {
-      return in_array($role, $this->roles);
+        return in_array($role, $this->roles);
     }
 
     public function isEnabled (): bool
@@ -127,6 +131,7 @@ class User implements UserInterface
     public function setEnabled (bool $enabled): self
     {
         $this->enabled = $enabled;
+
         return $this;
     }
 

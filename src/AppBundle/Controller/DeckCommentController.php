@@ -33,10 +33,11 @@ class DeckCommentController extends BaseApiController
         $form = $this->createForm(CommentType::class, $comment);
         $form->submit(json_decode($request->getContent(), true), true);
 
-        if($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $comment->setUser($this->getUser())->setDeck($deck);
             $this->getDoctrine()->getManager()->persist($comment);
             $this->getDoctrine()->getManager()->flush();
+
             return $this->success($comment);
         }
 
@@ -54,7 +55,9 @@ class DeckCommentController extends BaseApiController
         $comments = $this
             ->get('doctrine')
             ->getRepository(Comment::class)
-            ->findBy(['deck' => $deck]);
+            ->findBy(['deck' => $deck])
+        ;
+
         return $this->success($comments);
     }
 
@@ -83,8 +86,9 @@ class DeckCommentController extends BaseApiController
         $form = $this->createForm(CommentType::class, $comment);
         $form->submit(json_decode($request->getContent(), true), false);
 
-        if($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
+
             return $this->success($comment);
         }
 
@@ -102,13 +106,14 @@ class DeckCommentController extends BaseApiController
         if ($this->isGranted('COMMENT_VISIBILITY', $comment) === false) {
             throw $this->createAccessDeniedException();
         }
-        
+
 
         $form = $this->createForm(CommentVisibilityType::class, $comment);
         $form->submit(json_decode($request->getContent(), true), false);
 
-        if($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
+
             return $this->success($comment);
         }
 

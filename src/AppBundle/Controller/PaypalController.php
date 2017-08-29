@@ -12,7 +12,7 @@ use function dump;
  * Description of PaypalController
  *
  * @author Alsciende <alsciende@icloud.com>
- * 
+ *
  * @Route("/paypal")
  */
 class PaypalController extends Controller
@@ -28,7 +28,7 @@ class PaypalController extends Controller
 
         $result = $paypalService->setExpressCheckout(10, 'EUR', 'SALE');
 
-        if(isset($result['TOKEN']) === false) {
+        if (isset($result['TOKEN']) === false) {
             dump($result);
             die;
         }
@@ -68,7 +68,7 @@ class PaypalController extends Controller
 
     /**
      * Example id: 8S49757417107934H
-     * 
+     *
      * @Route("/transaction/{transactionId}")
      */
     public function transactionAction ($transactionId)

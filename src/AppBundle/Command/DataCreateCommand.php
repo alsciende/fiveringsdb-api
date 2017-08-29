@@ -38,41 +38,44 @@ class DataCreateCommand extends ContainerAwareCommand
 
         $data = $this->getCardData($input, $output);
 
-        $target = sprintf('%s/Card/%s.json',
+        $target = sprintf(
+            '%s/Card/%s.json',
             $dir,
             $data['id']
         );
 
-        if(file_exists($target) === false) {
+        if (file_exists($target) === false) {
             file_put_contents($target, json_encode([$data], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
         }
 
         $output->writeln(sprintf('<info>Successfully created %s. Id: %s</info>', $target, $data['id']));
 
         $packFilePath = sprintf('%s/PackCard/%s.json', $dir, $pack->getId());
-        if(file_exists($packFilePath) === false) {
+        if (file_exists($packFilePath) === false) {
             $packFile = [];
         } else {
             $packFile = json_decode(file_get_contents($packFilePath), true);
         }
 
         $packFile[] = [
-            'card_id' => $data['id'],
-            'quantity' => 3,
-            'position' => $this->getPosition($input, $output),
+            'card_id'     => $data['id'],
+            'quantity'    => 3,
+            'position'    => $this->getPosition($input, $output),
             'illustrator' => null,
-            'flavor' => null,
+            'flavor'      => null,
         ];
 
-        usort($packFile, function ($a, $b) {
+        usort(
+            $packFile, function ($a, $b) {
             return $a['card_id'] <=> $b['card_id'];
-        });
+        }
+        );
 
         file_put_contents($packFilePath, json_encode($packFile, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
         $output->writeln(sprintf('<info>Successfully updated %s</info>', $packFilePath));
     }
 
-    protected function getPosition(InputInterface $input, OutputInterface $output): string
+    protected function getPosition (InputInterface $input, OutputInterface $output): string
     {
         $helper = $this->getHelper('question');
         $position = $helper->ask($input, $output, new Question('Position: '));
@@ -80,30 +83,35 @@ class DataCreateCommand extends ContainerAwareCommand
         return $position;
     }
 
-    protected function getPack(InputInterface $input, OutputInterface $output): Pack
+    protected function getPack (InputInterface $input, OutputInterface $output): Pack
     {
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
 
         $helper = $this->getHelper('question');
         $packs = $em->getRepository(Pack::class)->findAll();
-        $packName = $helper->ask($input, $output, new ChoiceQuestion(
+        $packName = $helper->ask(
+            $input, $output, new ChoiceQuestion(
             'Pack: ',
-            array_map(function (Pack $pack) {
-                return $pack->getName();
-            }, $packs)
-        ));
+            array_map(
+                function (Pack $pack) {
+                    return $pack->getName();
+                }, $packs
+            )
+        )
+        );
         $pack = $em->getRepository(Pack::class)->findOneBy(['name' => $packName]) or die('Cannot find Pack');
 
         return $pack;
     }
 
-    protected function getCardData(InputInterface $input, OutputInterface $output): array
+    protected function getCardData (InputInterface $input, OutputInterface $output): array
     {
         $helper = $this->getHelper('question');
         $slugify = new \Cocur\Slugify\Slugify();
         $normalizer = $this->getContainer()->get('alsciende_serializer.deserializer');
 
-        $clan = $helper->ask($input, $output, new ChoiceQuestion(
+        $clan = $helper->ask(
+            $input, $output, new ChoiceQuestion(
             'Clan: ',
             [
                 Card::CLAN_CRAB,
@@ -113,11 +121,13 @@ class DataCreateCommand extends ContainerAwareCommand
                 Card::CLAN_NEUTRAL,
                 Card::CLAN_PHOENIX,
                 Card::CLAN_SCORPION,
-                Card::CLAN_UNICORN
+                Card::CLAN_UNICORN,
             ]
-        ));
+        )
+        );
 
-        $type = $helper->ask($input, $output, new ChoiceQuestion(
+        $type = $helper->ask(
+            $input, $output, new ChoiceQuestion(
             'Type: ',
             [
                 Card::TYPE_ATTACHMENT,
@@ -126,35 +136,40 @@ class DataCreateCommand extends ContainerAwareCommand
                 Card::TYPE_HOLDING,
                 Card::TYPE_PROVINCE,
                 Card::TYPE_ROLE,
-                Card::TYPE_STRONGHOLD
+                Card::TYPE_STRONGHOLD,
             ]
-        ));
+        )
+        );
 
         $element = null;
-        if($type === Card::TYPE_PROVINCE) {
-            $element = $helper->ask($input, $output, new ChoiceQuestion(
+        if ($type === Card::TYPE_PROVINCE) {
+            $element = $helper->ask(
+                $input, $output, new ChoiceQuestion(
                 'Element: ',
                 [
                     Card::ELEMENT_AIR,
                     Card::ELEMENT_EARTH,
                     Card::ELEMENT_FIRE,
                     Card::ELEMENT_VOID,
-                    Card::ELEMENT_WATER
+                    Card::ELEMENT_WATER,
                 ]
-            ));
+            )
+            );
         }
 
         $side = null;
-        if($type === Card::TYPE_CHARACTER) {
-            $side = $helper->ask($input, $output, new ChoiceQuestion(
+        if ($type === Card::TYPE_CHARACTER) {
+            $side = $helper->ask(
+                $input, $output, new ChoiceQuestion(
                 'Side: ',
                 [
                     Card::SIDE_CONFLICT,
-                    Card::SIDE_DYNASTY
+                    Card::SIDE_DYNASTY,
                 ]
-            ));
+            )
+            );
         } else {
-            switch($type) {
+            switch ($type) {
                 case Card::TYPE_HOLDING:
                     $side = Card::SIDE_DYNASTY;
                     break;

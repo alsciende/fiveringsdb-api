@@ -23,11 +23,11 @@ class DeckPublishController extends BaseApiController
      */
     public function postAction (Strain $strain)
     {
-        if($strain->getUser() !== $this->getUser()) {
+        if ($strain->getUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException();
         }
-        if($strain->getHead()->isPublished()) {
-          throw $this->createNotFoundException();
+        if ($strain->getHead()->isPublished()) {
+            throw $this->createNotFoundException();
         }
 
         $this->get('app.deck_manager')->publish($strain->getHead());

@@ -33,17 +33,19 @@ class CardSlotsTransformer implements DataTransformerInterface
     public function reverseTransform ($data)
     {
         $deckCards = [];
-        if(empty($data)) {
+        if (empty($data)) {
             return $deckCards;
         }
 
         foreach ($data as $card_id => $quantity) {
             $card = $this->repository->find($card_id);
             if ($card === null) {
-                throw new TransformationFailedException(sprintf(
-                    'A card with the identifier "%s" does not exist!',
-                    $card_id
-                ));
+                throw new TransformationFailedException(
+                    sprintf(
+                        'A card with the identifier "%s" does not exist!',
+                        $card_id
+                    )
+                );
             }
             $deckCards[] = new DeckCard($card, $quantity);
         }

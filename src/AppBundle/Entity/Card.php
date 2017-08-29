@@ -387,138 +387,161 @@ class Card
     public function setId (string $id): self
     {
         $this->id = $id;
+
         return $this;
     }
 
     public function setName (string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
-    public function setNameCanonical(string $nameCanonical): self
+    public function setNameCanonical (string $nameCanonical): self
     {
         $this->nameCanonical = $nameCanonical;
+
         return $this;
     }
 
     public function setCost (int $cost): self
     {
         $this->cost = $cost;
+
         return $this;
     }
 
     public function setText (string $text): self
     {
         $this->text = $text;
+
         return $this;
     }
 
-    public function setTextCanonical(string $textCanonical): self
+    public function setTextCanonical (string $textCanonical): self
     {
         $this->textCanonical = $textCanonical;
+
         return $this;
     }
 
     public function setType (string $type): self
     {
         $this->type = $type;
+
         return $this;
     }
 
     public function setClan (string $clan): self
     {
         $this->clan = $clan;
+
         return $this;
     }
 
     public function setElement (string $element = null): self
     {
         $this->element = $element;
+
         return $this;
     }
 
     public function setUnicity (bool $unicity): self
     {
         $this->unicity = $unicity;
+
         return $this;
     }
 
     public function setSide (string $side = null): self
     {
         $this->side = $side;
+
         return $this;
     }
 
     public function setTraits (array $traits): self
     {
         $this->traits = $traits;
+
         return $this;
     }
 
     public function setMilitary (int $military): self
     {
         $this->military = $military;
+
         return $this;
     }
 
     public function setPolitical (int $political): self
     {
         $this->political = $political;
+
         return $this;
     }
 
     public function setStrength (int $strength): self
     {
         $this->strength = $strength;
+
         return $this;
     }
 
     public function setMilitaryBonus (string $militaryBonus): self
     {
         $this->militaryBonus = $militaryBonus;
+
         return $this;
     }
 
     public function setPoliticalBonus (string $politicalBonus): self
     {
         $this->politicalBonus = $politicalBonus;
+
         return $this;
     }
 
     public function setStrengthBonus (string $strengthBonus): self
     {
         $this->strengthBonus = $strengthBonus;
+
         return $this;
     }
 
     public function setGlory (int $glory): self
     {
         $this->glory = $glory;
+
         return $this;
     }
 
     public function setHonor (int $honor): self
     {
         $this->honor = $honor;
+
         return $this;
     }
 
     public function setFate (int $fate): self
     {
         $this->fate = $fate;
+
         return $this;
     }
 
     public function setInfluencePool (int $influencePool): self
     {
         $this->influencePool = $influencePool;
+
         return $this;
     }
 
     public function setInfluenceCost (int $influenceCost = null): self
     {
         $this->influenceCost = $influenceCost;
+
         return $this;
     }
 
@@ -532,7 +555,7 @@ class Card
         return $this->name;
     }
 
-    public function getNameCanonical(): ?string
+    public function getNameCanonical (): ?string
     {
         return $this->nameCanonical;
     }
@@ -547,7 +570,7 @@ class Card
         return $this->text;
     }
 
-    public function getTextCanonical(): ?string
+    public function getTextCanonical (): ?string
     {
         return $this->textCanonical;
     }
@@ -713,6 +736,7 @@ class Card
     function setReviews (Collection $reviews)
     {
         $this->reviews = $reviews;
+
         return $this;
     }
 
@@ -724,6 +748,7 @@ class Card
     function setRulings (Collection $rulings)
     {
         $this->rulings = $rulings;
+
         return $this;
     }
 }
