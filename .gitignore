@@ -32,8 +32,8 @@
 /web/uploads/
 
 # Assets managed by Webpack
-/web/index.html
-/web/static/
+/dist/index.html
+/dist/static/
 
 # PHPUnit
 /app/phpunit.xml
