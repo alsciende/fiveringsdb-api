@@ -23,8 +23,3 @@ test:
     - bin/console server:start localhost:8080
     - phpunit -d memory_limit=128M --verbose --debug
 
-deployment:
-  production:
-    branch: master
-    commands:
-      - ./deploy.sh
