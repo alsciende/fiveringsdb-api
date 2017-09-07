@@ -93,6 +93,16 @@ class DeckManager
         $this->entityManager->remove($deck);
     }
 
+    public function countDecks (User $user)
+    {
+        return $this->entityManager->getRepository(Deck::class)->countBy(['user' => $user, 'published' => false]);
+    }
+
+    public function countStrains (User $user)
+    {
+        return $this->entityManager->getRepository(Strain::class)->countBy(['user' => $user]);
+    }
+
     /**
      * Add a like for this deck and user.
      * If the like was added, return the new number of likes.

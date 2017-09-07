@@ -25,10 +25,14 @@ class StrainController extends BaseApiController
      * @Route("/strains")
      * @Method("POST")
      * @Security("has_role('ROLE_USER')")
-     * @TODO check quota
      */
     public function postAction (Request $request)
     {
+        $count = $this->get('app.deck_manager')->countStrains($this->getUser());
+        if($count >= 100) {
+            return $this->failure('quota_error', "Quota reached");
+        }
+
         $strain = new Strain($this->getUser());
         $form = $this->createForm(StrainType::class, $strain);
         $form->submit(json_decode($request->getContent(), true), true);
