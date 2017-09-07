@@ -2,6 +2,6 @@
     window.opener.postMessage({
       'type': 'access_token',
       'access_token': '{{ access_token }}'
-    }, 'http://localhost:8081');
+    }, {{ origin|json_encode }});
     window.close();
 </script>
