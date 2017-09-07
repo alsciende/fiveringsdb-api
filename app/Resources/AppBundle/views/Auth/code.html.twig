@@ -2,6 +2,6 @@
     window.opener.postMessage({
       'type': 'access_token',
       'access_token': '{{ access_token }}'
-    }, {{ origin|json_encode }});
+    }, {{ origin|json_encode|raw }});
     window.close();
 </script>
