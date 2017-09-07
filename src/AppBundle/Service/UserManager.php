@@ -14,17 +14,9 @@ class UserManager
     /** @var EntityManagerInterface */
     private $em;
 
-    /** @var UserPasswordEncoderInterface */
-    private $encoder;
-
-    /** @var string */
-    private $salt;
-
-    public function __construct (EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder, $salt)
+    public function __construct (EntityManagerInterface $entityManager)
     {
         $this->em = $entityManager;
-        $this->encoder = $passwordEncoder;
-        $this->salt = $salt;
     }
 
     public function findUserByUsername (string $username): ?User
@@ -32,11 +24,12 @@ class UserManager
         return $this->em->getRepository(User::class)->findOneBy(['username' => $username]);
     }
 
-    public function createUser (string $username, string $plainPassword): User
+    public function createUser (string $username): User
     {
         $user = new User();
-        $user->setUsername($username);
-        $user->setPassword($this->encoder->encodePassword($user, $plainPassword));
+        $user->setUsername($username)
+             ->setPassword($username)
+             ->setEnabled(true);
 
         return $user;
     }
