@@ -79,6 +79,7 @@ class AuthController extends Controller
         $response['creation_date'] = $now->format('c');
         $now->add(\DateInterval::createFromDateString($response['expires_in'] . ' seconds'));
         $response['expiration_date'] = $now->format('c');
+        $response['origin'] = $this->getParameter('front_url');
 
         return $response;
     }
