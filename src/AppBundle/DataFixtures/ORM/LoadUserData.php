@@ -24,16 +24,16 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface, C
         /* @var $userManager UserManager */
         $userManager = $this->container->get('app.security.user_manager');
 
-        $this->loadUser($userManager, 'admin', 'admin', ['ROLE_ADMIN']);
-        $this->loadUser($userManager, 'guru', 'guru', ['ROLE_GURU']);
-        $this->loadUser($userManager, 'user', 'user');
-        $this->loadUser($userManager, 'user2', 'user2');
-        $this->loadUser($userManager, 'pirate', 'pirate');
+        $this->loadUser($userManager, 'admin', ['ROLE_ADMIN']);
+        $this->loadUser($userManager, 'guru', ['ROLE_GURU']);
+        $this->loadUser($userManager, 'user');
+        $this->loadUser($userManager, 'user2');
+        $this->loadUser($userManager, 'pirate');
     }
 
-    private function loadUser (UserManager $userManager, $username, $password, $roles = [])
+    private function loadUser (UserManager $userManager, $username, $roles = [])
     {
-        $user = $userManager->createUser($username, $password);
+        $user = $userManager->createUser($username);
         foreach ($roles as $role) {
             $user->addRole($role);
         }

@@ -81,8 +81,6 @@ services:
         class: AppBundle\Service\UserManager
         arguments:
           - "@doctrine.orm.entity_manager"
-          - "@security.password_encoder"
-          - "%secret%"
 
     app.security.token_manager:
         class: AppBundle\Service\TokenManager

@@ -24,7 +24,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(name="id", type="string", length=255, unique=true)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="UUID")
+     * @ORM\GeneratedValue(strategy="NONE")
      *
      * @JMS\Expose
      */
@@ -71,6 +71,13 @@ class User implements UserInterface
     function getId ()
     {
         return $this->id;
+    }
+
+    public function setId ($id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getUsername ()

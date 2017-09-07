@@ -37,26 +37,30 @@ class TokenController extends BaseApiController
                 return $this->failure('token_error', (string)$res->getBody());
             }
 
-            $data = json_decode((string)$res->getBody(), true);
-            $user = $this->get('app.security.user_manager')->findUserByUsername($data['username']);
-            if ($user instanceof User) {
-                $token->setUser($user);
-                $this->getDoctrine()->getManager()->persist($token);
-                $this->getDoctrine()->getManager()->flush();
+            $manager = $this->get('app.security.user_manager');
 
-                return $this->success(
-                    $token,
-                    [
-                        'Default',
-                        'user_group',
-                        'user' => [
-                            'Default',
-                        ],
-                    ]
-                );
+            $data = json_decode((string)$res->getBody(), true);
+            $user = $manager->findUserByUsername($data['username']);
+            if ($user === null) {
+                $user = $manager->createUser($data['username']);
+                $user->setId($data['id']);
+                $manager->updateUser($user);
             }
 
-            return $this->failure('user_not_found', $data['username']);
+            $token->setUser($user);
+            $this->getDoctrine()->getManager()->persist($token);
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->success(
+                $token,
+                [
+                    'Default',
+                    'user_group',
+                    'user' => [
+                        'Default',
+                    ],
+                ]
+            );
         }
 
         return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors(true)));
