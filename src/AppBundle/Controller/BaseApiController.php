@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Service\ApiService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormErrorIterator;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Description of ApiController
@@ -46,5 +47,10 @@ abstract class BaseApiController extends Controller
         }
 
         return $messages;
+    }
+
+    public function setPublic(Request $request, bool $public = true)
+    {
+        $this->get('app.api')->setPublic($request, $public);
     }
 }

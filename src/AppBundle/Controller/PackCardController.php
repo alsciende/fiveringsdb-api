@@ -2,10 +2,10 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Controller\BaseApiController;
 use AppBundle\Entity\PackCard;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Description of PackCardController
@@ -19,8 +19,10 @@ class PackCardController extends BaseApiController
      * @Route("/pack-cards")
      * @Method("GET")
      */
-    public function listAction ()
+    public function listAction (Request $request)
     {
+        $this->setPublic($request);
+
         return $this->success(
             $this
                 ->getDoctrine()
