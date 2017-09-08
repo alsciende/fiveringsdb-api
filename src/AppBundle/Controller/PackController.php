@@ -2,10 +2,10 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Controller\BaseApiController;
 use AppBundle\Entity\Pack;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Description of PacksController
@@ -19,8 +19,10 @@ class PackController extends BaseApiController
      * @Route("/packs")
      * @Method("GET")
      */
-    public function listAction ()
+    public function listAction (Request $request)
     {
+        $this->setPublic($request);
+
         return $this->success(
             $this
                 ->getDoctrine()

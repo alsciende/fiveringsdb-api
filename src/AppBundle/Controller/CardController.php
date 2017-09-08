@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Card;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Description of CardsController
@@ -18,8 +19,10 @@ class CardController extends BaseApiController
      * @Route("/cards", name="listCards")
      * @Method("GET")
      */
-    public function listAction ()
+    public function listAction (Request $request)
     {
+        $this->setPublic($request);
+
         return $this->success(
             $this
                 ->getDoctrine()
@@ -44,8 +47,10 @@ class CardController extends BaseApiController
      * @Route("/cards/{id}", name="getCard")
      * @Method("GET")
      */
-    public function getAction (Card $card)
+    public function getAction (Request $request, Card $card)
     {
+        $this->setPublic($request);
+
         return $this->success($card);
     }
 }

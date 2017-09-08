@@ -3,6 +3,8 @@
 namespace AppBundle\Service;
 
 use JMS\Serializer\SerializationContext;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -32,26 +34,19 @@ class ApiService
      */
     private $httpCacheMaxAge;
 
-    /**
-     *
-     * @var string
-     */
-    private $kernelEnvironment;
-
-    function __construct (RequestStack $requestStack, \JMS\Serializer\Serializer $serializer, $httpCacheMaxAge)
+    public function __construct (RequestStack $requestStack, \JMS\Serializer\Serializer $serializer, $httpCacheMaxAge)
     {
         $this->requestStack = $requestStack;
         $this->serializer = $serializer;
         $this->httpCacheMaxAge = $httpCacheMaxAge;
     }
 
-    function buildResponse ($data = null, $groups = [])
+    public function buildResponse ($data = null, $groups = [])
     {
         $request = $this->requestStack->getCurrentRequest();
-        $isPublic = $request->getMethod() === 'GET';
         $response = $this->getEmptyResponse();
 
-        if ($isPublic) {
+        if ($this->isPublic($request)) {
             // make response public and cacheable
             $response->setPublic();
             $response->setMaxAge($this->httpCacheMaxAge);
@@ -75,7 +70,7 @@ class ApiService
         return $response;
     }
 
-    function buildContent ($data = null, $groups = [])
+    public function buildContent ($data = null, $groups = [])
     {
         $content = [];
         if (is_array($data)) {
@@ -88,7 +83,7 @@ class ApiService
         return $content;
     }
 
-    function getDateUpdate ($data)
+    public function getDateUpdate ($data)
     {
         if (is_array($data) === false) {
             $data = [$data];
@@ -105,12 +100,22 @@ class ApiService
         );
     }
 
-    function getEmptyResponse ()
+    public function getEmptyResponse ()
     {
         $response = new Response();
 //        $response->headers->set('Access-Control-Allow-Origin', '*');
         $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
 
         return $response;
+    }
+
+    public function isPublic(Request $request): bool
+    {
+        return $request->attributes->get('public') ?? false;
+    }
+
+    public function setPublic(Request $request, bool $public = true)
+    {
+        $request->attributes->set('public', $public);
     }
 }

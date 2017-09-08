@@ -2,7 +2,6 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Controller\BaseApiController;
 use AppBundle\Entity\Deck;
 use AppBundle\Form\Type\DeckType;
 use AppBundle\Manager\DeckManager;
@@ -25,8 +24,10 @@ class PublicDeckController extends BaseApiController
      * @Route("/decks")
      * @Method("GET")
      */
-    public function listAction ()
+    public function listAction (Request $request)
     {
+        $this->setPublic($request);
+
         $decks = $this->getDoctrine()->getRepository(Deck::class)->findBy(['published' => true]);
 
         return $this->success($decks);
@@ -37,8 +38,10 @@ class PublicDeckController extends BaseApiController
      * @Route("/decks/{id}")
      * @Method("GET")
      */
-    public function getAction (Deck $deck)
+    public function getAction (Request $request, Deck $deck)
     {
+        $this->setPublic($request);
+
         if (!$deck->isPublished()) {
             throw $this->createNotFoundException();
         }
