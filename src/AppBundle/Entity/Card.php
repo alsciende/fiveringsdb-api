@@ -175,7 +175,7 @@ class Card
     /**
      * @var string
      *
-     * @ORM\Column(name="side", type="string", nullable=true)
+     * @ORM\Column(name="side", type="string", nullable=false)
      *
      * @Source(type="string")
      *
@@ -454,7 +454,7 @@ class Card
         return $this;
     }
 
-    public function setSide (string $side = null): self
+    public function setSide (string $side): self
     {
         $this->side = $side;
 
@@ -595,7 +595,7 @@ class Card
         return $this->unicity;
     }
 
-    public function getSide (): ?string
+    public function getSide (): string
     {
         return $this->side;
     }
