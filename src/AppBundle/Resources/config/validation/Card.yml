@@ -42,8 +42,8 @@ AppBundle\Entity\Card:
             - Choice:
                 - conflict
                 - dynasty
-            - Expression:
-                expression: "(value === 'conflict' and this.getType() in ['attachment','character','event']) or (value === 'dynasty' and this.getType() in ['character','holding']) or (value === null and this.getType() in ['role','province','stronghold'])"
+                - province
+                - role
         cost:
             - Type: integer
             - GreaterThanOrEqual: 0
