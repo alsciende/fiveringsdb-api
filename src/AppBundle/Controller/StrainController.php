@@ -85,6 +85,24 @@ class StrainController extends BaseApiController
     }
 
     /**
+     * Get a strain.
+     * @Route("/strains/{id}")
+     * @Method("GET")
+     */
+    public function getAction (Strain $strain)
+    {
+        return $this->success(
+            $strain, [
+                'Default',
+                'head_group',
+                'head' => [
+                    'Default',
+                ],
+            ]
+        );
+    }
+
+    /**
      * Delete a strain.
      * All its decks are deleted as well.
      * Published (major) decks don't have a strain.
