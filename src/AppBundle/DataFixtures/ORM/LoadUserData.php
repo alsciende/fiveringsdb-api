@@ -6,6 +6,7 @@ use AppBundle\Service\UserManager;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
@@ -38,6 +39,7 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface, C
             $user->addRole($role);
         }
         $user->setEnabled(true);
+        $user->setId(Uuid::uuid4());
         $userManager->updateUser($user);
         $this->addReference("user-$username", $user);
     }
