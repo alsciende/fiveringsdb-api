@@ -63,5 +63,5 @@ Soon...
 
 ```bash
 cd vue
-./node_modules/.bin/eslint src/
+npm run lint
 ```
