@@ -15,7 +15,9 @@ class RulingType extends AbstractType
     public function buildForm (FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('text', TextType::class);
+            ->add('text', TextType::class)
+            ->add('source', TextType::class)
+            ->add('link', TextType::class);
     }
 
     public function configureOptions (OptionsResolver $resolver)

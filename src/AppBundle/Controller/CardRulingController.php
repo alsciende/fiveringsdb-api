@@ -30,7 +30,7 @@ class CardRulingController extends BaseApiController
     {
         $ruling = new Ruling();
         $form = $this->createForm(RulingType::class, $ruling);
-        $form->submit(json_decode($request->getContent(), true), true);
+        $form->submit(json_decode($request->getContent(), true), false);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $ruling->setUser($this->getUser())->setCard($card);
@@ -40,7 +40,7 @@ class CardRulingController extends BaseApiController
             return $this->success($ruling);
         }
 
-        return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors()));
+        return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors(true)));
     }
 
     /**
@@ -67,6 +67,19 @@ class CardRulingController extends BaseApiController
     public function getAction (Ruling $ruling)
     {
         return $this->success($ruling);
+    }
+
+    /**
+     * Delete a ruling on a card
+     * @Route("/cards/{cardId}/rulings/{id}", name="deleteCardRuling")
+     * @Method("DELETE")
+     */
+    public function deleteAction (Ruling $ruling)
+    {
+        $this->getDoctrine()->getManager()->remove($ruling);
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->success();
     }
 
     /**

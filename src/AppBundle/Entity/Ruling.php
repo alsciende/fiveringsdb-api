@@ -3,9 +3,9 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Alsciende\SerializerBundle\Annotation\Source;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * A Ruling written by a User for a Card
@@ -29,8 +29,6 @@ class Ruling
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      *
-     * @Source(type="integer")
-     *
      * @JMS\Expose
      */
     private $id;
@@ -40,19 +38,37 @@ class Ruling
      *
      * @ORM\Column(name="text", type="text", nullable=false)
      *
-     * @Source(type="string")
+     * @JMS\Expose
+     *
+     * @Assert\NotBlank()
+     */
+    private $text;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="source", type="text", nullable=false)
+     *
+     * @JMS\Expose
+     *
+     * @Assert\NotBlank()
+     */
+    private $source;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="link", type="text", nullable=true)
      *
      * @JMS\Expose
      */
-    private $text;
+    private $link;
 
     /**
      * @var Card
      *
      * @ORM\ManyToOne(targetEntity="Card", inversedBy="rulings")
      * @ORM\JoinColumn(name="card_id", referencedColumnName="id")
-     *
-     * @Source(type="association")
      */
     private $card;
 
@@ -61,30 +77,12 @@ class Ruling
      *
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     *
-     * @Source(type="association")
      */
     private $user;
 
     function getId ()
     {
         return $this->id;
-    }
-
-    /**
-     * @JMS\VirtualProperty
-     */
-    function getCardId (): ?string
-    {
-        return $this->card ? $this->card->getId() : null;
-    }
-
-    /**
-     * @JMS\VirtualProperty
-     */
-    function getUserId (): ?string
-    {
-        return $this->user ? $this->user->getId() : null;
     }
 
     public function getText (): ?string
@@ -95,6 +93,30 @@ class Ruling
     public function setText (string $text): self
     {
         $this->text = $text;
+
+        return $this;
+    }
+
+    public function getSource (): ?string
+    {
+        return $this->source;
+    }
+
+    public function setSource (string $source): self
+    {
+        $this->source = $source;
+
+        return $this;
+    }
+
+    public function getLink (): ?string
+    {
+        return $this->link;
+    }
+
+    public function setLink (string $link): self
+    {
+        $this->link = $link;
 
         return $this;
     }

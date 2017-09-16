@@ -38,6 +38,7 @@ class CardController extends BaseApiController
                         'id_group',
                     ],
                 ],
+                'rulings_group',
             ]
         );
     }
