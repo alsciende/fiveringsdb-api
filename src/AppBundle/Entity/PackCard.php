@@ -70,6 +70,15 @@ class PackCard implements CardSlotInterface
     private $flavor;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="image_url", type="string", nullable=true)
+     *
+     * @JMS\Expose
+     */
+    private $imageUrl;
+
+    /**
      * @var \AppBundle\Entity\Card
      *
      * @ORM\Id
@@ -99,7 +108,7 @@ class PackCard implements CardSlotInterface
 
     public function __toString ()
     {
-        return $this->getCard()->getName() . ' (' . $this->getPack()->getName() . ')';
+        return sprintf('%s (#%s of %s)', $this->getCard()->getName(), $this->getPosition(), $this->getPack()->getName());
     }
 
     function getQuantity (): int
@@ -170,6 +179,18 @@ class PackCard implements CardSlotInterface
     public function setFlavor (string $flavor): self
     {
         $this->flavor = $flavor;
+
+        return $this;
+    }
+
+    public function getImageUrl(): ?string
+    {
+        return $this->imageUrl;
+    }
+
+    public function setImageUrl(string $imageUrl = null): self
+    {
+        $this->imageUrl = $imageUrl;
 
         return $this;
     }
