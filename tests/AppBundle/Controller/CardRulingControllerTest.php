@@ -21,7 +21,8 @@ class CardRulingControllerTest extends BaseApiControllerTest
             'POST',
             "/cards/above-question/rulings",
             [
-                'text' => 'Test ruling text'
+                'text' => 'Test ruling text',
+                'source' => 'Twitter'
             ]
         );
         $record = $this->assertStandardGetOne($client);
@@ -32,14 +33,6 @@ class CardRulingControllerTest extends BaseApiControllerTest
         $this->assertEquals(
             'Test ruling text',
             $record['text']
-        );
-        $this->assertEquals(
-            'above-question',
-            $record['card_id']
-        );
-        $this->assertArrayHasKey(
-            'user_id',
-            $record
         );
         return $record;
     }
@@ -103,10 +96,6 @@ class CardRulingControllerTest extends BaseApiControllerTest
         $this->assertEquals(
             $ruling['id'],
             $record['id']
-        );
-        $this->assertEquals(
-            $ruling['card_id'],
-            $record['card_id']
         );
         $this->assertEquals(
             'Updated ruling text',
