@@ -49,6 +49,7 @@ class DeckSerializer
             'nb_likes'    => $deck->getNbLikes(),
             'version'     => $deck->getMajorVersion() . '.' . $deck->getMinorVersion(),
             'problem'     => $deck->getProblem(),
+            'clan'        => $deck->getClan(),
             'strain'      => $deck->getStrain() ? $deck->getStrain()->getId() : null,
         ];
     }
