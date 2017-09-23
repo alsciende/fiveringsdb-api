@@ -4,7 +4,6 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * @author Alsciende <alsciende@icloud.com>

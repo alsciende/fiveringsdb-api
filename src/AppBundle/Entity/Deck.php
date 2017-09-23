@@ -6,7 +6,6 @@ use AppBundle\Model\CardSlotCollectionDecorator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
@@ -123,6 +122,14 @@ class Deck
      * @ORM\Column(name="problem", type="integer", nullable=false)
      */
     private $problem;
+
+    /**
+     * Main Clan of the deck
+     *
+     * @var string
+     * @ORM\Column(name="clan", type="string", nullable=true)
+     */
+    private $clan;
 
     /**
      * @var string
@@ -369,6 +376,18 @@ class Deck
         return $this;
     }
 
+    public function getClan (): ?string
+    {
+        return $this->clan;
+    }
+
+    public function setClan (string $clan = null): self
+    {
+        $this->clan = $clan;
+
+        return $this;
+    }
+
     public function getFormat (): ?string
     {
         return $this->format;
@@ -377,6 +396,7 @@ class Deck
     public function setFormat (string $format): self
     {
         $this->format = $format;
+
         return $this;
     }
 }

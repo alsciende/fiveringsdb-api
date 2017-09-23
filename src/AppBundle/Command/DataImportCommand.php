@@ -24,18 +24,14 @@ class DataImportCommand extends ContainerAwareCommand
 
     protected function execute (InputInterface $input, OutputInterface $output)
     {
-        /* @var $scanningService \Alsciende\SerializerBundle\Service\ScanningService */
         $scanningService = $this->getContainer()->get('alsciende_serializer.scanning_service');
 
         $sources = $scanningService->findSources();
 
-        /* @var $serializer \Alsciende\SerializerBundle\Serializer\Serializer */
         $serializer = $this->getContainer()->get('alsciende_serializer.serializer');
 
-        /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
 
-        /* @var $validator \Symfony\Component\Validator\Validator\RecursiveValidator */
         $validator = $this->getContainer()->get('validator');
 
         foreach ($sources as $source) {

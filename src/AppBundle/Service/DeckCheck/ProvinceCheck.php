@@ -56,8 +56,7 @@ class ProvinceCheck implements DeckCheckInterface
             $clan = $stronghold->getClan();
 
             $offClanProvinceSlot = $provinceSlots->find(
-                function ($slot) use ($clan) {
-                    /** @var CardSlotInterface $slot */
+                function (CardSlotInterface $slot) use ($clan) {
                     return $slot->getCard()->getClan() !== 'neutral'
                         && $slot->getCard()->getClan() !== $clan;
                 }

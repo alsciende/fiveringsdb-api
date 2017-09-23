@@ -2,11 +2,9 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Controller\BaseApiController;
 use AppBundle\Entity\Deck;
 use AppBundle\Entity\Strain;
 use AppBundle\Form\Type\StrainType;
-use AppBundle\Manager\DeckManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -117,9 +115,9 @@ class StrainController extends BaseApiController
         }
 
         $strain->clearHead();
-        $this->get('doctrine')->getManager()->flush();
-        $this->get('doctrine')->getManager()->remove($strain);
-        $this->get('doctrine')->getManager()->flush();
+        $this->getDoctrine()->getManager()->flush();
+        $this->getDoctrine()->getManager()->remove($strain);
+        $this->getDoctrine()->getManager()->flush();
 
         return $this->success();
     }

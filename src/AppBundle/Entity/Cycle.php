@@ -2,10 +2,10 @@
 
 namespace AppBundle\Entity;
 
+use Alsciende\SerializerBundle\Annotation\Source;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use Alsciende\SerializerBundle\Annotation\Source;
 use JMS\Serializer\Annotation as JMS;
 
 

@@ -2,7 +2,6 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Service\ApiService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormErrorIterator;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,10 +15,7 @@ abstract class BaseApiController extends Controller
 {
     public function success ($data = null, $groups = ['Default'])
     {
-        /* @var $service ApiService */
-        $service = $this->get('app.api');
-
-        return $service->buildResponse($data, $groups);
+        return $this->get('app.api')->buildResponse($data, $groups);
     }
 
     public function failure ($message = "unknown_error", $description = "An unknown error has occured.")

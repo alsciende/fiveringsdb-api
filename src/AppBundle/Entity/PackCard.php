@@ -2,9 +2,9 @@
 
 namespace AppBundle\Entity;
 
+use Alsciende\SerializerBundle\Annotation\Source;
 use AppBundle\Model\CardSlotInterface;
 use Doctrine\ORM\Mapping as ORM;
-use Alsciende\SerializerBundle\Annotation\Source;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use JMS\Serializer\Annotation as JMS;
 

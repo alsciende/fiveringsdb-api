@@ -2,15 +2,10 @@
 
 namespace AppBundle\Manager;
 
-use AppBundle\Entity\Card;
 use AppBundle\Entity\Deck;
-use AppBundle\Entity\DeckCard;
 use AppBundle\Entity\DeckLike;
 use AppBundle\Entity\Strain;
 use AppBundle\Entity\User;
-use AppBundle\Exception\CardNotFoundException;
-use AppBundle\Model\CardSlotCollectionDecorator;
-use AppBundle\Model\CardSlotInterface;
 use AppBundle\Service\DeckValidator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\Serializer;
@@ -50,6 +45,7 @@ class DeckManager
     public function persist (Deck $deck): self
     {
         $head = $deck->getStrain()->getHead();
+        $deck->setClan($deck->getDeckCards()->findClan());
         $deck->setProblem($this->deckValidator->check($deck->getDeckCards(), $deck->getFormat()));
         $deck->setPublished(false);
         $deck->setMajorVersion($head === null ? 0 : $head->getMajorVersion());

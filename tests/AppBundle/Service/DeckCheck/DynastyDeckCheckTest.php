@@ -46,7 +46,7 @@ class DynastyDeckCheckTest extends AbstractDeckCheckTest
             DeckValidator::OFF_CLAN_DYNASTY,
             [
                 new DeckCard(
-                    $this->getCard(['type' => Card::TYPE_STRONGHOLD, 'clan' => Card::CLAN_CRAB, 'influence_pool' => 10]),
+                    $this->getCard(['side' => Card::SIDE_PROVINCE, 'type' => Card::TYPE_STRONGHOLD, 'clan' => Card::CLAN_CRAB, 'influence_pool' => 10]),
                     1
                 ),
                 new DeckCard(

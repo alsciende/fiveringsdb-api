@@ -6,7 +6,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use function dump;
 
 /**
  * Description of PaypalController
@@ -23,7 +22,6 @@ class PaypalController extends Controller
      */
     public function createAction ()
     {
-        /* @var $paypalService \AppBundle\Service\PaypalService */
         $paypalService = $this->get('paypal');
 
         $result = $paypalService->setExpressCheckout(10, 'EUR', 'SALE');
@@ -54,7 +52,6 @@ class PaypalController extends Controller
         $token = $request->query->get('token');
         $payerID = $request->query->get('PayerID');
 
-        /* @var $paypalService \AppBundle\Service\PaypalService */
         $paypalService = $this->get('paypal');
 
         $result_get = $paypalService->getExpressCheckoutDetails($token);
@@ -73,7 +70,6 @@ class PaypalController extends Controller
      */
     public function transactionAction ($transactionId)
     {
-        /* @var $paypalService \AppBundle\Service\PaypalService */
         $paypalService = $this->get('paypal');
 
         $result = $paypalService->getTransactionDetails($transactionId);

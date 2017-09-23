@@ -2,9 +2,7 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Controller\BaseApiController;
 use AppBundle\Entity\Deck;
-use AppBundle\Manager\DeckManager;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -31,10 +29,8 @@ class DeckLikeController extends BaseApiController
             throw $this->createNotFoundException();
         }
 
-        /* @var $manager DeckManager */
-        $manager = $this->get('app.deck_manager');
         try {
-            $nbLikes = $manager->addLike($deck, $this->getUser());
+            $nbLikes = $this->get('app.deck_manager')->addLike($deck, $this->getUser());
             $this->getDoctrine()->getManager()->flush();
         } catch (Exception $ex) {
             return $this->failure($ex->getMessage());
@@ -56,10 +52,8 @@ class DeckLikeController extends BaseApiController
             throw $this->createNotFoundException();
         }
 
-        /* @var $manager DeckManager */
-        $manager = $this->get('app.deck_manager');
         try {
-            $nbLikes = $manager->removeLike($deck, $this->getUser());
+            $nbLikes = $this->get('app.deck_manager')->removeLike($deck, $this->getUser());
             $this->getDoctrine()->getManager()->flush();
         } catch (Exception $ex) {
             return $this->failure($ex->getMessage());

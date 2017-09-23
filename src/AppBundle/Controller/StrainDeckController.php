@@ -2,12 +2,10 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Controller\BaseApiController;
 use AppBundle\Entity\Deck;
 use AppBundle\Entity\Strain;
 use AppBundle\Form\Type\DeckType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -97,7 +95,7 @@ class StrainDeckController extends BaseApiController
 
         try {
             $this->get('app.deck_manager')->deleteDeck($deck);
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             return $this->failure($ex->getMessage());
         }
 

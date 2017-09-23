@@ -125,6 +125,13 @@ class CardSlotCollectionDecorator extends ArrayCollection
         return null;
     }
 
+    public function findClan (): ?string
+    {
+        $stronghold = $this->findStronghold();
+
+        return $stronghold ? $stronghold->getClan() : null;
+    }
+
     /**
      * Return true if all quantities are 1
      */

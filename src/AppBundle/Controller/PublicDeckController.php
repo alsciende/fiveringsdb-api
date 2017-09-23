@@ -4,7 +4,6 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Deck;
 use AppBundle\Form\Type\DeckType;
-use AppBundle\Manager\DeckManager;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -91,10 +90,8 @@ class PublicDeckController extends BaseApiController
             throw $this->createAccessDeniedException();
         }
 
-        /* @var $manager DeckManager */
-        $manager = $this->get('app.deck_manager');
         try {
-            $manager->deleteDeck($deck);
+            $this->get('app.deck_manager')->deleteDeck($deck);
         } catch (Exception $ex) {
             return $this->failure($ex->getMessage());
         }

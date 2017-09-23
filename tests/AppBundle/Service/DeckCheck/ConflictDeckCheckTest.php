@@ -64,7 +64,7 @@ class ConflictDeckCheckTest extends AbstractDeckCheckTest
             DeckValidator::NOT_ENOUGH_INFLUENCE,
             [
                 new DeckCard(
-                    $this->getCard(['type' => Card::TYPE_STRONGHOLD, 'clan' => Card::CLAN_CRAB, 'influence_pool' => 10]),
+                    $this->getCard(['side' => Card::SIDE_PROVINCE, 'type' => Card::TYPE_STRONGHOLD, 'clan' => Card::CLAN_CRAB, 'influence_pool' => 10]),
                     1
                 ),
                 new DeckCard(
@@ -82,7 +82,7 @@ class ConflictDeckCheckTest extends AbstractDeckCheckTest
             DeckValidator::TOO_MANY_OFF_CLANS,
             [
                 new DeckCard(
-                    $this->getCard(['type' => Card::TYPE_STRONGHOLD, 'clan' => Card::CLAN_CRAB, 'influence_pool' => 10]),
+                    $this->getCard(['side' => Card::SIDE_PROVINCE, 'type' => Card::TYPE_STRONGHOLD, 'clan' => Card::CLAN_CRAB, 'influence_pool' => 10]),
                     1
                 ),
                 new DeckCard(

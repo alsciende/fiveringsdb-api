@@ -2,15 +2,15 @@
 
 namespace AppBundle\Entity;
 
+use Alsciende\SerializerBundle\Annotation\Source;
+use AppBundle\Behavior\Entity\ToStringNameTrait;
 use AppBundle\Model\PackCardSlotCollectionDecorator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use Alsciende\SerializerBundle\Annotation\Source;
 use JMS\Serializer\Annotation as JMS;
-use AppBundle\Behavior\Entity\ToStringNameTrait;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Card
@@ -43,6 +43,8 @@ class Card
 
     const SIDE_CONFLICT = 'conflict';
     const SIDE_DYNASTY = 'dynasty';
+    const SIDE_PROVINCE = 'province';
+    const SIDE_ROLE = 'role';
 
     const CLAN_CRAB = 'crab';
     const CLAN_CRANE = 'crane';

@@ -23,7 +23,6 @@ class PaypalTransactionCommand extends \Symfony\Bundle\FrameworkBundle\Command\C
     {
         $transactionId = $input->getArgument('transaction_id');
 
-        /* @var $service \AppBundle\Service\PaypalService */
         $service = $this->getContainer()->get('paypal');
 
         $result = $service->getTransactionDetails($transactionId);

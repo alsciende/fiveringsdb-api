@@ -22,7 +22,6 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface, C
 
     public function load (ObjectManager $manager)
     {
-        /* @var $userManager UserManager */
         $userManager = $this->container->get('app.security.user_manager');
 
         $this->loadUser($userManager, 'admin', ['ROLE_ADMIN']);

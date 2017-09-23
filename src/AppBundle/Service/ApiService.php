@@ -3,10 +3,9 @@
 namespace AppBundle\Service;
 
 use JMS\Serializer\SerializationContext;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Description of ApiService
