@@ -88,10 +88,6 @@ class CardRulingController extends BaseApiController
      */
     public function patchAction (Request $request, Ruling $ruling)
     {
-        if ($this->getUser() !== $ruling->getUser()) {
-            throw $this->createAccessDeniedException();
-        }
-
         $form = $this->createForm(RulingType::class, $ruling);
         $form->submit(json_decode($request->getContent(), true), false);
 
