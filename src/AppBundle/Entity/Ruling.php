@@ -114,7 +114,7 @@ class Ruling
         return $this->link;
     }
 
-    public function setLink (string $link): self
+    public function setLink (string $link = null): self
     {
         $this->link = $link;
 
