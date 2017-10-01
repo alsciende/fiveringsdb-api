@@ -45,7 +45,7 @@ class Deck
      * Markdown-formatted description of the deck
      *
      * @var string
-     * @ORM\Column(name="description", type="text", nullable=true)
+     * @ORM\Column(name="description", type="text", nullable=false)
      */
     private $description;
 

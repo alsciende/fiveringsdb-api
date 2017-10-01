@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Deck;
 use AppBundle\Form\Type\DeckType;
+use AppBundle\Form\Type\PublicDeckType;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -63,7 +64,7 @@ class PublicDeckController extends BaseApiController
             throw $this->createAccessDeniedException();
         }
 
-        $form = $this->createForm(DeckType::class, $deck);
+        $form = $this->createForm(PublicDeckType::class, $deck);
         $form->submit(json_decode($request->getContent(), true), false);
 
         if ($form->isSubmitted() && $form->isValid()) {

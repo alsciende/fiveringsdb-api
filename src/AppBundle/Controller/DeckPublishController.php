@@ -3,9 +3,12 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Strain;
+use AppBundle\Form\Type\DeckType;
+use AppBundle\Form\Type\PublicDeckType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Description of DeckPublishController
@@ -20,18 +23,27 @@ class DeckPublishController extends BaseApiController
      * @Method("PATCH")
      * @Security("has_role('ROLE_USER')")
      */
-    public function postAction (Strain $strain)
+    public function postAction (Request $request, Strain $strain)
     {
         if ($strain->getUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException();
         }
-        if ($strain->getHead()->isPublished()) {
+
+        $deck = $strain->getHead();
+        if ($deck->isPublished()) {
             throw $this->createNotFoundException();
         }
 
-        $this->get('app.deck_manager')->publish($strain->getHead());
-        $this->getDoctrine()->getManager()->flush();
+        $form = $this->createForm(PublicDeckType::class, $deck);
+        $form->submit(json_decode($request->getContent(), true), false);
 
-        return $this->success($strain->getHead());
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->get('app.deck_manager')->publish($strain->getHead());
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->success($deck);
+        }
+
+        return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors()));
     }
 }

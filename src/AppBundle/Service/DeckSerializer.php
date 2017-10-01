@@ -48,6 +48,7 @@ class DeckSerializer
             'user_id'     => $deck->getUser() ? $deck->getUser()->getId() : null,
             'nb_likes'    => $deck->getNbLikes(),
             'version'     => $deck->getMajorVersion() . '.' . $deck->getMinorVersion(),
+            'published'   => $deck->isPublished(),
             'problem'     => $deck->getProblem(),
             'clan'        => $deck->getClan(),
             'strain'      => $deck->getStrain() ? $deck->getStrain()->getId() : null,
