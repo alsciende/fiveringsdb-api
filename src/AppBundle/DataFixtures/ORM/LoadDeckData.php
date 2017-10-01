@@ -2,7 +2,9 @@
 
 namespace AppBundle\DataFixtures\ORM;
 
+use AppBundle\Entity\Deck;
 use AppBundle\Entity\User;
+use AppBundle\Form\DataTransformer\CardSlotsTransformer;
 use AppBundle\Manager\DeckManager;
 use AppBundle\Service\DeckSerializer;
 use Doctrine\Common\DataFixtures\AbstractFixture;
@@ -24,13 +26,13 @@ class LoadDeckData extends AbstractFixture implements OrderedFixtureInterface, C
     /** @var DeckManager */
     private $manager;
 
-    /** @var DeckSerializer */
-    private $serializer;
+    /** @var CardSlotsTransformer */
+    private $transformer;
 
     public function load (ObjectManager $manager)
     {
         $this->manager = $this->container->get('app.deck_manager');
-        $this->serializer = $this->container->get('app.deck_serializer');
+        $this->transformer = $this->container->get('app.data_transformer.card_slots');
         $user = $this->getReference('user-user');
 
         $data = Yaml::parse(file_get_contents(__DIR__ . '/fixtures/deck.yml'));
@@ -44,14 +46,11 @@ class LoadDeckData extends AbstractFixture implements OrderedFixtureInterface, C
 
     public function loadDeck (User $user, string $format, string $name, array $cards)
     {
-        $deck = $this->serializer->deserialize(
-            [
-                'name'  => $name,
-                'cards' => $cards,
-            ]
-        );
+        $deck = new Deck();
+        $deck->setName($name);
         $deck->setFormat($format);
         $deck->setUser($user);
+        $deck->setDeckCards($this->transformer->reverseTransform($cards));
 
         $strain = $this->manager->createNewStrain($user);
         $deck->setStrain($strain);
