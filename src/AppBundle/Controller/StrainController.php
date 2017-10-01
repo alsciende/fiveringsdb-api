@@ -27,7 +27,7 @@ class StrainController extends BaseApiController
     public function postAction (Request $request)
     {
         $count = $this->get('app.deck_manager')->countStrains($this->getUser());
-        if($count >= 100) {
+        if ($count >= 100) {
             return $this->failure('quota_error', "Quota reached");
         }
 
@@ -49,12 +49,13 @@ class StrainController extends BaseApiController
 
             return $this->success(
                 $strain, [
-                'Default',
-                'head_group',
-                'head' => [
                     'Default',
-                ],
-            ]
+                    'Head',
+                    'head' => [
+                        'Default',
+                        'Cards',
+                    ]
+                ]
             );
         }
 
@@ -73,12 +74,13 @@ class StrainController extends BaseApiController
 
         return $this->success(
             $strains, [
-            'Default',
-            'head_group',
-            'head' => [
                 'Default',
-            ],
-        ]
+                'Head',
+                'head' => [
+                    'Default',
+                    'Cards',
+                ],
+            ]
         );
     }
 
@@ -92,9 +94,12 @@ class StrainController extends BaseApiController
         return $this->success(
             $strain, [
                 'Default',
-                'head_group',
+                'Head',
                 'head' => [
                     'Default',
+                    'Description',
+                    'Cards',
+                    'User',
                 ],
             ]
         );

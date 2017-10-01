@@ -77,7 +77,7 @@ class PublicDeckControllerTest extends BaseApiControllerTest
     {
         $client = $this->getClient('user');
 
-        $id = $deck['strain'];
+        $id = $deck['strain']['id'];
 
         $this->sendJsonRequest(
             $client,
@@ -90,22 +90,6 @@ class PublicDeckControllerTest extends BaseApiControllerTest
             $record['version']
         );
         return $record;
-    }
-
-    /**
-     * @covers  PublicDeckController::listAction()
-     * @depends testDeckPublishControllerPostAction
-     */
-    public function testPublicDeckControllerListAction ($deck)
-    {
-        $client = $this->getClient();
-
-        $this->sendJsonRequest(
-            $client,
-            'GET',
-            "/decks"
-        );
-        $record = $this->assertStandardGetMany($client);
     }
 
     /**
@@ -263,7 +247,7 @@ class PublicDeckControllerTest extends BaseApiControllerTest
         );
         $this->assertNotEquals(
           $record['user_id'],
-          $deck['user_id']
+          $deck['user']['id']
         );
         return $record;
     }

@@ -2,9 +2,16 @@ services:
     _instanceof:
         AppBundle\Service\DeckCheck\DeckCheckInterface:
             tags: [ 'app.deck_check' ]
+        AppBundle\Service\DeckSearch\DeckSearchInterface:
+            tags: [ 'app.deck_search' ]
 
     AppBundle\Service\DeckCheck\:
         resource: '../../src/AppBundle/Service/DeckCheck'
+        public: false
+
+    AppBundle\Service\DeckSearch\:
+        resource: '../../src/AppBundle/Service/DeckSearch'
+        arguments: [ '@doctrine.orm.entity_manager' ]
         public: false
 
     paypal:
@@ -24,6 +31,9 @@ services:
     app.deck_validator:
         class: AppBundle\Service\DeckValidator
 
+    app.deck_search:
+        class: AppBundle\Service\DeckSearchService
+
     app.deck_manager:
         class: AppBundle\Manager\DeckManager
         arguments:
@@ -31,15 +41,10 @@ services:
           - "@serializer"
           - '@app.deck_validator'
 
-    app.deck_serializer:
-        class: AppBundle\Service\DeckSerializer
+    app.cardslotcollection_serialization_subscriber:
+        class: AppBundle\EventSubscriber\Serializer\CardSlotCollectionSerializationHandler
         arguments:
-          - "@app.data_transformer.card_slots"
-
-    app.deck_serialization_subscriber:
-        class: AppBundle\EventSubscriber\Serializer\DeckSerializationHandler
-        arguments:
-            - "@app.deck_serializer"
+            - "@app.data_transformer.card_slots"
         tags:
             - { name: jms_serializer.subscribing_handler }
 
@@ -69,7 +74,6 @@ services:
         class: AppBundle\Security\CommentVisibilityVoter
         tags:
           - "security.voter"
-          
 
     app.security.oauth_authenticator:
         class: AppBundle\Security\OauthAuthenticator

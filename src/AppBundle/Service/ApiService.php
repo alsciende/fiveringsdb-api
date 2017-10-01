@@ -45,7 +45,7 @@ class ApiService
         $request = $this->requestStack->getCurrentRequest();
         $response = $this->getEmptyResponse();
 
-        if ($this->isPublic($request)) {
+        if (false && $this->isPublic($request)) {
             // make response public and cacheable
             $response->setPublic();
             $response->setMaxAge($this->httpCacheMaxAge);

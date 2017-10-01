@@ -122,7 +122,7 @@ class PrivateDeckControllerTest extends BaseApiControllerTest
     public function testStrainDeckControllerPostAction2 ($deck)
     {
         $client = $this->getClient('user');
-        $strainId = $deck['strain'];
+        $strainId = $deck['strain']['id'];
         $this->sendJsonRequest(
             $client,
             'POST',
@@ -157,7 +157,7 @@ class PrivateDeckControllerTest extends BaseApiControllerTest
     {
         $client = $this->getClient('user');
 
-        $strainId = $deck['strain'];
+        $strainId = $deck['strain']['id'];
 
         $this->sendJsonRequest(
             $client,

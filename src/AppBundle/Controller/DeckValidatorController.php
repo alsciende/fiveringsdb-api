@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Deck;
+use AppBundle\Model\CardSlotCollectionDecorator;
 use AppBundle\Service\DeckValidator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -22,18 +23,15 @@ class DeckValidatorController extends BaseApiController
      */
     public function validateAction (Request $request, string $format)
     {
-        /** @var Deck $deck */
-        $deck = $this->get('jms_serializer')->fromArray(
-            [
-                'cards' => json_decode($request->getContent(), true),
-            ], Deck::class
-        )
-        ;
+        $cardSlotCollection = $this->get('jms_serializer')->fromArray(
+            json_decode($request->getContent(), true)
+            , CardSlotCollectionDecorator::class
+        );
 
         return new JsonResponse(
             [
                 'success' => true,
-                'status'  => $this->get('app.deck_validator')->check($deck->getDeckCards(), $format),
+                'status'  => $this->get('app.deck_validator')->check($cardSlotCollection, $format),
             ]
         );
     }

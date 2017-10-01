@@ -40,7 +40,7 @@ class DeckCommentController extends BaseApiController
             return $this->success($comment);
         }
 
-        return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors()));
+        return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors(true)));
     }
 
     /**
@@ -91,7 +91,7 @@ class DeckCommentController extends BaseApiController
             return $this->success($comment);
         }
 
-        return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors()));
+        return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors(true)));
     }
 
     /**
@@ -116,6 +116,6 @@ class DeckCommentController extends BaseApiController
             return $this->success($comment);
         }
 
-        return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors()));
+        return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors(true)));
     }
 }

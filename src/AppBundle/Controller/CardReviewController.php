@@ -37,7 +37,7 @@ class CardReviewController extends BaseApiController
             return $this->success($review);
         }
 
-        return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors()));
+        return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors(true)));
     }
 
     /**
@@ -87,6 +87,6 @@ class CardReviewController extends BaseApiController
             return $this->success($review);
         }
 
-        return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors()));
+        return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors(true)));
     }
 }

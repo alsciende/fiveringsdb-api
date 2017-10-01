@@ -5,6 +5,7 @@ namespace AppBundle\Form\DataTransformer;
 use AppBundle\Entity\Card;
 use AppBundle\Entity\DeckCard;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\DataTransformerInterface;
@@ -20,6 +21,10 @@ class CardSlotsTransformer implements DataTransformerInterface
         $this->repository = $entityManager->getRepository(Card::class);
     }
 
+    /**
+     * @param Collection|DeckCard[] $deckCards
+     * @return array
+     */
     public function transform ($deckCards)
     {
         $data = [];
@@ -30,6 +35,10 @@ class CardSlotsTransformer implements DataTransformerInterface
         return $data;
     }
 
+    /**
+     * @param array $data
+     * @return Collection|DeckCard[] $deckCards
+     */
     public function reverseTransform ($data)
     {
         $deckCards = [];

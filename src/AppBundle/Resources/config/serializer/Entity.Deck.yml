@@ -1,0 +1,38 @@
+AppBundle\Entity\Deck:
+    exclusion_policy: ALL
+    properties:
+        id:
+            expose: true
+        createdAt:
+            expose: true
+        name:
+            expose: true
+        description:
+            expose: true
+            groups: ['Description']
+        format:
+            expose: true
+        nb_likes:
+            expose: true
+        published:
+            expose: true
+        problem:
+            expose: true
+        clan:
+            expose: true
+        strain:
+            expose: true
+            groups: ['Strain']
+        user:
+            expose: true
+            groups: ['User']
+        deckCards:
+            expose: true
+            type: AppBundle\Model\CardSlotCollectionDecorator
+            access_type: public_method
+            serialized_name: cards
+            groups: ['Cards']
+    virtual_properties:
+        getVersion:
+            serialized_name: version
+            type: string

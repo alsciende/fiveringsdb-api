@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * A Deck, private (minorVersion > 0) or public (minorVersion == 0)
@@ -61,7 +62,7 @@ class Deck
      * The owner of the deck
      *
      * @var User
-     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\ManyToOne(targetEntity="User", fetch="EAGER")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      */
     private $user;
@@ -139,6 +140,7 @@ class Deck
 
     function __construct ()
     {
+        $this->description = '';
         $this->nbLikes = 0;
         $this->majorVersion = 0;
         $this->minorVersion = 1;
@@ -199,6 +201,10 @@ class Deck
     /** @return Collection|DeckCard[] */
     public function getDeckCards (): CardSlotCollectionDecorator
     {
+        if ($this->deckCards === null) {
+            $this->deckCards = new ArrayCollection();
+        }
+
         return new CardSlotCollectionDecorator($this->deckCards->toArray());
     }
 
@@ -218,18 +224,6 @@ class Deck
             $this->removeDeckCard($deckCard);
         }
         $this->deckCards->clear();
-
-        return $this;
-    }
-
-    function getDeck (): ?Deck
-    {
-        return $this->deck;
-    }
-
-    function setDeck (Deck $deck): self
-    {
-        $this->deck = $deck;
 
         return $this;
     }
@@ -336,6 +330,11 @@ class Deck
     function getMinorVersion (): int
     {
         return $this->minorVersion;
+    }
+
+    function getVersion (): string
+    {
+        return $this->majorVersion . '.' . $this->minorVersion;
     }
 
     function setMajorVersion (int $majorVersion): self

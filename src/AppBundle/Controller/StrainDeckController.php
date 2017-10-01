@@ -36,7 +36,11 @@ class StrainDeckController extends BaseApiController
             $this->get('app.deck_manager')->persist($deck);
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->success($deck);
+            return $this->success($deck, [
+                'Default',
+                'Cards',
+                'Strain',
+            ]);
         }
 
         return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors(true)));
@@ -75,7 +79,11 @@ class StrainDeckController extends BaseApiController
             throw $this->createAccessDeniedException();
         }
 
-        return $this->success($deck);
+        return $this->success($deck, [
+            'Default',
+            'Description',
+            'Cards',
+        ]);
     }
 
     /**

@@ -29,7 +29,9 @@ class DeckType extends AbstractType
                 'required' => true,
             ]
             )
-            ->add('description', TextType::class)
+            ->add('description', TextType::class, [
+                'empty_data' => '',
+            ])
             ->add(
                 'format', TextType::class, [
                 'required' => true,

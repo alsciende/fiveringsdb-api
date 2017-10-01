@@ -41,9 +41,12 @@ class DeckPublishController extends BaseApiController
             $this->get('app.deck_manager')->publish($strain->getHead());
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->success($deck);
+            return $this->success($deck, [
+                'Default',
+                'User'
+            ]);
         }
 
-        return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors()));
+        return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors(true)));
     }
 }

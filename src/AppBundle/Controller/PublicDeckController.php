@@ -3,8 +3,10 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Deck;
+use AppBundle\Form\Type\DeckSearchType;
 use AppBundle\Form\Type\DeckType;
 use AppBundle\Form\Type\PublicDeckType;
+use AppBundle\Model\DeckSearch;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -28,9 +30,17 @@ class PublicDeckController extends BaseApiController
     {
         $this->setPublic($request);
 
-        $decks = $this->getDoctrine()->getRepository(Deck::class)->findBy(['published' => true]);
+        $search = new DeckSearch();
+        $form = $this->createForm(DeckSearchType::class, $search);
+        $form->submit($request->query->all(), false);
 
-        return $this->success($decks);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->get('app.deck_search')->search($search);
+
+            return $this->success($search);
+        }
+
+        return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors(true)));
     }
 
     /**
@@ -46,7 +56,11 @@ class PublicDeckController extends BaseApiController
             throw $this->createNotFoundException();
         }
 
-        return $this->success($deck);
+        return $this->success($deck, [
+            'Default',
+            'Description',
+            'Cards',
+        ]);
     }
 
     /**
@@ -70,10 +84,14 @@ class PublicDeckController extends BaseApiController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->success($deck);
+            return $this->success($deck, [
+                'Default',
+                'Description',
+                'Cards',
+            ]);
         }
 
-        return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors()));
+        return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors(true)));
     }
 
     /**

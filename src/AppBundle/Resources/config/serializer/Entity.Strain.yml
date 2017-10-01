@@ -3,8 +3,10 @@ AppBundle\Entity\Strain:
     properties:
         id:
             expose: true
+            groups: ['Default','Head']
         createdAt:
             expose: true
+            groups: ['Default','Head']
         head:
             expose: true
-            groups: [head_group]
+            groups: ['Head']

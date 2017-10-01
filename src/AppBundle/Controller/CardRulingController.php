@@ -97,7 +97,7 @@ class CardRulingController extends BaseApiController
             return $this->success($ruling);
         }
 
-        return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors()));
+        return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors(true)));
     }
 
 }

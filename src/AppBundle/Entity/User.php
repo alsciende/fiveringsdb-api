@@ -4,7 +4,6 @@ namespace AppBundle\Entity;
 
 use Alsciende\SerializerBundle\Annotation\Source;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -14,9 +13,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Table(name="users")
  *
  * @author Alsciende <alsciende@icloud.com>
- *
- * @JMS\ExclusionPolicy("all")
- * @JMS\AccessorOrder("alphabetical")
  */
 class User implements UserInterface
 {
@@ -25,8 +21,6 @@ class User implements UserInterface
      * @ORM\Column(name="id", type="string", length=255, unique=true)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
-     *
-     * @JMS\Expose
      */
     private $id;
 
@@ -34,8 +28,6 @@ class User implements UserInterface
      * @ORM\Column(type="string", unique=true)
      *
      * @Source(type="string")
-     *
-     * @JMS\Expose()
      */
     private $username;
 
@@ -50,8 +42,6 @@ class User implements UserInterface
      * @var array
      *
      * @ORM\Column(name="roles",type="simple_array")
-     *
-     * @JMS\Expose()
      */
     private $roles;
 
