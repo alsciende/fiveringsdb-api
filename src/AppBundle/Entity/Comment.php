@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace AppBundle\Entity;
 
+use AppBundle\Behavior\Entity\Timestampable;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use JMS\Serializer\Annotation as JMS;
 
 /**
  * A Comment written by a User for a Deck
@@ -14,12 +14,9 @@ use JMS\Serializer\Annotation as JMS;
  * @ORM\Table(name="comments")
  * @ORM\Entity
  *
- * @JMS\ExclusionPolicy("all")
- * @JMS\AccessorOrder("alphabetical")
- *
  * @author Alsciende <alsciende@icloud.com>
  */
-class Comment
+class Comment implements Timestampable
 {
     use TimestampableEntity;
 
@@ -29,8 +26,6 @@ class Comment
      * @ORM\Column(name="id", type="integer", unique=true)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @JMS\Expose
      */
     private $id;
 
@@ -38,8 +33,6 @@ class Comment
      * @var string
      *
      * @ORM\Column(name="text", type="text", nullable=false)
-     *
-     * @JMS\Expose
      */
     private $text;
 
@@ -47,8 +40,6 @@ class Comment
      * @var boolean
      *
      * @ORM\Column(name="visible", type="boolean", nullable=false)
-     *
-     * @JMS\Expose()
      */
     private $visible;
 
@@ -57,9 +48,6 @@ class Comment
      *
      * @ORM\ManyToOne(targetEntity="Deck", inversedBy="comments")
      * @ORM\JoinColumn(name="deck_id", referencedColumnName="id")
-     *
-     * @JMS\Expose()
-     * @JMS\Groups({"deck_group"})
      */
     private $deck;
 
@@ -68,9 +56,6 @@ class Comment
      *
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     *
-     * @JMS\Expose()
-     * @JMS\Groups({"user_group"})
      */
     private $user;
 
@@ -84,22 +69,6 @@ class Comment
         $this->text = $text;
 
         return $this;
-    }
-
-    /**
-     * @JMS\VirtualProperty
-     */
-    function getDeckId (): ?string
-    {
-        return $this->deck ? $this->deck->getId() : null;
-    }
-
-    /**
-     * @JMS\VirtualProperty
-     */
-    function getUserId (): ?string
-    {
-        return $this->user ? $this->user->getId() : null;
     }
 
     public function setDeck (Deck $deck): self

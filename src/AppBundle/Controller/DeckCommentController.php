@@ -57,7 +57,10 @@ class DeckCommentController extends BaseApiController
             ->findBy(['deck' => $deck])
         ;
 
-        return $this->success($comments);
+        return $this->success($comments, [
+            'Default',
+            'User',
+        ]);
     }
 
     /**

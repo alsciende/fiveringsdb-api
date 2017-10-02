@@ -3,10 +3,8 @@ AppBundle\Entity\User:
     properties:
         id:
             expose: true
-            groups: ['Default','Self']
         username:
             expose: true
-            groups: ['Default','Self']
         roles:
             expose: true
             groups: ['Self']

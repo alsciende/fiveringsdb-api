@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Alsciende\SerializerBundle\Annotation\Source;
+use AppBundle\Behavior\Entity\Timestampable;
 use AppBundle\Behavior\Entity\ToStringNameTrait;
 use AppBundle\Model\PackCardSlotCollectionDecorator;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -25,7 +26,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class Card
+class Card implements Timestampable
 {
     const TYPE_ATTACHMENT = 'attachment';
     const TYPE_CHARACTER = 'character';

@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Alsciende\SerializerBundle\Annotation\Source;
+use AppBundle\Behavior\Entity\Timestampable;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,7 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class Pack
+class Pack implements Timestampable
 {
     use TimestampableEntity;
 

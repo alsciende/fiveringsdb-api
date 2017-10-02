@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Behavior\Entity\Timestampable;
 use AppBundle\Model\CardSlotCollectionDecorator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -17,7 +18,7 @@ use JMS\Serializer\Annotation as Serializer;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class Deck
+class Deck implements Timestampable
 {
     const FORMAT_STANDARD = 'standard';
     const FORMAT_SINGLE_CORE = 'single-core';

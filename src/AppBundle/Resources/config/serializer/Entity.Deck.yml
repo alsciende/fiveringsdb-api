@@ -34,6 +34,9 @@ AppBundle\Entity\Deck:
             access_type: public_method
             serialized_name: cards
             groups: ['Cards']
+        comments:
+            expose: true
+            groups: ['Comments']
     virtual_properties:
         getVersion:
             serialized_name: version

@@ -63,6 +63,7 @@ class PublicDeckController extends BaseApiController
             'Description',
             'Cards',
             'User',
+            'Comments',
         ]);
     }
 

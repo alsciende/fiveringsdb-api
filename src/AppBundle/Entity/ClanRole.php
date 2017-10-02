@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Alsciende\SerializerBundle\Annotation\Source;
+use AppBundle\Behavior\Entity\Timestampable;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use JMS\Serializer\Annotation as JMS;
@@ -20,7 +21,7 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class ClanRole
+class ClanRole implements Timestampable
 {
     use TimestampableEntity;
 

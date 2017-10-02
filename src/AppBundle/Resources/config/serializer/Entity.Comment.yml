@@ -1,0 +1,17 @@
+AppBundle\Entity\Comment:
+    exclusion_policy: ALL
+    properties:
+        id:
+            expose: true
+        createdAt:
+            expose: true
+        text:
+            expose: true
+        visible:
+            expose: true
+        user:
+            expose: true
+            groups: ['User']
+        deck:
+            expose: true
+            groups: ['Deck']

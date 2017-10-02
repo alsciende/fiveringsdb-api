@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Behavior\Entity\Timestampable;
 use AppBundle\Search\PaginatedSearchInterface;
 use AppBundle\Search\SearchInterface;
 use JMS\Serializer\SerializationContext;
@@ -47,7 +48,7 @@ class ApiService
         $request = $this->requestStack->getCurrentRequest();
         $response = $this->getEmptyResponse();
 
-        if (false && $this->isPublic($request)) {
+        if ($this->isPublic($request)) {
             // make response public and cacheable
             $response->setPublic();
             $response->setMaxAge($this->httpCacheMaxAge);
@@ -98,7 +99,7 @@ class ApiService
         }
 
         return array_reduce(
-            $data, function ($carry, $item) {
+            $data, function ($carry, Timestampable $item) {
             if ($carry && $item->getUpdatedAt() < $carry) {
                 return $carry;
             } else {
