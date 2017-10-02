@@ -45,7 +45,8 @@ class DeckManager
     public function persist (Deck $deck): self
     {
         $head = $deck->getStrain()->getHead();
-        $deck->setClan($deck->getDeckCards()->findClan());
+        $deck->setPrimaryClan($deck->getDeckCards()->findPrimaryClan());
+        $deck->setSecondaryClan($deck->getDeckCards()->findSecondaryClan($deck->getPrimaryClan()));
         $deck->setProblem($this->deckValidator->check($deck->getDeckCards(), $deck->getFormat()));
         $deck->setPublished(false);
         $deck->setMajorVersion($head === null ? 0 : $head->getMajorVersion());

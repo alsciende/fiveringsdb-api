@@ -125,12 +125,20 @@ class Deck
     private $problem;
 
     /**
-     * Main Clan of the deck
+     * Primary Clan of the deck
      *
      * @var string
-     * @ORM\Column(name="clan", type="string", nullable=true)
+     * @ORM\Column(name="primary_clan", type="string", nullable=true)
      */
-    private $clan;
+    private $primaryClan;
+
+    /**
+     * Secondary Clan of the deck
+     *
+     * @var string
+     * @ORM\Column(name="secondary_clan", type="string", nullable=true)
+     */
+    private $secondaryClan;
 
     /**
      * @var string
@@ -375,14 +383,26 @@ class Deck
         return $this;
     }
 
-    public function getClan (): ?string
+    public function getPrimaryClan (): ?string
     {
-        return $this->clan;
+        return $this->primaryClan;
     }
 
-    public function setClan (string $clan = null): self
+    public function setPrimaryClan (string $primaryClan = null): self
     {
-        $this->clan = $clan;
+        $this->primaryClan = $primaryClan;
+
+        return $this;
+    }
+
+    public function getSecondaryClan (): ?string
+    {
+        return $this->secondaryClan;
+    }
+
+    public function setSecondaryClan (string $secondaryClan = null): self
+    {
+        $this->secondaryClan = $secondaryClan;
 
         return $this;
     }

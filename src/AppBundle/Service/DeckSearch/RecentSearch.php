@@ -2,8 +2,7 @@
 
 namespace AppBundle\Service\DeckSearch;
 
-use AppBundle\Entity\Deck;
-use AppBundle\Model\DeckSearch;
+use AppBundle\Search\DeckSearch;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
@@ -24,8 +23,8 @@ class RecentSearch extends AbstractDeckSearch
         $query = $this->getEntityManager()
                       ->createQuery($dql)
                       ->setParameter('published', true)
-                      ->setFirstResult(0)
-                      ->setMaxResults($search->getPagesize());
+                      ->setFirstResult($search->getFirstIndex())
+                      ->setMaxResults($search->getLimit());
 
         return new Paginator($query, false);
     }

@@ -2,7 +2,7 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Model\DeckSearch;
+use AppBundle\Search\DeckSearch;
 use AppBundle\Service\DeckSearch\DeckSearchInterface;
 
 /**
@@ -44,7 +44,7 @@ class DeckSearchService
         $paginator = $handler->search($search);
 
         $search->setTotal($paginator->count());
-        $search->setDecks($paginator->getIterator()->getArrayCopy());
+        $search->setRecords($paginator->getIterator()->getArrayCopy());
 
         return true;
     }

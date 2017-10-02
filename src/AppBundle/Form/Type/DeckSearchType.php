@@ -2,7 +2,7 @@
 
 namespace AppBundle\Form\Type;
 
-use AppBundle\Model\DeckSearch;
+use AppBundle\Search\DeckSearch;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;

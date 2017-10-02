@@ -4,9 +4,8 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Deck;
 use AppBundle\Form\Type\DeckSearchType;
-use AppBundle\Form\Type\DeckType;
 use AppBundle\Form\Type\PublicDeckType;
-use AppBundle\Model\DeckSearch;
+use AppBundle\Search\DeckSearch;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -37,7 +36,10 @@ class PublicDeckController extends BaseApiController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->get('app.deck_search')->search($search);
 
-            return $this->success($search);
+            return $this->success($search, [
+                'Default',
+                'User',
+            ]);
         }
 
         return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors(true)));

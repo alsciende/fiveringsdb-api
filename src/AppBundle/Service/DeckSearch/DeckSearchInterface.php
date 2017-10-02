@@ -3,7 +3,7 @@
 namespace AppBundle\Service\DeckSearch;
 
 use AppBundle\Entity\Deck;
-use AppBundle\Model\DeckSearch;
+use AppBundle\Search\DeckSearch;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**

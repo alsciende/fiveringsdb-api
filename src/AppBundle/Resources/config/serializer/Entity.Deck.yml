@@ -18,7 +18,9 @@ AppBundle\Entity\Deck:
             expose: true
         problem:
             expose: true
-        clan:
+        primaryClan:
+            expose: true
+        secondaryClan:
             expose: true
         strain:
             expose: true

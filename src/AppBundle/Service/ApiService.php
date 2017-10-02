@@ -2,6 +2,8 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Search\PaginatedSearchInterface;
+use AppBundle\Search\SearchInterface;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -72,7 +74,14 @@ class ApiService
     public function buildContent ($data = null, $groups = [])
     {
         $content = [];
-        if (is_array($data)) {
+        if ($data instanceof SearchInterface) {
+            $content['records'] = $data->getRecords();
+            $content['size'] = $data->getTotal();
+            if ($data instanceof PaginatedSearchInterface) {
+                $content['page'] = $data->getPage();
+                $content['limit'] = $data->getLimit();
+            }
+        } else if (is_array($data)) {
             $content['records'] = $data;
             $content['size'] = count($content['records']);
         } else {
@@ -108,12 +117,12 @@ class ApiService
         return $response;
     }
 
-    public function isPublic(Request $request): bool
+    public function isPublic (Request $request): bool
     {
         return $request->attributes->get('public') ?? false;
     }
 
-    public function setPublic(Request $request, bool $public = true)
+    public function setPublic (Request $request, bool $public = true)
     {
         $request->attributes->set('public', $public);
     }
