@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Strain;
 use AppBundle\Form\Type\DeckType;
 use AppBundle\Form\Type\PublicDeckType;
+use AppBundle\Service\DeckValidator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -33,6 +34,9 @@ class DeckPublishController extends BaseApiController
         if ($deck->isPublished()) {
             throw $this->createNotFoundException();
         }
+        if ($deck->getProblem() !== DeckValidator::VALID_DECK) {
+            return $this->failure('invalid_deck', 'This deck is invalid');
+        }
 
         $form = $this->createForm(PublicDeckType::class, $deck);
         $form->submit(json_decode($request->getContent(), true), false);
@@ -43,7 +47,7 @@ class DeckPublishController extends BaseApiController
 
             return $this->success($deck, [
                 'Default',
-                'User'
+                'User',
             ]);
         }
 

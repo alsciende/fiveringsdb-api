@@ -7,6 +7,7 @@ namespace AppBundle\Entity;
 use AppBundle\Behavior\Entity\Timestampable;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * A Comment written by a User for a Deck
@@ -33,6 +34,11 @@ class Comment implements Timestampable
      * @var string
      *
      * @ORM\Column(name="text", type="text", nullable=false)
+     *
+     * @Assert\Length(
+     *     min = 10,
+     *     max = 1024
+     * )
      */
     private $text;
 

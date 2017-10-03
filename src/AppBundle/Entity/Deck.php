@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use JMS\Serializer\Annotation as Serializer;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * A Deck, private (minorVersion > 0) or public (minorVersion == 0)
@@ -48,6 +48,10 @@ class Deck implements Timestampable
      *
      * @var string
      * @ORM\Column(name="description", type="text", nullable=false)
+     *
+     * @Assert\Length(
+     *     max = 32768
+     * )
      */
     private $description;
 

@@ -70,7 +70,10 @@ class StrainController extends BaseApiController
      */
     public function listAction ()
     {
-        $strains = $this->getDoctrine()->getRepository(Strain::class)->findBy(['user' => $this->getUser()]);
+        $strains = $this
+            ->getDoctrine()
+            ->getRepository(Strain::class)
+            ->findBy(['user' => $this->getUser()], ['updatedAt' => 'DESC']);
 
         return $this->success(
             $strains, [

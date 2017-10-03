@@ -10,7 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-abstract class AbstractDeckSearch implements DeckSearchInterface
+abstract class AbstractDeckSearchService implements DeckSearchServiceInterface
 {
     /**
      * @var EntityManagerInterface

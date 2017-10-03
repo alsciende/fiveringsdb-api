@@ -11,7 +11,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-interface DeckSearchInterface
+interface DeckSearchServiceInterface
 {
     /**
      * @return string

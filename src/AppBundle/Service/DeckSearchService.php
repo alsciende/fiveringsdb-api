@@ -3,7 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Search\DeckSearch;
-use AppBundle\Service\DeckSearch\DeckSearchInterface;
+use AppBundle\Service\DeckSearch\DeckSearchServiceInterface;
 
 /**
  * Description of DeckSearchService
@@ -13,7 +13,7 @@ use AppBundle\Service\DeckSearch\DeckSearchInterface;
 class DeckSearchService
 {
 
-    /** @var DeckSearchInterface[] */
+    /** @var DeckSearchServiceInterface[] */
     private $services;
 
     public function __construct ()
@@ -24,7 +24,7 @@ class DeckSearchService
     /**
      * Called by the CompilerPass to get all the DeckChecks in services.yml
      */
-    public function addService (DeckSearchInterface $service)
+    public function addService (DeckSearchServiceInterface $service)
     {
         $this->services[$service::supports()] = $service;
     }

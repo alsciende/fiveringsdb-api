@@ -10,7 +10,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class RecentSearch extends AbstractDeckSearch
+class RecentSearchService extends AbstractDeckSearchService
 {
     static public function supports (): string
     {

@@ -2,7 +2,7 @@ services:
     _instanceof:
         AppBundle\Service\DeckCheck\DeckCheckInterface:
             tags: [ 'app.deck_check' ]
-        AppBundle\Service\DeckSearch\DeckSearchInterface:
+        AppBundle\Service\DeckSearch\DeckSearchServiceInterface:
             tags: [ 'app.deck_search' ]
 
     AppBundle\Service\DeckCheck\:
