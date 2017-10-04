@@ -5,6 +5,8 @@ AppBundle\Entity\Deck:
             expose: true
         createdAt:
             expose: true
+        updatedAt:
+            expose: true
         name:
             expose: true
         description:
