@@ -97,9 +97,9 @@ cocur_slugify:
       - default
 
 nelmio_cors:
-    paths:
-        '^/':
-            allow_origin: ['*']
-            allow-headers: ['content-type','authorization']
-            allow_methods: ['POST', 'PUT', 'PATCH', 'GET', 'DELETE']
-            max_age: 3600
+    defaults:
+        allow_origin: ['*']
+        allow-headers: ['content-type','authorization']
+        allow_methods: ['POST', 'PUT', 'PATCH', 'GET', 'DELETE']
+        max_age: 3600
+        forced_allow_origin_value: '*'
