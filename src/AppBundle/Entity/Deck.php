@@ -26,6 +26,12 @@ class Deck implements Timestampable
     use TimestampableEntity;
 
     /**
+     * @var string
+     * @ORM\Column(type="string", nullable=false)
+     */
+    protected $format;
+
+    /**
      * Unique identifier of the deck
      *
      * @var string
@@ -82,12 +88,20 @@ class Deck implements Timestampable
     private $strain;
 
     /**
-     * The number of likes, for a public deck
-     *
+     * @var Collection|DeckLike[]
+     * @ORM\OneToMany(targetEntity="DeckLike", mappedBy="deck")
+     */
+    private $deckLikes;
+
+    /**
      * @var integer
-     * @ORM\Column(name="nb_likes", type="integer", nullable=true)
      */
     private $nbLikes;
+
+    /**
+     * @var integer
+     */
+    private $nbComments;
 
     /**
      * Comments on the deck
@@ -145,21 +159,73 @@ class Deck implements Timestampable
      */
     private $secondaryClan;
 
-    /**
-     * @var string
-     * @ORM\Column(type="string", nullable=false)
-     */
-    protected $format;
-
     function __construct ()
     {
         $this->description = '';
-        $this->nbLikes = 0;
         $this->majorVersion = 0;
         $this->minorVersion = 1;
         $this->published = false;
         $this->createdAt = new \DateTime();
         $this->deckCards = new ArrayCollection();
+    }
+
+    public function getNbLikes (): int
+    {
+        return $this->nbLikes;
+    }
+
+    public function setNbLikes (int $nbLikes): self
+    {
+        $this->nbLikes = $nbLikes;
+
+        return $this;
+    }
+
+    /** @return Collection|DeckLike[] */
+    public function getDeckLikes (): Collection
+    {
+        return $this->deckLikes;
+    }
+
+    /** @param Collection|DeckLike[] $deckLikes */
+    public function setDeckLikes (Collection $deckLikes): self
+    {
+        $this->clearDeckLikes();
+        foreach ($deckLikes as $deckLike) {
+            $this->addDeckLike($deckLike);
+        }
+
+        return $this;
+    }
+
+    public function clearDeckLikes (): self
+    {
+        foreach ($this->getDeckLikes() as $deckLike) {
+            $this->removeDeckLike($deckLike);
+        }
+        $this->deckLikes->clear();
+
+        return $this;
+    }
+
+    public function removeDeckLike (DeckLike $deckLike): self
+    {
+        if ($this->deckLikes->contains($deckLike)) {
+            $this->deckLikes->removeElement($deckLike);
+            $deckLike->setDeck(null);
+        }
+
+        return $this;
+    }
+
+    public function addDeckLike (DeckLike $deckLike): self
+    {
+        if ($this->deckLikes->contains($deckLike) === false) {
+            $this->deckLikes->add($deckLike);
+            $deckLike->setDeck($this);
+        }
+
+        return $this;
     }
 
     function __toString ()
@@ -191,6 +257,16 @@ class Deck implements Timestampable
         return $this;
     }
 
+    /** @return Collection|DeckCard[] */
+    public function getDeckCards (): CardSlotCollectionDecorator
+    {
+        if ($this->deckCards === null) {
+            $this->deckCards = new ArrayCollection();
+        }
+
+        return new CardSlotCollectionDecorator($this->deckCards->toArray());
+    }
+
     public function setDeckCards (Collection $deckCards): self
     {
         $this->clearDeckCards();
@@ -201,24 +277,14 @@ class Deck implements Timestampable
         return $this;
     }
 
-    public function addDeckCard (DeckCard $deckCard): self
+    public function clearDeckCards (): self
     {
-        if ($this->deckCards->contains($deckCard) === false) {
-            $this->deckCards->add($deckCard);
-            $deckCard->setDeck($this);
+        foreach ($this->getDeckCards() as $deckCard) {
+            $this->removeDeckCard($deckCard);
         }
+        $this->deckCards->clear();
 
         return $this;
-    }
-
-    /** @return Collection|DeckCard[] */
-    public function getDeckCards (): CardSlotCollectionDecorator
-    {
-        if ($this->deckCards === null) {
-            $this->deckCards = new ArrayCollection();
-        }
-
-        return new CardSlotCollectionDecorator($this->deckCards->toArray());
     }
 
     public function removeDeckCard (DeckCard $deckCard): self
@@ -231,12 +297,12 @@ class Deck implements Timestampable
         return $this;
     }
 
-    public function clearDeckCards (): self
+    public function addDeckCard (DeckCard $deckCard): self
     {
-        foreach ($this->getDeckCards() as $deckCard) {
-            $this->removeDeckCard($deckCard);
+        if ($this->deckCards->contains($deckCard) === false) {
+            $this->deckCards->add($deckCard);
+            $deckCard->setDeck($this);
         }
-        $this->deckCards->clear();
 
         return $this;
     }
@@ -265,16 +331,10 @@ class Deck implements Timestampable
         return $this;
     }
 
-    function getNbLikes (): int
+    /** @return Collection|Comment[] */
+    public function getComments (): Collection
     {
-        return $this->nbLikes;
-    }
-
-    function setNbLikes (int $nbLikes): self
-    {
-        $this->nbLikes = $nbLikes;
-
-        return $this;
+        return $this->comments;
     }
 
     public function setComments (Collection $comments): self
@@ -287,20 +347,14 @@ class Deck implements Timestampable
         return $this;
     }
 
-    public function addComment (Comment $comment): self
+    public function clearComments (): self
     {
-        if ($this->comments->contains($comment) === false) {
-            $this->comments->add($comment);
-            $comment->setDeck($this);
+        foreach ($this->getComments() as $comment) {
+            $this->removeComment($comment);
         }
+        $this->comments->clear();
 
         return $this;
-    }
-
-    /** @return Collection|Comment[] */
-    public function getComments (): Collection
-    {
-        return $this->comments;
     }
 
     public function removeComment (Comment $comment): self
@@ -313,12 +367,12 @@ class Deck implements Timestampable
         return $this;
     }
 
-    public function clearComments (): self
+    public function addComment (Comment $comment): self
     {
-        foreach ($this->getComments() as $comment) {
-            $this->removeComment($comment);
+        if ($this->comments->contains($comment) === false) {
+            $this->comments->add($comment);
+            $comment->setDeck($this);
         }
-        $this->comments->clear();
 
         return $this;
     }
@@ -340,16 +394,6 @@ class Deck implements Timestampable
         return $this->majorVersion;
     }
 
-    function getMinorVersion (): int
-    {
-        return $this->minorVersion;
-    }
-
-    function getVersion (): string
-    {
-        return $this->majorVersion . '.' . $this->minorVersion;
-    }
-
     function setMajorVersion (int $majorVersion): self
     {
         $this->majorVersion = $majorVersion;
@@ -357,11 +401,21 @@ class Deck implements Timestampable
         return $this;
     }
 
+    function getMinorVersion (): int
+    {
+        return $this->minorVersion;
+    }
+
     function setMinorVersion (int $minorVersion): self
     {
         $this->minorVersion = $minorVersion;
 
         return $this;
+    }
+
+    function getVersion (): string
+    {
+        return $this->majorVersion . '.' . $this->minorVersion;
     }
 
     function isPublished (): bool
@@ -420,6 +474,18 @@ class Deck implements Timestampable
     public function setFormat (string $format): self
     {
         $this->format = $format;
+
+        return $this;
+    }
+
+    public function getNbComments (): int
+    {
+        return $this->nbComments;
+    }
+
+    public function setNbComments (int $nbComments): self
+    {
+        $this->nbComments = $nbComments;
 
         return $this;
     }

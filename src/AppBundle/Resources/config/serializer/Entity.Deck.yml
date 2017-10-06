@@ -1,5 +1,6 @@
 AppBundle\Entity\Deck:
     exclusion_policy: ALL
+    accessor_order: alphabetical
     properties:
         id:
             expose: true
@@ -14,7 +15,9 @@ AppBundle\Entity\Deck:
             groups: ['Description']
         format:
             expose: true
-        nb_likes:
+        nbLikes:
+            expose: true
+        nbComments:
             expose: true
         published:
             expose: true

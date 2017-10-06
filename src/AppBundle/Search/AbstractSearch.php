@@ -47,4 +47,9 @@ class AbstractSearch implements SearchInterface
 
         return $this;
     }
+
+    public function addRecord ($record)
+    {
+        $this->records[] = $record;
+    }
 }

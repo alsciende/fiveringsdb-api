@@ -41,10 +41,7 @@ class DeckSearchService
 
         $handler = $this->services[$search->getSort()];
 
-        $paginator = $handler->search($search);
-
-        $search->setTotal($paginator->count());
-        $search->setRecords($paginator->getIterator()->getArrayCopy());
+        $handler->search($search);
 
         return true;
     }

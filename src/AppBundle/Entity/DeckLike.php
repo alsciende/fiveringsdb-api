@@ -19,7 +19,7 @@ class DeckLike
      * @var \AppBundle\Entity\Deck
      *
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="Deck")
+     * @ORM\ManyToOne(targetEntity="Deck", inversedBy="deckLikes")
      * @ORM\JoinColumn(name="deck_id", referencedColumnName="id")
      */
     private $deck;

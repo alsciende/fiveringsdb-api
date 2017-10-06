@@ -20,7 +20,6 @@ interface DeckSearchServiceInterface
 
     /**
      * @param array $arguments
-     * @return Deck[]|Paginator
      */
-    public function search(DeckSearch $search): Paginator;
+    public function search(DeckSearch $search);
 }

@@ -12,4 +12,6 @@ interface SearchInterface
     public function getTotal (): ?int;
 
     public function getRecords (): array;
+
+    public function addRecord ($record);
 }
