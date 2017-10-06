@@ -167,6 +167,8 @@ class Deck implements Timestampable
         $this->published = false;
         $this->createdAt = new \DateTime();
         $this->deckCards = new ArrayCollection();
+        $this->nbLikes = 0;
+        $this->nbComments = 0;
     }
 
     public function getNbLikes (): int
