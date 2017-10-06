@@ -171,7 +171,7 @@ class Deck implements Timestampable
         $this->nbComments = 0;
     }
 
-    public function getNbLikes (): int
+    public function getNbLikes (): ?int
     {
         return $this->nbLikes;
     }
@@ -480,7 +480,7 @@ class Deck implements Timestampable
         return $this;
     }
 
-    public function getNbComments (): int
+    public function getNbComments (): ?int
     {
         return $this->nbComments;
     }
