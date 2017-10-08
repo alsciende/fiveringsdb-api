@@ -24,7 +24,7 @@ abstract class AbstractPopularDeckSearchService extends AbstractDeckSearchServic
         WHERE d.published=:published 
         AND DATEDIFF(NOW(), d.createdAt) <= :days
         GROUP BY d, u
-        ORDER BY nbLikes DESC";
+        ORDER BY nbLikes DESC, d.createdAt DESC";
         $query = $this->getEntityManager()
                       ->createQuery($dql)
                       ->setParameter('published', true)
