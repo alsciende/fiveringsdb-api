@@ -3,6 +3,7 @@
 namespace AppBundle\Form\Type;
 
 use AppBundle\Search\DeckSearch;
+use AppBundle\Service\DeckSearchService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -16,13 +17,19 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class DeckSearchType extends AbstractType
 {
+    /** @var DeckSearchService $deckSearchService */
+    private $deckSearchService;
+
+    public function __construct (DeckSearchService $deckSearchService)
+    {
+        $this->deckSearchService = $deckSearchService;
+    }
+
     public function buildForm (FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('sort', ChoiceType::class, [
-                'choices' => [
-                    'recent' => 'recent',
-                ],
+                'choices' => $this->deckSearchService->getSupported(),
             ])
             ->add('page', IntegerType::class);
     }

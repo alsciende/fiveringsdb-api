@@ -75,6 +75,13 @@ services:
         tags:
           - "form.type"
 
+    app.form_type.deck_search:
+        class: AppBundle\Form\Type\DeckSearchType
+        arguments:
+          - "@app.deck_search"
+        tags:
+          - "form.type"
+
     app.security_voter.comment_visibility:
         class: AppBundle\Security\CommentVisibilityVoter
         tags:
