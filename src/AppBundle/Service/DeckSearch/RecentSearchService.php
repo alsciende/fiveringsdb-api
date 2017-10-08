@@ -22,7 +22,7 @@ class RecentSearchService extends AbstractDeckSearchService
     {
         $search->setTotal($this->getTotal());
 
-        $dql = "SELECT d, u, COUNT(l.user), COUNT(c.id)
+        $dql = "SELECT d, u, COUNT(DISTINCT l.user), COUNT(DISTINCT c.id)
         FROM AppBundle:Deck d 
         JOIN d.user u 
         LEFT JOIN d.deckLikes l

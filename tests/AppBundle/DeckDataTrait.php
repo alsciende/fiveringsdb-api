@@ -26,6 +26,7 @@ trait DeckDataTrait
             'doji-challenger' => 3,
             'doji-gift-giver' => 3,
             'doji-hotaru' => 3,
+            'doji-whisperer' => 3,
             'guest-of-honor' => 3,
             'kakita-asami' => 3,
             'kakita-kaezin' => 3,

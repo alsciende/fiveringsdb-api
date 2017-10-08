@@ -32,7 +32,7 @@ class DeckValidatorControllerTest extends BaseApiControllerTest
         );
         $content = $this->getContent($client);
         $this->assertEquals(
-            DeckValidator::TOO_FEW_DYNASTY,
+            DeckValidator::VALID_DECK,
             $content['status']
         );
     }
