@@ -21,7 +21,7 @@ class AllTimePopularSearchService extends AbstractDeckSearchService
     {
         $search->setTotal($this->getTotal());
 
-        $dql = "SELECT d, u, COUNT(l.user) nbLikes, COUNT(c.id) nbComments
+        $dql = "SELECT d, u, COUNT(DISTINCT l.user) nbLikes, COUNT(DISTINCT c.id) nbComments
         FROM AppBundle:Deck d 
         JOIN d.user u 
         LEFT JOIN d.deckLikes l
