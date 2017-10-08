@@ -70,7 +70,10 @@ class DeckCommentController extends BaseApiController
      */
     public function getAction (Comment $comment)
     {
-        return $this->success($comment);
+        return $this->success($comment, [
+            'Default',
+            'User',
+        ]);
     }
 
     /**

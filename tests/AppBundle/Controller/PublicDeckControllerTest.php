@@ -55,7 +55,7 @@ class PublicDeckControllerTest extends BaseApiControllerTest
             $record['name']
         );
         $this->assertEquals(
-            34,
+            35,
             count($record['cards'])
         );
         $this->assertEquals(
@@ -182,7 +182,7 @@ class PublicDeckControllerTest extends BaseApiControllerTest
         $this->sendJsonRequest(
             $client,
             'POST',
-            "/decks/$id/like"
+            "/decks/$id/likes"
         );
         $record = $this->assertStandardGetOne($client);
         $this->assertEquals(
@@ -205,7 +205,7 @@ class PublicDeckControllerTest extends BaseApiControllerTest
         $this->sendJsonRequest(
             $client,
             'DELETE',
-            "/decks/$id/like"
+            "/decks/$id/likes"
         );
         $this->assertStandardGetNone($client);
     }
@@ -237,87 +237,21 @@ class PublicDeckControllerTest extends BaseApiControllerTest
             'Test comment text',
             $record['text']
         );
-        $this->assertArrayHasKey(
-            'deck_id',
-            $record
-        );
-        $this->assertArrayHasKey(
-            'user_id',
-            $record
-        );
-        $this->assertNotEquals(
-          $record['user_id'],
-          $deck['user']['id']
-        );
-        return $record;
-    }
-
-    /**
-     * @covers  DeckCommentController::listAction()
-     * @depends testDeckCommentControllerPostAction
-     */
-    public function testDeckCommentControllerListAction ($comment)
-    {
-        $client = $this->getClient();
-
-        $id = $comment['deck_id'];
-
-        $this->sendJsonRequest(
-            $client,
-            'GET',
-            "/decks/$id/comments"
-        );
-        $records = $this->assertStandardGetMany($client);
-        $this->assertEquals(
-            1,
-            count($records)
-        );
-        return $records;
-    }
-
-    /**
-     * @covers  DeckCommentController::getAction()
-     * @depends testDeckCommentControllerPostAction
-     */
-    public function testDeckCommentControllerGetAction ($comment)
-    {
-        $client = $this->getClient();
-
-        $deckId = $comment['deck_id'];
-        $id = $comment['id'];
-
-        $this->sendJsonRequest(
-            $client,
-            'GET',
-            "/decks/$deckId/comments/$id"
-        );
-        $record = $this->assertStandardGetOne($client);
-        $this->assertEquals(
-            $id,
-            $record['id']
-        );
-        $this->assertEquals(
-            true,
-            $record['visible']
-        );
-        return $record;
+        return "/decks/$id/comments/".$record['id'];
     }
 
     /**
      * @covers  DeckCommentController::patchAction()
      * @depends testDeckCommentControllerPostAction
      */
-    public function testDeckCommentControllerPatchActionPirate ($comment)
+    public function testDeckCommentControllerPatchActionPirate ($url)
     {
         $client = $this->getClient('pirate');
-
-        $deckId = $comment['deck_id'];
-        $id = $comment['id'];
 
         $this->sendJsonRequest(
             $client,
             'PATCH',
-            "/decks/$deckId/comments/$id",
+            $url,
             [
                 'text' => 'Updated text',
                 'visible' => false
@@ -333,17 +267,14 @@ class PublicDeckControllerTest extends BaseApiControllerTest
      * @covers  DeckCommentController::patchAction()
      * @depends testDeckCommentControllerPostAction
      */
-    public function testDeckCommentControllerPatchAction ($comment)
+    public function testDeckCommentControllerPatchAction ($url)
     {
         $client = $this->getClient('user2');
-
-        $deckId = $comment['deck_id'];
-        $id = $comment['id'];
 
         $this->sendJsonRequest(
             $client,
             'PATCH',
-            "/decks/$deckId/comments/$id",
+            $url,
             [
                 'text' => 'Updated text'
             ]
@@ -357,18 +288,6 @@ class PublicDeckControllerTest extends BaseApiControllerTest
             true,
             $record['visible']
         );
-        $this->assertEquals(
-            $comment['id'],
-            $record['id']
-        );
-        $this->assertEquals(
-            $comment['deck_id'],
-            $record['deck_id']
-        );
-        $this->assertEquals(
-            $comment['user_id'],
-            $record['user_id']
-        );
         return $record;
     }
 
@@ -376,17 +295,14 @@ class PublicDeckControllerTest extends BaseApiControllerTest
      * @covers  DeckCommentController::visibilityPatchAction()
      * @depends testDeckCommentControllerPostAction
      */
-    public function testDeckCommentVisibilityControllerPatchActionUser2 ($comment)
+    public function testDeckCommentVisibilityControllerPatchActionUser2 ($url)
     {
         $client = $this->getClient('user2');
-
-        $deckId = $comment['deck_id'];
-        $id = $comment['id'];
 
         $this->sendJsonRequest(
             $client,
             'PATCH',
-            "/decks/$deckId/comments/$id/visibility",
+            "$url/visibility",
             [
                 'visible' => false
             ]
@@ -398,17 +314,14 @@ class PublicDeckControllerTest extends BaseApiControllerTest
      * @covers  DeckCommentController::visibilityPatchAction()
      * @depends testDeckCommentControllerPostAction
      */
-    public function testDeckCommentVisibilityControllerPatchAction ($comment)
+    public function testDeckCommentVisibilityControllerPatchAction ($url)
     {
         $client = $this->getClient('user');
-
-        $deckId = $comment['deck_id'];
-        $id = $comment['id'];
 
         $this->sendJsonRequest(
             $client,
             'PATCH',
-            "/decks/$deckId/comments/$id/visibility",
+            "$url/visibility",
             [
                 'visible' => false
             ]

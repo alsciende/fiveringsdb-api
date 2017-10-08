@@ -86,7 +86,7 @@ class PrivateDeckControllerTest extends BaseApiControllerTest
             $record['name']
         );
         $this->assertEquals(
-            34,
+            35,
             count($record['cards'])
         );
         $this->assertEquals(
@@ -135,7 +135,7 @@ class PrivateDeckControllerTest extends BaseApiControllerTest
             $record['name']
         );
         $this->assertEquals(
-            34,
+            35,
             count($record['cards'])
         );
         $this->assertEquals(

@@ -55,7 +55,7 @@ class DeckCopyControllerTest extends BaseApiControllerTest
             $record['name']
         );
         $this->assertEquals(
-            34,
+            35,
             count($record['cards'])
         );
         $this->assertEquals(
@@ -101,7 +101,7 @@ class DeckCopyControllerTest extends BaseApiControllerTest
             $head['name']
         );
         $this->assertEquals(
-            34,
+            35,
             count($head['cards'])
         );
         $this->assertEquals(
