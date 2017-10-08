@@ -30,13 +30,21 @@ class DeckSearchService
     }
 
     /**
+     * @return string[]
+     */
+    public function getSupported (): array
+    {
+        return array_keys($this->services);
+    }
+
+    /**
      * @param DeckSearch $search
      * @return bool
      */
-    public function search(DeckSearch $search)
+    public function search (DeckSearch $search)
     {
-        if(key_exists($search->getSort(), $this->services) === false) {
-            throw new \InvalidArgumentException('Unknown deck sort '.$search->getSort());
+        if (key_exists($search->getSort(), $this->services) === false) {
+            throw new \InvalidArgumentException('Unknown deck sort ' . $search->getSort());
         }
 
         $handler = $this->services[$search->getSort()];

@@ -4,32 +4,31 @@ namespace AppBundle\Service\DeckSearch;
 
 use AppBundle\Entity\Deck;
 use AppBundle\Search\DeckSearch;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
- * Description of RecentSearch
+ * Description of AllTimePopularSearchService
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class RecentSearchService extends AbstractDeckSearchService
+class AllTimePopularSearchService extends AbstractDeckSearchService
 {
     static public function supports (): string
     {
-        return 'recent';
+        return 'fame';
     }
 
     public function search (DeckSearch $search)
     {
         $search->setTotal($this->getTotal());
 
-        $dql = "SELECT d, u, COUNT(l.user), COUNT(c.id)
+        $dql = "SELECT d, u, COUNT(l.user) nbLikes, COUNT(c.id) nbComments
         FROM AppBundle:Deck d 
         JOIN d.user u 
         LEFT JOIN d.deckLikes l
         LEFT JOIN d.comments c
         WHERE d.published=:published 
         GROUP BY d, u
-        ORDER BY d.createdAt DESC";
+        ORDER BY nbLikes DESC";
         $query = $this->getEntityManager()
                       ->createQuery($dql)
                       ->setParameter('published', true)
@@ -39,8 +38,8 @@ class RecentSearchService extends AbstractDeckSearchService
         foreach ($query->getResult() as $result) {
             /** @var Deck $deck */
             $deck = $result[0];
-            $deck->setNbLikes((int) $result[1]);
-            $deck->setNbComments((int) $result[2]);
+            $deck->setNbLikes((int) $result['nbLikes']);
+            $deck->setNbComments((int) $result['nbComments']);
             $search->addRecord($deck);
         }
     }

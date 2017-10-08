@@ -41,6 +41,11 @@ services:
           - "@serializer"
           - '@app.deck_validator'
 
+    app.deck_like_manager:
+        class: AppBundle\Manager\DeckLikeManager
+        arguments:
+          - "@doctrine.orm.entity_manager"
+
     app.cardslotcollection_serialization_subscriber:
         class: AppBundle\EventSubscriber\Serializer\CardSlotCollectionSerializationHandler
         arguments:
@@ -67,6 +72,13 @@ services:
         class: AppBundle\Form\Type\DeckType
         arguments:
           - "@app.data_transformer.card_slots"
+        tags:
+          - "form.type"
+
+    app.form_type.deck_search:
+        class: AppBundle\Form\Type\DeckSearchType
+        arguments:
+          - "@app.deck_search"
         tags:
           - "form.type"
 

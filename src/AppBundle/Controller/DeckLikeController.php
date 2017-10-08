@@ -18,7 +18,7 @@ class DeckLikeController extends BaseApiController
 {
     /**
      * Create a like from a public deck
-     * @Route("/decks/{deckId}/like")
+     * @Route("/decks/{deckId}/likes")
      * @Method("POST")
      * @Security("has_role('ROLE_USER')")
      * @ParamConverter("deck", class="AppBundle:Deck", options={"id" = "deckId"})
@@ -30,7 +30,7 @@ class DeckLikeController extends BaseApiController
         }
 
         try {
-            $nbLikes = $this->get('app.deck_manager')->addLike($deck, $this->getUser());
+            $nbLikes = $this->get('app.deck_like_manager')->addLike($deck, $this->getUser());
             $this->getDoctrine()->getManager()->flush();
         } catch (Exception $ex) {
             return $this->failure($ex->getMessage());
@@ -41,7 +41,7 @@ class DeckLikeController extends BaseApiController
 
     /**
      * Delete a like from a public deck
-     * @Route("/decks/{deckId}/like")
+     * @Route("/decks/{deckId}/likes")
      * @Method("DELETE")
      * @Security("has_role('ROLE_USER')")
      * @ParamConverter("deck", class="AppBundle:Deck", options={"id" = "deckId"})
@@ -53,12 +53,33 @@ class DeckLikeController extends BaseApiController
         }
 
         try {
-            $nbLikes = $this->get('app.deck_manager')->removeLike($deck, $this->getUser());
+            $nbLikes = $this->get('app.deck_like_manager')->removeLike($deck, $this->getUser());
             $this->getDoctrine()->getManager()->flush();
         } catch (Exception $ex) {
             return $this->failure($ex->getMessage());
         }
 
         return $this->success($nbLikes);
+    }
+
+    /**
+     * @Route("/decks/{deckId}/likes/me")
+     * @Method("GET")
+     * @Security("has_role('ROLE_USER')")
+     * @ParamConverter("deck", class="AppBundle:Deck", options={"id" = "deckId"})
+     */
+    public function getAction (Deck $deck)
+    {
+        if ($deck->isPublished() === false) {
+            throw $this->createNotFoundException();
+        }
+
+        try {
+            $like = $this->get('app.deck_like_manager')->getLike($deck, $this->getUser());
+        } catch (Exception $ex) {
+            return $this->failure($ex->getMessage());
+        }
+
+        return $this->success($like);
     }
 }

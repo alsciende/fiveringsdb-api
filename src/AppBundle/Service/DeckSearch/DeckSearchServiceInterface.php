@@ -16,10 +16,10 @@ interface DeckSearchServiceInterface
     /**
      * @return string
      */
-    static public function supports(): string;
+    static public function supports (): string;
 
     /**
      * @param array $arguments
      */
-    public function search(DeckSearch $search);
+    public function search (DeckSearch $search);
 }
