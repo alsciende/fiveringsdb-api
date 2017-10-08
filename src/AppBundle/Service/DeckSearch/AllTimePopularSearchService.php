@@ -28,7 +28,7 @@ class AllTimePopularSearchService extends AbstractDeckSearchService
         LEFT JOIN d.comments c
         WHERE d.published=:published 
         GROUP BY d, u
-        ORDER BY nbLikes DESC";
+        ORDER BY nbLikes DESC, d.createdAt DESC";
         $query = $this->getEntityManager()
                       ->createQuery($dql)
                       ->setParameter('published', true)
