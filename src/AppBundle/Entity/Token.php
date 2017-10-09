@@ -3,13 +3,10 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Table(name="tokens")
  * @ORM\Entity()
- *
- * @Serializer\ExclusionPolicy("all")
  *
  * @author Alsciende <alsciende@icloud.com>
  */
@@ -21,8 +18,6 @@ class Token
      * @ORM\Column(name="id", type="string", length=255, unique=true)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
-     *
-     * @Serializer\Expose()
      */
     private $id;
 
@@ -30,9 +25,6 @@ class Token
      * @var User
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     *
-     * @Serializer\Expose()
-     * @Serializer\Groups({"user_group"})
      */
     private $user;
 

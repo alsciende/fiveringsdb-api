@@ -1,0 +1,9 @@
+AppBundle\Entity\Token:
+    exclusion_policy: ALL
+    accessor_order: alphabetical
+    properties:
+        id:
+            expose: true
+        user:
+            expose: true
+            groups: ['User']
