@@ -54,9 +54,10 @@ class TokenController extends BaseApiController
                 $token,
                 [
                     'Default',
-                    'user_group',
+                    'User',
                     'user' => [
                         'Default',
+                        'Self',
                     ],
                 ]
             );
