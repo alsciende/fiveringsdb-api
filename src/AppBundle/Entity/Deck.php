@@ -56,6 +56,7 @@ class Deck implements Timestampable
      * @ORM\Column(name="description", type="text", nullable=false)
      *
      * @Assert\Length(
+     *     min = 10,
      *     max = 32768
      * )
      */
