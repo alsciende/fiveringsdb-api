@@ -112,9 +112,13 @@ class PublicDeckController extends BaseApiController
         if ($deck->getUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException();
         }
+        if ($deck->getComments()->count() > 0) {
+            return $this->failure('error', 'This deck has comments.');
+        }
 
         try {
             $this->get('app.deck_manager')->deleteDeck($deck);
+            $this->getDoctrine()->getManager()->flush();
         } catch (Exception $ex) {
             return $this->failure($ex->getMessage());
         }
