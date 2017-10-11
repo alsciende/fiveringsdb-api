@@ -84,13 +84,13 @@ class Deck implements Timestampable
      *
      * @var Strain
      * @ORM\ManyToOne(targetEntity="Strain", inversedBy="decks")
-     * @ORM\JoinColumn(name="strain_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="strain_id", referencedColumnName="id", nullable=true)
      */
     private $strain;
 
     /**
      * @var Collection|DeckLike[]
-     * @ORM\OneToMany(targetEntity="DeckLike", mappedBy="deck")
+     * @ORM\OneToMany(targetEntity="DeckLike", mappedBy="deck", cascade={"persist", "remove", "merge"})
      */
     private $deckLikes;
 
@@ -327,7 +327,7 @@ class Deck implements Timestampable
         return $this->strain;
     }
 
-    function setStrain (Strain $strain): self
+    function setStrain (Strain $strain = null): self
     {
         $this->strain = $strain;
 

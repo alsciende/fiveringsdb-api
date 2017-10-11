@@ -83,7 +83,7 @@ class PackCard implements CardSlotInterface, Timestampable
      * @var \AppBundle\Entity\Card
      *
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="Card", inversedBy="packCards")
+     * @ORM\ManyToOne(targetEntity="Card", inversedBy="packCards", fetch="EAGER")
      * @ORM\JoinColumn(name="card_id", referencedColumnName="id")
      *
      * @Source(type="association")
@@ -97,7 +97,7 @@ class PackCard implements CardSlotInterface, Timestampable
      * @var \AppBundle\Entity\Pack
      *
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="Pack", inversedBy="cards")
+     * @ORM\ManyToOne(targetEntity="Pack", inversedBy="cards", fetch="EAGER")
      * @ORM\JoinColumn(name="pack_id", referencedColumnName="id")
      *
      * @Source(type="association")

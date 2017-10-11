@@ -54,7 +54,7 @@ class StrainController extends BaseApiController
                     'head' => [
                         'Default',
                         'Cards',
-                    ]
+                    ],
                 ]
             );
         }
@@ -111,7 +111,7 @@ class StrainController extends BaseApiController
     /**
      * Delete a strain.
      * All its decks are deleted as well.
-     * Published (major) decks don't have a strain.
+     * Published (major) decks won't have a strain.
      * @Route("/strains/{id}")
      * @Method("DELETE")
      * @Security("has_role('ROLE_USER')")
@@ -120,6 +120,12 @@ class StrainController extends BaseApiController
     {
         if ($strain->getUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException();
+        }
+
+        foreach ($strain->getDecks() as $deck) {
+            if ($deck->isPublished()) {
+                $deck->setStrain(null);
+            }
         }
 
         $strain->clearHead();

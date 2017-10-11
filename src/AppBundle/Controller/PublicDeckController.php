@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Deck;
+use AppBundle\Entity\Strain;
 use AppBundle\Form\Type\DeckSearchType;
 use AppBundle\Form\Type\PublicDeckType;
 use AppBundle\Search\DeckSearch;
@@ -117,7 +118,11 @@ class PublicDeckController extends BaseApiController
         }
 
         try {
-            $this->get('app.deck_manager')->deleteDeck($deck);
+            if ($deck->getStrain() instanceof Strain) {
+                $deck->setPublished(false);
+            } else {
+                $this->get('app.deck_manager')->deleteDeck($deck);
+            }
             $this->getDoctrine()->getManager()->flush();
         } catch (Exception $ex) {
             return $this->failure($ex->getMessage());

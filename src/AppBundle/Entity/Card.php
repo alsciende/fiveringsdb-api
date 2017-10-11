@@ -348,7 +348,11 @@ class Card implements Timestampable
     /**
      * @var Collection
      *
-     * @ORM\OneToMany(targetEntity="PackCard", mappedBy="card", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="PackCard",
+     *      mappedBy="card",
+     *      cascade={"persist", "remove", "merge"},
+     *      orphanRemoval=true,
+     *      fetch="EAGER")
      *
      * @JMS\Expose
      * @JMS\Groups({"packs_group"})
