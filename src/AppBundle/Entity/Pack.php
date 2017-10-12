@@ -99,7 +99,7 @@ class Pack implements Timestampable
     /**
      * @var Cycle
      *
-     * @ORM\ManyToOne(targetEntity="Cycle", inversedBy="packs")
+     * @ORM\ManyToOne(targetEntity="Cycle", inversedBy="packs", fetch="EAGER")
      * @ORM\JoinColumn(name="cycle_id", referencedColumnName="id", nullable=false)
      *
      * @Source(type="association")

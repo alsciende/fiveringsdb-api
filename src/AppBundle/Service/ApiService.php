@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ApiService
 {
+    const USE_LAST_UPDATED = false;
 
     /**
      *
@@ -52,12 +53,14 @@ class ApiService
             // make response public and cacheable
             $response->setPublic();
             $response->setMaxAge($this->httpCacheMaxAge);
-            // find last update of data
             $dateUpdate = $this->getDateUpdate($data);
-            $response->setLastModified($dateUpdate);
-            // compare to request header
-            if ($response->isNotModified($request)) {
-                return $response;
+            if (self::USE_LAST_UPDATED) { //!\\ issue with sub-entities
+                // find last update of data
+                $response->setLastModified($dateUpdate);
+                // compare to request header
+                if ($response->isNotModified($request)) {
+                    return $response;
+                }
             }
         }
 
