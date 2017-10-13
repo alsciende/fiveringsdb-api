@@ -5,6 +5,8 @@ namespace AppBundle\Command;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Validator\ConstraintViolationInterface;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
  * Description of DataImportCommand
@@ -14,15 +16,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 class DataImportCommand extends ContainerAwareCommand
 {
 
-    protected function configure ()
+    protected function configure()
     {
         $this
             ->setName('app:data:import')
-            ->setDescription("Import data from JSON files to the database")
-        ;
+            ->setDescription("Import data from JSON files to the database");
     }
 
-    protected function execute (InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         $scanningService = $this->getContainer()->get('alsciende_serializer.scanning_service');
 
@@ -40,9 +41,11 @@ class DataImportCommand extends ContainerAwareCommand
                 $entity = $imported['entity'];
                 $errors = $validator->validate($entity);
                 if (count($errors) > 0) {
-                    dump($errors);
-                    $errorsString = (string)$errors;
-                    throw new \Exception($errorsString);
+                    /** @var ConstraintViolationInterface $error */
+                    foreach ($errors as $error) {
+                        $output->writeln(sprintf('<error>Error while importing %s.</error>', $error->getRoot()));
+                    }
+                    throw new \Exception((string) $errors);
                 }
             }
 

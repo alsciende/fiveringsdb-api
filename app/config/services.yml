@@ -117,3 +117,10 @@ services:
           - "%kernel.logs_dir%"
           - "%kernel.environment%"
           - "%kernel.debug%"
+
+    app.validator.has_correct_slug:
+        class: AppBundle\Validator\Constraints\HasCorrectSlugValidator
+        arguments:
+          - "@cocur_slugify"
+        tags:
+          - "validator.constraint_validator"
