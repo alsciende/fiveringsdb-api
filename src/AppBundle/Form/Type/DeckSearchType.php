@@ -31,7 +31,8 @@ class DeckSearchType extends AbstractType
             ->add('sort', ChoiceType::class, [
                 'choices' => $this->deckSearchService->getSupported(),
             ])
-            ->add('page', IntegerType::class);
+            ->add('page', IntegerType::class)
+            ->add('limit', IntegerType::class);
     }
 
     public function configureOptions (OptionsResolver $resolver)
