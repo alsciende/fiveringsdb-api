@@ -104,6 +104,12 @@ services:
           - "@doctrine.orm.entity_manager"
           - "@logger"
 
+    app.feature_manager:
+        class: AppBundle\Service\FeatureManager
+        arguments:
+          - "@doctrine.orm.entity_manager"
+          - "%features_period%"
+
     metagame:
         class: AppBundle\Service\Metagame
         arguments:

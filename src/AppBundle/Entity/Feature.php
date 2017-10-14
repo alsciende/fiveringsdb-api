@@ -2,20 +2,24 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Behavior\Entity\Timestampable;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * Feature is when a deck is featured on the front page
  *
  * @author Alsciende <alsciende@icloud.com>
  *
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\FeatureRepository")
  * @ORM\Table(name="features", indexes={
  *          @ORM\Index(columns={"date"})
  *     })
  */
-class Feature
+class Feature implements Timestampable
 {
+    use TimestampableEntity;
+
     /**
      * @var int
      *

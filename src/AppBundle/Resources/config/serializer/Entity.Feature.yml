@@ -1,0 +1,11 @@
+AppBundle\Entity\Feature:
+    exclusion_policy: ALL
+    accessor_order: alphabetical
+    properties:
+        clan:
+            expose: true
+        date:
+            expose: true
+        deck:
+            expose: true
+            groups: ['Deck']

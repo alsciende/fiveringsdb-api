@@ -35,3 +35,6 @@ parameters:
 
     # URL of the UI
     front_url: ~
+
+    # Period of the nomination of front-page featured decks
+    features_period: 7
