@@ -13,8 +13,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * A Deck, private (minorVersion > 0) or public (minorVersion == 0)
  *
- * @ORM\Table(name="decks")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\DeckRepository")
+ * @ORM\Table(name="decks")
  *
  * @author Alsciende <alsciende@icloud.com>
  */
