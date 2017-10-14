@@ -61,7 +61,7 @@ class DeckRepository extends EntityRepository
             return $item['primaryClan'];
         }, $this
             ->getEntityManager()
-            ->createQuery("SELECT DISTINCT d.primaryClan FROM AppBundle:Deck d ORDER BY d.primaryClan")
+            ->createQuery("SELECT DISTINCT d.primaryClan FROM AppBundle:Deck d WHERE d.primaryClan IS NOT NULL ORDER BY d.primaryClan")
             ->getArrayResult()
         );
     }
