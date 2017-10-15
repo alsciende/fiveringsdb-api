@@ -46,7 +46,7 @@ class Feature implements Timestampable
     /**
      * @var Deck
      *
-     * @ORM\OneToOne(targetEntity="Deck")
+     * @ORM\OneToOne(targetEntity="Deck", inversedBy="feature")
      * @ORM\JoinColumn(name="deck_id", referencedColumnName="id")
      */
     private $deck;

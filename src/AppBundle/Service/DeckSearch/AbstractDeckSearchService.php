@@ -31,17 +31,4 @@ abstract class AbstractDeckSearchService implements DeckSearchServiceInterface
     {
         return $this->entityManager->getRepository(Deck::class);
     }
-
-    protected function getTotal (): int
-    {
-        $dql = "SELECT COUNT(d)
-        FROM AppBundle:Deck d 
-        WHERE d.published=:published 
-        ORDER BY d.createdAt DESC";
-        $query = $this->getEntityManager()
-                      ->createQuery($dql)
-                      ->setParameter('published', true);
-
-        return (int) $query->getSingleScalarResult();
-    }
 }

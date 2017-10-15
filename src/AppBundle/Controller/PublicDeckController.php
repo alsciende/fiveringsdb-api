@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Deck;
+use AppBundle\Entity\Feature;
 use AppBundle\Entity\Strain;
 use AppBundle\Form\Type\DeckSearchType;
 use AppBundle\Form\Type\PublicDeckType;
@@ -115,6 +116,9 @@ class PublicDeckController extends BaseApiController
         }
         if ($deck->getComments()->count() > 0) {
             return $this->failure('error', 'This deck has comments.');
+        }
+        if ($deck->getFeature() instanceof Feature) {
+            return $this->failure('error', 'This deck is featured.');
         }
 
         try {
