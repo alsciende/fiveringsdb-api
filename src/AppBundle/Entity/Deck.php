@@ -46,6 +46,8 @@ class Deck implements Timestampable
      *
      * @var string
      * @ORM\Column(name="name", type="string", length=255, nullable=false)
+     *
+     * @Assert\NotBlank()
      */
     private $name;
 
@@ -55,6 +57,7 @@ class Deck implements Timestampable
      * @var string
      * @ORM\Column(name="description", type="text", nullable=false)
      *
+     * @Assert\NotBlank()
      * @Assert\Length(
      *     min = 10,
      *     max = 32768
@@ -500,7 +503,7 @@ class Deck implements Timestampable
         return $this;
     }
 
-    public function getFeature (): Feature
+    public function getFeature (): ?Feature
     {
         return $this->feature;
     }

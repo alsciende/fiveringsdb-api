@@ -35,6 +35,7 @@ class Comment implements Timestampable
      *
      * @ORM\Column(name="text", type="text", nullable=false)
      *
+     * @Assert\NotBlank()
      * @Assert\Length(
      *     min = 10,
      *     max = 1024
