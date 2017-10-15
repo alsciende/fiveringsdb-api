@@ -48,7 +48,7 @@ class Strain implements Timestampable
      * The last minor deck of the strain
      *
      * @var Deck
-     * @ORM\OneToOne(targetEntity="Deck", fetch="EAGER")
+     * @ORM\OneToOne(targetEntity="Deck", fetch="EAGER", cascade={"persist"})
      * @ORM\JoinColumn(name="deck_id", referencedColumnName="id")
      */
     private $head;
@@ -59,6 +59,7 @@ class Strain implements Timestampable
      * @var Collection
      * @ORM\OneToMany(targetEntity="Deck", mappedBy="strain", cascade={"remove"})
      * @ORM\JoinColumn(name="strain_id", referencedColumnName="id")
+     * @ORM\OrderBy({"createdAt" = "ASC"})
      */
     private $decks;
 

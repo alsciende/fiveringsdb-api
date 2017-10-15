@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Manager;
+namespace AppBundle\Service;
 
 use AppBundle\Entity\Deck;
 use AppBundle\Entity\DeckLike;

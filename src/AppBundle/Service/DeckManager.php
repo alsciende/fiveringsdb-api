@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Manager;
+namespace AppBundle\Service;
 
 use AppBundle\Entity\Deck;
 use AppBundle\Entity\DeckLike;
@@ -26,8 +26,11 @@ class DeckManager
     /** @var DeckValidator */
     private $deckValidator;
 
-    public function __construct (EntityManagerInterface $entityManager, Serializer $serializer, DeckValidator $deckValidator)
-    {
+    public function __construct (
+        EntityManagerInterface $entityManager,
+        Serializer $serializer,
+        DeckValidator $deckValidator
+    ) {
         $this->entityManager = $entityManager;
         $this->serializer = $serializer;
         $this->deckValidator = $deckValidator;
@@ -42,9 +45,18 @@ class DeckManager
         return $strain;
     }
 
+    public function deleteExpiredDecks (Strain $strain)
+    {
+        $decks = array_slice(array_reverse($strain->getDecks()->toArray()), $strain->getUser()->getStrainSizeLimit());
+        foreach ($decks as $deck) {
+            $this->deleteDeck($deck);
+        }
+    }
+
     public function persist (Deck $deck): self
     {
-        $head = $deck->getStrain()->getHead();
+        $strain = $deck->getStrain();
+        $head = $strain->getHead();
         $deck->setPrimaryClan($deck->getDeckCards()->findPrimaryClan());
         $deck->setSecondaryClan($deck->getDeckCards()->findSecondaryClan($deck->getPrimaryClan()));
         $deck->setProblem($this->deckValidator->check($deck->getDeckCards(), $deck->getFormat()));
@@ -53,7 +65,8 @@ class DeckManager
         $deck->setMinorVersion($head === null ? 1 : $head->getMinorVersion() + 1);
         $this->entityManager->persist($deck);
 
-        $deck->getStrain()->setHead($deck);
+        $strain->addDeck($deck)->setHead($deck);
+        $this->deleteExpiredDecks($strain);
 
         return $this;
     }
@@ -85,17 +98,23 @@ class DeckManager
     /**
      * Delete a deck
      */
-    public function deleteDeck (Deck $deck)
+    public function deleteDeck (Deck $deck): bool
     {
+        if ($deck->isPublished() === true && $deck->getStrain() instanceof Strain) {
+            return false;
+        }
+
         $this->entityManager->remove($deck);
+
+        return true;
     }
 
-    public function countDecks (User $user)
+    public function countDecks (User $user): int
     {
         return $this->entityManager->getRepository(Deck::class)->countBy(['user' => $user, 'published' => false]);
     }
 
-    public function countStrains (User $user)
+    public function countStrains (User $user): int
     {
         return $this->entityManager->getRepository(Strain::class)->countBy(['user' => $user]);
     }
