@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormErrorIterator;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -22,7 +23,7 @@ abstract class BaseApiController extends Controller
     {
         $this->get('logger')->info($message);
 
-        return new \Symfony\Component\HttpFoundation\JsonResponse(
+        return new JsonResponse(
             [
                 "success"     => false,
                 "message"     => $message,

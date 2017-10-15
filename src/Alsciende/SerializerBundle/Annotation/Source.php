@@ -2,6 +2,8 @@
 
 namespace Alsciende\SerializerBundle\Annotation;
 
+use Doctrine\Common\Annotations\Annotation;
+
 /**
  * @Source annotation
  *
@@ -10,7 +12,7 @@ namespace Alsciende\SerializerBundle\Annotation;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class Source extends \Doctrine\Common\Annotations\Annotation
+class Source extends Annotation
 {
 
     /* @var string */

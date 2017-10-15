@@ -40,7 +40,7 @@ class DeckLike
      */
     private $createdAt;
 
-    function __construct (\AppBundle\Entity\Deck $deck, \AppBundle\Entity\User $user)
+    function __construct (Deck $deck, User $user)
     {
         $this->deck = $deck;
         $this->user = $user;

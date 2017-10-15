@@ -2,6 +2,8 @@
 
 namespace Alsciende\SerializerBundle\Manager;
 
+use Alsciende\SerializerBundle\Model\Source;
+
 /**
  * Description of SourceManager
  *
@@ -46,9 +48,9 @@ class SourceManager
     /**
      * Add one source
      *
-     * @param \Alsciende\SerializerBundle\Model\Source $source
+     * @param Source $source
      */
-    public function addSource (\Alsciende\SerializerBundle\Model\Source $source)
+    public function addSource (Source $source)
     {
         if ($source->getPath() === null) {
             $source->setPath($this->path);
@@ -68,7 +70,7 @@ class SourceManager
         while (count($this->sources)) {
             $next = $this->findNextResolvedSource($this->sources, $classes);
             if ($next === null) {
-                $unresolvedClasses = array_map(function (\Alsciende\SerializerBundle\Model\Source $source) {
+                $unresolvedClasses = array_map(function (Source $source) {
                     return $source->getClassName();
                 }, $this->sources);
                 throw new \InvalidArgumentException("Sources contain a cycle of dependencies, or a dependency is not configured as a Source.\nUnresolved classes are: " . implode(", ", $unresolvedClasses) . ".\nResolved classes are : " . implode(", ", $classes) . ".");

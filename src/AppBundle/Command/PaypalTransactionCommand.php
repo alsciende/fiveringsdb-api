@@ -2,12 +2,17 @@
 
 namespace AppBundle\Command;
 
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+
 /**
  * Description of PaypalTransaction
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class PaypalTransactionCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand
+class PaypalTransactionCommand extends ContainerAwareCommand
 {
 
     protected function configure ()
@@ -15,11 +20,11 @@ class PaypalTransactionCommand extends \Symfony\Bundle\FrameworkBundle\Command\C
         $this
             ->setName('app:paypal:transaction')
             ->setDescription("Fetch and display details about a PayPal Transaction")
-            ->addArgument('transaction_id', \Symfony\Component\Console\Input\InputArgument::REQUIRED, "ID of the Paypal transaction")
+            ->addArgument('transaction_id', InputArgument::REQUIRED, "ID of the Paypal transaction")
         ;
     }
 
-    protected function execute (\Symfony\Component\Console\Input\InputInterface $input, \Symfony\Component\Console\Output\OutputInterface $output)
+    protected function execute (InputInterface $input, OutputInterface $output)
     {
         $transactionId = $input->getArgument('transaction_id');
 

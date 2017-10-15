@@ -3,13 +3,15 @@
 namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Description of SecurityController
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class SecurityController extends \Symfony\Bundle\FrameworkBundle\Controller\Controller
+class SecurityController extends Controller
 {
     /**
      * @Route("/login", name="security_login")
@@ -33,6 +35,6 @@ class SecurityController extends \Symfony\Bundle\FrameworkBundle\Controller\Cont
      */
     public function loginCheckAction ()
     {
-        throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException("This controller shouldn't be called");
+        throw new BadRequestHttpException("This controller shouldn't be called");
     }
 }

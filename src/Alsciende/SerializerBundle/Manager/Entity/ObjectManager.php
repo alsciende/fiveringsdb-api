@@ -2,18 +2,21 @@
 
 namespace Alsciende\SerializerBundle\Manager\Entity;
 
+use Alsciende\SerializerBundle\Manager\BaseObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
+
 /**
  * Description of ObjectManager
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class ObjectManager extends \Alsciende\SerializerBundle\Manager\BaseObjectManager
+class ObjectManager extends BaseObjectManager
 {
     /* @var \Doctrine\ORM\EntityManager */
 
     private $entityManager;
 
-    function __construct (\Doctrine\ORM\EntityManager $entityManager)
+    function __construct (EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
     }
@@ -194,20 +197,20 @@ class ObjectManager extends \Alsciende\SerializerBundle\Manager\BaseObjectManage
      * Returns a description of the association, including the foreign key value
      * as found in $data
      *
-     * @param type $data an array where the value of the foreign key can be found
-     * @param type $associationMapping
-     * @return array
+     * @param array $data an array where the value of the foreign key can be found
+     * @param array $associationMapping
+     * @return array|null
      */
     private function findAssociation ($data, $associationMapping)
     {
         if (!$associationMapping['isOwningSide']) {
-            return;
+            return null;
         }
         $referenceKeys = [];
         $referenceValues = [];
         foreach ($associationMapping['sourceToTargetKeyColumns'] as $referenceKey => $targetIdentifier) {
             if (!key_exists($referenceKey, $data)) {
-                return;
+                return null;
             }
             $referenceKeys[] = $referenceKey;
             $referenceValues[$targetIdentifier] = $data[$referenceKey];

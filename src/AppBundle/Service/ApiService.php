@@ -6,6 +6,7 @@ use AppBundle\Behavior\Entity\Timestampable;
 use AppBundle\Search\PaginatedSearchInterface;
 use AppBundle\Search\SearchInterface;
 use JMS\Serializer\SerializationContext;
+use JMS\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,7 +38,7 @@ class ApiService
      */
     private $httpCacheMaxAge;
 
-    public function __construct (RequestStack $requestStack, \JMS\Serializer\Serializer $serializer, $httpCacheMaxAge)
+    public function __construct (RequestStack $requestStack, Serializer $serializer, $httpCacheMaxAge)
     {
         $this->requestStack = $requestStack;
         $this->serializer = $serializer;

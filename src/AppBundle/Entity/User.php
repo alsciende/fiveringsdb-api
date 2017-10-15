@@ -162,7 +162,7 @@ class User implements UserInterface
         return '';
     }
 
-    public function getStrainSizeLimit (): int
+    public function getStrainSizeLimit (): ?int
     {
         return $this->strainSizeLimit;
     }
@@ -174,7 +174,7 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getStrainsCountLimit (): int
+    public function getStrainsCountLimit (): ?int
     {
         return $this->strainsCountLimit;
     }
