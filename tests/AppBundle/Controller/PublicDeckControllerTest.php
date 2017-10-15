@@ -369,7 +369,7 @@ class PublicDeckControllerTest extends BaseApiControllerTest
             'DELETE',
             "/decks/$id"
         );
-        $this->assertStandardGetNone($client);
+        $this->assertUnsuccessful($client);
     }
 
     /**

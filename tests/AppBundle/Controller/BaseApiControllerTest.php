@@ -82,4 +82,15 @@ abstract class BaseApiControllerTest extends WebTestCase
         $client->getResponse()->getStatusCode()
       );
     }
+
+    public function assertUnsuccessful(Client $client)
+    {
+        $this->assertEquals(
+            \Symfony\Component\HttpFoundation\Response::HTTP_OK, $client->getResponse()->getStatusCode()
+        );
+        $content = json_decode($client->getResponse()->getContent(), true);
+        $this->assertFalse(
+            $content['success']
+        );
+    }
 }
