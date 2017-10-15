@@ -39,7 +39,7 @@ class DeckPublishController extends BaseApiController
         }
 
         $form = $this->createForm(PublicDeckType::class, $deck);
-        $form->submit(json_decode($request->getContent(), true), false);
+        $form->submit(json_decode($request->getContent(), true), true);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->get('app.deck_manager')->publish($strain->getHead());
