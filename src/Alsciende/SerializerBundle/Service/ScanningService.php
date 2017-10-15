@@ -4,6 +4,8 @@ namespace Alsciende\SerializerBundle\Service;
 
 use Alsciende\SerializerBundle\Manager\ObjectManagerInterface;
 use Alsciende\SerializerBundle\Model\Source;
+use Doctrine\Common\Annotations\Reader;
+use Psr\Cache\CacheItemPoolInterface;
 use ReflectionClass;
 use ReflectionProperty;
 
@@ -40,8 +42,13 @@ class ScanningService
      */
     private $path;
 
-    public function __construct (ObjectManagerInterface $objectManager, SourceOrderingService $orderingService, \Doctrine\Common\Annotations\Reader $reader, \Psr\Cache\CacheItemPoolInterface $cache, $path)
-    {
+    public function __construct (
+        ObjectManagerInterface $objectManager,
+        SourceOrderingService $orderingService,
+        Reader $reader,
+        CacheItemPoolInterface $cache,
+        $path
+    ) {
         $this->objectManager = $objectManager;
         $this->orderingService = $orderingService;
         $this->reader = $reader;
@@ -93,7 +100,7 @@ class ScanningService
 
         $reflectionClass = new ReflectionClass($className);
         $annotation = $this->reader->getClassAnnotation($reflectionClass, \Alsciende\SerializerBundle\Annotation\Source::class);
-        if ($annotation) {
+        if ($annotation instanceof \Alsciende\SerializerBundle\Annotation\Source) {
             $source = $this->buildSource($annotation, $reflectionClass);
             $cacheItem->set($source);
             return $source;

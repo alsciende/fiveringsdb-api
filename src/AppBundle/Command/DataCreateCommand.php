@@ -10,6 +10,7 @@ namespace AppBundle\Command;
 
 use AppBundle\Entity\Card;
 use AppBundle\Entity\Pack;
+use Cocur\Slugify\Slugify;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -106,7 +107,7 @@ class DataCreateCommand extends ContainerAwareCommand
     protected function getCardData (InputInterface $input, OutputInterface $output): array
     {
         $helper = $this->getHelper('question');
-        $slugify = new \Cocur\Slugify\Slugify();
+        $slugify = new Slugify();
         $normalizer = $this->getContainer()->get('alsciende_serializer.deserializer');
 
         $clan = $helper->ask(

@@ -35,14 +35,14 @@ services:
         class: AppBundle\Service\DeckSearchService
 
     app.deck_manager:
-        class: AppBundle\Manager\DeckManager
+        class: AppBundle\Service\DeckManager
         arguments:
           - "@doctrine.orm.entity_manager"
           - "@serializer"
           - '@app.deck_validator'
 
     app.deck_like_manager:
-        class: AppBundle\Manager\DeckLikeManager
+        class: AppBundle\Service\DeckLikeManager
         arguments:
           - "@doctrine.orm.entity_manager"
 

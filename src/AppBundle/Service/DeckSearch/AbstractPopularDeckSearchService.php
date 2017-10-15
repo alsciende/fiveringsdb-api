@@ -14,14 +14,23 @@ abstract class AbstractPopularDeckSearchService extends AbstractDeckSearchServic
 {
     public function search (DeckSearch $search)
     {
-        $search->setTotal($this->getTotal());
+        $dql = "SELECT COUNT(d)
+        FROM AppBundle:Deck d
+        WHERE d.published = :published
+        AND DATEDIFF(NOW(), d.createdAt) <= :days";
+        $query = $this->getEntityManager()
+                      ->createQuery($dql)
+                      ->setParameter('published', true)
+                      ->setParameter('days', $this->getNumberOfDays());
+
+        $search->setTotal((int) $query->getSingleScalarResult());
 
         $dql = "SELECT d, u, COUNT(DISTINCT l.user) nbLikes, COUNT(DISTINCT c.id) nbComments
         FROM AppBundle:Deck d 
         JOIN d.user u 
         LEFT JOIN d.deckLikes l
         LEFT JOIN d.comments c
-        WHERE d.published=:published 
+        WHERE d.published = :published 
         AND DATEDIFF(NOW(), d.createdAt) <= :days
         GROUP BY d, u
         ORDER BY nbLikes DESC, d.createdAt DESC";

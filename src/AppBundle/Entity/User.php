@@ -33,7 +33,7 @@ class User implements UserInterface
 
     /**
      *
-     * @ORM\Column(name="password",type="string",length=255)
+     * @ORM\Column(name="password", type="string", length=255)
      */
     private $password;
 
@@ -41,7 +41,7 @@ class User implements UserInterface
      *
      * @var array
      *
-     * @ORM\Column(name="roles",type="simple_array")
+     * @ORM\Column(name="roles", type="simple_array")
      */
     private $roles;
 
@@ -49,13 +49,33 @@ class User implements UserInterface
      *
      * @var boolean
      *
-     * @ORM\Column(name="enabled",type="boolean")
+     * @ORM\Column(name="enabled", type="boolean")
      */
     private $enabled;
+
+    /**
+     * Limit on the size of each strain
+     *
+     * @var int
+     *
+     * @ORM\Column(name="strain_size_limit", type="integer")
+     */
+    private $strainSizeLimit;
+
+    /**
+     * Limit on the number of strains
+     *
+     * @var int
+     *
+     * @ORM\Column(name="strains_count_limit", type="integer")
+     */
+    private $strainsCountLimit;
 
     function __construct ()
     {
         $this->roles = ['ROLE_USER'];
+        $this->strainSizeLimit = 10;
+        $this->strainsCountLimit = 100;
     }
 
     function getId ()
@@ -140,5 +160,29 @@ class User implements UserInterface
     public function getSalt ()
     {
         return '';
+    }
+
+    public function getStrainSizeLimit (): ?int
+    {
+        return $this->strainSizeLimit;
+    }
+
+    public function setStrainSizeLimit (int $strainSizeLimit): self
+    {
+        $this->strainSizeLimit = $strainSizeLimit;
+
+        return $this;
+    }
+
+    public function getStrainsCountLimit (): ?int
+    {
+        return $this->strainsCountLimit;
+    }
+
+    public function setStrainsCountLimit (int $strainsCountLimit): self
+    {
+        $this->strainsCountLimit = $strainsCountLimit;
+
+        return $this;
     }
 }

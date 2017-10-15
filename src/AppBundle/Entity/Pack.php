@@ -5,6 +5,7 @@ namespace AppBundle\Entity;
 use Alsciende\SerializerBundle\Annotation\Source;
 use AppBundle\Behavior\Entity\Timestampable;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -121,7 +122,7 @@ class Pack implements Timestampable
 
     function __construct ()
     {
-        $this->cards = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->cards = new ArrayCollection();
     }
 
     public function setId (string $id): self

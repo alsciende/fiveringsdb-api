@@ -160,6 +160,13 @@ class Deck implements Timestampable
      */
     private $secondaryClan;
 
+    /**
+     * @var Feature
+     *
+     * @ORM\OneToOne(targetEntity="Feature", mappedBy="deck")
+     */
+    private $feature;
+
     function __construct ()
     {
         $this->description = '';
@@ -489,6 +496,18 @@ class Deck implements Timestampable
     public function setNbComments (int $nbComments): self
     {
         $this->nbComments = $nbComments;
+
+        return $this;
+    }
+
+    public function getFeature (): Feature
+    {
+        return $this->feature;
+    }
+
+    public function setFeature (Feature $feature): self
+    {
+        $this->feature = $feature;
 
         return $this;
     }

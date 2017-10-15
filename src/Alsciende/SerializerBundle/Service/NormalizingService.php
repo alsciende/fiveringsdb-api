@@ -2,6 +2,8 @@
 
 namespace Alsciende\SerializerBundle\Service;
 
+use Alsciende\SerializerBundle\Manager\ObjectManagerInterface;
+
 /**
  * Turns an object into an array
  *
@@ -10,7 +12,7 @@ namespace Alsciende\SerializerBundle\Service;
 class NormalizingService implements NormalizingServiceInterface
 {
 
-    public function __construct (\Alsciende\SerializerBundle\Manager\ObjectManagerInterface $objectManager)
+    public function __construct (ObjectManagerInterface $objectManager)
     {
         $this->objectManager = $objectManager;
     }

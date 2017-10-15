@@ -5,7 +5,7 @@ namespace AppBundle\DataFixtures\ORM;
 use AppBundle\Entity\Deck;
 use AppBundle\Entity\User;
 use AppBundle\Form\DataTransformer\CardSlotsTransformer;
-use AppBundle\Manager\DeckManager;
+use AppBundle\Service\DeckManager;
 use AppBundle\Service\DeckSerializer;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
