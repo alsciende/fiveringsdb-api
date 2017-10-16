@@ -7,7 +7,6 @@ use AppBundle\Behavior\Entity\Timestampable;
 use AppBundle\Model\CardSlotInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use JMS\Serializer\Annotation as JMS;
 
 /**
  * Description of PackCard
@@ -16,9 +15,6 @@ use JMS\Serializer\Annotation as JMS;
  * @ORM\Entity
  *
  * @Source(break="pack_id")
- *
- * @JMS\ExclusionPolicy("all")
- * @JMS\AccessorOrder("alphabetical")
  *
  * @author Alsciende <alsciende@icloud.com>
  */
@@ -32,8 +28,6 @@ class PackCard implements CardSlotInterface, Timestampable
      * @ORM\Column(name="quantity", type="integer", nullable=false)
      *
      * @Source(type="integer")
-     *
-     * @JMS\Expose
      */
     private $quantity;
 
@@ -43,8 +37,6 @@ class PackCard implements CardSlotInterface, Timestampable
      * @ORM\Column(name="position", type="string", nullable=false)
      *
      * @Source(type="string")
-     *
-     * @JMS\Expose
      */
     private $position;
 
@@ -54,8 +46,6 @@ class PackCard implements CardSlotInterface, Timestampable
      * @ORM\Column(name="illustrator", type="string", nullable=true)
      *
      * @Source(type="string")
-     *
-     * @JMS\Expose
      */
     private $illustrator;
 
@@ -65,8 +55,6 @@ class PackCard implements CardSlotInterface, Timestampable
      * @ORM\Column(name="flavor", type="string", nullable=true)
      *
      * @Source(type="string")
-     *
-     * @JMS\Expose
      */
     private $flavor;
 
@@ -74,8 +62,6 @@ class PackCard implements CardSlotInterface, Timestampable
      * @var string
      *
      * @ORM\Column(name="image_url", type="string", nullable=true)
-     *
-     * @JMS\Expose
      */
     private $imageUrl;
 
@@ -87,9 +73,6 @@ class PackCard implements CardSlotInterface, Timestampable
      * @ORM\JoinColumn(name="card_id", referencedColumnName="id")
      *
      * @Source(type="association")
-     *
-     * @JMS\Expose
-     * @JMS\Groups({"card_group"})
      */
     private $card;
 
@@ -101,9 +84,6 @@ class PackCard implements CardSlotInterface, Timestampable
      * @ORM\JoinColumn(name="pack_id", referencedColumnName="id")
      *
      * @Source(type="association")
-     *
-     * @JMS\Expose
-     * @JMS\Groups({"pack_group"})
      */
     private $pack;
 

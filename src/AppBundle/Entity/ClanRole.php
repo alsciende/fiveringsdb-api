@@ -6,7 +6,6 @@ use Alsciende\SerializerBundle\Annotation\Source;
 use AppBundle\Behavior\Entity\Timestampable;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use JMS\Serializer\Annotation as JMS;
 
 /**
  * Description of ClanRole
@@ -15,9 +14,6 @@ use JMS\Serializer\Annotation as JMS;
  * @ORM\Entity
  *
  * @Source()
- *
- * @JMS\ExclusionPolicy("all")
- * @JMS\AccessorOrder("alphabetical")
  *
  * @author Alsciende <alsciende@icloud.com>
  */
@@ -33,9 +29,6 @@ class ClanRole implements Timestampable
      * @ORM\JoinColumn(name="card_id", referencedColumnName="id")
      *
      * @Source(type="association")
-     *
-     * @JMS\Expose
-     * @JMS\Groups({"card_group"})
      */
     private $card;
 
@@ -45,8 +38,6 @@ class ClanRole implements Timestampable
      * @ORM\Column(name="clan", type="string", nullable=false)
      *
      * @Source(type="string")
-     *
-     * @JMS\Expose
      */
     private $clan;
 

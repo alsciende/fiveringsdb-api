@@ -9,18 +9,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Pack
  *
  * @ORM\Table(name="packs")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\PackRepository")
  *
  * @Source()
- * @JMS\ExclusionPolicy("all")
- * @JMS\AccessorOrder("alphabetical")
  *
  * @author Alsciende <alsciende@icloud.com>
  */
@@ -37,9 +34,6 @@ class Pack implements Timestampable
      * @ORM\GeneratedValue(strategy="NONE")
      *
      * @Source(type="string")
-     *
-     * @JMS\Expose
-     * @JMS\Groups({"Default","id_group"})
      */
     private $id;
 
@@ -50,8 +44,6 @@ class Pack implements Timestampable
      * @ORM\Column(name="name", type="string", length=255, unique=true)
      *
      * @Source(type="string")
-     *
-     * @JMS\Expose
      */
     private $name;
 
@@ -61,8 +53,6 @@ class Pack implements Timestampable
      * @ORM\Column(name="position", type="integer")
      *
      * @Source(type="integer")
-     *
-     * @JMS\Expose
      */
     private $position;
 
@@ -72,19 +62,15 @@ class Pack implements Timestampable
      * @ORM\Column(name="size", type="integer", nullable=true)
      *
      * @Source(type="integer")
-     *
-     * @JMS\Expose
      */
     private $size;
 
     /**
      * @var DateTime
      *
-     * @ORM\Column(name="released_at", type="datetime", nullable=true)
+     * @ORM\Column(name="released_at", type="date", nullable=true)
      *
      * @Source(type="date")
-     *
-     * @JMS\Expose
      */
     private $releasedAt;
 
@@ -104,9 +90,6 @@ class Pack implements Timestampable
      * @ORM\JoinColumn(name="cycle_id", referencedColumnName="id", nullable=false)
      *
      * @Source(type="association")
-     *
-     * @JMS\Expose()
-     * @JMS\Groups({"cycle_group"})
      */
     private $cycle;
 
@@ -114,15 +97,17 @@ class Pack implements Timestampable
      * @var PackCard[]
      *
      * @ORM\OneToMany(targetEntity="PackCard", mappedBy="pack", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
-     *
-     * @JMS\Expose()
-     * @JMS\Groups({"cards_group"})
      */
     private $cards;
 
     function __construct ()
     {
         $this->cards = new ArrayCollection();
+    }
+
+    public function getId (): string
+    {
+        return $this->id;
     }
 
     public function setId (string $id): self
@@ -132,9 +117,9 @@ class Pack implements Timestampable
         return $this;
     }
 
-    public function getId (): string
+    public function getName (): string
     {
-        return $this->id;
+        return $this->name;
     }
 
     public function setName (string $name): self
@@ -144,9 +129,9 @@ class Pack implements Timestampable
         return $this;
     }
 
-    public function getName (): string
+    public function getPosition (): int
     {
-        return $this->name;
+        return $this->position;
     }
 
     public function setPosition (int $position): self
@@ -156,9 +141,9 @@ class Pack implements Timestampable
         return $this;
     }
 
-    public function getPosition (): int
+    public function getSize (): int
     {
-        return $this->position;
+        return $this->size;
     }
 
     public function setSize (int $size): self
@@ -166,11 +151,6 @@ class Pack implements Timestampable
         $this->size = $size;
 
         return $this;
-    }
-
-    public function getSize (): int
-    {
-        return $this->size;
     }
 
     function getReleasedAt (): DateTime
@@ -185,16 +165,16 @@ class Pack implements Timestampable
         return $this;
     }
 
+    public function getFfgId (): ?string
+    {
+        return $this->ffgId;
+    }
+
     public function setFfgId (string $ffgId): self
     {
         $this->ffgId = $ffgId;
 
         return $this;
-    }
-
-    public function getFfgId (): ?string
-    {
-        return $this->ffgId;
     }
 
     function getCycle (): Cycle

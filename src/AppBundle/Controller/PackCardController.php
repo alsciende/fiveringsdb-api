@@ -30,13 +30,13 @@ class PackCardController extends BaseApiController
                 ->findAll(),
             [
                 'Default',
-                'card_group',
-                'pack_group',
+                'Card',
                 'card' => [
-                    'id_group',
+                    'Id',
                 ],
+                'Pack',
                 'pack' => [
-                    'id_group',
+                    'Id',
                 ],
             ]
         );

@@ -27,12 +27,12 @@ class PackController extends BaseApiController
             $this
                 ->getDoctrine()
                 ->getRepository(Pack::class)
-                ->findAll(),
+                ->findAllSorted(),
             [
                 'Default',
-                'cycle_group',
+                'Cycle',
                 'cycle' => [
-                    'id_group',
+                    'Id',
                 ],
             ]
         );

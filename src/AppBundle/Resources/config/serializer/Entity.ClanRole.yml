@@ -1,0 +1,9 @@
+AppBundle\Entity\ClanRole:
+    exclusion_policy: ALL
+    accessor_order: alphabetical
+    properties:
+        card:
+            expose: true
+            groups: ['Card']
+        clan:
+            expose: true

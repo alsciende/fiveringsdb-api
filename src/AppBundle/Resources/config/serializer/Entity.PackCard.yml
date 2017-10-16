@@ -1,0 +1,20 @@
+AppBundle\Entity\PackCard:
+    exclusion_policy: ALL
+    accessor_order: alphabetical
+    properties:
+        quantity:
+            expose: true
+        position:
+            expose: true
+        illustrator:
+            expose: true
+        flavor:
+            expose: true
+        imageUrl:
+            expose: true
+        card:
+            expose: true
+            groups: ['Card']
+        pack:
+            expose: true
+            groups: ['Pack']
