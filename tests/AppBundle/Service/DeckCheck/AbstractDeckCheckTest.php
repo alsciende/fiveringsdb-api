@@ -9,9 +9,16 @@ use AppBundle\Model\CardSlotCollectionDecorator;
 use AppBundle\Service\DeckCheck\DeckCheckInterface;
 use JMS\Serializer\SerializerBuilder;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-abstract class AbstractDeckCheckTest extends TestCase
+abstract class AbstractDeckCheckTest extends WebTestCase
 {
+    protected function setUp()
+    {
+        static::$kernel = static::createKernel();
+        static::$kernel->boot();
+    }
+
     public function assertCheck(DeckCheckInterface $checker, int $expectedValue, array $deckCards) {
         $this->assertEquals(
             $expectedValue,
@@ -21,7 +28,7 @@ abstract class AbstractDeckCheckTest extends TestCase
 
     protected function getCard($attributes)
     {
-        $serializer = SerializerBuilder::create()->build();
+        $serializer = static::$kernel->getContainer()->get('jms_serializer');
         return $serializer->fromArray($attributes, Card::class);
     }
 }
