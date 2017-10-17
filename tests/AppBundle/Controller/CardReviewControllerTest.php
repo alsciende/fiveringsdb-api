@@ -33,14 +33,6 @@ class CardReviewControllerTest extends BaseApiControllerTest
             'Test review text',
             $record['text']
         );
-        $this->assertEquals(
-            'above-question',
-            $record['card_id']
-        );
-        $this->assertArrayHasKey(
-            'user_id',
-            $record
-        );
         return $record;
     }
 
@@ -103,10 +95,6 @@ class CardReviewControllerTest extends BaseApiControllerTest
         $this->assertEquals(
             $review['id'],
             $record['id']
-        );
-        $this->assertEquals(
-            $review['card_id'],
-            $record['card_id']
         );
         $this->assertEquals(
             'Updated review text',

@@ -30,12 +30,12 @@ class CardController extends BaseApiController
                 ->findAll(),
             [
                 'Default',
-                'packs_group',
+                'PackCards',
                 'packCards' => [
                     'Default',
-                    'pack_group',
+                    'Pack',
                     'pack' => [
-                        'id_group',
+                        'Id',
                     ],
                 ],
             ]

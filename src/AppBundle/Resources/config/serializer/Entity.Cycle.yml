@@ -1,0 +1,16 @@
+AppBundle\Entity\Cycle:
+    exclusion_policy: ALL
+    accessor_order: alphabetical
+    properties:
+        id:
+            expose: true
+            groups: ['Default','Id']
+        name:
+            expose: true
+        position:
+            expose: true
+        size:
+            expose: true
+        packs:
+            expose: true
+            groups: ['Packs']

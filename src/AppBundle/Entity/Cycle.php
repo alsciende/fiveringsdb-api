@@ -7,8 +7,6 @@ use AppBundle\Behavior\Entity\Timestampable;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use JMS\Serializer\Annotation as JMS;
-
 
 /**
  * Cycle
@@ -17,8 +15,6 @@ use JMS\Serializer\Annotation as JMS;
  * @ORM\Entity()
  *
  * @Source()
- * @JMS\ExclusionPolicy("all")
- * @JMS\AccessorOrder("alphabetical")
  *
  * @author Alsciende <alsciende@icloud.com>
  */
@@ -34,9 +30,6 @@ class Cycle implements Timestampable
      * @ORM\GeneratedValue(strategy="NONE")
      *
      * @Source(type="string")
-     *
-     * @JMS\Expose()
-     * @JMS\Groups({"Default","id_group"})
      */
     private $id;
 
@@ -46,8 +39,6 @@ class Cycle implements Timestampable
      * @ORM\Column(name="name", type="string", length=255, unique=true)
      *
      * @Source(type="string")
-     *
-     * @JMS\Expose()
      */
     private $name;
 
@@ -57,8 +48,6 @@ class Cycle implements Timestampable
      * @ORM\Column(name="position", type="integer")
      *
      * @Source(type="integer")
-     *
-     * @JMS\Expose()
      */
     private $position;
 
@@ -68,17 +57,13 @@ class Cycle implements Timestampable
      * @ORM\Column(name="size", type="integer", nullable=true)
      *
      * @Source(type="integer")
-     *
-     * @JMS\Expose()
      */
     private $size;
 
     /**
      * @var Collection|Pack[]
-     * @ORM\OneToMany(targetEntity="Pack", mappedBy="cycle")
      *
-     * @JMS\Expose()
-     * @JMS\Groups({"packs_group"})
+     * @ORM\OneToMany(targetEntity="Pack", mappedBy="cycle")
      */
     private $packs;
 

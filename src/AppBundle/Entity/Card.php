@@ -10,7 +10,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -20,9 +19,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity()
  *
  * @Source(break="id")
- *
- * @JMS\ExclusionPolicy("all")
- * @JMS\AccessorOrder("alphabetical")
  *
  * @author Alsciende <alsciende@icloud.com>
  */
@@ -69,9 +65,6 @@ class Card implements Timestampable
      * @ORM\GeneratedValue(strategy="NONE")
      *
      * @Source(type="string")
-     *
-     * @JMS\Expose
-     * @JMS\Groups({"Default","id_group"})
      */
     private $id;
 
@@ -83,8 +76,6 @@ class Card implements Timestampable
      * @ORM\Column(name="name", type="string", length=255)
      *
      * @Source(type="string")
-     *
-     * @JMS\Expose
      */
     private $name;
 
@@ -92,8 +83,6 @@ class Card implements Timestampable
      * @var string
      *
      * @ORM\Column(name="name_canonical", type="string", length=255)
-     *
-     * @JMS\Expose
      */
     private $nameCanonical;
 
@@ -103,8 +92,6 @@ class Card implements Timestampable
      * @ORM\Column(name="cost", type="integer", nullable=true)
      *
      * @Source(type="integer")
-     *
-     * @JMS\Expose
      */
     private $cost;
 
@@ -114,8 +101,6 @@ class Card implements Timestampable
      * @ORM\Column(name="text", type="text", nullable=true)
      *
      * @Source(type="string")
-     *
-     * @JMS\Expose
      */
     private $text;
 
@@ -123,8 +108,6 @@ class Card implements Timestampable
      * @var string
      *
      * @ORM\Column(name="text_canonical", type="text", nullable=true)
-     *
-     * @JMS\Expose
      */
     private $textCanonical;
 
@@ -134,9 +117,6 @@ class Card implements Timestampable
      * @ORM\Column(name="type", type="text", nullable=false)
      *
      * @Source(type="string")
-     *
-     * @JMS\Expose
-     * @JMS\Type("string")
      */
     private $type;
 
@@ -146,9 +126,6 @@ class Card implements Timestampable
      * @ORM\Column(name="clan", type="text", nullable=false)
      *
      * @Source(type="string")
-     *
-     * @JMS\Expose
-     * @JMS\Type("string")
      */
     private $clan;
 
@@ -158,9 +135,6 @@ class Card implements Timestampable
      * @ORM\Column(name="element", type="text", nullable=true)
      *
      * @Source(type="string")
-     *
-     * @JMS\Expose
-     * @JMS\Type("string")
      */
     private $element;
 
@@ -170,8 +144,6 @@ class Card implements Timestampable
      * @ORM\Column(name="unicity", type="boolean", nullable=false)
      *
      * @Source(type="boolean")
-     *
-     * @JMS\Expose
      */
     private $unicity;
 
@@ -181,9 +153,6 @@ class Card implements Timestampable
      * @ORM\Column(name="side", type="string", nullable=false)
      *
      * @Source(type="string")
-     *
-     * @JMS\Expose
-     * @JMS\Type("string")
      */
     private $side;
 
@@ -193,8 +162,6 @@ class Card implements Timestampable
      * @ORM\Column(name="traits", type="simple_array", nullable=true)
      *
      * @Source(type="array")
-     *
-     * @JMS\Expose
      */
     private $traits;
 
@@ -204,8 +171,6 @@ class Card implements Timestampable
      * @ORM\Column(name="military", type="smallint", nullable=true)
      *
      * @Source(type="integer")
-     *
-     * @JMS\Expose
      */
     private $military;
 
@@ -215,8 +180,6 @@ class Card implements Timestampable
      * @ORM\Column(name="political", type="smallint", nullable=true)
      *
      * @Source(type="integer")
-     *
-     * @JMS\Expose
      */
     private $political;
 
@@ -226,8 +189,6 @@ class Card implements Timestampable
      * @ORM\Column(name="strength", type="smallint", nullable=true)
      *
      * @Source(type="integer")
-     *
-     * @JMS\Expose
      */
     private $strength;
 
@@ -237,8 +198,6 @@ class Card implements Timestampable
      * @ORM\Column(name="military_bonus", type="string", nullable=true)
      *
      * @Source(type="string")
-     *
-     * @JMS\Expose
      */
     private $militaryBonus;
 
@@ -248,8 +207,6 @@ class Card implements Timestampable
      * @ORM\Column(name="political_bonus", type="string", nullable=true)
      *
      * @Source(type="string")
-     *
-     * @JMS\Expose
      */
     private $politicalBonus;
 
@@ -259,8 +216,6 @@ class Card implements Timestampable
      * @ORM\Column(name="strength_bonus", type="string", nullable=true)
      *
      * @Source(type="string")
-     *
-     * @JMS\Expose
      */
     private $strengthBonus;
 
@@ -270,8 +225,6 @@ class Card implements Timestampable
      * @ORM\Column(name="glory", type="smallint", nullable=true)
      *
      * @Source(type="integer")
-     *
-     * @JMS\Expose
      */
     private $glory;
 
@@ -281,8 +234,6 @@ class Card implements Timestampable
      * @ORM\Column(name="honor", type="smallint", nullable=true)
      *
      * @Source(type="integer")
-     *
-     * @JMS\Expose
      */
     private $honor;
 
@@ -292,8 +243,6 @@ class Card implements Timestampable
      * @ORM\Column(name="fate", type="smallint", nullable=true)
      *
      * @Source(type="integer")
-     *
-     * @JMS\Expose
      */
     private $fate;
 
@@ -303,9 +252,6 @@ class Card implements Timestampable
      * @ORM\Column(name="influence_pool", type="smallint", nullable=true)
      *
      * @Source(type="integer")
-     *
-     * @JMS\Expose
-     * @JMS\Type("int")
      */
     private $influencePool;
 
@@ -315,9 +261,6 @@ class Card implements Timestampable
      * @ORM\Column(name="influence_cost", type="smallint", nullable=true)
      *
      * @Source(type="integer")
-     *
-     * @JMS\Expose
-     * @JMS\Type("int")
      */
     private $influenceCost;
 
@@ -327,9 +270,6 @@ class Card implements Timestampable
      * @ORM\Column(name="deck_limit", type="smallint", nullable=false)
      *
      * @Source(type="integer")
-     *
-     * @JMS\Expose
-     * @JMS\Type("int")
      */
     private $deckLimit;
 
@@ -339,9 +279,6 @@ class Card implements Timestampable
      * @ORM\Column(name="role_restriction", type="string", nullable=true)
      *
      * @Source(type="string")
-     *
-     * @JMS\Expose()
-     * @JMS\Type("string")
      */
     private $roleRestriction;
 
@@ -353,9 +290,6 @@ class Card implements Timestampable
      *      cascade={"persist", "remove", "merge"},
      *      orphanRemoval=true,
      *      fetch="EAGER")
-     *
-     * @JMS\Expose
-     * @JMS\Groups({"packs_group"})
      */
     private $packCards;
 
@@ -364,9 +298,6 @@ class Card implements Timestampable
      * @var Collection
      *
      * @ORM\OneToMany(targetEntity="Review", mappedBy="card", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
-     *
-     * @JMS\Expose
-     * @JMS\Groups({"reviews_group"})
      */
     private $reviews;
 
@@ -375,9 +306,6 @@ class Card implements Timestampable
      * @var Collection
      *
      * @ORM\OneToMany(targetEntity="Ruling", mappedBy="card", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
-     *
-     * @JMS\Expose
-     * @JMS\Groups({"rulings_group"})
      */
     private $rulings;
 

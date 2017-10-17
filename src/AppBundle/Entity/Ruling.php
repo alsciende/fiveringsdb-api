@@ -5,7 +5,6 @@ namespace AppBundle\Entity;
 use AppBundle\Behavior\Entity\Timestampable;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -13,9 +12,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="rulings")
  * @ORM\Entity
- *
- * @JMS\ExclusionPolicy("all")
- * @JMS\AccessorOrder("alphabetical")
  *
  * @author Alsciende <alsciende@icloud.com>
  */
@@ -29,8 +25,6 @@ class Ruling implements Timestampable
      * @ORM\Column(name="id", type="integer", unique=true)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @JMS\Expose
      */
     private $id;
 
@@ -38,8 +32,6 @@ class Ruling implements Timestampable
      * @var string
      *
      * @ORM\Column(name="text", type="text", nullable=false)
-     *
-     * @JMS\Expose
      *
      * @Assert\NotBlank()
      */
@@ -50,8 +42,6 @@ class Ruling implements Timestampable
      *
      * @ORM\Column(name="source", type="text", nullable=false)
      *
-     * @JMS\Expose
-     *
      * @Assert\NotBlank()
      */
     private $source;
@@ -60,8 +50,6 @@ class Ruling implements Timestampable
      * @var string
      *
      * @ORM\Column(name="link", type="text", nullable=true)
-     *
-     * @JMS\Expose
      */
     private $link;
 

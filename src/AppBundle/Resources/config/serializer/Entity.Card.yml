@@ -1,0 +1,63 @@
+AppBundle\Entity\Card:
+    exclusion_policy: ALL
+    accessor_order: alphabetical
+    properties:
+        id:
+            expose: true
+            groups: ['Default','Id']
+        name:
+            expose: true
+        nameCanonical:
+            expose: true
+        cost:
+            expose: true
+        text:
+            expose: true
+        textCanonical:
+            expose: true
+        type:
+            expose: true
+        clan:
+            expose: true
+        element:
+            expose: true
+        unicity:
+            expose: true
+        side:
+            expose: true
+        traits:
+            expose: true
+        military:
+            expose: true
+        political:
+            expose: true
+        strength:
+            expose: true
+        militaryBonus:
+            expose: true
+        politicalBonus:
+            expose: true
+        strengthBonus:
+            expose: true
+        glory:
+            expose: true
+        honor:
+            expose: true
+        fate:
+            expose: true
+        influencePool:
+            expose: true
+        influenceCost:
+            expose: true
+        deckLimit:
+            expose: true
+        roleRestriction:
+        packCards:
+            expose: true
+            groups: ['PackCards']
+        reviews:
+            expose: true
+            groups: ['Reviews']
+        rulings:
+            expose: true
+            groups: ['Rulings']

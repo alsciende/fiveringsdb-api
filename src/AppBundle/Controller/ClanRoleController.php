@@ -30,9 +30,9 @@ class ClanRoleController extends BaseApiController
                 ->findAll(),
             [
                 'Default',
-                'card_group',
+                'Card',
                 'card' => [
-                    'id_group',
+                    'Id',
                 ],
             ]
         );
