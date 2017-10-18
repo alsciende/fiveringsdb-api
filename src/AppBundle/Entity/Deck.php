@@ -8,7 +8,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * A Deck, private (minorVersion > 0) or public (minorVersion == 0)
@@ -46,8 +45,6 @@ class Deck implements Timestampable
      *
      * @var string
      * @ORM\Column(name="name", type="string", length=255, nullable=false)
-     *
-     * @Assert\NotBlank()
      */
     private $name;
 
@@ -56,11 +53,6 @@ class Deck implements Timestampable
      *
      * @var string
      * @ORM\Column(name="description", type="text", nullable=false)
-     *
-     * @Assert\Length(
-     *     min = 10,
-     *     max = 32768
-     * )
      */
     private $description;
 
@@ -262,7 +254,7 @@ class Deck implements Timestampable
         return $this->name;
     }
 
-    function setName (string $name): self
+    function setName (string $name = null): self
     {
         $this->name = $name;
 

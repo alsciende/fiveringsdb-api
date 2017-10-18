@@ -54,6 +54,7 @@ class DeckType extends AbstractType
                 'data_class'         => Deck::class,
                 'csrf_protection'    => false,
                 'allow_extra_fields' => true,
+                'validation_groups' => ['private'],
             ]
         );
     }
