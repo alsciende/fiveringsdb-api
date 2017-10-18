@@ -24,6 +24,7 @@ class Strain implements Timestampable
      * Unique identifier of the strain
      *
      * @var string
+     *
      * @ORM\Column(name="id", type="string", length=255, unique=true)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="UUID")
@@ -39,6 +40,7 @@ class Strain implements Timestampable
      * The owner of the strain
      *
      * @var User
+     *
      * @ORM\ManyToOne(targetEntity="User", fetch="EAGER")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
@@ -47,7 +49,8 @@ class Strain implements Timestampable
     /**
      * The last minor deck of the strain
      *
-     * @var Deck
+     * @var Deck|null
+     *
      * @ORM\OneToOne(targetEntity="Deck", fetch="EAGER", cascade={"persist"})
      * @ORM\JoinColumn(name="deck_id", referencedColumnName="id")
      */
@@ -57,6 +60,7 @@ class Strain implements Timestampable
      * The decks of the strain
      *
      * @var Collection
+     *
      * @ORM\OneToMany(targetEntity="Deck", mappedBy="strain", cascade={"remove"})
      * @ORM\JoinColumn(name="strain_id", referencedColumnName="id")
      * @ORM\OrderBy({"createdAt" = "ASC"})

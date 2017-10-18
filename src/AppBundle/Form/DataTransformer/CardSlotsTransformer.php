@@ -6,6 +6,7 @@ use AppBundle\Entity\Card;
 use AppBundle\Entity\DeckCard;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\DataTransformerInterface;
@@ -13,7 +14,7 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
 
 class CardSlotsTransformer implements DataTransformerInterface
 {
-    /** @var  EntityRepository */
+    /** @var  ObjectRepository */
     protected $repository;
 
     public function __construct (EntityManagerInterface $entityManager)

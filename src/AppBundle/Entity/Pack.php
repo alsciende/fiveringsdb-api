@@ -91,7 +91,7 @@ class Pack implements Timestampable
     private $cycle;
 
     /**
-     * @var PackCard[]
+     * @var Collection|PackCard[]
      *
      * @ORM\OneToMany(targetEntity="PackCard", mappedBy="pack", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
      */
