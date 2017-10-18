@@ -174,12 +174,12 @@ class Pack implements Timestampable
         return $this;
     }
 
-    function getCycle (): Cycle
+    function getCycle (): ?Cycle
     {
         return $this->cycle;
     }
 
-    function setCycle (Cycle $cycle): self
+    function setCycle (Cycle $cycle = null): self
     {
         $this->cycle = $cycle;
 

@@ -71,7 +71,7 @@ class Comment implements Timestampable
         return $this;
     }
 
-    public function setDeck (Deck $deck): self
+    public function setDeck (Deck $deck = null): self
     {
         $this->deck = $deck;
 
