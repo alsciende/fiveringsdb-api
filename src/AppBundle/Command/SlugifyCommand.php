@@ -34,7 +34,7 @@ class SlugifyCommand extends ContainerAwareCommand
 
         $slugify = new Slugify();
         if ($ruleset) {
-            $slugify->activateRuleset($ruleset);
+            $slugify->activateRuleSet($ruleset);
         }
         $output->writeln($slugify->slugify($string));
     }

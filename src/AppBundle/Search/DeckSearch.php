@@ -3,7 +3,7 @@
 namespace AppBundle\Search;
 
 use AppBundle\Behavior\Entity\Timestampable;
-use AppBundle\Entity\Deck;
+
 
 /**
  * Description of DeckSearch

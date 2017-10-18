@@ -3,7 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Strain;
-use AppBundle\Form\Type\DeckType;
+
 use AppBundle\Form\Type\PublicDeckType;
 use AppBundle\Service\DeckValidator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;

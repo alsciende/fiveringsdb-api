@@ -6,6 +6,8 @@ use AppBundle\Entity\Deck;
 use AppBundle\Entity\DeckLike;
 use AppBundle\Entity\Strain;
 use AppBundle\Entity\User;
+use AppBundle\Repository\DeckRepository;
+use AppBundle\Repository\StrainRepository;
 use AppBundle\Service\DeckValidator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\Serializer;
@@ -18,20 +20,30 @@ use Symfony\Component\Serializer\Serializer;
 class DeckManager
 {
     /** @var EntityManagerInterface */
-    protected $entityManager;
+    private $entityManager;
+
+    /** @var DeckRepository */
+    private $deckRepository;
+
+    /** @var StrainRepository */
+    private $strainRepository;
 
     /** @var Serializer */
-    protected $serializer;
+    private $serializer;
 
     /** @var DeckValidator */
     private $deckValidator;
 
     public function __construct (
         EntityManagerInterface $entityManager,
+        DeckRepository $deckRepository,
+        StrainRepository $strainRepository,
         Serializer $serializer,
         DeckValidator $deckValidator
     ) {
         $this->entityManager = $entityManager;
+        $this->deckRepository = $deckRepository;
+        $this->strainRepository = $strainRepository;
         $this->serializer = $serializer;
         $this->deckValidator = $deckValidator;
     }
@@ -111,11 +123,11 @@ class DeckManager
 
     public function countDecks (User $user): int
     {
-        return $this->entityManager->getRepository(Deck::class)->countBy(['user' => $user, 'published' => false]);
+        return $this->deckRepository->countBy(['user' => $user, 'published' => false]);
     }
 
     public function countStrains (User $user): int
     {
-        return $this->entityManager->getRepository(Strain::class)->countBy(['user' => $user]);
+        return $this->strainRepository->countBy(['user' => $user]);
     }
 }

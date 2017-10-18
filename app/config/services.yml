@@ -38,6 +38,8 @@ services:
         class: AppBundle\Service\DeckManager
         arguments:
           - "@doctrine.orm.entity_manager"
+          - "@=service('doctrine.orm.entity_manager').getRepository('AppBundle:Deck')"
+          - "@=service('doctrine.orm.entity_manager').getRepository('AppBundle:Strain')"
           - "@serializer"
           - '@app.deck_validator'
 
@@ -108,6 +110,8 @@ services:
         class: AppBundle\Service\FeatureManager
         arguments:
           - "@doctrine.orm.entity_manager"
+          - "@=service('doctrine.orm.entity_manager').getRepository('AppBundle:Feature')"
+          - "@=service('doctrine.orm.entity_manager').getRepository('AppBundle:Deck')"
           - "%features_period%"
 
     metagame:

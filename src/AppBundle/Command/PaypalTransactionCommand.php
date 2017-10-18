@@ -32,7 +32,7 @@ class PaypalTransactionCommand extends ContainerAwareCommand
 
         $result = $service->getTransactionDetails($transactionId);
 
-        dump($result);
+//        dump($result);
     }
 
 }

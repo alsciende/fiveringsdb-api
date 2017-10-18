@@ -4,6 +4,8 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\Deck;
 use AppBundle\Entity\Feature;
+use AppBundle\Repository\DeckRepository;
+use AppBundle\Repository\FeatureRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -16,21 +18,32 @@ class FeatureManager
     /** @var EntityManagerInterface */
     private $entityManager;
 
+    /** @var FeatureRepository */
+    private $featureRepository;
+
+    /** @var DeckRepository */
+    private $deckRepository;
+
     /** @var int */
     private $period;
 
-    public function __construct (EntityManagerInterface $entityManager, int $period)
-    {
+    public function __construct (
+        EntityManagerInterface $entityManager,
+        FeatureRepository $featureRepository,
+        DeckRepository $deckRepository,
+        int $period
+    ) {
         $this->entityManager = $entityManager;
+        $this->featureRepository = $featureRepository;
+        $this->deckRepository = $deckRepository;
         $this->period = $period;
     }
 
     public function getElectedFeatures ()
     {
-        $featureRepository = $this->entityManager->getRepository(Feature::class);
-        $date = $featureRepository->findLastDate();
+        $date = $this->featureRepository->findLastDate();
         if ($date instanceof \DateTime) {
-            return $featureRepository->findBy(['date' => $date]);
+            return $this->featureRepository->findBy(['date' => $date]);
         }
 
         return [];
@@ -40,11 +53,8 @@ class FeatureManager
     {
         $today = new \DateTime();
 
-        foreach ($this->entityManager->getRepository(Deck::class)->findClans() as $clan) {
-            $deck = $this
-                ->entityManager
-                ->getRepository(Deck::class)
-                ->findBestDeckForClan($clan, $this->period);
+        foreach ($this->deckRepository->findClans() as $clan) {
+            $deck = $this->deckRepository->findBestDeckForClan($clan, $this->period);
             if ($deck instanceof Deck) {
                 $this->entityManager->persist(new Feature($clan, $today, $deck));
             }

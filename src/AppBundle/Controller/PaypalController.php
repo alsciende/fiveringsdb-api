@@ -27,7 +27,7 @@ class PaypalController extends Controller
         $result = $paypalService->setExpressCheckout(10, 'EUR', 'SALE');
 
         if (isset($result['TOKEN']) === false) {
-            dump($result);
+//            dump($result);
             die;
         }
 
@@ -55,10 +55,10 @@ class PaypalController extends Controller
         $paypalService = $this->get('paypal');
 
         $result_get = $paypalService->getExpressCheckoutDetails($token);
-        dump($result_get);
+//        dump($result_get);
 
         $result_do = $paypalService->doExpressCheckoutPayment($token, $payerID, 10, 'EUR', 'SALE');
-        dump($result_do);
+//        dump($result_do);
 
         return new Response("Thank you dear Sir!");
     }
@@ -73,7 +73,7 @@ class PaypalController extends Controller
         $paypalService = $this->get('paypal');
 
         $result = $paypalService->getTransactionDetails($transactionId);
-        dump($result);
+//        dump($result);
 
         return new Response("Done!");
     }

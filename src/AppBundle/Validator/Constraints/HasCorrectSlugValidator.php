@@ -27,7 +27,7 @@ class HasCorrectSlugValidator extends ConstraintValidator
 
     public function validate($card, Constraint $constraint)
     {
-        if($card instanceof Card) {
+        if($card instanceof Card && $constraint instanceof HasCorrectSlug) {
             if($this->slugify->slugify($card->getName()) !== $card->getId()) {
                 $this->context->buildViolation($constraint->message)
                               ->setParameter('{{ card.name }}', $card->getName())

@@ -2,9 +2,9 @@
 
 namespace AppBundle\Service\DeckSearch;
 
-use AppBundle\Entity\Deck;
+
 use AppBundle\Search\DeckSearch;
-use Doctrine\ORM\Tools\Pagination\Paginator;
+
 
 /**
  * Description of DeckSearchInterface
