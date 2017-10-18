@@ -261,7 +261,7 @@ class Deck implements Timestampable
         return $this;
     }
 
-    /** @return Collection|DeckCard[]|CardSlotCollectionDecorator */
+    /** @return CardSlotCollectionDecorator */
     public function getDeckCards (): CardSlotCollectionDecorator
     {
         if ($this->deckCards === null) {
