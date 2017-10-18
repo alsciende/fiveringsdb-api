@@ -7,7 +7,6 @@ namespace AppBundle\Entity;
 use AppBundle\Behavior\Entity\Timestampable;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * A Comment written by a User for a Deck
@@ -34,12 +33,6 @@ class Comment implements Timestampable
      * @var string
      *
      * @ORM\Column(name="text", type="text", nullable=false)
-     *
-     * @Assert\NotBlank()
-     * @Assert\Length(
-     *     min = 10,
-     *     max = 1024
-     * )
      */
     private $text;
 
@@ -68,6 +61,7 @@ class Comment implements Timestampable
 
     public function __construct ()
     {
+        $this->text = 'Default text';
         $this->visible = true;
     }
 
@@ -97,17 +91,17 @@ class Comment implements Timestampable
         return $this->id;
     }
 
-    public function getText (): ?string
+    public function getText (): string
     {
         return $this->text;
     }
 
-    public function getDeck (): ?Deck
+    public function getDeck (): Deck
     {
         return $this->deck;
     }
 
-    public function getUser (): ?User
+    public function getUser (): User
     {
         return $this->user;
     }

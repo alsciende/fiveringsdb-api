@@ -10,6 +10,7 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
+use Doctrine\ORM\Mapping\ClassMetadata;
 
 /**
  * Doctrine listener updating the canonical name field.
@@ -71,6 +72,8 @@ class CardListener implements EventSubscriber
     private function recomputeChangeSet (EntityManagerInterface $em, Card $card)
     {
         $meta = $em->getClassMetadata(Card::class);
-        $em->getUnitOfWork()->recomputeSingleEntityChangeSet($meta, $card);
+        if ($meta instanceof ClassMetadata) {
+            $em->getUnitOfWork()->recomputeSingleEntityChangeSet($meta, $card);
+        }
     }
 }

@@ -50,8 +50,7 @@ class CardReviewController extends BaseApiController
         $reviews = $this
             ->get('doctrine')
             ->getRepository(Review::class)
-            ->findBy(['card' => $card])
-        ;
+            ->findBy(['card' => $card]);
 
         return $this->success($reviews);
     }

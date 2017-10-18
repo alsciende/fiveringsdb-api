@@ -47,7 +47,9 @@
         "sensio/generator-bundle": "^3.0",
         "symfony/var-dumper": "^3.2",
         "doctrine/doctrine-fixtures-bundle": "^2.3",
-        "phpunit/phpunit": "^6.2"
+        "phpunit/phpunit": "^6.2",
+        "phpstan/phpstan": "^0.8.5",
+        "phpstan/phpstan-doctrine": "^0.8.0"
     },
     "scripts": {
         "symfony-scripts": [

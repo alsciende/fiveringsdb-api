@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityRepository;
  */
 class PackRepository extends EntityRepository
 {
-    public function findAllSorted()
+    public function findAllSorted ()
     {
         return $this->findBy([], ['ffgId' => 'ASC', 'releasedAt' => 'ASC']);
     }

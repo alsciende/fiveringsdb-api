@@ -12,7 +12,7 @@ use AppBundle\Entity\PackCard;
 class PackCardSlotCollectionDecorator extends CardSlotCollectionDecorator
 {
     /**
-     * @return PackCard[]
+     * @return CardSlotInterface[]|PackCard[]
      */
     public function toArray (): array
     {

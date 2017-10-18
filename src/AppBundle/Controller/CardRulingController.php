@@ -51,8 +51,7 @@ class CardRulingController extends BaseApiController
         $rulings = $this
             ->get('doctrine')
             ->getRepository(Ruling::class)
-            ->findBy(['card' => $card])
-        ;
+            ->findBy(['card' => $card]);
 
         return $this->success($rulings);
     }

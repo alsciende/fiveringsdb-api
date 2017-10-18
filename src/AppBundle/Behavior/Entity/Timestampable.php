@@ -14,5 +14,5 @@ interface Timestampable
     /**
      * @return \DateTime
      */
-    public function getUpdatedAt();
+    public function getUpdatedAt ();
 }

@@ -23,20 +23,19 @@ class UserPromoteCommand extends ContainerAwareCommand
             ->setName('app:user:promote')
             ->setDescription("Promote user to a role")
             ->addArgument('username', InputArgument::REQUIRED, 'Name of user to promote')
-            ->addArgument('role', InputArgument::REQUIRED, 'Role')
-        ;
+            ->addArgument('role', InputArgument::REQUIRED, 'Role');
     }
 
     protected function execute (InputInterface $input, OutputInterface $output)
     {
         $role = $input->getArgument('role');
-        if(strpos($role, 'ROLE_') !== 0) {
+        if (strpos($role, 'ROLE_') !== 0) {
             throw new \InvalidArgumentException('Role must start with ROLE_');
         }
 
         $userManager = $this->getContainer()->get('app.security.user_manager');
         $user = $userManager->findUserByUsername($input->getArgument('username'));
-        if($user === null) {
+        if ($user === null) {
             throw new \InvalidArgumentException('No such user.');
         }
 

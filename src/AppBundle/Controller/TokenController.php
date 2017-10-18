@@ -33,12 +33,12 @@ class TokenController extends BaseApiController
 
             $res = $this->get('metagame')->get('api/users/me', [], $token->getId());
             if ($res->getStatusCode() !== 200) {
-                return $this->failure('token_error', (string)$res->getBody());
+                return $this->failure('token_error', (string) $res->getBody());
             }
 
             $manager = $this->get('app.security.user_manager');
 
-            $data = json_decode((string)$res->getBody(), true);
+            $data = json_decode((string) $res->getBody(), true);
             $user = $manager->findUserByUsername($data['username']);
             if ($user === null) {
                 $user = $manager->createUser($data['username']);

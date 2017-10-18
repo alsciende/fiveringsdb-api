@@ -2,8 +2,9 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Deck;
 use AppBundle\Entity\Strain;
-use AppBundle\Form\Type\DeckType;
+
 use AppBundle\Form\Type\PublicDeckType;
 use AppBundle\Service\DeckValidator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -31,6 +32,9 @@ class DeckPublishController extends BaseApiController
         }
 
         $deck = $strain->getHead();
+        if (!$deck instanceof Deck) {
+            return $this->failure('invalid_deck', 'This strain is empty');
+        }
         if ($deck->isPublished()) {
             throw $this->createNotFoundException();
         }

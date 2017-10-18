@@ -5,7 +5,6 @@ namespace AppBundle\Entity;
 use AppBundle\Behavior\Entity\Timestampable;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * A Ruling written by a User for a Card
@@ -32,8 +31,6 @@ class Ruling implements Timestampable
      * @var string
      *
      * @ORM\Column(name="text", type="text", nullable=false)
-     *
-     * @Assert\NotBlank()
      */
     private $text;
 
@@ -41,13 +38,11 @@ class Ruling implements Timestampable
      * @var string
      *
      * @ORM\Column(name="source", type="text", nullable=false)
-     *
-     * @Assert\NotBlank()
      */
     private $source;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="link", type="text", nullable=true)
      */

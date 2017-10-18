@@ -22,7 +22,7 @@ class DeckRepository extends EntityRepository
 
     /**
      * @param string $clan
-     * @param int $period
+     * @param int    $period
      * @return Deck|null
      */
     public function findBestDeckForClan (string $clan, int $period): ?Deck

@@ -3,10 +3,12 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Deck;
-use AppBundle\Entity\DeckLike;
+
 use AppBundle\Entity\Strain;
 use AppBundle\Entity\User;
-use AppBundle\Service\DeckValidator;
+use AppBundle\Repository\DeckRepository;
+use AppBundle\Repository\StrainRepository;
+
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\Serializer;
 
@@ -18,20 +20,31 @@ use Symfony\Component\Serializer\Serializer;
 class DeckManager
 {
     /** @var EntityManagerInterface */
-    protected $entityManager;
+    private $entityManager;
+
+    /** @var DeckRepository */
+    private $deckRepository;
+
+    /** @var StrainRepository */
+    private $strainRepository;
 
     /** @var Serializer */
-    protected $serializer;
+    private $serializer;
 
     /** @var DeckValidator */
     private $deckValidator;
 
     public function __construct (
         EntityManagerInterface $entityManager,
+        DeckRepository $deckRepository,
+        StrainRepository $strainRepository,
         Serializer $serializer,
         DeckValidator $deckValidator
-    ) {
+    )
+    {
         $this->entityManager = $entityManager;
+        $this->deckRepository = $deckRepository;
+        $this->strainRepository = $strainRepository;
         $this->serializer = $serializer;
         $this->deckValidator = $deckValidator;
     }
@@ -56,17 +69,19 @@ class DeckManager
     public function persist (Deck $deck): self
     {
         $strain = $deck->getStrain();
-        $head = $strain->getHead();
-        $deck->setPrimaryClan($deck->getDeckCards()->findPrimaryClan());
-        $deck->setSecondaryClan($deck->getDeckCards()->findSecondaryClan($deck->getPrimaryClan()));
-        $deck->setProblem($this->deckValidator->check($deck->getDeckCards(), $deck->getFormat()));
-        $deck->setPublished(false);
-        $deck->setMajorVersion($head === null ? 0 : $head->getMajorVersion());
-        $deck->setMinorVersion($head === null ? 1 : $head->getMinorVersion() + 1);
-        $this->entityManager->persist($deck);
+        if ($strain instanceof Strain) {
+            $head = $strain->getHead();
+            $deck->setPrimaryClan($deck->getDeckCards()->findPrimaryClan());
+            $deck->setSecondaryClan($deck->getDeckCards()->findSecondaryClan($deck->getPrimaryClan()));
+            $deck->setProblem($this->deckValidator->check($deck->getDeckCards(), $deck->getFormat()));
+            $deck->setPublished(false);
+            $deck->setMajorVersion($head === null ? 0 : $head->getMajorVersion());
+            $deck->setMinorVersion($head === null ? 1 : $head->getMinorVersion() + 1);
+            $this->entityManager->persist($deck);
 
-        $strain->addDeck($deck)->setHead($deck);
-        $this->deleteExpiredDecks($strain);
+            $strain->addDeck($deck)->setHead($deck);
+            $this->deleteExpiredDecks($strain);
+        }
 
         return $this;
     }
@@ -111,11 +126,11 @@ class DeckManager
 
     public function countDecks (User $user): int
     {
-        return $this->entityManager->getRepository(Deck::class)->countBy(['user' => $user, 'published' => false]);
+        return $this->deckRepository->countBy(['user' => $user, 'published' => false]);
     }
 
     public function countStrains (User $user): int
     {
-        return $this->entityManager->getRepository(Strain::class)->countBy(['user' => $user]);
+        return $this->strainRepository->countBy(['user' => $user]);
     }
 }

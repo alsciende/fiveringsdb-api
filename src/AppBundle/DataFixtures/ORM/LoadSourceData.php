@@ -34,7 +34,7 @@ class LoadSourceData extends AbstractFixture implements OrderedFixtureInterface,
                 $entity = $imported['entity'];
                 $errors = $validator->validate($entity);
                 if (count($errors) > 0) {
-                    $errorsString = (string)$errors;
+                    $errorsString = (string) $errors;
                     throw new \Exception($errorsString);
                 }
             }

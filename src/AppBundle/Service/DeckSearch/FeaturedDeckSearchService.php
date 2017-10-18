@@ -2,7 +2,7 @@
 
 namespace AppBundle\Service\DeckSearch;
 
-use AppBundle\Entity\Deck;
+
 use AppBundle\Entity\Feature;
 use AppBundle\Search\DeckSearch;
 
