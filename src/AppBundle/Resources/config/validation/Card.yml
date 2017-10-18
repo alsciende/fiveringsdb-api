@@ -2,6 +2,9 @@ AppBundle\Entity\Card:
     constraints:
         - AppBundle\Validator\Constraints\HasCorrectSlug: ~
     properties:
+        id:
+            - Type: string
+            - NotBlank: ~
         name:
             - Type: string
             - NotBlank: ~

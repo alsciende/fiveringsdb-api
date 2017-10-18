@@ -10,7 +10,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Card
@@ -58,8 +57,6 @@ class Card implements Timestampable
     /**
      * @var string
      *
-     * @Assert\NotBlank()
-     *
      * @ORM\Column(name="id", type="string", length=255, unique=true)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
@@ -70,8 +67,6 @@ class Card implements Timestampable
 
     /**
      * @var string
-     *
-     * @Assert\NotBlank()
      *
      * @ORM\Column(name="name", type="string", length=255)
      *
