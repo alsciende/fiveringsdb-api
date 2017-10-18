@@ -10,7 +10,7 @@ class CommentVisibilityVoter extends Voter
 {
     /**
      * @param string $attribute
-     * @param mixed $object
+     * @param mixed  $object
      * @return bool
      */
     protected function supports ($attribute, $object)
@@ -27,8 +27,8 @@ class CommentVisibilityVoter extends Voter
     }
 
     /**
-     * @param string $attribute
-     * @param Comment $object
+     * @param string         $attribute
+     * @param Comment        $object
      * @param TokenInterface $token
      * @return bool
      */

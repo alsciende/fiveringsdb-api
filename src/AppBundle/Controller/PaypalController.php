@@ -58,6 +58,7 @@ class PaypalController extends Controller
 //        dump($result_get);
 
         $result_do = $paypalService->doExpressCheckoutPayment($token, $payerID, 10, 'EUR', 'SALE');
+
 //        dump($result_do);
 
         return new Response("Thank you dear Sir!");
@@ -73,6 +74,7 @@ class PaypalController extends Controller
         $paypalService = $this->get('paypal');
 
         $result = $paypalService->getTransactionDetails($transactionId);
+
 //        dump($result);
 
         return new Response("Done!");

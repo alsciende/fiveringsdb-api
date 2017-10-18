@@ -16,14 +16,14 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
 class DataImportCommand extends ContainerAwareCommand
 {
 
-    protected function configure()
+    protected function configure ()
     {
         $this
             ->setName('app:data:import')
             ->setDescription("Import data from JSON files to the database");
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute (InputInterface $input, OutputInterface $output)
     {
         $scanningService = $this->getContainer()->get('alsciende_serializer.scanning_service');
 

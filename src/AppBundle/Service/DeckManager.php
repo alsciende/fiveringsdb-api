@@ -34,7 +34,7 @@ class DeckManager
     /** @var DeckValidator */
     private $deckValidator;
 
-    public function __construct(
+    public function __construct (
         EntityManagerInterface $entityManager,
         DeckRepository $deckRepository,
         StrainRepository $strainRepository,
@@ -49,7 +49,7 @@ class DeckManager
         $this->deckValidator = $deckValidator;
     }
 
-    public function createNewStrain(User $user): Strain
+    public function createNewStrain (User $user): Strain
     {
         // @TODO: quota
         $strain = new Strain($user);
@@ -58,7 +58,7 @@ class DeckManager
         return $strain;
     }
 
-    public function deleteExpiredDecks(Strain $strain)
+    public function deleteExpiredDecks (Strain $strain)
     {
         $decks = array_slice(array_reverse($strain->getDecks()->toArray()), $strain->getUser()->getStrainSizeLimit());
         foreach ($decks as $deck) {
@@ -66,7 +66,7 @@ class DeckManager
         }
     }
 
-    public function persist(Deck $deck): self
+    public function persist (Deck $deck): self
     {
         $strain = $deck->getStrain();
         if ($strain instanceof Strain) {
@@ -86,7 +86,7 @@ class DeckManager
         return $this;
     }
 
-    public function copy(Deck $deck, Deck $parent): self
+    public function copy (Deck $deck, Deck $parent): self
     {
         $deck->setName($parent->getName());
         $deck->setDescription($parent->getDescription());
@@ -101,7 +101,7 @@ class DeckManager
     /**
      * Set $deck as a major version. It becomes public.
      */
-    public function publish(Deck $deck): self
+    public function publish (Deck $deck): self
     {
         $deck->setPublished(true);
         $deck->setMajorVersion($deck->getMajorVersion() + 1);
@@ -113,7 +113,7 @@ class DeckManager
     /**
      * Delete a deck
      */
-    public function deleteDeck(Deck $deck): bool
+    public function deleteDeck (Deck $deck): bool
     {
         if ($deck->isPublished() === true && $deck->getStrain() instanceof Strain) {
             return false;
@@ -124,12 +124,12 @@ class DeckManager
         return true;
     }
 
-    public function countDecks(User $user): int
+    public function countDecks (User $user): int
     {
         return $this->deckRepository->countBy(['user' => $user, 'published' => false]);
     }
 
-    public function countStrains(User $user): int
+    public function countStrains (User $user): int
     {
         return $this->strainRepository->countBy(['user' => $user]);
     }

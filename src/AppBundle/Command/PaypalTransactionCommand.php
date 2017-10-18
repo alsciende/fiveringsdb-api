@@ -20,8 +20,7 @@ class PaypalTransactionCommand extends ContainerAwareCommand
         $this
             ->setName('app:paypal:transaction')
             ->setDescription("Fetch and display details about a PayPal Transaction")
-            ->addArgument('transaction_id', InputArgument::REQUIRED, "ID of the Paypal transaction")
-        ;
+            ->addArgument('transaction_id', InputArgument::REQUIRED, "ID of the Paypal transaction");
     }
 
     protected function execute (InputInterface $input, OutputInterface $output)

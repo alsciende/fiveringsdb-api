@@ -61,8 +61,7 @@ class StrainDeckController extends BaseApiController
         $decks = $this
             ->getDoctrine()
             ->getRepository(Deck::class)
-            ->findBy(['strain' => $strain], ['createdAt' => 'ASC'])
-        ;
+            ->findBy(['strain' => $strain], ['createdAt' => 'ASC']);
 
         return $this->success($decks);
     }

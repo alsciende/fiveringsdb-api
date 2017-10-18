@@ -26,23 +26,22 @@ class DeckType extends AbstractType
         $builder
             ->add(
                 'name', TextType::class, [
-                'required' => true,
-            ]
+                    'required' => true,
+                ]
             )
             ->add('description', TextType::class, [
                 'empty_data' => '',
             ])
             ->add(
                 'format', TextType::class, [
-                'required' => true,
-            ]
+                    'required' => true,
+                ]
             )
             ->add(
                 'cards', TextType::class, [
-                'property_path' => 'deckCards',
-            ]
-            )
-        ;
+                    'property_path' => 'deckCards',
+                ]
+            );
 
         $builder->get('cards')->addModelTransformer($this->transformer);
     }
@@ -54,7 +53,7 @@ class DeckType extends AbstractType
                 'data_class'         => Deck::class,
                 'csrf_protection'    => false,
                 'allow_extra_fields' => true,
-                'validation_groups' => ['private'],
+                'validation_groups'  => ['private'],
             ]
         );
     }

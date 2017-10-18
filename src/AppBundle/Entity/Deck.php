@@ -259,11 +259,11 @@ class Deck implements Timestampable
 
     public function setDeckCards (Collection $deckCards): self
     {
-        if(!$this->deckCards instanceof Collection) {
+        if (!$this->deckCards instanceof Collection) {
             $this->deckCards = new ArrayCollection();
         }
 
-        if($this->deckCards->count() > 0) {
+        if ($this->deckCards->count() > 0) {
             throw new \Exception('setDeckCards called on a non-empty Deck.');
         }
 

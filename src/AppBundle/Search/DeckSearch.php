@@ -17,19 +17,19 @@ class DeckSearch extends AbstractPaginatedSearch implements Timestampable
      */
     private $sort;
 
-    public function getSort(): ?string
+    public function getSort (): ?string
     {
         return $this->sort;
     }
 
-    public function setSort(string $sort): self
+    public function setSort (string $sort): self
     {
         $this->sort = $sort;
 
         return $this;
     }
 
-    public function getUpdatedAt()
+    public function getUpdatedAt ()
     {
         return array_reduce(
             $this->getRecords(), function ($carry, Timestampable $item) {

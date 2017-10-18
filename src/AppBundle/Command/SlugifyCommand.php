@@ -23,8 +23,7 @@ class SlugifyCommand extends ContainerAwareCommand
             ->setName('app:slugify')
             ->setDescription("Converts a string into a slug.")
             ->addArgument("string", InputArgument::REQUIRED, "String to convert")
-            ->addOption("ruleset", "r", InputOption::VALUE_REQUIRED, "Ruleset for conversion")
-        ;
+            ->addOption("ruleset", "r", InputOption::VALUE_REQUIRED, "Ruleset for conversion");
     }
 
     protected function execute (InputInterface $input, OutputInterface $output)

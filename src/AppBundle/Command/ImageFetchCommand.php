@@ -22,8 +22,7 @@ class ImageFetchCommand extends ContainerAwareCommand
     {
         $this
             ->setName('app:images:find')
-            ->setDescription("Find missing images from official servers")
-        ;
+            ->setDescription("Find missing images from official servers");
     }
 
     protected function execute (InputInterface $input, OutputInterface $output)

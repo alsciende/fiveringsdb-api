@@ -23,7 +23,7 @@ class AuthController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function initAction(Request $request)
+    public function initAction (Request $request)
     {
         if (!$request->getSession() instanceof SessionInterface) {
             throw $this->createAccessDeniedException();
@@ -34,7 +34,7 @@ class AuthController extends Controller
         $metagameBaseUri = $this->getParameter('metagame_base_uri');
 
         return [
-            'uri'   => $metagameBaseUri.'oauth/v2/auth',
+            'uri'   => $metagameBaseUri . 'oauth/v2/auth',
             'query' => http_build_query(
                 [
                     'client_id'     => $this->getParameter('metagame_client_id'),
@@ -51,7 +51,7 @@ class AuthController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function codeAction(Request $request)
+    public function codeAction (Request $request)
     {
         if (!$request->getSession() instanceof SessionInterface) {
             throw $this->createAccessDeniedException();
@@ -85,7 +85,7 @@ class AuthController extends Controller
         $response = json_decode($res->getBody(), true);
         $now = new \DateTime();
         $response['creation_date'] = $now->format('c');
-        $now->add(\DateInterval::createFromDateString($response['expires_in'].' seconds'));
+        $now->add(\DateInterval::createFromDateString($response['expires_in'] . ' seconds'));
         $response['expiration_date'] = $now->format('c');
         $response['origin'] = $this->getParameter('front_url');
 

@@ -46,7 +46,7 @@ abstract class BaseApiController extends Controller
         return $messages;
     }
 
-    public function setPublic(Request $request, bool $public = true)
+    public function setPublic (Request $request, bool $public = true)
     {
         $this->get('app.api')->setPublic($request, $public);
     }

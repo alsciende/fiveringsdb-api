@@ -17,7 +17,7 @@ class HasCorrectSlug extends Constraint
 {
     public $message = 'The card "{{ card.name }}" has an incorrect slug id.';
 
-    public function getTargets()
+    public function getTargets ()
     {
         return self::CLASS_CONSTRAINT;
     }

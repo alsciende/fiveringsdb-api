@@ -26,8 +26,7 @@ class DataCreateCommand extends ContainerAwareCommand
     {
         $this
             ->setName('app:data:new')
-            ->setDescription("Create a JSON file for a card")
-        ;
+            ->setDescription("Create a JSON file for a card");
     }
 
     protected function execute (InputInterface $input, OutputInterface $output)
@@ -91,13 +90,13 @@ class DataCreateCommand extends ContainerAwareCommand
         $packs = $em->getRepository(Pack::class)->findAll();
         $packName = $helper->ask(
             $input, $output, new ChoiceQuestion(
-            'Pack: ',
-            array_map(
-                function (Pack $pack) {
-                    return $pack->getName();
-                }, $packs
+                'Pack: ',
+                array_map(
+                    function (Pack $pack) {
+                        return $pack->getName();
+                    }, $packs
+                )
             )
-        )
         );
         $pack = $em->getRepository(Pack::class)->findOneBy(['name' => $packName]) or die('Cannot find Pack');
 
@@ -112,48 +111,48 @@ class DataCreateCommand extends ContainerAwareCommand
 
         $clan = $helper->ask(
             $input, $output, new ChoiceQuestion(
-            'Clan: ',
-            [
-                Card::CLAN_CRAB,
-                Card::CLAN_CRANE,
-                Card::CLAN_DRAGON,
-                Card::CLAN_LION,
-                Card::CLAN_NEUTRAL,
-                Card::CLAN_PHOENIX,
-                Card::CLAN_SCORPION,
-                Card::CLAN_UNICORN,
-            ]
-        )
+                'Clan: ',
+                [
+                    Card::CLAN_CRAB,
+                    Card::CLAN_CRANE,
+                    Card::CLAN_DRAGON,
+                    Card::CLAN_LION,
+                    Card::CLAN_NEUTRAL,
+                    Card::CLAN_PHOENIX,
+                    Card::CLAN_SCORPION,
+                    Card::CLAN_UNICORN,
+                ]
+            )
         );
 
         $type = $helper->ask(
             $input, $output, new ChoiceQuestion(
-            'Type: ',
-            [
-                Card::TYPE_ATTACHMENT,
-                Card::TYPE_CHARACTER,
-                Card::TYPE_EVENT,
-                Card::TYPE_HOLDING,
-                Card::TYPE_PROVINCE,
-                Card::TYPE_ROLE,
-                Card::TYPE_STRONGHOLD,
-            ]
-        )
+                'Type: ',
+                [
+                    Card::TYPE_ATTACHMENT,
+                    Card::TYPE_CHARACTER,
+                    Card::TYPE_EVENT,
+                    Card::TYPE_HOLDING,
+                    Card::TYPE_PROVINCE,
+                    Card::TYPE_ROLE,
+                    Card::TYPE_STRONGHOLD,
+                ]
+            )
         );
 
         $element = null;
         if ($type === Card::TYPE_PROVINCE) {
             $element = $helper->ask(
                 $input, $output, new ChoiceQuestion(
-                'Element: ',
-                [
-                    Card::ELEMENT_AIR,
-                    Card::ELEMENT_EARTH,
-                    Card::ELEMENT_FIRE,
-                    Card::ELEMENT_VOID,
-                    Card::ELEMENT_WATER,
-                ]
-            )
+                    'Element: ',
+                    [
+                        Card::ELEMENT_AIR,
+                        Card::ELEMENT_EARTH,
+                        Card::ELEMENT_FIRE,
+                        Card::ELEMENT_VOID,
+                        Card::ELEMENT_WATER,
+                    ]
+                )
             );
         }
 
@@ -161,12 +160,12 @@ class DataCreateCommand extends ContainerAwareCommand
         if ($type === Card::TYPE_CHARACTER) {
             $side = $helper->ask(
                 $input, $output, new ChoiceQuestion(
-                'Side: ',
-                [
-                    Card::SIDE_CONFLICT,
-                    Card::SIDE_DYNASTY,
-                ]
-            )
+                    'Side: ',
+                    [
+                        Card::SIDE_CONFLICT,
+                        Card::SIDE_DYNASTY,
+                    ]
+                )
             );
         } else {
             switch ($type) {

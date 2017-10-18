@@ -54,8 +54,7 @@ class DeckCommentController extends BaseApiController
         $comments = $this
             ->get('doctrine')
             ->getRepository(Comment::class)
-            ->findBy(['deck' => $deck])
-        ;
+            ->findBy(['deck' => $deck]);
 
         return $this->success($comments, [
             'Default',

@@ -11,7 +11,9 @@ class PaypalService
 {
 
     private $username;
+
     private $password;
+
     private $signature;
 
     public function __construct ($username, $password, $signature)
@@ -46,12 +48,12 @@ class PaypalService
     {
         return $this->createRequest(
             "SetExpressCheckout", 98, [
-            "PAYMENTREQUEST_0_AMT"           => $amount,
-            "PAYMENTREQUEST_0_CURRENCYCODE"  => $currency,
-            "PAYMENTREQUEST_0_PAYMENTACTION" => $paymentAction,
-            "cancelUrl"                      => "http://fiveringsdb.dev/app_dev.php/paypal/cancel",
-            "returnUrl"                      => "http://fiveringsdb.dev/app_dev.php/paypal/success",
-        ]
+                "PAYMENTREQUEST_0_AMT"           => $amount,
+                "PAYMENTREQUEST_0_CURRENCYCODE"  => $currency,
+                "PAYMENTREQUEST_0_PAYMENTACTION" => $paymentAction,
+                "cancelUrl"                      => "http://fiveringsdb.dev/app_dev.php/paypal/cancel",
+                "returnUrl"                      => "http://fiveringsdb.dev/app_dev.php/paypal/success",
+            ]
         );
     }
 
@@ -64,8 +66,8 @@ class PaypalService
     {
         return $this->createRequest(
             "GetExpressCheckoutDetails", 93, [
-            "TOKEN" => $token,
-        ]
+                "TOKEN" => $token,
+            ]
         );
     }
 
@@ -73,12 +75,12 @@ class PaypalService
     {
         return $this->createRequest(
             "DoExpressCheckoutPayment", 93, [
-            "TOKEN"                          => $token,
-            "PAYERID"                        => $payerID,
-            "PAYMENTREQUEST_0_AMT"           => $amount,
-            "PAYMENTREQUEST_0_CURRENCYCODE"  => $currency,
-            "PAYMENTREQUEST_0_PAYMENTACTION" => $paymentAction,
-        ]
+                "TOKEN"                          => $token,
+                "PAYERID"                        => $payerID,
+                "PAYMENTREQUEST_0_AMT"           => $amount,
+                "PAYMENTREQUEST_0_CURRENCYCODE"  => $currency,
+                "PAYMENTREQUEST_0_PAYMENTACTION" => $paymentAction,
+            ]
         );
     }
 
@@ -86,8 +88,8 @@ class PaypalService
     {
         return $this->createRequest(
             "GetTransactionDetails", 78, [
-            "TransactionID" => $transactionId,
-        ]
+                "TransactionID" => $transactionId,
+            ]
         );
     }
 

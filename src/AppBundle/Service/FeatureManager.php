@@ -32,7 +32,8 @@ class FeatureManager
         FeatureRepository $featureRepository,
         DeckRepository $deckRepository,
         int $period
-    ) {
+    )
+    {
         $this->entityManager = $entityManager;
         $this->featureRepository = $featureRepository;
         $this->deckRepository = $deckRepository;

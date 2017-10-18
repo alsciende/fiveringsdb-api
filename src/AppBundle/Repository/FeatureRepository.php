@@ -12,10 +12,10 @@ use Doctrine\ORM\EntityRepository;
  */
 class FeatureRepository extends EntityRepository
 {
-    public function findLastDate(): ?\DateTime
+    public function findLastDate (): ?\DateTime
     {
         $mostRecent = $this->findOneBy([], ['date' => 'DESC']);
-        if($mostRecent instanceof Feature) {
+        if ($mostRecent instanceof Feature) {
             return $mostRecent->getDate();
         }
 

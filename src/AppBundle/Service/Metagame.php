@@ -75,19 +75,17 @@ class Metagame
     {
         return $this->getClient($token)->request(
             'GET', $url, [
-            'query' => $parameters,
-        ]
-        )
-            ;
+                'query' => $parameters,
+            ]
+        );
     }
 
     public function post ($url, $parameters = [], $token = null): Response
     {
         return $this->getClient($token)->request(
             'POST', $url, [
-            'json' => $parameters,
-        ]
-        )
-            ;
+                'json' => $parameters,
+            ]
+        );
     }
 }

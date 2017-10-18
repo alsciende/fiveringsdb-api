@@ -54,7 +54,7 @@ class AbstractPaginatedSearch extends AbstractSearch implements PaginatedSearchI
         return $this;
     }
 
-    public function getFirstIndex(): int
+    public function getFirstIndex (): int
     {
         return ($this->page - 1) * $this->limit;
     }

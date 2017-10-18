@@ -59,7 +59,8 @@ class CardSlotCollectionDecorator extends ArrayCollection
         return $content;
     }
 
-    public function filter(\Closure $p) {
+    public function filter (\Closure $p)
+    {
         return new CardSlotCollectionDecorator(parent::filter($p)->toArray());
     }
 

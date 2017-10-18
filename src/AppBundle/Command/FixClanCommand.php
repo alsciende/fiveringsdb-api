@@ -18,14 +18,14 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class FixClanCommand extends ContainerAwareCommand
 {
-    protected function configure()
+    protected function configure ()
     {
         $this
             ->setName('app:fix:clan')
             ->setDescription("Fix the primary and secondary clans of each deck");
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute (InputInterface $input, OutputInterface $output)
     {
         $entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
 

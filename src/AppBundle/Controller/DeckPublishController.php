@@ -32,7 +32,7 @@ class DeckPublishController extends BaseApiController
         }
 
         $deck = $strain->getHead();
-        if(!$deck instanceof Deck) {
+        if (!$deck instanceof Deck) {
             return $this->failure('invalid_deck', 'This strain is empty');
         }
         if ($deck->isPublished()) {

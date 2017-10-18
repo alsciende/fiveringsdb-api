@@ -164,12 +164,12 @@ class PackCard implements CardSlotInterface, Timestampable
         return $this;
     }
 
-    public function getImageUrl(): ?string
+    public function getImageUrl (): ?string
     {
         return $this->imageUrl;
     }
 
-    public function setImageUrl(string $imageUrl = null): self
+    public function setImageUrl (string $imageUrl = null): self
     {
         $this->imageUrl = $imageUrl;
 
