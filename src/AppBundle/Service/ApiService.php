@@ -122,9 +122,9 @@ class ApiService
         return $response;
     }
 
-    public function isPublic (Request $request): bool
+    public function isPublic (Request $request = null): bool
     {
-        return $request->attributes->get('public') ?? false;
+        return $request instanceof Request && $request->attributes->get('public') ?? false;
     }
 
     public function setPublic (Request $request, bool $public = true)

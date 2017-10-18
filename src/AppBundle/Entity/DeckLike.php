@@ -61,7 +61,7 @@ class DeckLike
         return $this->createdAt;
     }
 
-    function setDeck (Deck $deck = null): self
+    function setDeck (Deck $deck): self
     {
         $this->deck = $deck;
 

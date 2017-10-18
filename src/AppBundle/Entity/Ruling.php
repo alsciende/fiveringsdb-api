@@ -42,7 +42,7 @@ class Ruling implements Timestampable
     private $source;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="link", type="text", nullable=true)
      */

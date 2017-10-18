@@ -26,6 +26,7 @@ class Deck implements Timestampable
 
     /**
      * @var string
+     *
      * @ORM\Column(type="string", nullable=false)
      */
     protected $format;
@@ -34,6 +35,7 @@ class Deck implements Timestampable
      * Unique identifier of the deck
      *
      * @var string
+     *
      * @ORM\Column(name="id", type="string", length=255, unique=true)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="UUID")
@@ -44,6 +46,7 @@ class Deck implements Timestampable
      * Name of the deck
      *
      * @var string
+     *
      * @ORM\Column(name="name", type="string", length=255, nullable=false)
      */
     private $name;
@@ -51,7 +54,8 @@ class Deck implements Timestampable
     /**
      * Markdown-formatted description of the deck
      *
-     * @var string
+     * @var string|null
+     *
      * @ORM\Column(name="description", type="text", nullable=false)
      */
     private $description;
@@ -60,6 +64,7 @@ class Deck implements Timestampable
      * The cards used by the deck
      *
      * @var Collection
+     *
      * @ORM\OneToMany(targetEntity="DeckCard", mappedBy="deck", cascade={"persist", "remove", "merge"})
      */
     private $deckCards;
@@ -68,6 +73,7 @@ class Deck implements Timestampable
      * The owner of the deck
      *
      * @var User
+     *
      * @ORM\ManyToOne(targetEntity="User", fetch="EAGER")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      */
@@ -76,7 +82,8 @@ class Deck implements Timestampable
     /**
      * The strain of the deck
      *
-     * @var Strain
+     * @var Strain|null
+     *
      * @ORM\ManyToOne(targetEntity="Strain", inversedBy="decks")
      * @ORM\JoinColumn(name="strain_id", referencedColumnName="id", nullable=true)
      */
@@ -84,6 +91,7 @@ class Deck implements Timestampable
 
     /**
      * @var Collection|DeckLike[]
+     *
      * @ORM\OneToMany(targetEntity="DeckLike", mappedBy="deck", cascade={"persist", "remove", "merge"})
      */
     private $deckLikes;
@@ -102,6 +110,7 @@ class Deck implements Timestampable
      * Comments on the deck
      *
      * @var Collection
+     *
      * @ORM\OneToMany(targetEntity="Comment", mappedBy="deck", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
      */
     private $comments;
@@ -110,6 +119,7 @@ class Deck implements Timestampable
      * The major version of the deck. Incremented with each publication.
      *
      * @var integer
+     *
      * @ORM\Column(name="major_version", type="integer", nullable=false)
      */
     private $majorVersion;
@@ -118,6 +128,7 @@ class Deck implements Timestampable
      * The minor version of the deck. 0 for a public deck. Incremented with each save.
      *
      * @var integer
+     *
      * @ORM\Column(name="minor_version", type="integer", nullable=false)
      */
     private $minorVersion;
@@ -126,6 +137,7 @@ class Deck implements Timestampable
      * Whether the deck is published
      *
      * @var boolean
+     *
      * @ORM\Column(name="published", type="boolean", nullable=false)
      */
     private $published;
@@ -134,6 +146,7 @@ class Deck implements Timestampable
      * A number indicating a problem with the deck
      *
      * @var integer
+     *
      * @ORM\Column(name="problem", type="integer", nullable=false)
      */
     private $problem;
@@ -141,7 +154,8 @@ class Deck implements Timestampable
     /**
      * Primary Clan of the deck
      *
-     * @var string
+     * @var string|null
+     *
      * @ORM\Column(name="primary_clan", type="string", nullable=true)
      */
     private $primaryClan;
@@ -149,7 +163,8 @@ class Deck implements Timestampable
     /**
      * Secondary Clan of the deck
      *
-     * @var string
+     * @var string|null
+     *
      * @ORM\Column(name="secondary_clan", type="string", nullable=true)
      */
     private $secondaryClan;
@@ -163,6 +178,8 @@ class Deck implements Timestampable
 
     function __construct ()
     {
+        $this->name = 'Default name';
+        $this->format = 'standard';
         $this->description = '';
         $this->majorVersion = 0;
         $this->minorVersion = 1;
@@ -189,37 +206,6 @@ class Deck implements Timestampable
     public function getDeckLikes (): Collection
     {
         return $this->deckLikes;
-    }
-
-    /** @param Collection|DeckLike[] $deckLikes */
-    public function setDeckLikes (Collection $deckLikes): self
-    {
-        $this->clearDeckLikes();
-        foreach ($deckLikes as $deckLike) {
-            $this->addDeckLike($deckLike);
-        }
-
-        return $this;
-    }
-
-    public function clearDeckLikes (): self
-    {
-        foreach ($this->getDeckLikes() as $deckLike) {
-            $this->removeDeckLike($deckLike);
-        }
-        $this->deckLikes->clear();
-
-        return $this;
-    }
-
-    public function removeDeckLike (DeckLike $deckLike): self
-    {
-        if ($this->deckLikes->contains($deckLike)) {
-            $this->deckLikes->removeElement($deckLike);
-            $deckLike->setDeck(null);
-        }
-
-        return $this;
     }
 
     public function addDeckLike (DeckLike $deckLike): self
@@ -249,12 +235,12 @@ class Deck implements Timestampable
         return $this;
     }
 
-    function getName (): ?string
+    function getName (): string
     {
         return $this->name;
     }
 
-    function setName (string $name = null): self
+    function setName (string $name): self
     {
         $this->name = $name;
 
@@ -273,29 +259,16 @@ class Deck implements Timestampable
 
     public function setDeckCards (Collection $deckCards): self
     {
-        $this->clearDeckCards();
+        if(!$this->deckCards instanceof Collection) {
+            $this->deckCards = new ArrayCollection();
+        }
+
+        if($this->deckCards->count() > 0) {
+            throw new \Exception('setDeckCards called on a non-empty Deck.');
+        }
+
         foreach ($deckCards as $deckCard) {
             $this->addDeckCard($deckCard);
-        }
-
-        return $this;
-    }
-
-    public function clearDeckCards (): self
-    {
-        foreach ($this->getDeckCards() as $deckCard) {
-            $this->removeDeckCard($deckCard);
-        }
-        $this->deckCards->clear();
-
-        return $this;
-    }
-
-    public function removeDeckCard (DeckCard $deckCard): self
-    {
-        if ($this->deckCards->contains($deckCard)) {
-            $this->deckCards->removeElement($deckCard);
-            $deckCard->setDeck(null);
         }
 
         return $this;
@@ -339,36 +312,6 @@ class Deck implements Timestampable
     public function getComments (): Collection
     {
         return $this->comments;
-    }
-
-    public function setComments (Collection $comments): self
-    {
-        $this->clearComments();
-        foreach ($comments as $comment) {
-            $this->addComment($comment);
-        }
-
-        return $this;
-    }
-
-    public function clearComments (): self
-    {
-        foreach ($this->getComments() as $comment) {
-            $this->removeComment($comment);
-        }
-        $this->comments->clear();
-
-        return $this;
-    }
-
-    public function removeComment (Comment $comment): self
-    {
-        if ($this->comments->contains($comment)) {
-            $this->comments->removeElement($comment);
-            $comment->setDeck(null);
-        }
-
-        return $this;
     }
 
     public function addComment (Comment $comment): self
@@ -470,7 +413,7 @@ class Deck implements Timestampable
         return $this;
     }
 
-    public function getFormat (): ?string
+    public function getFormat (): string
     {
         return $this->format;
     }

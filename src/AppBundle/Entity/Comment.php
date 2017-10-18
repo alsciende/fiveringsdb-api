@@ -61,6 +61,7 @@ class Comment implements Timestampable
 
     public function __construct ()
     {
+        $this->text = 'Default text';
         $this->visible = true;
     }
 
@@ -71,7 +72,7 @@ class Comment implements Timestampable
         return $this;
     }
 
-    public function setDeck (Deck $deck = null): self
+    public function setDeck (Deck $deck): self
     {
         $this->deck = $deck;
 
@@ -90,17 +91,17 @@ class Comment implements Timestampable
         return $this->id;
     }
 
-    public function getText (): ?string
+    public function getText (): string
     {
         return $this->text;
     }
 
-    public function getDeck (): ?Deck
+    public function getDeck (): Deck
     {
         return $this->deck;
     }
 
-    public function getUser (): ?User
+    public function getUser (): User
     {
         return $this->user;
     }

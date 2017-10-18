@@ -6,7 +6,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * This controller is not part of the API. Responses are HTML pages.
@@ -21,14 +23,18 @@ class AuthController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function initAction (Request $request)
+    public function initAction(Request $request)
     {
+        if (!$request->getSession() instanceof SessionInterface) {
+            throw $this->createAccessDeniedException();
+        }
+
         $request->getSession()->start();
 
         $metagameBaseUri = $this->getParameter('metagame_base_uri');
 
         return [
-            'uri'   => $metagameBaseUri . 'oauth/v2/auth',
+            'uri'   => $metagameBaseUri.'oauth/v2/auth',
             'query' => http_build_query(
                 [
                     'client_id'     => $this->getParameter('metagame_client_id'),
@@ -45,8 +51,12 @@ class AuthController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function codeAction (Request $request)
+    public function codeAction(Request $request)
     {
+        if (!$request->getSession() instanceof SessionInterface) {
+            throw $this->createAccessDeniedException();
+        }
+
         $request->getSession()->start();
 
         // check the state
@@ -60,14 +70,13 @@ class AuthController extends Controller
         // request the access-token to the oauth server
         $res = $this->get('metagame')->get(
             'oauth/v2/token', [
-            'client_id'     => $this->getParameter('metagame_client_id'),
-            'client_secret' => $this->getParameter('metagame_client_secret'),
-            'redirect_uri'  => $this->getParameter('metagame_redirect_uri'),
-            'grant_type'    => 'authorization_code',
-            'code'          => $code,
-        ]
-        )
-        ;
+                'client_id'     => $this->getParameter('metagame_client_id'),
+                'client_secret' => $this->getParameter('metagame_client_secret'),
+                'redirect_uri'  => $this->getParameter('metagame_redirect_uri'),
+                'grant_type'    => 'authorization_code',
+                'code'          => $code,
+            ]
+        );
         if ($res->getStatusCode() !== 200) {
             throw new \Exception($res->getReasonPhrase());
         }
@@ -76,7 +85,7 @@ class AuthController extends Controller
         $response = json_decode($res->getBody(), true);
         $now = new \DateTime();
         $response['creation_date'] = $now->format('c');
-        $now->add(\DateInterval::createFromDateString($response['expires_in'] . ' seconds'));
+        $now->add(\DateInterval::createFromDateString($response['expires_in'].' seconds'));
         $response['expiration_date'] = $now->format('c');
         $response['origin'] = $this->getParameter('front_url');
 

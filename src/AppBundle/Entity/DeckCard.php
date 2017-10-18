@@ -74,7 +74,7 @@ class DeckCard implements CardSlotInterface
         return $this;
     }
 
-    function setDeck (Deck $deck = null): self
+    function setDeck (Deck $deck): self
     {
         $this->deck = $deck;
 

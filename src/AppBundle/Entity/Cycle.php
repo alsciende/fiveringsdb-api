@@ -115,17 +115,6 @@ class Cycle implements Timestampable
         return $this->size;
     }
 
-    /** @param Collection|Pack[] $packs */
-    public function setPacks (Collection $packs): self
-    {
-        $this->clearPacks();
-        foreach ($packs as $pack) {
-            $this->addPack($pack);
-        }
-
-        return $this;
-    }
-
     public function addPack (Pack $pack): self
     {
         if ($this->packs->contains($pack) === false) {
@@ -140,25 +129,5 @@ class Cycle implements Timestampable
     public function getPacks (): Collection
     {
         return $this->packs;
-    }
-
-    public function removePack (Pack $pack): self
-    {
-        if ($this->packs->contains($pack)) {
-            $this->packs->removeElement($pack);
-            $pack->setCycle(null);
-        }
-
-        return $this;
-    }
-
-    public function clearPacks (): self
-    {
-        foreach ($this->getPacks() as $pack) {
-            $this->removePack($pack);
-        }
-        $this->packs->clear();
-
-        return $this;
     }
 }

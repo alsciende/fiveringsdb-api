@@ -59,7 +59,7 @@ class PackCard implements CardSlotInterface, Timestampable
     private $flavor;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="image_url", type="string", nullable=true)
      */

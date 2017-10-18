@@ -125,7 +125,7 @@ class Card implements Timestampable
     private $clan;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="element", type="text", nullable=true)
      *
@@ -161,7 +161,7 @@ class Card implements Timestampable
     private $traits;
 
     /**
-     * @var integer
+     * @var integer|null
      *
      * @ORM\Column(name="military", type="smallint", nullable=true)
      *
@@ -170,7 +170,7 @@ class Card implements Timestampable
     private $military;
 
     /**
-     * @var integer
+     * @var integer|null
      *
      * @ORM\Column(name="political", type="smallint", nullable=true)
      *
@@ -179,7 +179,7 @@ class Card implements Timestampable
     private $political;
 
     /**
-     * @var integer
+     * @var integer|null
      *
      * @ORM\Column(name="strength", type="smallint", nullable=true)
      *
@@ -188,7 +188,7 @@ class Card implements Timestampable
     private $strength;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="military_bonus", type="string", nullable=true)
      *
@@ -197,7 +197,7 @@ class Card implements Timestampable
     private $militaryBonus;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="political_bonus", type="string", nullable=true)
      *
@@ -206,7 +206,7 @@ class Card implements Timestampable
     private $politicalBonus;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="strength_bonus", type="string", nullable=true)
      *
@@ -215,7 +215,7 @@ class Card implements Timestampable
     private $strengthBonus;
 
     /**
-     * @var integer
+     * @var integer|null
      *
      * @ORM\Column(name="glory", type="smallint", nullable=true)
      *
@@ -224,7 +224,7 @@ class Card implements Timestampable
     private $glory;
 
     /**
-     * @var integer
+     * @var integer|null
      *
      * @ORM\Column(name="honor", type="smallint", nullable=true)
      *
@@ -233,7 +233,7 @@ class Card implements Timestampable
     private $honor;
 
     /**
-     * @var integer
+     * @var integer|null
      *
      * @ORM\Column(name="fate", type="smallint", nullable=true)
      *
@@ -242,7 +242,7 @@ class Card implements Timestampable
     private $fate;
 
     /**
-     * @var integer
+     * @var integer|null
      *
      * @ORM\Column(name="influence_pool", type="smallint", nullable=true)
      *
@@ -251,7 +251,7 @@ class Card implements Timestampable
     private $influencePool;
 
     /**
-     * @var integer
+     * @var integer|null
      *
      * @ORM\Column(name="influence_cost", type="smallint", nullable=true)
      *
@@ -269,7 +269,7 @@ class Card implements Timestampable
     private $deckLimit;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="role_restriction", type="string", nullable=true)
      *
