@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Security\AccessToken;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -81,14 +82,14 @@ class AuthController extends Controller
             throw new \Exception($res->getReasonPhrase());
         }
 
-        // process the response
-        $response = json_decode($res->getBody(), true);
-        $now = new \DateTime();
-        $response['creation_date'] = $now->format('c');
-        $now->add(\DateInterval::createFromDateString($response['expires_in'] . ' seconds'));
-        $response['expiration_date'] = $now->format('c');
-        $response['origin'] = $this->getParameter('front_url');
+        $accessToken = AccessToken::createFromJson($res->getBody());
 
-        return $response;
+        return [
+            'message' => [
+                'type' => 'access_token',
+                'access_token' => $accessToken->getAccessToken()
+            ],
+            'origin' => $this->getParameter('front_url')
+        ];
     }
 }

@@ -1,0 +1,3 @@
+AppBundle\Security\AccessToken:
+    exclusion_policy: NONE
+    accessor_order: alphabetical
