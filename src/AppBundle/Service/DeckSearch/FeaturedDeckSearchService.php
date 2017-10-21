@@ -2,8 +2,7 @@
 
 namespace AppBundle\Service\DeckSearch;
 
-
-use AppBundle\Entity\Feature;
+use AppBundle\Entity\Deck;
 use AppBundle\Search\DeckSearch;
 
 /**
@@ -27,12 +26,12 @@ class FeaturedDeckSearchService extends AbstractDeckSearchService
 
         $search->setTotal((int) $query->getSingleScalarResult());
 
-        $dql = "SELECT f, d, u, COUNT(DISTINCT l.user), COUNT(DISTINCT c.id)
-        FROM AppBundle:Feature f
-        JOIN f.deck d
+        $dql = "SELECT d, u, COUNT(DISTINCT l.user), COUNT(DISTINCT c.id)
+        FROM AppBundle:Deck d
         JOIN d.user u 
         LEFT JOIN d.deckLikes l
         LEFT JOIN d.comments c
+        WHERE EXISTS(SELECT * FROM AppBundle:Feature f WHERE f.deck=d)
         GROUP BY d, u
         ORDER BY d.createdAt DESC";
         $query = $this->getEntityManager()
@@ -41,9 +40,8 @@ class FeaturedDeckSearchService extends AbstractDeckSearchService
                       ->setMaxResults($search->getLimit());
 
         foreach ($query->getResult() as $result) {
-            /** @var Feature $feature */
-            $feature = $result[0];
-            $deck = $feature->getDeck();
+            /** @var Deck $deck */
+            $deck = $result[0];
             $deck->setNbLikes((int) $result[1]);
             $deck->setNbComments((int) $result[2]);
             $search->addRecord($deck);
