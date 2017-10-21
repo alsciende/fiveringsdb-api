@@ -31,7 +31,7 @@ class FeaturedDeckSearchService extends AbstractDeckSearchService
         JOIN d.user u 
         LEFT JOIN d.deckLikes l
         LEFT JOIN d.comments c
-        WHERE EXISTS(SELECT * FROM AppBundle:Feature f WHERE f.deck=d)
+        WHERE EXISTS(SELECT f FROM AppBundle:Feature f WHERE f.deck=d)
         GROUP BY d, u
         ORDER BY d.createdAt DESC";
         $query = $this->getEntityManager()
