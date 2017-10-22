@@ -102,7 +102,6 @@ class StrainController extends BaseApiController
                     'Default',
                     'Description',
                     'Cards',
-                    'User',
                 ],
             ]
         );

@@ -33,18 +33,11 @@ class Activity
     private $type;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="text", type="string", nullable=false)
-     */
-    private $text;
-
-    /**
      * @var array
      *
-     * @ORM\Column(name="route", type="json_array")
+     * @ORM\Column(name="data", type="json_array")
      */
-    private $route;
+    private $data;
 
     /**
      * @var \DateTime
@@ -64,7 +57,7 @@ class Activity
     {
         $this->type = $type;
         $this->createdAt = new \DateTime();
-        $this->route = [];
+        $this->data = [];
     }
 
     public function getId (): int
@@ -84,26 +77,14 @@ class Activity
         return $this;
     }
 
-    public function getText (): string
+    public function getData (): array
     {
-        return $this->text;
+        return $this->data;
     }
 
-    public function setText (string $text): self
+    public function setData (array $data): self
     {
-        $this->text = $text;
-
-        return $this;
-    }
-
-    public function getRoute (): array
-    {
-        return $this->route;
-    }
-
-    public function setRoute (array $route): self
-    {
-        $this->route = $route;
+        $this->data = $data;
 
         return $this;
     }

@@ -70,6 +70,7 @@ class CardRulingController extends BaseApiController
      * Delete a ruling on a card
      * @Route("/cards/{cardId}/rulings/{id}", name="deleteCardRuling")
      * @Method("DELETE")
+     * @Security("has_role('ROLE_GURU')")
      */
     public function deleteAction (Ruling $ruling)
     {

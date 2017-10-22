@@ -1,0 +1,10 @@
+AppBundle\Entity\Activity:
+    exclusion_policy: ALL
+    accessor_order: alphabetical
+    properties:
+        type:
+            expose: true
+        data:
+            expose: true
+        createdAt:
+            expose: true

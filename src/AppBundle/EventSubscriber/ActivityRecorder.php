@@ -28,27 +28,38 @@ class ActivityRecorder implements EventSubscriberInterface
         $this->logger = $logger;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents ()
     {
-        return array(
+        return [
             CommentAddedEvent::NAME => 'onCommentAdded',
-        );
+        ];
     }
 
-    public function onCommentAdded(CommentAddedEvent $event)
+    public function onCommentAdded (CommentAddedEvent $event)
     {
-        $deck = $event->getComment()->getDeck();
+        $comment = $event->getComment();
+        $deck = $comment->getDeck();
+        $data = [
+            'deck' => [
+                'id'   => $deck->getId(),
+                'name' => $deck->getName(),
+            ],
+            'user' => [
+                'id'   => $comment->getUser()->getId(),
+                'name' => $comment->getUser()->getUsername(),
+            ],
+        ];
 
         $activity = new Activity(Activity::TYPE_COMMENT_AUTHOR);
         $activity->setUser($deck->getUser());
-        $activity->setText('You are the author');
+        $activity->setData($data);
         $this->entityManager->persist($activity);
 
-        foreach($this->entityManager->getRepository(Deck::class)->findCommenters($deck) as $commenter) {
-            if($commenter !== $deck->getUser()) {
-                $activity = new Activity(Activity::TYPE_COMMENT_AUTHOR);
+        foreach ($this->entityManager->getRepository(Deck::class)->findCommenters($deck) as $commenter) {
+            if ($commenter !== $deck->getUser()) {
+                $activity = new Activity(Activity::TYPE_COMMENT_PARTICIPANT);
                 $activity->setUser($commenter);
-                $activity->setText('You are a commenter');
+                $activity->setData($data);
                 $this->entityManager->persist($activity);
             }
         }
