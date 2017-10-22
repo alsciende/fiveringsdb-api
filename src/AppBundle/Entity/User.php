@@ -3,6 +3,8 @@
 namespace AppBundle\Entity;
 
 use Alsciende\SerializerBundle\Annotation\Source;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -71,11 +73,18 @@ class User implements UserInterface
      */
     private $strainsCountLimit;
 
+    /**
+     * @var Collection|Activity[]
+     * @ORM\OneToMany(targetEntity="Activity", mappedBy="user")
+     */
+    private $activities;
+
     function __construct ()
     {
         $this->roles = ['ROLE_USER'];
         $this->strainSizeLimit = 10;
         $this->strainsCountLimit = 100;
+        $this->activities = new ArrayCollection();
     }
 
     function getId ()
@@ -182,6 +191,53 @@ class User implements UserInterface
     public function setStrainsCountLimit (int $strainsCountLimit): self
     {
         $this->strainsCountLimit = $strainsCountLimit;
+
+        return $this;
+    }
+
+    /** @return Collection|Activity[] */
+    public function getActivities (): Collection
+    {
+        return $this->activities;
+    }
+
+    /** @param Collection|Activity[] $activities */
+    public function setActivities (Collection $activities): self
+    {
+        $this->clearActivitys();
+        foreach ($activities as $activity) {
+            $this->addActivity($activity);
+        }
+
+        return $this;
+    }
+
+    public function clearActivitys (): self
+    {
+        foreach ($this->getActivities() as $activity) {
+            $this->removeActivity($activity);
+        }
+        $this->activities->clear();
+
+        return $this;
+    }
+
+    public function removeActivity (Activity $activity): self
+    {
+        if ($this->activities->contains($activity)) {
+            $this->activities->removeElement($activity);
+            $activity->setUser(null);
+        }
+
+        return $this;
+    }
+
+    public function addActivity (Activity $activity): self
+    {
+        if ($this->activities->contains($activity) === false) {
+            $this->activities->add($activity);
+            $activity->setUser($this);
+        }
 
         return $this;
     }

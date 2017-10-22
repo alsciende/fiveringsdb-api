@@ -6,6 +6,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Comment;
 use AppBundle\Entity\Deck;
+use AppBundle\Event\CommentAddedEvent;
 use AppBundle\Form\Type\CommentType;
 use AppBundle\Form\Type\CommentVisibilityType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -36,6 +37,8 @@ class DeckCommentController extends BaseApiController
             $comment->setUser($this->getUser())->setDeck($deck);
             $this->getDoctrine()->getManager()->persist($comment);
             $this->getDoctrine()->getManager()->flush();
+
+            $this->get('event_dispatcher')->dispatch(CommentAddedEvent::NAME, new CommentAddedEvent($comment));
 
             return $this->success($comment);
         }

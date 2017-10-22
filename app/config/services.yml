@@ -128,3 +128,12 @@ services:
           - "@cocur_slugify"
         tags:
           - "validator.constraint_validator"
+
+    app.activity_recorder:
+        public: false
+        class: AppBundle\EventSubscriber\ActivityRecorder
+        arguments:
+          - "@doctrine.orm.entity_manager"
+          - "@logger"
+        tags:
+          - "kernel.event_subscriber"

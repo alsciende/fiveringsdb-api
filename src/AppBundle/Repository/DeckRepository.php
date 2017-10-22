@@ -3,6 +3,7 @@
 namespace AppBundle\Repository;
 
 use AppBundle\Entity\Deck;
+use AppBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -64,5 +65,21 @@ class DeckRepository extends EntityRepository
             ->createQuery("SELECT DISTINCT d.primaryClan FROM AppBundle:Deck d WHERE d.primaryClan IS NOT NULL ORDER BY d.primaryClan")
             ->getArrayResult()
         );
+    }
+
+    /**
+     * @param Deck $deck
+     * @return User[]
+     */
+    public function findCommenters(Deck $deck): array
+    {
+        $dql = "SELECT DISTINCT u
+        FROM AppBundle:User u
+        WHERE EXISTS (SELECT c FROM AppBundle:Comment c WHERE c.user=u AND c.deck=:deck)";
+        $query = $this->getEntityManager()
+                      ->createQuery($dql)
+                      ->setParameter('deck', $deck);
+
+        return $query->getResult();
     }
 }

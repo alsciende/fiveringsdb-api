@@ -19,7 +19,7 @@ class Ruling implements Timestampable
     use TimestampableEntity;
 
     /**
-     * @var string
+     * @var int
      *
      * @ORM\Column(name="id", type="integer", unique=true)
      * @ORM\Id
