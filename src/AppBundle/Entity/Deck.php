@@ -32,7 +32,7 @@ class Deck implements Timestampable
      *
      * @ORM\Column(type="string", nullable=false)
      */
-    protected $format;
+    private $format;
 
     /**
      * Unique identifier of the deck

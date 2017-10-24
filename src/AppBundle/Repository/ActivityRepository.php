@@ -2,6 +2,8 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Activity;
+use AppBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -11,5 +13,25 @@ use Doctrine\ORM\EntityRepository;
  */
 class ActivityRepository extends EntityRepository
 {
+    /**
+     * @param User $user
+     * @param int $limit
+     * @return Activity[]
+     */
+    public function findForUser(User $user, int $limit): array
+    {
+        $dql = "SELECT a, d, u
+        FROM AppBundle:Activity a
+        LEFT JOIN a.deck d
+        LEFT JOIN d.user u
+        WHERE EXISTS (SELECT n FROM AppBundle:Notification n WHERE n.user=:user AND n.activity=a)
+        ORDER BY a.createdAt DESC";
+        $query = $this->getEntityManager()
+                      ->createQuery($dql)
+                      ->setParameter('user', $user)
+                      ->setFirstResult(0)
+                      ->setMaxResults($limit);
 
+        return $query->getResult();
+    }
 }

@@ -26,9 +26,13 @@ class ActivityController extends BaseApiController
             $this
                 ->getDoctrine()
                 ->getRepository(Activity::class)
-                ->findBy(['user' => $this->getUser()], ['createdAt' => 'DESC'], 10),
+                ->findForUser($this->getUser(), 10),
             [
                 'Default',
+                'Deck',
+                'deck' => [
+                    'Activity'
+                ],
             ]
         );
     }

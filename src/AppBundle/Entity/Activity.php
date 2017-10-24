@@ -1,6 +1,10 @@
 <?php
 
 namespace AppBundle\Entity;
+
+use AppBundle\Behavior\Entity\SequentialIdTrait;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -13,17 +17,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Activity
 {
-    const TYPE_COMMENT_AUTHOR = 1;
-    const TYPE_COMMENT_PARTICIPANT = 2;
+    const TYPE_COMMENT_ADDED = 1;
+    const TYPE_DECKLIST_PUBLISHED = 2;
+    const TYPE_DECKLIST_SHARED = 3;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", unique=true)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+    use SequentialIdTrait;
 
     /**
      * @var int
@@ -33,11 +31,11 @@ class Activity
     private $type;
 
     /**
-     * @var array
-     *
-     * @ORM\Column(name="data", type="json_array")
+     * @var Deck
+     * @ORM\ManyToOne(targetEntity="Deck", fetch="EAGER")
+     * @ORM\JoinColumn(name="deck_id", referencedColumnName="id", nullable=false)
      */
-    private $data;
+    private $deck;
 
     /**
      * @var \DateTime
@@ -47,22 +45,17 @@ class Activity
     private $createdAt;
 
     /**
-     * @var User|null
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="activities")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
+     * @var Collection|Notification[]
+     * @ORM\OneToMany(targetEntity="Notification", mappedBy="activity", cascade={"persist","remove"})
      */
-    private $user;
+    private $notifications;
 
-    public function __construct (int $type)
+    public function __construct (int $type, Deck $deck)
     {
         $this->type = $type;
+        $this->deck = $deck;
         $this->createdAt = new \DateTime();
-        $this->data = [];
-    }
-
-    public function getId (): int
-    {
-        return $this->id;
+        $this->notifications = new ArrayCollection();
     }
 
     public function getType (): int
@@ -70,23 +63,9 @@ class Activity
         return $this->type;
     }
 
-    public function setType (int $type): self
+    public function getDeck(): Deck
     {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    public function getData (): array
-    {
-        return $this->data;
-    }
-
-    public function setData (array $data): self
-    {
-        $this->data = $data;
-
-        return $this;
+        return $this->deck;
     }
 
     public function getCreatedAt (): \DateTime
@@ -94,23 +73,46 @@ class Activity
         return $this->createdAt;
     }
 
-    public function setCreatedAt (\DateTime $createdAt): self
+    /** @return Collection|Notification[] */
+    public function getNotifications (): Collection
     {
-        $this->createdAt = $createdAt;
+        return $this->notifications;
+    }
+
+    /** @param Collection|Notification[] $notifications */
+    public function setNotifications (Collection $notifications): self
+    {
+        $this->clearNotifications();
+        foreach ($notifications as $notification) {
+            $this->addNotification($notification);
+        }
 
         return $this;
     }
 
-    public function getUser(): ?User
+    public function clearNotifications (): self
     {
-        return $this->user;
+        foreach ($this->getNotifications() as $notification) {
+            $this->removeNotification($notification);
+        }
+        $this->notifications->clear();
+
+        return $this;
     }
 
-    public function setUser(User $user = null): self
+    public function removeNotification (Notification $notification): self
     {
-        $this->user = $user;
-        if ($user instanceof User) {
-            $user->addActivity($this);
+        if ($this->notifications->contains($notification)) {
+            $this->notifications->removeElement($notification);
+        }
+
+        return $this;
+    }
+
+    public function addNotification (Notification $notification): self
+    {
+        if ($this->notifications->contains($notification) === false) {
+            $this->notifications->add($notification);
         }
 
         return $this;

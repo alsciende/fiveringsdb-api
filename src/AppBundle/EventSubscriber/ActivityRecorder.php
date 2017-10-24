@@ -4,6 +4,7 @@ namespace AppBundle\EventSubscriber;
 
 use AppBundle\Entity\Activity;
 use AppBundle\Entity\Deck;
+use AppBundle\Entity\Notification;
 use AppBundle\Event\CommentAddedEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -39,31 +40,17 @@ class ActivityRecorder implements EventSubscriberInterface
     {
         $comment = $event->getComment();
         $deck = $comment->getDeck();
-        $data = [
-            'deck' => [
-                'id'   => $deck->getId(),
-                'name' => $deck->getName(),
-            ],
-            'user' => [
-                'id'   => $comment->getUser()->getId(),
-                'name' => $comment->getUser()->getUsername(),
-            ],
-        ];
 
-        $activity = new Activity(Activity::TYPE_COMMENT_AUTHOR);
-        $activity->setUser($deck->getUser());
-        $activity->setData($data);
-        $this->entityManager->persist($activity);
+        $activity = new Activity(Activity::TYPE_COMMENT_ADDED, $deck);
+        $activity->addNotification(new Notification($deck->getUser(), $activity));
 
         foreach ($this->entityManager->getRepository(Deck::class)->findCommenters($deck) as $commenter) {
             if ($commenter !== $deck->getUser()) {
-                $activity = new Activity(Activity::TYPE_COMMENT_PARTICIPANT);
-                $activity->setUser($commenter);
-                $activity->setData($data);
-                $this->entityManager->persist($activity);
+                $activity->addNotification(new Notification($commenter, $activity));
             }
         }
 
+        $this->entityManager->persist($activity);
         $this->entityManager->flush();
     }
 }

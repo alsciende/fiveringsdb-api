@@ -4,12 +4,14 @@ AppBundle\Entity\Deck:
     properties:
         id:
             expose: true
+            groups: ['Default','Activity']
         createdAt:
             expose: true
         updatedAt:
             expose: true
         name:
             expose: true
+            groups: ['Default','Activity']
         description:
             expose: true
             groups: ['Description']

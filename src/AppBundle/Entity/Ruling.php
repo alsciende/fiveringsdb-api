@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Behavior\Entity\SequentialIdTrait;
 use AppBundle\Behavior\Entity\Timestampable;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -17,15 +18,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 class Ruling implements Timestampable
 {
     use TimestampableEntity;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", unique=true)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+    use SequentialIdTrait;
 
     /**
      * @var string
@@ -63,11 +56,6 @@ class Ruling implements Timestampable
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
-
-    function getId ()
-    {
-        return $this->id;
-    }
 
     public function getText (): ?string
     {
