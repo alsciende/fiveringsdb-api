@@ -3,6 +3,8 @@
 namespace AppBundle\Command;
 
 use AppBundle\Entity\Card;
+use AppBundle\Entity\Pack;
+use AppBundle\Entity\PackCard;
 use Cocur\Slugify\Slugify;
 use function GuzzleHttp\Psr7\str;
 use JMS\Serializer\SerializationContext;
@@ -34,9 +36,14 @@ class DataParseCommand extends ContainerAwareCommand
         $this->slugify = new Slugify();
         $serializer = $this->getContainer()->get('jms_serializer');
         $jsonDirectory = $this->getContainer()->getParameter('path_to_json_data');
+        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
+
+        $packCards = [];
 
         foreach ($this->getItemsFromFile($input->getArgument('filename')) as $item) {
             $normalizedItem = $this->normalizeItem($item);
+            $packCardItem = $normalizedItem['pack_card'];
+            unset($normalizedItem['pack_card']);
 
             $newCard = $serializer->fromArray($normalizedItem, Card::class);
             $serializationContext = new SerializationContext();
@@ -46,13 +53,46 @@ class DataParseCommand extends ContainerAwareCommand
 
             $jsonfilename = sprintf('%s/Card/%s.json', $jsonDirectory, $normalizedItem['id']);
             file_put_contents($jsonfilename, $json);
+
+            $card = $em->find(Card::class, $normalizedItem['id']);
+            $setId = $packCardItem['set_id'];
+            unset($packCardItem['set_id']);
+            if (!isset($packCards[$setId])) {
+                $packCards[$setId] = [];
+            }
+            $pack = $em->find(Pack::class, $setId);
+            /** @var PackCard $packCard */
+            $packCard = $em->getRepository(PackCard::class)->findOneBy(['card' => $card, 'pack' => $pack]);
+            if(!isset($packCardItem['flavor'])) {
+                $packCardItem['flavor'] = $packCard->getFlavor();
+            }
+            if(!isset($packCardItem['quantity'])) {
+                $packCardItem['quantity'] = $packCard->getQuantity();
+            }
+            ksort($packCardItem);
+            $packCards[$setId][] = $packCardItem;
         }
+
+        foreach ($packCards as $setId => $packCardList) {
+            usort($packCardList, function ($a, $b) {
+                return $a <=> $b;
+            });
+            $serializationContext = new SerializationContext();
+            $serializationContext->setGroups(['Source']);
+            $serializationContext->setSerializeNull(true);
+            $json = $serializer->serialize($packCardList, 'json', $serializationContext);
+
+            $jsonfilename = sprintf('%s/PackCard/%s.json', $jsonDirectory, $setId);
+            file_put_contents($jsonfilename, $json);
+        }
+
     }
 
-    protected function getItemsFromFile(string $filename): array
+    protected function getItemsFromFile (string $filename): array
     {
         $content = file_get_contents($filename);
         $json = rtrim(substr($content, 8), ';');
+
         return json_decode($json, true);
     }
 
@@ -76,7 +116,9 @@ class DataParseCommand extends ContainerAwareCommand
                 break;
         }
 
-        $normalizedItem = [];
+        $normalizedItem = [
+            'pack_card' => [],
+        ];
 
         $type = strtolower($item['type']);
 
@@ -94,15 +136,6 @@ class DataParseCommand extends ContainerAwareCommand
 
         foreach ($item as $key => $value) {
             switch ($key) {
-                case 'altart':
-                case 'ban':
-                case 'fullurl':
-                case 'furl':
-                case 'num':
-                case 'rest':
-                case 'setid':
-                case 'showindn':
-                    break;
                 case 'clan':
                 case 'type':
                     $normalizedItem[$key] = strtolower($value);
@@ -182,10 +215,34 @@ class DataParseCommand extends ContainerAwareCommand
                         $normalizedItem['role_restriction'] = strtolower(substr($value, 0, 6));
                     }
                     break;
+                case 'img':
+                    $normalizedItem['pack_card']['image_url'] = 'http://lcg-cdn.fantasyflightgames.com/l5r/' . $value;
+                    break;
+                case 'setname':
+                    if ($value === 'Core Set') {
+                        $value = 'Core';
+                    }
+                    $normalizedItem['pack_card']['set_id'] = $this->slugify->slugify($value);
+                    break;
+                case 'num':
+                    $normalizedItem['pack_card']['position'] = ltrim($value, '0');
+                    break;
+                case 'illus':
+                    $normalizedItem['pack_card']['illustrator'] = $value;
+                    break;
+                case 'altart':
+                case 'ban':
+                case 'fullurl':
+                case 'furl':
+                case 'rest':
+                case 'setid':
+                case 'showindn':
+                    break;
             }
         }
 
         $normalizedItem['id'] = $this->slugify->slugify($item['name']);
+        $normalizedItem['pack_card']['card_id'] = $normalizedItem['id'];
 
         ksort($normalizedItem);
 

@@ -152,12 +152,12 @@ class PackCard implements CardSlotInterface, Timestampable
         return $this;
     }
 
-    public function getFlavor (): string
+    public function getFlavor (): ?string
     {
         return $this->flavor;
     }
 
-    public function setFlavor (string $flavor): self
+    public function setFlavor (string $flavor = null): self
     {
         $this->flavor = $flavor;
 
