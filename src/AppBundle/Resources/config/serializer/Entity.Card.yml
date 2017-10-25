@@ -4,54 +4,77 @@ AppBundle\Entity\Card:
     properties:
         id:
             expose: true
-            groups: ['Default','Id']
+            groups: ['Default','Id','Source']
         name:
             expose: true
+            groups: ['Default','Source']
         nameCanonical:
             expose: true
         cost:
             expose: true
+            groups: ['Default','Source']
         text:
             expose: true
+            groups: ['Default','Source']
         textCanonical:
             expose: true
         type:
             expose: true
+            groups: ['Default','Source']
         clan:
             expose: true
+            groups: ['Default','Source']
         element:
             expose: true
+            groups: ['Default','Source']
         unicity:
             expose: true
+            groups: ['Default','Source']
         side:
             expose: true
+            groups: ['Default','Source']
         traits:
             expose: true
+            groups: ['Default','Source']
         military:
             expose: true
+            groups: ['Default','Source']
         political:
             expose: true
+            groups: ['Default','Source']
         strength:
             expose: true
+            groups: ['Default','Source']
         militaryBonus:
             expose: true
+            groups: ['Default','Source']
         politicalBonus:
             expose: true
+            groups: ['Default','Source']
         strengthBonus:
             expose: true
+            groups: ['Default','Source']
         glory:
             expose: true
+            groups: ['Default','Source']
         honor:
             expose: true
+            groups: ['Default','Source']
         fate:
             expose: true
+            groups: ['Default','Source']
         influencePool:
             expose: true
+            groups: ['Default','Source']
         influenceCost:
             expose: true
+            groups: ['Default','Source']
         deckLimit:
             expose: true
+            groups: ['Default','Source']
         roleRestriction:
+            expose: true
+            groups: ['Default','Source']
         packCards:
             expose: true
             groups: ['PackCards']

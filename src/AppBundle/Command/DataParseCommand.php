@@ -32,55 +32,28 @@ class DataParseCommand extends ContainerAwareCommand
     protected function execute (InputInterface $input, OutputInterface $output)
     {
         $this->slugify = new Slugify();
-        $repository = $this
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository(Card::class);
-        $serializer = $this
-            ->getContainer()
-            ->get('jms_serializer');
+        $serializer = $this->getContainer()->get('jms_serializer');
+        $jsonDirectory = $this->getContainer()->getParameter('path_to_json_data');
 
-        $filename = $input->getArgument('filename');
+        foreach ($this->getItemsFromFile($input->getArgument('filename')) as $item) {
+            $normalizedItem = $this->normalizeItem($item);
 
+            $newCard = $serializer->fromArray($normalizedItem, Card::class);
+            $serializationContext = new SerializationContext();
+            $serializationContext->setGroups(['Source']);
+            $serializationContext->setSerializeNull(true);
+            $json = $serializer->serialize([$newCard], 'json', $serializationContext);
+
+            $jsonfilename = sprintf('%s/Card/%s.json', $jsonDirectory, $normalizedItem['id']);
+            file_put_contents($jsonfilename, $json);
+        }
+    }
+
+    protected function getItemsFromFile(string $filename): array
+    {
         $content = file_get_contents($filename);
         $json = rtrim(substr($content, 8), ';');
-        $items = json_decode($json, true);
-
-        foreach ($items as $item) {
-            dump($item);
-            $normalizedItem = $this->normalizeItem($item);
-            $card = $repository->find($normalizedItem['id']);
-
-            $serializationContext = new SerializationContext();
-            $serializationContext->setGroups(['Default']);
-            $serializedCard = $serializer->toArray($card, $serializationContext);
-
-            unset($serializedCard['name_canonical']);
-            unset($serializedCard['text_canonical']);
-            
-            dump($normalizedItem);
-            dump($serializedCard);
-            $errors = 0;
-            dump('missing in normalized');
-            foreach ($serializedCard as $k => $value) {
-                if (!isset($normalizedItem[$k]) || $normalizedItem[$k] != $serializedCard[$k]) {
-                    dump([$k => $serializedCard[$k]]);
-                    $errors++;
-                }
-            }
-            dump('missing in serialized');
-            foreach ($normalizedItem as $k => $value) {
-                if (!isset($serializedCard[$k]) || $normalizedItem[$k] != $serializedCard[$k]) {
-                    dump([$k => $normalizedItem[$k]]);
-                    $errors++;
-                }
-            }
-            if ($errors) {
-                die;
-            }
-        }
-
-        dump("no errors");
+        return json_decode($json, true);
     }
 
     protected function normalizeItem (array $item): array
@@ -89,16 +62,30 @@ class DataParseCommand extends ContainerAwareCommand
             case '180':
                 $item['influence'] = "3";
                 break;
+            case '170':
+                $item['text'] = 'This character gets +1[Military] and +1[Politics] for each claimed ring.';
+                break;
+            case '63':
+                $item['text'] = 'No attachments except <em class=\'bbc\'><strong class=\'bbc\'>Monk</strong></em> or <em class=\'bbc\'><strong class=\'bbc\'>Tattoo</strong></em>.<br/><strong class=\'bbc\'>Action</strong>: While this character is attacking, spend 1 fate to an unclaimed ring. Choose a <em class=\'bbc\'><strong class=\'bbc\'>Monk</strong></em> character or a character with a <em class=\'bbc\'><strong class=\'bbc\'>Monk</strong></em> attachment &ndash; ready that character.';
+                break;
+            case '3':
+                $item['text'] = '<strong class=\'bbc\'>Action</strong>: During a conflict, bow this stronghold. Choose a participating character with 1 or more attachments on it &ndash; until the end of the conflict, that character gets +1[Military] and +1[Politics] (+2[Military] and +2[Politics] instead if it has 2 or more attachments on it).';
+                break;
+            case '171':
+                $item['text'] = 'While this character is attacking, the contested ring gains the [Air] element. If this character wins the conflict as an attacker, you may choose which of its ring effects to resolve.';
+                break;
         }
 
         $normalizedItem = [];
 
         $type = strtolower($item['type']);
+
         $traits = array_map(function ($trait) {
             return trim($this->slugify->slugify($trait));
         }, array_filter(explode('.', $item['traits']), function ($trait) {
             return !empty($trait);
         }));
+
         $element = null;
         if ($type === 'province') {
             $element = array_shift($traits);
@@ -143,7 +130,7 @@ class DataParseCommand extends ContainerAwareCommand
                     if ($type === 'stronghold' || $type === 'holding') {
                         $normalizedItem['strength_bonus'] = $value;
                     } else if ($value !== '') {
-                        $normalizedItem['strength'] = $value;
+                        $normalizedItem['strength'] = intval($value);
                     }
                     break;
                 case 'startinghonor':
@@ -207,6 +194,10 @@ class DataParseCommand extends ContainerAwareCommand
 
     protected function transcribe ($text)
     {
+        $text = preg_replace('/  +/', ' ', $text);
+        $text = preg_replace('/(<[^<\/]+>) /', ' $1', $text);
+        $text = preg_replace('/\((<[^<\/]+>)/', '$1(', $text);
+
         $text = str_replace([
             '&ndash;',
             '<em class=\'bbc\'><strong class=\'bbc\'>',
@@ -230,25 +221,15 @@ class DataParseCommand extends ContainerAwareCommand
             '[Scorpion]',
             '[Unicorn]',
             '’',
-            ']and',
-            '<br /></i>',
-            '<br/></i>',
             '<br />',
+            '<br/></i>',
             '<br/>',
             '&rsquo;',
-            ' </em>or<em> ',
-            '.</em>.',
             '&quot;Action:',
             '&quot;',
             '&ldquo;',
             '&rdquo;',
-            '<i> ',
-            '(<i>',
-            '󲈽',
-            '<i></i>',
-            ' –  ',
             'deck building',
-
         ], [
             '–',
             '<em>',
@@ -272,26 +253,15 @@ class DataParseCommand extends ContainerAwareCommand
             '[clan-scorpion]',
             '[clan-unicorn]',
             '\'',
-            '] and',
+            '<br/>',
             "</i>\n",
-            "</i>\n",
-            "\n",
             "\n",
             '\'',
-            '</em> or <em>',
-            '</em>.',
             '"<b>Action:</b>',
             '"',
             '"',
             '"',
-            ' <i>',
-            '<i>(',
-            '[conflict-military]',
-            '',
-            ' – ',
             'deckbuilding',
-
-
         ], $text);
 
         return $text;
