@@ -39,7 +39,6 @@
         "jms/serializer-bundle": "^1.4",
         "ramsey/uuid": "^3.6",
         "nelmio/cors-bundle": "^1.5",
-        "javiereguiluz/easyadmin-bundle": "^1.16",
         "curl/curl": "^1.8",
         "beberlei/DoctrineExtensions": "^1.0"
     },
