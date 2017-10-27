@@ -1,0 +1,88 @@
+parameters:
+  clans:
+    - crab
+    - crane
+    - dragon
+    - lion
+    - phoenix
+    - scorpion
+    - unicorn
+
+AppBundle\Entity\User:
+    admin:
+        id: '<uuid()>'
+        username: 'admin'
+        password: '<password()>'
+        enabled: true
+        roles: '[ROLE_USER,ROLE_ADMIN]'
+    guru:
+        id: '<uuid()>'
+        username: 'guru'
+        password: '<password()>'
+        enabled: true
+        roles: '[ROLE_USER,ROLE_GURU]'
+    user:
+        id: '<uuid()>'
+        username: 'user'
+        password: '<password()>'
+        enabled: true
+        roles: '[ROLE_USER]'
+    user{1..30}:
+        id: '<uuid()>'
+        username: '<firstname()>'
+        password: '<password()>'
+        enabled: true
+        roles: '[ROLE_USER]'
+    pirate:
+        id: '<uuid()>'
+        username: 'pirate'
+        password: '<password()>'
+        enabled: true
+        roles: '[ROLE_USER]'
+
+AppBundle\Entity\Token:
+    token-admin:
+        id: 'admin'
+        user: '@admin'
+    token-guru:
+        id: 'guru'
+        user: '@guru'
+    token-user:
+        id: 'user'
+        user: '@user'
+    token-user{1..30}:
+        id: 'user<current()>'
+        user: '@user<current()>'
+    token-pirate:
+        id: 'pirate'
+        user: '@pirate'
+
+AppBundle\Entity\Strain:
+    strain{1..30}:
+        __construct: ['@user<current()>']
+        id: '<uuid()>'
+
+AppBundle\Entity\Deck:
+    deck{1..30}:
+        format: 'single-core'
+        id: '<uuid()>'
+        name: '<sentence(5)>'
+        description: '<paragraph(30)>'
+        user: '@user<current()>'
+        strain: '@strain<current()>'
+        majorVersion: 1
+        minorVersion: 0
+        published: true
+        problem: 0
+        primaryClan: <randomElement(<{clans}>)>
+        secondaryClan: <randomElement(<{clans}>)>
+
+AppBundle\Entity\DeckLike:
+    decklike{1..30}:
+        __construct: ['@deck<numberBetween(1,30)>','@user<current()>']
+
+AppBundle\Entity\Comment:
+    comment{1..30}:
+        text: <paragraph(10)>
+        deck: '@deck<numberBetween(1,30)>'
+        user: '@user<current()>'
