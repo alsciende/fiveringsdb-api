@@ -13,8 +13,8 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 /**
  * Pack
  *
- * @ORM\Table(name="packs")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\PackRepository")
+ * @ORM\Table(name="packs")
  *
  * @Source()
  *

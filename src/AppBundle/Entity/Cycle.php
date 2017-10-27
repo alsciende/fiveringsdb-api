@@ -11,8 +11,8 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 /**
  * Cycle
  *
- * @ORM\Table(name="cycles")
  * @ORM\Entity()
+ * @ORM\Table(name="cycles")
  *
  * @Source()
  *

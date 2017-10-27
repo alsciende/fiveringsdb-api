@@ -11,8 +11,8 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 /**
  * Description of PackCard
  *
+ * @ORM\Entity()
  * @ORM\Table(name="pack_cards")
- * @ORM\Entity
  *
  * @Source(break="pack_id")
  *

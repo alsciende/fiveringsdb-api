@@ -8,8 +8,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Description of DeckCard
  *
+ * @ORM\Entity()
  * @ORM\Table(name="deck_cards")
- * @ORM\Entity
+ *
  * @author Alsciende <alsciende@icloud.com>
  */
 class DeckCard implements CardSlotInterface

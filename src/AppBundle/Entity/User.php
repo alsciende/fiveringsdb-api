@@ -9,7 +9,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * Description of User
  *
- * @ORM\Entity
+ * @ORM\Entity()
  * @ORM\Table(name="users")
  *
  * @author Alsciende <alsciende@icloud.com>

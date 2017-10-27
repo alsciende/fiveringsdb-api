@@ -117,13 +117,11 @@ class PublicDeckController extends BaseApiController
         if ($deck->getComments()->count() > 0) {
             return $this->failure('error', 'This deck has comments.');
         }
-        if ($deck->getFeature() instanceof Feature) {
-            return $this->failure('error', 'This deck is featured.');
-        }
 
         try {
             if ($deck->getStrain() instanceof Strain) {
                 $deck->setPublished(false);
+                $deck->setPublishedAt(null);
             } else {
                 $this->get('app.deck_manager')->deleteDeck($deck);
             }

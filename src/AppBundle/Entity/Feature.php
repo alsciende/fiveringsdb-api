@@ -9,12 +9,12 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 /**
  * Feature is when a deck is featured on the front page
  *
- * @author Alsciende <alsciende@icloud.com>
- *
  * @ORM\Entity(repositoryClass="AppBundle\Repository\FeatureRepository")
  * @ORM\Table(name="features", indexes={
  *          @ORM\Index(columns={"date"})
  *     })
+ *
+ * @author Alsciende <alsciende@icloud.com>
  */
 class Feature implements Timestampable
 {

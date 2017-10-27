@@ -10,8 +10,8 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 /**
  * A Review written by a User for a Card
  *
+ * @ORM\Entity()
  * @ORM\Table(name="reviews")
- * @ORM\Entity
  *
  * @author Alsciende <alsciende@icloud.com>
  */

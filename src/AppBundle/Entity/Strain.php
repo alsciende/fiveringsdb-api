@@ -11,8 +11,8 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 /**
  * A strain of private decks
  *
- * @ORM\Table(name="strains")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\StrainRepository")
+ * @ORM\Table(name="strains")
  *
  * @author Alsciende <alsciende@icloud.com>
  */

@@ -9,5 +9,5 @@ namespace AppBundle\Service\DeckSearch;
  */
 interface PopularDeckSearchServiceInterface extends DeckSearchServiceInterface
 {
-    public function getNumberOfDays (): int;
+    public function getFreshness (): int;
 }

@@ -75,6 +75,7 @@ class DeckManager
             $deck->setSecondaryClan($deck->getDeckCards()->findSecondaryClan($deck->getPrimaryClan()));
             $deck->setProblem($this->deckValidator->check($deck->getDeckCards(), $deck->getFormat()));
             $deck->setPublished(false);
+            $deck->setPublishedAt(null);
             $deck->setMajorVersion($head === null ? 0 : $head->getMajorVersion());
             $deck->setMinorVersion($head === null ? 1 : $head->getMinorVersion() + 1);
             $this->entityManager->persist($deck);
@@ -104,6 +105,7 @@ class DeckManager
     public function publish (Deck $deck): self
     {
         $deck->setPublished(true);
+        $deck->setPublishedAt(new \DateTime());
         $deck->setMajorVersion($deck->getMajorVersion() + 1);
         $deck->setMinorVersion(0);
 
