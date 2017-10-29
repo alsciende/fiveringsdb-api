@@ -14,8 +14,8 @@ class LastMonthPopularSearchService extends AbstractPopularDeckSearchService
         return 'month';
     }
 
-    public function getNumberOfDays (): int
+    public function getFreshness (): int
     {
-        return 31;
+        return 2;
     }
 }

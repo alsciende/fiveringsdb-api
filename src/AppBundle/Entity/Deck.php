@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Behavior\Entity\FreshnessTrait;
 use AppBundle\Behavior\Entity\Timestampable;
 use AppBundle\Model\CardSlotCollectionDecorator;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -13,7 +14,10 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
  * A Deck, private (minorVersion > 0) or public (minorVersion == 0)
  *
  * @ORM\Entity(repositoryClass="AppBundle\Repository\DeckRepository")
- * @ORM\Table(name="decks")
+ * @ORM\Table(name="decks", indexes={
+ *          @ORM\Index(columns={"published"}),
+ *          @ORM\Index(columns={"freshness"})
+ *     })
  *
  * @author Alsciende <alsciende@icloud.com>
  */
@@ -22,7 +26,13 @@ class Deck implements Timestampable
     const FORMAT_STANDARD = 'standard';
     const FORMAT_SINGLE_CORE = 'single-core';
 
+    const FRESHNESS_DAY = 0; // less than 24 hours
+    const FRESHNESS_WEEK = 1; // less than 7 days
+    const FRESHNESS_MONTH = 2; // less than 1 month
+    const FRESHNESS_STALE = 3; // more than 1 month
+
     use TimestampableEntity;
+    use FreshnessTrait;
 
     /**
      * @var string
@@ -143,6 +153,13 @@ class Deck implements Timestampable
     private $published;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="published_at", type="datetime", nullable=true)
+     */
+    private $publishedAt;
+
+    /**
      * A number indicating a problem with the deck
      *
      * @var integer
@@ -169,13 +186,6 @@ class Deck implements Timestampable
      */
     private $secondaryClan;
 
-    /**
-     * @var Feature
-     *
-     * @ORM\OneToOne(targetEntity="Feature", mappedBy="deck")
-     */
-    private $feature;
-
     function __construct ()
     {
         $this->name = 'Default name';
@@ -188,6 +198,7 @@ class Deck implements Timestampable
         $this->deckCards = new ArrayCollection();
         $this->nbLikes = 0;
         $this->nbComments = 0;
+        $this->freshness = 0;
     }
 
     public function getNbLikes (): ?int
@@ -437,14 +448,22 @@ class Deck implements Timestampable
         return $this;
     }
 
-    public function getFeature (): ?Feature
+    /**
+     * @return \DateTime
+     */
+    public function getPublishedAt (): \DateTime
     {
-        return $this->feature;
+        return $this->publishedAt;
     }
 
-    public function setFeature (Feature $feature): self
+    /**
+     * @param \DateTime $publishedAt
+     *
+     * @return self
+     */
+    public function setPublishedAt (\DateTime $publishedAt): self
     {
-        $this->feature = $feature;
+        $this->publishedAt = $publishedAt;
 
         return $this;
     }

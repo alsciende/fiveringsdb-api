@@ -5,8 +5,8 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="tokens")
  * @ORM\Entity()
+ * @ORM\Table(name="tokens")
  *
  * @author Alsciende <alsciende@icloud.com>
  */

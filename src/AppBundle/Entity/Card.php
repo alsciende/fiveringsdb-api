@@ -14,8 +14,8 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 /**
  * Card
  *
- * @ORM\Table(name="cards")
  * @ORM\Entity()
+ * @ORM\Table(name="cards")
  *
  * @Source(break="id")
  *

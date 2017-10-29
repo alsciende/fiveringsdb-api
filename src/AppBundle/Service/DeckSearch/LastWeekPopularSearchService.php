@@ -14,8 +14,8 @@ class LastWeekPopularSearchService extends AbstractPopularDeckSearchService
         return 'week';
     }
 
-    public function getNumberOfDays (): int
+    public function getFreshness (): int
     {
-        return 7;
+        return 1;
     }
 }

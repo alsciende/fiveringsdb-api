@@ -9,8 +9,8 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 /**
  * A Ruling written by a User for a Card
  *
+ * @ORM\Entity()
  * @ORM\Table(name="rulings")
- * @ORM\Entity
  *
  * @author Alsciende <alsciende@icloud.com>
  */

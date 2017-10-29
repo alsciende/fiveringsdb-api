@@ -10,8 +10,8 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 /**
  * Description of ClanRole
  *
+ * @ORM\Entity()
  * @ORM\Table(name="clan_roles")
- * @ORM\Entity
  *
  * @Source()
  *
