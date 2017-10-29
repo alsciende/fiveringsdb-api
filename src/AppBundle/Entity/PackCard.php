@@ -50,7 +50,7 @@ class PackCard implements CardSlotInterface, Timestampable
     private $illustrator;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="flavor", type="string", nullable=true)
      *

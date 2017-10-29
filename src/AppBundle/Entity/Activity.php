@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use AppBundle\Behavior\Entity\SequentialIdTrait;
+use AppBundle\Behavior\Entity\Timestampable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class Activity
+class Activity implements Timestampable
 {
     const TYPE_COMMENT_ADDED = 1;
     const TYPE_DECKLIST_PUBLISHED = 2;
@@ -69,6 +70,11 @@ class Activity
     }
 
     public function getCreatedAt (): \DateTime
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt ()
     {
         return $this->createdAt;
     }

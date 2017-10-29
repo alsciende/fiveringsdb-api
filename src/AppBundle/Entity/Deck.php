@@ -287,7 +287,7 @@ class Deck implements Timestampable
         return $this;
     }
 
-    function getUser (): ?User
+    function getUser (): User
     {
         return $this->user;
     }

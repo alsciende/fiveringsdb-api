@@ -6,6 +6,8 @@ use AppBundle\Entity\Activity;
 use AppBundle\Entity\Deck;
 use AppBundle\Entity\Notification;
 use AppBundle\Event\CommentAddedEvent;
+use AppBundle\Repository\ActivityRepository;
+use AppBundle\Repository\DeckRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -20,13 +22,16 @@ class ActivityRecorder implements EventSubscriberInterface
     /** @var EntityManagerInterface */
     private $entityManager;
 
-    /** @var LoggerInterface */
-    private $logger;
+    /** @var DeckRepository */
+    private $deckRepository;
 
-    public function __construct (EntityManagerInterface $entityManager, LoggerInterface $logger)
+    public function __construct (
+        EntityManagerInterface $entityManager,
+        DeckRepository $deckRepository
+    )
     {
         $this->entityManager = $entityManager;
-        $this->logger = $logger;
+        $this->deckRepository = $deckRepository;
     }
 
     public static function getSubscribedEvents ()
@@ -44,7 +49,7 @@ class ActivityRecorder implements EventSubscriberInterface
         $activity = new Activity(Activity::TYPE_COMMENT_ADDED, $deck);
         $activity->addNotification(new Notification($deck->getUser(), $activity));
 
-        foreach ($this->entityManager->getRepository(Deck::class)->findCommenters($deck) as $commenter) {
+        foreach ($this->deckRepository->findCommenters($deck) as $commenter) {
             if ($commenter !== $deck->getUser()) {
                 $activity->addNotification(new Notification($commenter, $activity));
             }
