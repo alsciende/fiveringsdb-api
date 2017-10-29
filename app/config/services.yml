@@ -134,6 +134,6 @@ services:
         class: AppBundle\EventSubscriber\ActivityRecorder
         arguments:
           - "@doctrine.orm.entity_manager"
-          - "@logger"
+          - "@=service('doctrine.orm.entity_manager').getRepository('AppBundle:Deck')"
         tags:
           - "kernel.event_subscriber"
