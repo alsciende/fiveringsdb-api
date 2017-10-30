@@ -33,7 +33,7 @@ class Activity implements Timestampable
 
     /**
      * @var Deck
-     * @ORM\ManyToOne(targetEntity="Deck", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="Deck", inversedBy="activities", fetch="EAGER")
      * @ORM\JoinColumn(name="deck_id", referencedColumnName="id", nullable=false)
      */
     private $deck;

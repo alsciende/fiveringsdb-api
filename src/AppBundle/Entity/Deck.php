@@ -179,6 +179,12 @@ class Deck implements Timestampable
      */
     private $secondaryClan;
 
+    /**
+     * @var Collection|Activity[]
+     * @ORM\OneToMany(targetEntity="Activity", mappedBy="deck", cascade={"remove"})
+     */
+    private $activities;
+
     function __construct ()
     {
         $this->name = 'Default name';
@@ -456,6 +462,51 @@ class Deck implements Timestampable
     public function setPublishedAt (\DateTime $publishedAt = null): self
     {
         $this->publishedAt = $publishedAt;
+
+        return $this;
+    }
+
+    /** @return Collection|Activity[] */
+    public function getActivities (): Collection
+    {
+        return $this->activities;
+    }
+
+    /** @param Collection|Activity[] $activities */
+    public function setActivities (Collection $activities): self
+    {
+        $this->clearActivitys();
+        foreach ($activities as $activity) {
+            $this->addActivity($activity);
+        }
+
+        return $this;
+    }
+
+    public function clearActivitys (): self
+    {
+        foreach ($this->getActivities() as $activity) {
+            $this->removeActivity($activity);
+        }
+        $this->activities->clear();
+
+        return $this;
+    }
+
+    public function removeActivity (Activity $activity): self
+    {
+        if ($this->activities->contains($activity)) {
+            $this->activities->removeElement($activity);
+        }
+
+        return $this;
+    }
+
+    public function addActivity (Activity $activity): self
+    {
+        if ($this->activities->contains($activity) === false) {
+            $this->activities->add($activity);
+        }
 
         return $this;
     }

@@ -4,31 +4,39 @@ AppBundle\Entity\Deck:
     properties:
         id:
             expose: true
-            groups: ['Default','Activity']
+            groups: ['Default','Activity','Public']
         createdAt:
             expose: true
         updatedAt:
             expose: true
+        publishedAt:
+            expose: true
+            groups: ['Public']
         name:
             expose: true
-            groups: ['Default','Activity']
+            groups: ['Default','Activity','Public']
         description:
             expose: true
             groups: ['Description']
         format:
             expose: true
+            groups: ['Default','Public']
         nbLikes:
             expose: true
+            groups: ['Public']
         nbComments:
             expose: true
+            groups: ['Public']
         published:
             expose: true
         problem:
             expose: true
         primaryClan:
             expose: true
+            groups: ['Default','Public']
         secondaryClan:
             expose: true
+            groups: ['Default','Public']
         strain:
             expose: true
             groups: ['Strain']

@@ -39,8 +39,11 @@ class PublicDeckController extends BaseApiController
             $this->get('app.deck_search')->search($search);
 
             return $this->success($search, [
-                'Default',
+                'Public',
                 'User',
+                'user' => [
+                    'Default'
+                ]
             ]);
         }
 
@@ -61,10 +64,13 @@ class PublicDeckController extends BaseApiController
         }
 
         return $this->success($deck, [
-            'Default',
+            'Public',
             'Description',
             'Cards',
             'User',
+            'user' => [
+                'Default'
+            ],
             'Comments',
         ]);
     }
@@ -91,7 +97,7 @@ class PublicDeckController extends BaseApiController
             $this->getDoctrine()->getManager()->flush();
 
             return $this->success($deck, [
-                'Default',
+                'Public',
                 'Description',
                 'Cards',
             ]);
