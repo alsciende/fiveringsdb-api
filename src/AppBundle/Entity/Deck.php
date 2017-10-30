@@ -146,7 +146,7 @@ class Deck implements Timestampable
     private $published;
 
     /**
-     * @var \DateTime
+     * @var \DateTime|null
      *
      * @ORM\Column(name="published_at", type="datetime", nullable=true)
      */
@@ -443,7 +443,7 @@ class Deck implements Timestampable
     /**
      * @return \DateTime
      */
-    public function getPublishedAt (): \DateTime
+    public function getPublishedAt (): ?\DateTime
     {
         return $this->publishedAt;
     }
@@ -453,7 +453,7 @@ class Deck implements Timestampable
      *
      * @return self
      */
-    public function setPublishedAt (\DateTime $publishedAt): self
+    public function setPublishedAt (\DateTime $publishedAt = null): self
     {
         $this->publishedAt = $publishedAt;
 

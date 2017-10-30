@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace AppBundle\Entity;
 
-use AppBundle\Behavior\Entity\FreshnessTrait;
 use AppBundle\Behavior\Entity\Timestampable;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
