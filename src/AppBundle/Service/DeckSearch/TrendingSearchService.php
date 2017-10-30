@@ -24,13 +24,17 @@ class TrendingSearchService extends AbstractDeckSearchService
 
     public function search (DeckSearch $search)
     {
+        $date = new \DateTime();
+        date_sub($date, new \DateInterval("P1D"));
+
         $dql = "SELECT COUNT(d)
         FROM AppBundle:Deck d
         WHERE d.published = :published
-        AND d.freshness = 0";
+        AND d.createdAt >= :date";
         $query = $this->getEntityManager()
                       ->createQuery($dql)
-                      ->setParameter('published', true);
+                      ->setParameter('published', true)
+                      ->setParameter('date', $date);
 
         $search->setTotal((int) $query->getSingleScalarResult());
 
@@ -48,13 +52,13 @@ class TrendingSearchService extends AbstractDeckSearchService
             COUNT(DISTINCT c.user_id) nbComments, 
             SUM(s.score) 
         FROM (
-	        SELECT l.deck_id, (86400 - UNIX_TIMESTAMP() + UNIX_TIMESTAMP(created_at)) score
-	        FROM deck_likes l 
-	        WHERE l.freshness = 0
+	        SELECT deck_id, (86400 - UNIX_TIMESTAMP() + UNIX_TIMESTAMP(created_at)) score
+	        FROM deck_likes 
+	        WHERE created_at >= ?
 	        UNION ALL
-	        SELECT c.deck_id, (86400 - UNIX_TIMESTAMP() + UNIX_TIMESTAMP(created_at)) score
-	        FROM comments c 
-	        WHERE c.freshness = 0
+	        SELECT deck_id, (86400 - UNIX_TIMESTAMP() + UNIX_TIMESTAMP(created_at)) score
+	        FROM comments 
+	        WHERE created_at >= ?
         ) s
         INNER JOIN decks d ON d.id = s.deck_id
         INNER JOIN users u ON d.user_id = u.id
@@ -67,8 +71,10 @@ class TrendingSearchService extends AbstractDeckSearchService
 
         $query = $this->getEntityManager()
                       ->createNativeQuery($sql, $rsm)
-                      ->setParameter(1, $search->getFirstIndex())
-                      ->setParameter(2, $search->getLimit());
+                      ->setParameter(1, $date->format('Y-m-d H:i:s'))
+                      ->setParameter(2, $date->format('Y-m-d H:i:s'))
+                      ->setParameter(3, $search->getFirstIndex())
+                      ->setParameter(4, $search->getLimit());
 
         foreach ($query->getResult() as $result) {
             /** @var Deck $deck */

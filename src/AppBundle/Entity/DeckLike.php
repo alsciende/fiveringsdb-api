@@ -2,7 +2,6 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Behavior\Entity\FreshnessTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -11,15 +10,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  * @ORM\Entity
  * @ORM\Table(name="deck_likes", indexes={
- *          @ORM\Index(columns={"freshness"})
+ *          @ORM\Index(columns={"created_at"})
  *     })
  *
  * @author Alsciende <alsciende@icloud.com>
  */
 class DeckLike
 {
-    use FreshnessTrait;
-
     /**
      * @var \AppBundle\Entity\Deck
      *
@@ -49,7 +46,6 @@ class DeckLike
     {
         $this->deck = $deck;
         $this->user = $user;
-        $this->freshness = 0;
     }
 
     function getDeck (): Deck

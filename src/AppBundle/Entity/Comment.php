@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace AppBundle\Entity;
 
-use AppBundle\Behavior\Entity\FreshnessTrait;
 use AppBundle\Behavior\Entity\Timestampable;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -14,7 +13,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
  *
  * @ORM\Entity
  * @ORM\Table(name="comments", indexes={
- *          @ORM\Index(columns={"freshness"})
+ *          @ORM\Index(columns={"created_at"})
  *     })
  *
  * @author Alsciende <alsciende@icloud.com>
@@ -22,7 +21,6 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 class Comment implements Timestampable
 {
     use TimestampableEntity;
-    use FreshnessTrait;
 
     /**
      * @var string
@@ -67,7 +65,6 @@ class Comment implements Timestampable
     {
         $this->text = 'Default text';
         $this->visible = true;
-        $this->freshness = 0;
     }
 
     public function setText (string $text): self
