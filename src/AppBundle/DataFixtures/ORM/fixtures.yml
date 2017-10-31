@@ -22,14 +22,14 @@ AppBundle\Entity\User:
         enabled: true
         roles: '[ROLE_USER,ROLE_GURU]'
     user:
-        id: '<uuid()>'
+        id: '97f727d6-96ef-11e7-8a2f-c821582d3bbf'
         username: 'user'
         password: '<password()>'
         enabled: true
         roles: '[ROLE_USER]'
     user{1..30}:
         id: '<uuid()>'
-        username: '<firstname()>'
+        username: '<firstname()><current()>'
         password: '<password()>'
         enabled: true
         roles: '[ROLE_USER]'
@@ -73,6 +73,7 @@ AppBundle\Entity\Deck:
         majorVersion: 1
         minorVersion: 0
         published: true
+        published_at: <dateTimeThisMonth()>
         problem: 0
         primaryClan: <randomElement(<{clans}>)>
         secondaryClan: <randomElement(<{clans}>)>
@@ -86,3 +87,11 @@ AppBundle\Entity\Comment:
         text: <paragraph(10)>
         deck: '@deck<numberBetween(1,30)>'
         user: '@user<current()>'
+
+AppBundle\Entity\Activity:
+    activity{1..30}:
+        __construct: ['<numberBetween(1,3)>','@deck<numberBetween(1,30)>']
+
+AppBundle\Entity\Notification:
+    notif{1..30}:
+        __construct: ['@user','@activity<current()>']

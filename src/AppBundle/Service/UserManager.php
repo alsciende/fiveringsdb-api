@@ -23,10 +23,16 @@ class UserManager
         return $this->em->getRepository(User::class)->findOneBy(['username' => $username]);
     }
 
-    public function createUser (string $username): User
+    public function findUserById (string $id): ?User
+    {
+        return $this->em->getRepository(User::class)->find($id);
+    }
+
+    public function createUser (string $id, string $username): User
     {
         $user = new User();
-        $user->setUsername($username)
+        $user->setId($id)
+             ->setUsername($username)
              ->setPassword($username)
              ->setEnabled(true);
 
