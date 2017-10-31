@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  */
-class UserController extends BaseApiController
+class UserController extends AbstractController
 {
     /**
      * Get details about the current user

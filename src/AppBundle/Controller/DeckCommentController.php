@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * @author Alsciende <alsciende@icloud.com>
  */
-class DeckCommentController extends BaseApiController
+class DeckCommentController extends AbstractController
 {
     /**
      * Create a comment on a deck

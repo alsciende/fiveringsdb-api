@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class PublicDeckController extends BaseApiController
+class PublicDeckController extends AbstractController
 {
 
     /**

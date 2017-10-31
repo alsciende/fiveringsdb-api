@@ -12,7 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class ActivityController extends BaseApiController
+class ActivityController extends AbstractController
 {
     /**
      * Get activity
@@ -29,9 +29,8 @@ class ActivityController extends BaseApiController
                 ->findForUser($this->getUser(), 10),
             [
                 'Default',
-                'Deck',
                 'deck' => [
-                    'Activity'
+                    'Public'
                 ],
             ]
         );

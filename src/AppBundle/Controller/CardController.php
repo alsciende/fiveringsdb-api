@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class CardController extends BaseApiController
+class CardController extends AbstractController
 {
     /**
      * Get all Cards

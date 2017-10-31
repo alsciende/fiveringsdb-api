@@ -38,6 +38,13 @@ class Activity
     private $deck;
 
     /**
+     * @var User
+     * @ORM\ManyToOne(targetEntity="User", fetch="EAGER")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
+     */
+    private $user;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=false)
@@ -50,10 +57,11 @@ class Activity
      */
     private $notifications;
 
-    public function __construct (int $type, Deck $deck)
+    public function __construct (int $type, Deck $deck, User $user)
     {
         $this->type = $type;
         $this->deck = $deck;
+        $this->user = $user;
         $this->createdAt = new \DateTime();
         $this->notifications = new ArrayCollection();
     }
@@ -68,12 +76,12 @@ class Activity
         return $this->deck;
     }
 
-    public function getCreatedAt (): \DateTime
+    public function getUser (): User
     {
-        return $this->createdAt;
+        return $this->user;
     }
 
-    public function getUpdatedAt ()
+    public function getCreatedAt (): \DateTime
     {
         return $this->createdAt;
     }

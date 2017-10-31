@@ -4,8 +4,9 @@ AppBundle\Entity\Activity:
     properties:
         type:
             expose: true
+        createdAt:
+            expose: true
         deck:
             expose: true
-            groups: ['Deck']
-        createdAt:
+        user:
             expose: true

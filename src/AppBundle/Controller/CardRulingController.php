@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class CardRulingController extends BaseApiController
+class CardRulingController extends AbstractController
 {
 
     /**

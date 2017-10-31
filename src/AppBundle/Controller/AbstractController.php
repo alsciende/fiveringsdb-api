@@ -12,14 +12,14 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-abstract class BaseApiController extends Controller
+abstract class AbstractController extends Controller
 {
     public function success ($data = null, $groups = ['Default'])
     {
         return $this->get('app.api')->buildResponse($data, $groups);
     }
 
-    public function failure ($message = "unknown_error", $description = "An unknown error has occured.")
+    public function failure ($message = "unknown_error", $description = "An unknown error has occurred.")
     {
         $this->get('logger')->info($message);
 

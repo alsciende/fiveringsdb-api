@@ -4,7 +4,7 @@ AppBundle\Entity\Deck:
     properties:
         id:
             expose: true
-            groups: ['Default','Activity','Public']
+            groups: ['Default','Public']
         createdAt:
             expose: true
         updatedAt:
@@ -14,7 +14,7 @@ AppBundle\Entity\Deck:
             groups: ['Public']
         name:
             expose: true
-            groups: ['Default','Activity','Public']
+            groups: ['Default','Public']
         description:
             expose: true
             groups: ['Description']

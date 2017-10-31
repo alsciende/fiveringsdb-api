@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class ClanRoleController extends BaseApiController
+class ClanRoleController extends AbstractController
 {
     /**
      * Get all pairs Clan-Role
