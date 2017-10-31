@@ -21,7 +21,7 @@ class FeatureController extends BaseApiController
     {
         $this->setPublic($request);
 
-        $features = $this->get('app.feature_manager')->getElectedFeatures();
+        $features = $this->get('app.feature_manager')->getCurrentFeatures();
 
         return $this->success($features, [
             'Default',

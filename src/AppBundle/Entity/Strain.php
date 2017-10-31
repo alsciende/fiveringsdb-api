@@ -2,7 +2,6 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Behavior\Entity\Timestampable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,7 +15,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class Strain implements Timestampable
+class Strain
 {
     use TimestampableEntity;
 

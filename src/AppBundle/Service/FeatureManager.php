@@ -40,7 +40,7 @@ class FeatureManager
         $this->period = $period;
     }
 
-    public function getElectedFeatures ()
+    public function getCurrentFeatures ()
     {
         $date = $this->featureRepository->findLastDate();
         if ($date instanceof \DateTime) {

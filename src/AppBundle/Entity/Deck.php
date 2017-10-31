@@ -2,12 +2,10 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Behavior\Entity\Timestampable;
 use AppBundle\Model\CardSlotCollectionDecorator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * A Deck, private (minorVersion > 0) or public (minorVersion == 0)
@@ -20,19 +18,10 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class Deck implements Timestampable
+class Deck
 {
     const FORMAT_STANDARD = 'standard';
     const FORMAT_SINGLE_CORE = 'single-core';
-
-    use TimestampableEntity;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", nullable=false)
-     */
-    private $format;
 
     /**
      * Unique identifier of the deck
@@ -62,6 +51,19 @@ class Deck implements Timestampable
      * @ORM\Column(name="description", type="text", nullable=false)
      */
     private $description;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=false)
+     */
+    private $format;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime")
+     */
+    private $createdAt;
 
     /**
      * The cards used by the deck
@@ -432,6 +434,11 @@ class Deck implements Timestampable
         $this->format = $format;
 
         return $this;
+    }
+
+    public function getCreatedAt(): \DateTime
+    {
+        return $this->createdAt;
     }
 
     public function getNbComments (): ?int
