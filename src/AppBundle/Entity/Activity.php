@@ -57,6 +57,11 @@ class Activity
      */
     private $notifications;
 
+    /**
+     * @var bool
+     */
+    private $personal;
+
     public function __construct (int $type, Deck $deck, User $user, \DateTime $createdAt = null)
     {
         $this->type = $type;
@@ -127,6 +132,18 @@ class Activity
         if ($this->notifications->contains($notification) === false) {
             $this->notifications->add($notification);
         }
+
+        return $this;
+    }
+
+    public function isPersonal (): bool
+    {
+        return $this->personal;
+    }
+
+    public function setPersonal (bool $personal): self
+    {
+        $this->personal = $personal;
 
         return $this;
     }

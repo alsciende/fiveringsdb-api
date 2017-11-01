@@ -69,9 +69,13 @@ class PublicDeckController extends AbstractController
             'Cards',
             'User',
             'user' => [
-                'Default'
+                'Default',
             ],
             'Comments',
+            'comments' => [
+                'Default',
+                'User'
+            ],
         ]);
     }
 

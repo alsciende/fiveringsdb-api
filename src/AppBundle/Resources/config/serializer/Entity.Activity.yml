@@ -4,6 +4,8 @@ AppBundle\Entity\Activity:
     properties:
         type:
             expose: true
+        personal:
+            expose: true
         createdAt:
             expose: true
         deck:

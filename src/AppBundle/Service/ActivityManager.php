@@ -28,7 +28,7 @@ class ActivityManager
         $public = $this->getPublicActivity();
         $list = array_merge($personal, $public);
         usort($list, function (Activity $a, Activity $b) {
-            return $a->getCreatedAt() <=> $b->getCreatedAt();
+            return $b->getCreatedAt() <=> $a->getCreatedAt();
         });
 
         return $list;
@@ -37,10 +37,12 @@ class ActivityManager
     /** @return Activity[] */
     private function getPersonalActivity (User $user): array
     {
-        return $this
+        return array_map(function (Activity $activity) {
+            return $activity->setPersonal(true);
+        }, $this
             ->entityManager
             ->getRepository(Activity::class)
-            ->findForUser($user, 10);
+            ->findForUser($user, 10));
     }
 
     /** @return Activity[] */
@@ -56,7 +58,13 @@ class ActivityManager
             );
 
         return array_map(function (Deck $deck) {
-            return new Activity(Activity::TYPE_DECKLIST_PUBLISHED, $deck, $deck->getUser(), $deck->getPublishedAt());
+            $activity = new Activity(
+                Activity::TYPE_DECKLIST_PUBLISHED,
+                $deck,
+                $deck->getUser(),
+                $deck->getPublishedAt()
+            );
+            return $activity->setPersonal(false);
         }, $decks);
     }
 }

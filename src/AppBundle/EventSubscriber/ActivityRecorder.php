@@ -44,13 +44,14 @@ class ActivityRecorder implements EventSubscriberInterface
     public function onCommentAdded (CommentAddedEvent $event)
     {
         $comment = $event->getComment();
+        $user = $comment->getUser();
         $deck = $comment->getDeck();
 
         $activity = new Activity(Activity::TYPE_COMMENT_ADDED, $deck, $comment->getUser());
         $activity->addNotification(new Notification($deck->getUser(), $activity));
 
         foreach ($this->deckRepository->findCommenters($deck) as $commenter) {
-            if ($commenter !== $deck->getUser()) {
+            if ($commenter !== $deck->getUser() && $commenter !== $user) {
                 $activity->addNotification(new Notification($commenter, $activity));
             }
         }

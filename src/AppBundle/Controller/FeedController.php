@@ -29,7 +29,8 @@ class FeedController extends AbstractController
             [
                 'Default',
                 'deck' => [
-                    'Public'
+                    'Public',
+                    'User',
                 ],
             ]
         );

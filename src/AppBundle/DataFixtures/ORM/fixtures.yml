@@ -10,7 +10,7 @@ parameters:
 
 AppBundle\Entity\User:
     admin:
-        id: '<uuid()>'
+        id: '507577be-9459-11e7-8117-685b35b003e2'
         username: 'admin'
         password: '<password()>'
         enabled: true
@@ -90,7 +90,7 @@ AppBundle\Entity\Comment:
 
 AppBundle\Entity\Activity:
     activity{1..100}:
-        __construct: ['<numberBetween(1,3)>','@deck<numberBetween(1,100)>','@user<numberBetween(1,100)>']
+        __construct: ['<numberBetween(1,3)>','@deck<numberBetween(1,100)>','@user<numberBetween(1,100)>','<dateTimeThisMonth()>']
 
 AppBundle\Entity\Notification:
     notif{1..100}:
