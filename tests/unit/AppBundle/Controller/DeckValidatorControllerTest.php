@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\AppBundle\Controller;
+namespace Tests\Unit\AppBundle\Controller;
 
 use AppBundle\Controller\DeckValidatorController;
 use AppBundle\Service\DeckValidator;
-use Tests\AppBundle\Controller\BaseApiControllerTest;
-use Tests\AppBundle\DeckDataTrait;
+use Tests\Unit\AppBundle\Controller\BaseApiControllerTest;
+use Tests\Unit\AppBundle\DeckDataTrait;
 
 class DeckValidatorControllerTest extends BaseApiControllerTest
 {

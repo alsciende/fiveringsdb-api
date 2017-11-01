@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\AppBundle\Service\DeckCheck;
+namespace Tests\Unit\AppBundle\Service\DeckCheck;
 
 use AppBundle\Entity\Card;
 use AppBundle\Model\CardSlotCollectionDecorator;

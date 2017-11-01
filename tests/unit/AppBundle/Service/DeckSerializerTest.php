@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\AppBundle\Service;
+namespace Tests\Unit\AppBundle\Service;
 
 use AppBundle\Entity\Card;
 use AppBundle\Entity\Deck;
@@ -10,7 +10,7 @@ use AppBundle\Entity\DeckCard;
 use JMS\Serializer\Serializer;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Container;
-use Tests\AppBundle\DeckDataTrait;
+use Tests\Unit\AppBundle\DeckDataTrait;
 
 class DeckSerializerTest extends KernelTestCase
 {

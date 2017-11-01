@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\AppBundle\Controller;
+namespace Tests\Unit\AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;

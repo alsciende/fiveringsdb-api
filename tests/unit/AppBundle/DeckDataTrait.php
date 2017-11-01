@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\AppBundle;
+namespace Tests\Unit\AppBundle;
 
 trait DeckDataTrait
 {

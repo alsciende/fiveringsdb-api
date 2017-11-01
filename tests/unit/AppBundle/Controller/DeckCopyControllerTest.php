@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Tests\AppBundle\Controller;
+namespace Tests\Unit\AppBundle\Controller;
 
 use AppBundle\Controller\DeckLineageController;
 use AppBundle\Controller\PrivateDeckController;
 use AppBundle\Controller\PublicDeckController;
-use Tests\AppBundle\Controller\BaseApiControllerTest;
-use Tests\AppBundle\DeckDataTrait;
+use Tests\Unit\AppBundle\Controller\BaseApiControllerTest;
+use Tests\Unit\AppBundle\DeckDataTrait;
 
 /**
  * Test class for all the API endpoints that read/write decks
  *
- * @package Tests\AppBundle\Controller
+ * @package Tests\Unit\AppBundle\Controller
  * @author Alsciende <alsciende@icloud.com>
  */
 class DeckCopyControllerTest extends BaseApiControllerTest

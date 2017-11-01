@@ -32,3 +32,6 @@ monolog:
 
 #swiftmailer:
 #    delivery_addresses: ['me@example.com']
+nelmio_alice:
+    locale: 'en_US' # Default locale for the Faker Generator
+    seed: ~

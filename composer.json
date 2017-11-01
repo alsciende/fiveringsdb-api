@@ -13,7 +13,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "Tests\\Functional\\": "tests/functional/",
+            "Tests\\Unit\\": "tests/unit/"
         }
     },
     "require": {
@@ -40,7 +41,10 @@
         "ramsey/uuid": "^3.6",
         "nelmio/cors-bundle": "^1.5",
         "curl/curl": "^1.8",
-        "beberlei/DoctrineExtensions": "^1.0"
+        "beberlei/DoctrineExtensions": "^1.0",
+        "behat/behat": "^3.4",
+        "behat/symfony2-extension": "^2.1",
+        "justinrainbow/json-schema": "^5.2"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\AppBundle\Service\DeckCheck;
+namespace Tests\Unit\AppBundle\Service\DeckCheck;
 
 use AppBundle\Entity\DeckCard;
 use AppBundle\Service\DeckCheck\CardCopiesCheck;

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\AppBundle\Controller;
+namespace Tests\Unit\AppBundle\Controller;
 
 use AppBundle\Controller\CardRulingController;
-use Tests\AppBundle\Controller\BaseApiControllerTest;
+use Tests\Unit\AppBundle\Controller\BaseApiControllerTest;
 
 class CardRulingControllerTest extends BaseApiControllerTest
 {
