@@ -57,12 +57,12 @@ class Activity
      */
     private $notifications;
 
-    public function __construct (int $type, Deck $deck, User $user)
+    public function __construct (int $type, Deck $deck, User $user, \DateTime $createdAt = null)
     {
         $this->type = $type;
         $this->deck = $deck;
         $this->user = $user;
-        $this->createdAt = new \DateTime();
+        $this->createdAt = $createdAt ?? new \DateTime();
         $this->notifications = new ArrayCollection();
     }
 

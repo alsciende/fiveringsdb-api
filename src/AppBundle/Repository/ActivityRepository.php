@@ -20,10 +20,11 @@ class ActivityRepository extends EntityRepository
      */
     public function findForUser(User $user, int $limit): array
     {
-        $dql = "SELECT a, d, u
+        $dql = "SELECT a, u1, d, u2
         FROM AppBundle:Activity a
+        LEFT JOIN a.user u1
         LEFT JOIN a.deck d
-        LEFT JOIN d.user u
+        LEFT JOIN d.user u2
         WHERE EXISTS (SELECT n FROM AppBundle:Notification n WHERE n.user=:user AND n.activity=a)
         ORDER BY a.createdAt DESC";
         $query = $this->getEntityManager()

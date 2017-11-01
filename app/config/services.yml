@@ -137,3 +137,9 @@ services:
           - "@=service('doctrine.orm.entity_manager').getRepository('AppBundle:Deck')"
         tags:
           - "kernel.event_subscriber"
+
+    app.activity_manager:
+        public: true
+        class: AppBundle\Service\ActivityManager
+        arguments:
+          - "@doctrine.orm.entity_manager"

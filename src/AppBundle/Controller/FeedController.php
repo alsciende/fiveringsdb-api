@@ -24,6 +24,14 @@ class FeedController extends AbstractController
      */
     public function listAction ()
     {
-
+        return $this->success(
+            $this->get('app.activity_manager')->getActivity($this->getUser()),
+            [
+                'Default',
+                'deck' => [
+                    'Public'
+                ],
+            ]
+        );
     }
 }
