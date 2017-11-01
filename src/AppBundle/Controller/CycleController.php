@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class CycleController extends BaseApiController
+class CycleController extends AbstractController
 {
     /**
      * Get all Cycles

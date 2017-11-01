@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * @author Alsciende <alsciende@icloud.com>
  */
-class StrainController extends BaseApiController
+class StrainController extends AbstractController
 {
     /**
      * Create a strain
@@ -102,7 +102,6 @@ class StrainController extends BaseApiController
                     'Default',
                     'Description',
                     'Cards',
-                    'User',
                 ],
             ]
         );

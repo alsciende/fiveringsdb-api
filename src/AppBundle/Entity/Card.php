@@ -3,7 +3,6 @@
 namespace AppBundle\Entity;
 
 use Alsciende\SerializerBundle\Annotation\Source;
-use AppBundle\Behavior\Entity\Timestampable;
 use AppBundle\Behavior\Entity\ToStringNameTrait;
 use AppBundle\Model\PackCardSlotCollectionDecorator;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -21,7 +20,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class Card implements Timestampable
+class Card
 {
     const TYPE_ATTACHMENT = 'attachment';
     const TYPE_CHARACTER = 'character';

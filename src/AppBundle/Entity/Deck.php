@@ -2,12 +2,10 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Behavior\Entity\Timestampable;
 use AppBundle\Model\CardSlotCollectionDecorator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * A Deck, private (minorVersion > 0) or public (minorVersion == 0)
@@ -20,19 +18,10 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class Deck implements Timestampable
+class Deck
 {
     const FORMAT_STANDARD = 'standard';
     const FORMAT_SINGLE_CORE = 'single-core';
-
-    use TimestampableEntity;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", nullable=false)
-     */
-    protected $format;
 
     /**
      * Unique identifier of the deck
@@ -62,6 +51,19 @@ class Deck implements Timestampable
      * @ORM\Column(name="description", type="text", nullable=false)
      */
     private $description;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=false)
+     */
+    private $format;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime")
+     */
+    private $createdAt;
 
     /**
      * The cards used by the deck
@@ -179,6 +181,12 @@ class Deck implements Timestampable
      */
     private $secondaryClan;
 
+    /**
+     * @var Collection|Activity[]
+     * @ORM\OneToMany(targetEntity="Activity", mappedBy="deck", cascade={"remove"})
+     */
+    private $activities;
+
     function __construct ()
     {
         $this->name = 'Default name';
@@ -189,6 +197,7 @@ class Deck implements Timestampable
         $this->published = false;
         $this->createdAt = new \DateTime();
         $this->deckCards = new ArrayCollection();
+        $this->activities = new ArrayCollection();
         $this->nbLikes = 0;
         $this->nbComments = 0;
     }
@@ -287,7 +296,7 @@ class Deck implements Timestampable
         return $this;
     }
 
-    function getUser (): ?User
+    function getUser (): User
     {
         return $this->user;
     }
@@ -428,6 +437,11 @@ class Deck implements Timestampable
         return $this;
     }
 
+    public function getCreatedAt(): \DateTime
+    {
+        return $this->createdAt;
+    }
+
     public function getNbComments (): ?int
     {
         return $this->nbComments;
@@ -456,6 +470,51 @@ class Deck implements Timestampable
     public function setPublishedAt (\DateTime $publishedAt = null): self
     {
         $this->publishedAt = $publishedAt;
+
+        return $this;
+    }
+
+    /** @return Collection|Activity[] */
+    public function getActivities (): Collection
+    {
+        return $this->activities;
+    }
+
+    /** @param Collection|Activity[] $activities */
+    public function setActivities (Collection $activities): self
+    {
+        $this->clearActivitys();
+        foreach ($activities as $activity) {
+            $this->addActivity($activity);
+        }
+
+        return $this;
+    }
+
+    public function clearActivitys (): self
+    {
+        foreach ($this->getActivities() as $activity) {
+            $this->removeActivity($activity);
+        }
+        $this->activities->clear();
+
+        return $this;
+    }
+
+    public function removeActivity (Activity $activity): self
+    {
+        if ($this->activities->contains($activity)) {
+            $this->activities->removeElement($activity);
+        }
+
+        return $this;
+    }
+
+    public function addActivity (Activity $activity): self
+    {
+        if ($this->activities->contains($activity) === false) {
+            $this->activities->add($activity);
+        }
 
         return $this;
     }

@@ -1,0 +1,9 @@
+default:
+    extensions:
+        Behat\Symfony2Extension: ~
+    suites:
+        default:
+            contexts:
+                - Tests\Functional\Features\Context\FeatureContext: ~
+            paths:
+                - %paths.base%/tests/functional/Features

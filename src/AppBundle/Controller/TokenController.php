@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class TokenController extends BaseApiController
+class TokenController extends AbstractController
 {
     /**
      * Uses the token to get the user data with Metagame, then saves it
@@ -39,10 +39,9 @@ class TokenController extends BaseApiController
             $manager = $this->get('app.security.user_manager');
 
             $data = json_decode((string) $res->getBody(), true);
-            $user = $manager->findUserByUsername($data['username']);
+            $user = $manager->findUserById($data['id']);
             if ($user === null) {
-                $user = $manager->createUser($data['username']);
-                $user->setId($data['id']);
+                $user = $manager->createUser($data['id'], $data['username']);
                 $manager->updateUser($user);
             }
 

@@ -2,7 +2,6 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Behavior\Entity\Timestampable;
 use AppBundle\Search\PaginatedSearchInterface;
 use AppBundle\Search\SearchInterface;
 use JMS\Serializer\SerializationContext;
@@ -18,8 +17,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ApiService
 {
-    const USE_LAST_UPDATED = false;
-
     /**
      *
      * @var RequestStack
@@ -51,23 +48,12 @@ class ApiService
         $response = $this->getEmptyResponse();
 
         if ($this->isPublic($request)) {
-            // make response public and cacheable
             $response->setPublic();
             $response->setMaxAge($this->httpCacheMaxAge);
-            $dateUpdate = $this->getDateUpdate($data);
-            if (self::USE_LAST_UPDATED) { //!\\ issue with sub-entities
-                // find last update of data
-                $response->setLastModified($dateUpdate);
-                // compare to request header
-                if ($response->isNotModified($request)) {
-                    return $response;
-                }
-            }
         }
 
         $content = $this->buildContent($data, $groups);
         $content['success'] = true;
-        $content['last_updated'] = isset($dateUpdate) ? $dateUpdate->format('c') : null;
 
         $serialized = $this->serializer->serialize($content, 'json', SerializationContext::create()->setGroups($groups));
 
@@ -96,27 +82,9 @@ class ApiService
         return $content;
     }
 
-    public function getDateUpdate ($data)
-    {
-        if (is_array($data) === false) {
-            $data = [$data];
-        }
-
-        return array_reduce(
-            $data, function ($carry, Timestampable $item) {
-            if ($carry && $item->getUpdatedAt() < $carry) {
-                return $carry;
-            } else {
-                return $item->getUpdatedAt();
-            }
-        }
-        );
-    }
-
     public function getEmptyResponse ()
     {
         $response = new Response();
-//        $response->headers->set('Access-Control-Allow-Origin', '*');
         $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
 
         return $response;

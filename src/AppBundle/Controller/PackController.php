@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class PackController extends BaseApiController
+class PackController extends AbstractController
 {
     /**
      * Get all Packs

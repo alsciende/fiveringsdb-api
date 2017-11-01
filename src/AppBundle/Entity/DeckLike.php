@@ -37,7 +37,6 @@ class DeckLike
 
     /**
      * @var \DateTime
-     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime",nullable=false)
      */
     private $createdAt;
@@ -46,6 +45,7 @@ class DeckLike
     {
         $this->deck = $deck;
         $this->user = $user;
+        $this->createdAt = new \DateTime();
     }
 
     function getDeck (): Deck
@@ -73,13 +73,6 @@ class DeckLike
     function setUser (User $user): self
     {
         $this->user = $user;
-
-        return $this;
-    }
-
-    function setCreatedAt (\DateTime $createdAt): self
-    {
-        $this->createdAt = $createdAt;
 
         return $this;
     }

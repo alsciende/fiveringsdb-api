@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class DeckValidatorController extends BaseApiController
+class DeckValidatorController extends AbstractController
 {
     /**
      * @Route("/deck-validation/{format}")

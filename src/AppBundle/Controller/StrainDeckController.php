@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * @author Alsciende <alsciende@icloud.com>
  */
-class StrainDeckController extends BaseApiController
+class StrainDeckController extends AbstractController
 {
     /**
      * Create a minor version

@@ -14,7 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class DeckLikeController extends BaseApiController
+class DeckLikeController extends AbstractController
 {
     /**
      * Create a like from a public deck

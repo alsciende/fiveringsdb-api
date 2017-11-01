@@ -3,7 +3,6 @@
 namespace AppBundle\Entity;
 
 use Alsciende\SerializerBundle\Annotation\Source;
-use AppBundle\Behavior\Entity\Timestampable;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -20,7 +19,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class Pack implements Timestampable
+class Pack
 {
     use TimestampableEntity;
 

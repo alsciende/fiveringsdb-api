@@ -3,7 +3,6 @@
 namespace AppBundle\Entity;
 
 use Alsciende\SerializerBundle\Annotation\Source;
-use AppBundle\Behavior\Entity\Timestampable;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -18,7 +17,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class Cycle implements Timestampable
+class Cycle
 {
     use TimestampableEntity;
 

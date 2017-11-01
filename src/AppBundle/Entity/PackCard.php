@@ -3,7 +3,6 @@
 namespace AppBundle\Entity;
 
 use Alsciende\SerializerBundle\Annotation\Source;
-use AppBundle\Behavior\Entity\Timestampable;
 use AppBundle\Model\CardSlotInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -18,7 +17,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class PackCard implements CardSlotInterface, Timestampable
+class PackCard implements CardSlotInterface
 {
     use TimestampableEntity;
 
@@ -50,7 +49,7 @@ class PackCard implements CardSlotInterface, Timestampable
     private $illustrator;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="flavor", type="string", nullable=true)
      *
@@ -152,12 +151,12 @@ class PackCard implements CardSlotInterface, Timestampable
         return $this;
     }
 
-    public function getFlavor (): string
+    public function getFlavor (): ?string
     {
         return $this->flavor;
     }
 
-    public function setFlavor (string $flavor): self
+    public function setFlavor (string $flavor = null): self
     {
         $this->flavor = $flavor;
 

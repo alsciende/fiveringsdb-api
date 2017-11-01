@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class PublicDeckController extends BaseApiController
+class PublicDeckController extends AbstractController
 {
 
     /**
@@ -39,8 +39,11 @@ class PublicDeckController extends BaseApiController
             $this->get('app.deck_search')->search($search);
 
             return $this->success($search, [
-                'Default',
+                'Public',
                 'User',
+                'user' => [
+                    'Default'
+                ]
             ]);
         }
 
@@ -61,11 +64,18 @@ class PublicDeckController extends BaseApiController
         }
 
         return $this->success($deck, [
-            'Default',
+            'Public',
             'Description',
             'Cards',
             'User',
+            'user' => [
+                'Default',
+            ],
             'Comments',
+            'comments' => [
+                'Default',
+                'User'
+            ],
         ]);
     }
 
@@ -91,7 +101,7 @@ class PublicDeckController extends BaseApiController
             $this->getDoctrine()->getManager()->flush();
 
             return $this->success($deck, [
-                'Default',
+                'Public',
                 'Description',
                 'Cards',
             ]);
