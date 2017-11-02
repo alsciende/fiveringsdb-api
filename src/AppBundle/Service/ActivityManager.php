@@ -22,11 +22,12 @@ class ActivityManager
         $this->entityManager = $entityManager;
     }
 
-    public function getActivity (User $user)
+    public function getActivity (User $user = null)
     {
-        $personal = $this->getPersonalActivity($user);
-        $public = $this->getPublicActivity();
-        $list = array_merge($personal, $public);
+        $list = $this->getPublicActivity();
+        if($user instanceof User) {
+            $list = array_merge($list, $this->getPersonalActivity($user));
+        }
         usort($list, function (Activity $a, Activity $b) {
             return $b->getCreatedAt() <=> $a->getCreatedAt();
         });
