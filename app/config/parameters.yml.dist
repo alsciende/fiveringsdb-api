@@ -32,6 +32,9 @@ parameters:
     metagame_client_id: ~
     metagame_client_secret: ~
     metagame_redirect_uri: ~
+    metagame_user_id: ~
+    metagame_admin_id: ~
+    metagame_guru_id: ~
 
     # URL of the UI
     front_url: ~
