@@ -152,7 +152,7 @@ class DataParseCommand extends ContainerAwareCommand
                     $normalizedItem['traits'] = $traits;
                     break;
                 case 'unique':
-                    $normalizedItem['unicity'] = $value === 'Y';
+                    $normalizedItem['unicity'] = $value === 'Y' || $type === 'stronghold';
                     break;
                 case 'text':
                     if ($value !== '') {
