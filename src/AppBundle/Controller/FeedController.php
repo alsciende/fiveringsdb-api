@@ -20,7 +20,6 @@ class FeedController extends AbstractController
      * Get Feed
      * @Route("/feed")
      * @Method("GET")
-     * @Security("has_role('ROLE_USER')")
      */
     public function listAction ()
     {

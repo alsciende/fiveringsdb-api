@@ -9,24 +9,24 @@ parameters:
     - unicorn
 
 AppBundle\Entity\User:
+    user:
+        id: '<{user_id}>'
+        username: 'user'
+        password: '<password()>'
+        enabled: true
+        roles: '[ROLE_USER]'
     admin:
-        id: '507577be-9459-11e7-8117-685b35b003e2'
+        id: '<{admin_id}>'
         username: 'admin'
         password: '<password()>'
         enabled: true
         roles: '[ROLE_USER,ROLE_ADMIN]'
     guru:
-        id: '<uuid()>'
+        id: '<{guru_id}>'
         username: 'guru'
         password: '<password()>'
         enabled: true
         roles: '[ROLE_USER,ROLE_GURU]'
-    user:
-        id: 'ee91e47c-940a-11e7-8117-685b35b003e2'
-        username: 'user'
-        password: '<password()>'
-        enabled: true
-        roles: '[ROLE_USER]'
     user{1..100}:
         id: '<uuid()>'
         username: '<firstname()><current()>'

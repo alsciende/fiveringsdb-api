@@ -23,7 +23,11 @@ class LoadAliceData extends AbstractFixture implements OrderedFixtureInterface, 
     public function load (ObjectManager $manager)
     {
         $loader = new NativeLoader();
-        $objectSet = $loader->loadFile(__DIR__.'/fixtures.yml');
+        $objectSet = $loader->loadFile(__DIR__.'/fixtures.yml', [
+            'user_id' => $this->container->getParameter('metagame_user_id') ?? Uuid::uuid4(),
+            'admin_id' => $this->container->getParameter('metagame_admin_id') ?? Uuid::uuid4(),
+            'guru_id' => $this->container->getParameter('metagame_guru_id') ?? Uuid::uuid4(),
+        ]);
 
         foreach($objectSet->getObjects() as $reference => $object) {
             $manager->persist($object);
