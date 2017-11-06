@@ -24,7 +24,6 @@ class PublicDeckType extends AbstractType
         $resolver->setDefaults(
             [
                 'data_class'         => Deck::class,
-                'csrf_protection'    => false,
                 'allow_extra_fields' => false,
                 'validation_groups'  => ['public'],
             ]

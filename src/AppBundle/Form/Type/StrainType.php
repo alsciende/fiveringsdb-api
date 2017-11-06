@@ -23,7 +23,6 @@ class StrainType extends AbstractType
         $resolver->setDefaults(
             [
                 'data_class'      => Strain::class,
-                'csrf_protection' => false,
             ]
         );
     }

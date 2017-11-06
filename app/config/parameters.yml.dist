@@ -41,3 +41,7 @@ parameters:
 
     # Period of the nomination of front-page featured decks
     features_period: 7
+
+    # Security
+    # Access Token TTL (seconds)
+    access_token_ttl: 3600

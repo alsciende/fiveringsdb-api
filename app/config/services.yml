@@ -104,7 +104,7 @@ services:
         class: AppBundle\Service\TokenManager
         arguments:
           - "@doctrine.orm.entity_manager"
-          - "@logger"
+          - "%access_token_ttl%"
 
     app.feature_manager:
         class: AppBundle\Service\FeatureManager

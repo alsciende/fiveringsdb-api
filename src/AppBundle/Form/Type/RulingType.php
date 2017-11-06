@@ -25,7 +25,6 @@ class RulingType extends AbstractType
         $resolver->setDefaults(
             [
                 'data_class'      => Ruling::class,
-                'csrf_protection' => false,
             ]
         );
     }

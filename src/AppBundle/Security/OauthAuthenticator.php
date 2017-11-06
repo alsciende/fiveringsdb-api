@@ -58,7 +58,7 @@ class OauthAuthenticator extends AbstractGuardAuthenticator
     public function getUser ($credentials, UserProviderInterface $userProvider)
     {
         $token = $this->tokenManager->findToken($credentials['token']);
-        if ($token instanceof Token) {
+        if ($token instanceof Token && $token->getExpiresAt() > new \DateTime()) {
             return $token->getUser();
         }
 

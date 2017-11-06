@@ -6,6 +6,7 @@ use AppBundle\Entity\Token;
 use AppBundle\Form\Type\TokenType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -22,32 +23,33 @@ class TokenController extends AbstractController
      */
     public function postAction (Request $request)
     {
-        $token = new Token();
-        $form = $this->createForm(TokenType::class, $token);
+        $form = $this->createFormBuilder([])->add('id', TextType::class)->getForm();
         $form->submit(json_decode($request->getContent(), true), true);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($this->getDoctrine()->getRepository(Token::class)->find($token->getId()) instanceof Token) {
+            $tokenId = $form->getData()['id'];
+
+            $token = $this->getDoctrine()->getRepository(Token::class)->find($tokenId);
+            if ($token instanceof Token) {
                 return $this->success($token);
             }
 
-            $res = $this->get('metagame')->get('api/users/me', [], $token->getId());
+            $res = $this->get('metagame')->get('api/users/me', [], $tokenId);
             if ($res->getStatusCode() !== 200) {
                 return $this->failure('token_error', (string) $res->getBody());
             }
+            $userData = json_decode((string) $res->getBody(), true);
 
-            $manager = $this->get('app.security.user_manager');
-
-            $data = json_decode((string) $res->getBody(), true);
-            $user = $manager->findUserById($data['id']);
+            $userManager = $this->get('app.security.user_manager');
+            $user = $userManager->findUserById($userData['id']);
             if ($user === null) {
-                $user = $manager->createUser($data['id'], $data['username']);
-                $manager->updateUser($user);
+                $user = $userManager->createUser($userData['id'], $userData['username']);
+                $userManager->updateUser($user);
             }
 
-            $token->setUser($user);
-            $this->getDoctrine()->getManager()->persist($token);
-            $this->getDoctrine()->getManager()->flush();
+            $tokenManager = $this->get('app.security.token_manager');
+            $token = $tokenManager->createToken($tokenId, $user);
+            $tokenManager->updateToken($token);
 
             return $this->success(
                 $token,

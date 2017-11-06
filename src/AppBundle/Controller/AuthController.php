@@ -2,12 +2,12 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Security\AccessToken;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -82,14 +82,38 @@ class AuthController extends Controller
             throw new \Exception($res->getReasonPhrase());
         }
 
-        $accessToken = AccessToken::createFromJson($res->getBody());
-
         return [
-            'message' => [
-                'type' => 'access_token',
-                'access_token' => $accessToken->getAccessToken()
-            ],
+            'message' => json_decode($res->getBody(), true),
             'origin' => $this->getParameter('front_url')
         ];
+    }
+
+    /**
+     * @Route("/refresh")
+     * @Method("POST")
+     */
+    public function refreshAction (Request $request)
+    {
+        $form = $this->createFormBuilder([])->add('refresh_token', TextType::class)->getForm();
+        $form->submit(json_decode($request->getContent(), true), true);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $refreshToken = $form->getData()['refresh_token'];
+
+            // request the access-token to the oauth server
+            $res = $this->get('metagame')->get(
+                'oauth/v2/token', [
+                    'client_id'     => $this->getParameter('metagame_client_id'),
+                    'client_secret' => $this->getParameter('metagame_client_secret'),
+                    'grant_type'    => 'refresh_token',
+                    'refresh_token' => $refreshToken,
+                ]
+            );
+            if ($res->getStatusCode() !== 200) {
+                throw new \Exception($res->getReasonPhrase());
+            }
+
+            return new JsonResponse(json_decode($res->getBody(), true));
+        }
     }
 }

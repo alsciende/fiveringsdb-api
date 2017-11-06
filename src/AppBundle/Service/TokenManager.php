@@ -15,9 +15,13 @@ class TokenManager
     /** @var EntityManagerInterface */
     private $em;
 
-    public function __construct (EntityManagerInterface $entityManager)
+    /** @var int */
+    private $ttl;
+
+    public function __construct (EntityManagerInterface $entityManager, int $ttl)
     {
         $this->em = $entityManager;
+        $this->ttl = $ttl;
     }
 
     public function findToken (string $token): ?Token
@@ -30,6 +34,10 @@ class TokenManager
         $token = new Token();
         $token->setId($value);
         $token->setUser($user);
+        $token->setCreatedAt(new \DateTime());
+        $expiresAt = clone($token->getCreatedAt());
+        $expiresAt->add(\DateInterval::createFromDateString($this->ttl . ' seconds'));
+        $token->setExpiresAt($expiresAt);
 
         return $token;
     }

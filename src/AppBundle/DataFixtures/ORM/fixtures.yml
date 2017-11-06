@@ -44,18 +44,28 @@ AppBundle\Entity\Token:
     token-admin:
         id: 'admin'
         user: '@admin'
+        createdAt: '<dateTimeThisMonth()>'
+        expiresAt: '<dateTimeBetween("now","tomorrow")>'
     token-guru:
         id: 'guru'
         user: '@guru'
+        createdAt: '<dateTimeThisMonth()>'
+        expiresAt: '<dateTimeBetween("now","tomorrow")>'
     token-user:
         id: 'user'
         user: '@user'
+        createdAt: '<dateTimeThisMonth()>'
+        expiresAt: '<dateTimeBetween("now","tomorrow")>'
     token-user{1..100}:
         id: 'user<current()>'
         user: '@user<current()>'
+        createdAt: '<dateTimeThisMonth()>'
+        expiresAt: '<dateTimeBetween("now","tomorrow")>'
     token-pirate:
         id: 'pirate'
         user: '@pirate'
+        createdAt: '<dateTimeThisMonth()>'
+        expiresAt: '<dateTimeBetween("now","tomorrow")>'
 
 AppBundle\Entity\Strain:
     strain{1..100}:

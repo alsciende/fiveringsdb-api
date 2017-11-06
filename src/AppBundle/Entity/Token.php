@@ -22,6 +22,20 @@ class Token
     private $id;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime")
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime")
+     */
+    private $expiresAt;
+
+    /**
      * @var User
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
@@ -48,6 +62,30 @@ class Token
     public function setUser (User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getCreatedAt (): \DateTime
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt (\DateTime $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getExpiresAt (): \DateTime
+    {
+        return $this->expiresAt;
+    }
+
+    public function setExpiresAt (\DateTime $expiresAt): self
+    {
+        $this->expiresAt = $expiresAt;
 
         return $this;
     }
