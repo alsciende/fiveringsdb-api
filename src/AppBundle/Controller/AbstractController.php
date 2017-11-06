@@ -37,8 +37,8 @@ abstract class AbstractController extends Controller
         $messages = [];
         foreach ($errors as $error) {
             $messages[] = [
-                "property_path" => $error->getCause()->getPropertyPath(),
-                "invalid_value" => $error->getCause()->getInvalidValue(),
+                "property_path" => $error->getCause() ? $error->getCause()->getPropertyPath() : null,
+                "invalid_value" => $error->getCause() ? $error->getCause()->getInvalidValue() : null,
                 "error_message" => $error->getMessage(),
             ];
         }

@@ -4,6 +4,8 @@ AppBundle\Entity\Token:
     properties:
         id:
             expose: true
+        expiresAt:
+            expose: true
         user:
             expose: true
             groups: ['User']

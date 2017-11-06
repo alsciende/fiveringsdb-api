@@ -40,7 +40,6 @@ class DeckSearchType extends AbstractType
         $resolver->setDefaults(
             [
                 'data_class'         => DeckSearch::class,
-                'csrf_protection'    => false,
                 'allow_extra_fields' => false,
             ]
         );

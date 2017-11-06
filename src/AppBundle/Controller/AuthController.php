@@ -82,13 +82,8 @@ class AuthController extends Controller
             throw new \Exception($res->getReasonPhrase());
         }
 
-        $accessToken = AccessToken::createFromJson($res->getBody());
-
         return [
-            'message' => [
-                'type' => 'access_token',
-                'access_token' => $accessToken->getAccessToken()
-            ],
+            'message' => json_decode($res->getBody(), true),
             'origin' => $this->getParameter('front_url')
         ];
     }

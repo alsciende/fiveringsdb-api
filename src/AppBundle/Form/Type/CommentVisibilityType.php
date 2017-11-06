@@ -23,7 +23,6 @@ class CommentVisibilityType extends AbstractType
         $resolver->setDefaults(
             [
                 'data_class'      => Comment::class,
-                'csrf_protection' => false,
             ]
         );
     }
