@@ -61,6 +61,8 @@ class PackCard implements CardSlotInterface
      * @var string|null
      *
      * @ORM\Column(name="image_url", type="string", nullable=true)
+     *
+     * @Source(type="string")
      */
     private $imageUrl;
 
