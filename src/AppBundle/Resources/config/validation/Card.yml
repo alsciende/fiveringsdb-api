@@ -123,6 +123,12 @@ AppBundle\Entity\Card:
             - Expression:
                 expression: "this.getSide() === 'conflict' or value === null"
                 message: Cannot have an influence cost.
+            - Expression:
+                expression: "this.getSide() !== 'conflict' or this.getClan() !== 'neutral' or value === 0"
+                message: Must have a influence cost equal to 0.
+            - Expression:
+                expression: "this.getSide() !== 'conflict' or this.getClan() === 'neutral' or value === null or value > 0"
+                message: Must have a influence cost greater than 0.
         deckLimit:
             - Type: integer
             - Range:
