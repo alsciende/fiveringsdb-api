@@ -55,30 +55,39 @@ class FeatureContext implements KernelAwareContext
     }
 
     /**
-     * @Given the database is empty
+     * @Given the database is loaded
      */
-    public function theDatabaseIsEmpty ()
+    public function theDatabaseIsLoaded ()
     {
-        /** @var EntityManagerInterface $entityManager */
-        $entityManager = $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
+        $sql = file_get_contents(__DIR__ . '/../../../resources/dump/dump.sql');
+        $conn = $this->kernel->getContainer()->get('doctrine.orm.entity_manager')->getConnection();
 
-        $metaData = $entityManager->getMetadataFactory()->getAllMetadata();
-
-        $tool = new \Doctrine\ORM\Tools\SchemaTool($entityManager);
-        $tool->dropSchema($metaData);
-        $tool->createSchema($metaData);
-    }
-
-    /**
-     * @Given the fixtures are loaded
-     */
-    public function theFixturesAreLoaded ()
-    {
-        /** @var EntityManagerInterface $entityManager */
-        $entityManager = $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
-
-        $this->loadSourceData($entityManager);
-        $this->loadAliceData($entityManager);
+        if ($conn instanceof \Doctrine\DBAL\Driver\PDOConnection) {
+            // PDO Drivers
+            try {
+                $lines = 0;
+                $stmt = $conn->prepare($sql);
+                $stmt->execute();
+                do {
+                    // Required due to "MySQL has gone away!" issue
+                    $stmt->fetch();
+                    $stmt->closeCursor();
+                    $lines++;
+                } while ($stmt->nextRowset());
+            } catch (\PDOException $e) {
+                throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+            }
+        } else {
+            // Non-PDO Drivers (ie. OCI8 driver)
+            $stmt = $conn->prepare($sql);
+            $rs = $stmt->execute();
+            if ($rs) {
+            } else {
+                $error = $stmt->errorInfo();
+                throw new \RuntimeException($error[2], $error[0]);
+            }
+            $stmt->closeCursor();
+        }
     }
 
     /**
@@ -94,6 +103,7 @@ class FeatureContext implements KernelAwareContext
             $token = $entityManager->getRepository(Token::class)->findOneBy(['user' => $user]);
             if ($token instanceof Token) {
                 $this->token = $token->getId();
+
                 return;
             }
         }
@@ -121,6 +131,17 @@ class FeatureContext implements KernelAwareContext
         $receivedCode = (string) $this->response->getStatusCode();
         if ($receivedCode !== $code) {
             throw new \Exception(sprintf('Expected a "%s" status code, received "%s".', $code, $receivedCode));
+        }
+    }
+
+    /**
+     * @Then The response should be successful
+     */
+    public function theResponseShouldBeSuccessful ()
+    {
+        if ($this->json->success === false) {
+            dump($this->json);
+            throw new \Exception('Expected successful response, received unsuccessful response.');
         }
     }
 
@@ -182,52 +203,12 @@ class FeatureContext implements KernelAwareContext
 
     private function getAuthorizationHeader ()
     {
+        if (empty($this->token)) {
+            return [];
+        }
+
         return [
             'HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->token),
         ];
     }
-
-    private function loadSourceData (EntityManagerInterface $entityManager)
-    {
-        $scanningService = $this->kernel->getContainer()->get('alsciende_serializer.scanning_service');
-
-        $sources = $scanningService->findSources();
-
-        $serializer = $this->kernel->getContainer()->get('alsciende_serializer.serializer');
-
-        $validator = $this->kernel->getContainer()->get('validator');
-
-        foreach ($sources as $source) {
-            $result = $serializer->importSource($source);
-            foreach ($result as $imported) {
-                $entity = $imported['entity'];
-                $errors = $validator->validate($entity);
-                if (count($errors) > 0) {
-                    $errorsString = (string) $errors;
-                    throw new \Exception($errorsString);
-                }
-            }
-
-            $entityManager->flush();
-        }
-    }
-
-    private function loadAliceData (EntityManagerInterface $entityManager)
-    {
-        $loader = new NativeLoader();
-        $objectSet = $loader->loadFile(
-            $this
-                ->kernel
-                ->getContainer()
-                ->getParameter('kernel.project_dir')
-            . '/src/AppBundle/DataFixtures/ORM/fixtures.yml'
-        );
-
-        foreach ($objectSet->getObjects() as $reference => $object) {
-            $entityManager->persist($object);
-        }
-
-        $entityManager->flush();
-    }
-
 }

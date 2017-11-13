@@ -5,7 +5,9 @@ namespace AppBundle\Form\Type;
 use AppBundle\Search\DeckSearch;
 use AppBundle\Service\DeckSearchService;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -31,6 +33,14 @@ class DeckSearchType extends AbstractType
             ->add('sort', ChoiceType::class, [
                 'choices' => $this->deckSearchService->getSupported(),
             ])
+            ->add('since', DateType::class, [
+                'widget' => 'single_text',
+                'format' => DateType::HTML5_FORMAT,
+            ])
+            ->add('clan', ChoiceType::class, [
+                'choices' => ["crab", "crane", "dragon", "lion", "phoenix", "scorpion", "unicorn"],
+            ])
+            ->add('featured', CheckboxType::class)
             ->add('page', IntegerType::class)
             ->add('limit', IntegerType::class);
     }

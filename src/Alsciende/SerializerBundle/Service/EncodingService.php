@@ -22,10 +22,10 @@ class EncodingService
     public function decode (Block $block)
     {
         $list = json_decode($block->getData(), true);
-        $valid = isset($list)
-            && is_array($list)
-            && (count($list) === 0 || array_key_exists(0, $list))
-        ;
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new UnexpectedValueException("Block data cannot be decoded (".json_last_error_msg().") " . $block->getData());
+        }
+        $valid = is_array($list) && (count($list) === 0 || array_key_exists(0, $list));
         if ($valid === false) {
             throw new UnexpectedValueException("Block data cannot be decoded to a numeric array: " . $block->getData());
         }

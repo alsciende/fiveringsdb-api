@@ -7,23 +7,23 @@ use AppBundle\Search\DeckSearch;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 
-
 /**
- * Description of RecentSearch
+ * Description of AbstractPopularDeckSearchService
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class RecentSearchService extends AbstractGenericDeckSearchService
+class PopularDeckSearchService extends AbstractGenericDeckSearchService
 {
     static public function supports (): string
     {
-        return 'date';
+        return 'popularity';
     }
 
     public function getOrderedQuery (QueryBuilder $qb): Query
     {
         $qb
-            ->orderBy('d.publishedAt', 'DESC');
+            ->orderBy('nbLikes', 'DESC')
+            ->addOrderBy('d.publishedAt', 'DESC');
 
         return $qb->getQuery();
     }

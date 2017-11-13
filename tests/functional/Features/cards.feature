@@ -1,8 +1,7 @@
 Feature: get cards data
 
   Background:
-    Given the database is empty
-    And the fixtures are loaded
+    Given the database is loaded
 
   Scenario: Getting the cards data
     When I query "/cards" by GET
