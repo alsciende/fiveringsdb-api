@@ -2,8 +2,10 @@
 
 namespace AppBundle\Form\Type;
 
+use AppBundle\Entity\Card;
 use AppBundle\Search\DeckSearch;
 use AppBundle\Service\DeckSearchService;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -41,6 +43,9 @@ class DeckSearchType extends AbstractType
                 'choices' => ["crab", "crane", "dragon", "lion", "phoenix", "scorpion", "unicorn"],
             ])
             ->add('featured', CheckboxType::class)
+            ->add('card', EntityType::class, [
+                'class' => Card::class
+            ])
             ->add('page', IntegerType::class)
             ->add('limit', IntegerType::class);
     }

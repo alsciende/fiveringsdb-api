@@ -2,6 +2,8 @@
 
 namespace AppBundle\Search;
 
+use AppBundle\Entity\Card;
+
 /**
  * Description of DeckSearch
  *
@@ -28,6 +30,11 @@ class DeckSearch extends AbstractPaginatedSearch
      * @var bool
      */
     private $featured;
+
+    /**
+     * @var Card|null
+     */
+    private $card;
 
     public function __construct ()
     {
@@ -59,12 +66,12 @@ class DeckSearch extends AbstractPaginatedSearch
         return $this;
     }
 
-    public function getClan ()
+    public function getClan (): ?string
     {
         return $this->clan;
     }
 
-    public function setClan ($clan): self
+    public function setClan ($clan = null): self
     {
         $this->clan = $clan;
 
@@ -79,6 +86,18 @@ class DeckSearch extends AbstractPaginatedSearch
     public function setFeatured (bool $featured): self
     {
         $this->featured = $featured;
+
+        return $this;
+    }
+
+    public function getCard (): ?Card
+    {
+        return $this->card;
+    }
+
+    public function setCard (Card $card = null): self
+    {
+        $this->card = $card;
 
         return $this;
     }

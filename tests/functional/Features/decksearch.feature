@@ -28,4 +28,9 @@ Feature: search decks
     Then I should get a 200 HTTP Response status code
     And  The response should be successful
 
+  Scenario: Getting decks with a card
+    When I query "/decks?sort=date&card=above-question" by GET
+    Then I should get a 200 HTTP Response status code
+    And  The response should be successful
+
 

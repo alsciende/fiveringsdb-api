@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service\DeckSearch;
 
+use AppBundle\Entity\Card;
 use AppBundle\Entity\Deck;
 use AppBundle\Search\DeckSearch;
 use Doctrine\ORM\Query;
@@ -73,6 +74,15 @@ abstract class AbstractGenericDeckSearchService extends AbstractDeckSearchServic
             $qb->innerJoin('AppBundle:Feature', 'f', Query\Expr\Join::INNER_JOIN, 'f.deck = d');
         }
 
+        if($search->getCard() instanceof Card) {
+            $qb2 = $qb->getEntityManager()->createQueryBuilder()
+                ->select('dc')
+                ->from('AppBundle:DeckCard','dc')
+                ->where('dc.card = :card')
+                ->andWhere('dc.deck = d');
+            $qb->andWhere($qb->expr()->exists($qb2->getDQL()));
+        }
+
         return $qb;
     }
 
@@ -88,6 +98,9 @@ abstract class AbstractGenericDeckSearchService extends AbstractDeckSearchServic
             $query->setParameter('clan', $search->getClan());
         }
 
+        if($search->getCard() instanceof Card) {
+            $query->setParameter('card', $search->getCard());
+        }
         return $query;
     }
 }
