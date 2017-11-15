@@ -66,8 +66,12 @@ abstract class AbstractGenericDeckSearchService extends AbstractDeckSearchServic
             $qb->andWhere('d.publishedAt >= :date');
         }
 
-        if ($search->getClan() !== null) {
-            $qb->andWhere('d.primaryClan = :clan');
+        if ($search->getPrimaryClan() !== null) {
+            $qb->andWhere('d.primaryClan = :primaryClan');
+        }
+
+        if ($search->getSecondaryClan() !== null) {
+            $qb->andWhere('d.secondaryClan = :secondaryClan');
         }
 
         if ($search->isFeatured()) {
@@ -100,8 +104,12 @@ abstract class AbstractGenericDeckSearchService extends AbstractDeckSearchServic
             $query->setParameter('date', $search->getSince());
         }
 
-        if ($search->getClan() !== null) {
-            $query->setParameter('clan', $search->getClan());
+        if ($search->getPrimaryClan() !== null) {
+            $query->setParameter('primaryClan', $search->getPrimaryClan());
+        }
+
+        if ($search->getSecondaryClan() !== null) {
+            $query->setParameter('secondaryClan', $search->getSecondaryClan());
         }
 
         if (count($search->getCards()) > 0) {

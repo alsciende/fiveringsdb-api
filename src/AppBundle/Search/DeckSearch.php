@@ -24,8 +24,12 @@ class DeckSearch extends AbstractPaginatedSearch
     /**
      * @var string|null
      */
-    private $clan;
+    private $primaryClan;
 
+    /**
+     * @var string|null
+     */
+    private $secondaryClan;
     /**
      * @var bool
      */
@@ -67,14 +71,26 @@ class DeckSearch extends AbstractPaginatedSearch
         return $this;
     }
 
-    public function getClan (): ?string
+    public function getPrimaryClan (): ?string
     {
-        return $this->clan;
+        return $this->primaryClan;
     }
 
-    public function setClan ($clan = null): self
+    public function setPrimaryClan ($primaryClan = null): self
     {
-        $this->clan = $clan;
+        $this->primaryClan = $primaryClan;
+
+        return $this;
+    }
+
+    public function getSecondaryClan (): ?string
+    {
+        return $this->secondaryClan;
+    }
+
+    public function setSecondaryClan ($secondaryClan = null): self
+    {
+        $this->secondaryClan = $secondaryClan;
 
         return $this;
     }

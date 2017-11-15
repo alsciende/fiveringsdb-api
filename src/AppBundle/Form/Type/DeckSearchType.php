@@ -39,7 +39,10 @@ class DeckSearchType extends AbstractType
                 'widget' => 'single_text',
                 'format' => DateType::HTML5_FORMAT,
             ])
-            ->add('clan', ChoiceType::class, [
+            ->add('primaryClan', ChoiceType::class, [
+                'choices' => ["crab", "crane", "dragon", "lion", "phoenix", "scorpion", "unicorn"],
+            ])
+            ->add('secondaryClan', ChoiceType::class, [
                 'choices' => ["crab", "crane", "dragon", "lion", "phoenix", "scorpion", "unicorn"],
             ])
             ->add('featured', CheckboxType::class)
