@@ -43,8 +43,9 @@ class DeckSearchType extends AbstractType
                 'choices' => ["crab", "crane", "dragon", "lion", "phoenix", "scorpion", "unicorn"],
             ])
             ->add('featured', CheckboxType::class)
-            ->add('card', EntityType::class, [
-                'class' => Card::class
+            ->add('cards', EntityType::class, [
+                'class' => Card::class,
+                'multiple' => true,
             ])
             ->add('page', IntegerType::class)
             ->add('limit', IntegerType::class);

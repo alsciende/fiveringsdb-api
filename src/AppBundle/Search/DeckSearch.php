@@ -32,13 +32,14 @@ class DeckSearch extends AbstractPaginatedSearch
     private $featured;
 
     /**
-     * @var Card|null
+     * @var Card[]
      */
-    private $card;
+    protected $cards;
 
     public function __construct ()
     {
         $this->featured = false;
+        $this->cards = [];
         parent::__construct();
     }
 
@@ -90,15 +91,17 @@ class DeckSearch extends AbstractPaginatedSearch
         return $this;
     }
 
-    public function getCard (): ?Card
+    /** @param Card[] $cards */
+    public function setCards (array $cards): self
     {
-        return $this->card;
-    }
-
-    public function setCard (Card $card = null): self
-    {
-        $this->card = $card;
+        $this->cards = $cards;
 
         return $this;
+    }
+
+    /** @return Card[] */
+    public function getCards (): array
+    {
+        return $this->cards;
     }
 }
