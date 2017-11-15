@@ -24,21 +24,26 @@ class DeckSearch extends AbstractPaginatedSearch
     /**
      * @var string|null
      */
-    private $clan;
+    private $primaryClan;
 
+    /**
+     * @var string|null
+     */
+    private $secondaryClan;
     /**
      * @var bool
      */
     private $featured;
 
     /**
-     * @var Card|null
+     * @var Card[]
      */
-    private $card;
+    protected $cards;
 
     public function __construct ()
     {
         $this->featured = false;
+        $this->cards = [];
         parent::__construct();
     }
 
@@ -66,14 +71,26 @@ class DeckSearch extends AbstractPaginatedSearch
         return $this;
     }
 
-    public function getClan (): ?string
+    public function getPrimaryClan (): ?string
     {
-        return $this->clan;
+        return $this->primaryClan;
     }
 
-    public function setClan ($clan = null): self
+    public function setPrimaryClan ($primaryClan = null): self
     {
-        $this->clan = $clan;
+        $this->primaryClan = $primaryClan;
+
+        return $this;
+    }
+
+    public function getSecondaryClan (): ?string
+    {
+        return $this->secondaryClan;
+    }
+
+    public function setSecondaryClan ($secondaryClan = null): self
+    {
+        $this->secondaryClan = $secondaryClan;
 
         return $this;
     }
@@ -90,15 +107,17 @@ class DeckSearch extends AbstractPaginatedSearch
         return $this;
     }
 
-    public function getCard (): ?Card
+    /** @param Card[] $cards */
+    public function setCards (array $cards): self
     {
-        return $this->card;
-    }
-
-    public function setCard (Card $card = null): self
-    {
-        $this->card = $card;
+        $this->cards = $cards;
 
         return $this;
+    }
+
+    /** @return Card[] */
+    public function getCards (): array
+    {
+        return $this->cards;
     }
 }

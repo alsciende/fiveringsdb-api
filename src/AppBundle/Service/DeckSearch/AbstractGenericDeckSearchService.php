@@ -66,21 +66,31 @@ abstract class AbstractGenericDeckSearchService extends AbstractDeckSearchServic
             $qb->andWhere('d.publishedAt >= :date');
         }
 
-        if ($search->getClan() !== null) {
-            $qb->andWhere('d.primaryClan = :clan');
+        if ($search->getPrimaryClan() !== null) {
+            $qb->andWhere('d.primaryClan = :primaryClan');
         }
 
-        if($search->isFeatured()) {
+        if ($search->getSecondaryClan() !== null) {
+            $qb->andWhere('d.secondaryClan = :secondaryClan');
+        }
+
+        if ($search->isFeatured()) {
             $qb->innerJoin('AppBundle:Feature', 'f', Query\Expr\Join::INNER_JOIN, 'f.deck = d');
         }
 
-        if($search->getCard() instanceof Card) {
-            $qb2 = $qb->getEntityManager()->createQueryBuilder()
-                ->select('dc')
-                ->from('AppBundle:DeckCard','dc')
-                ->where('dc.card = :card')
-                ->andWhere('dc.deck = d');
-            $qb->andWhere($qb->expr()->exists($qb2->getDQL()));
+        if (count($search->getCards()) > 0) {
+            foreach ($search->getCards() as $index => $card) {
+                $qb->andWhere($qb->expr()->exists(
+                    $qb
+                        ->getEntityManager()
+                        ->createQueryBuilder()
+                        ->select("dc$index")
+                        ->from('AppBundle:DeckCard', "dc$index")
+                        ->where("dc$index.card = :card$index")
+                        ->andWhere("dc$index.deck = d")
+                        ->getDQL()
+                ));
+            }
         }
 
         return $qb;
@@ -94,13 +104,20 @@ abstract class AbstractGenericDeckSearchService extends AbstractDeckSearchServic
             $query->setParameter('date', $search->getSince());
         }
 
-        if ($search->getClan() !== null) {
-            $query->setParameter('clan', $search->getClan());
+        if ($search->getPrimaryClan() !== null) {
+            $query->setParameter('primaryClan', $search->getPrimaryClan());
         }
 
-        if($search->getCard() instanceof Card) {
-            $query->setParameter('card', $search->getCard());
+        if ($search->getSecondaryClan() !== null) {
+            $query->setParameter('secondaryClan', $search->getSecondaryClan());
         }
+
+        if (count($search->getCards()) > 0) {
+            foreach ($search->getCards() as $index => $card) {
+                $query->setParameter("card$index", $card);
+            }
+        }
+
         return $query;
     }
 }
