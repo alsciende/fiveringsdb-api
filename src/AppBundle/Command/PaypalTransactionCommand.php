@@ -2,6 +2,7 @@
 
 namespace AppBundle\Command;
 
+use AppBundle\Service\PaypalService;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -27,7 +28,7 @@ class PaypalTransactionCommand extends ContainerAwareCommand
     {
         $transactionId = $input->getArgument('transaction_id');
 
-        $service = $this->getContainer()->get('paypal');
+        $service = $this->getContainer()->get(PaypalService::class);
 
         $result = $service->getTransactionDetails($transactionId);
 
