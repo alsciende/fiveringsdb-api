@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Deck;
+use AppBundle\Service\DeckLikeManager;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -30,7 +31,7 @@ class DeckLikeController extends AbstractController
         }
 
         try {
-            $nbLikes = $this->get('app.deck_like_manager')->addLike($deck, $this->getUser());
+            $nbLikes = $this->get(DeckLikeManager::class)->addLike($deck, $this->getUser());
             $this->getDoctrine()->getManager()->flush();
         } catch (Exception $ex) {
             return $this->failure($ex->getMessage());
@@ -53,7 +54,7 @@ class DeckLikeController extends AbstractController
         }
 
         try {
-            $nbLikes = $this->get('app.deck_like_manager')->removeLike($deck, $this->getUser());
+            $nbLikes = $this->get(DeckLikeManager::class)->removeLike($deck, $this->getUser());
             $this->getDoctrine()->getManager()->flush();
         } catch (Exception $ex) {
             return $this->failure($ex->getMessage());
@@ -75,7 +76,7 @@ class DeckLikeController extends AbstractController
         }
 
         try {
-            $like = $this->get('app.deck_like_manager')->getLike($deck, $this->getUser());
+            $like = $this->get(DeckLikeManager::class)->getLike($deck, $this->getUser());
         } catch (Exception $ex) {
             return $this->failure($ex->getMessage());
         }

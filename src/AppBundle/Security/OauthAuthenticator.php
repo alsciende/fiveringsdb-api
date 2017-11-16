@@ -4,7 +4,6 @@ namespace AppBundle\Security;
 
 use AppBundle\Entity\Token;
 use AppBundle\Service\TokenManager;
-use Monolog\Logger;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,13 +23,9 @@ class OauthAuthenticator extends AbstractGuardAuthenticator
     /** @var TokenManager $tokenManager */
     private $tokenManager;
 
-    /** @var Logger $logger */
-    private $logger;
-
-    function __construct (TokenManager $tokenManager, Logger $logger)
+    function __construct (TokenManager $tokenManager)
     {
         $this->tokenManager = $tokenManager;
-        $this->logger = $logger;
     }
 
     /**

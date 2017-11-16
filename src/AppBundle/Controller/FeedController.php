@@ -8,9 +8,9 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Service\ActivityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  */
@@ -24,7 +24,7 @@ class FeedController extends AbstractController
     public function listAction ()
     {
         return $this->success(
-            $this->get('app.activity_manager')->getActivity($this->getUser()),
+            $this->get(ActivityManager::class)->getActivity($this->getUser()),
             [
                 'Default',
                 'deck' => [

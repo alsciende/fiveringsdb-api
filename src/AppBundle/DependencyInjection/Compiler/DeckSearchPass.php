@@ -2,6 +2,7 @@
 
 namespace AppBundle\DependencyInjection\Compiler;
 
+use AppBundle\Service\DeckSearchService;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -15,11 +16,11 @@ class DeckSearchPass implements CompilerPassInterface
 {
     public function process (ContainerBuilder $container)
     {
-        if ($container->has('app.deck_search') === false) {
+        if ($container->has(DeckSearchService::class) === false) {
             return;
         }
 
-        $definition = $container->findDefinition('app.deck_search');
+        $definition = $container->findDefinition(DeckSearchService::class);
 
         $taggedServices = $container->findTaggedServiceIds('app.deck_search');
 

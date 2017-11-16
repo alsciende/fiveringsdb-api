@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Deck;
 use AppBundle\Entity\Strain;
 use AppBundle\Form\Type\DeckType;
+use AppBundle\Service\DeckManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -33,7 +34,7 @@ class StrainDeckController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $deck->setUser($this->getUser())->setStrain($strain);
-            $this->get('app.deck_manager')->persist($deck);
+            $this->get(DeckManager::class)->persist($deck);
             $this->getDoctrine()->getManager()->flush();
 
             return $this->success($deck, [
@@ -101,7 +102,7 @@ class StrainDeckController extends AbstractController
         }
 
         try {
-            $this->get('app.deck_manager')->deleteDeck($deck);
+            $this->get(DeckManager::class)->deleteDeck($deck);
         } catch (\Exception $ex) {
             return $this->failure($ex->getMessage());
         }

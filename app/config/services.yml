@@ -1,145 +1,89 @@
 services:
-    _instanceof:
-        AppBundle\Service\DeckCheck\DeckCheckInterface:
-            tags: [ 'app.deck_check' ]
-        AppBundle\Service\DeckSearch\DeckSearchServiceInterface:
-            tags: [ 'app.deck_search' ]
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: true
+
+    # configuration by directory
+
+    AppBundle\:
+        resource: '../../src/AppBundle/{Security,Service,Util,Validator,Form}'
 
     AppBundle\Service\DeckCheck\:
-        resource: '../../src/AppBundle/Service/DeckCheck'
         public: false
+        resource: '../../src/AppBundle/Service/DeckCheck'
+        tags: [ 'app.deck_check' ]
 
     AppBundle\Service\DeckSearch\:
+        public: false
         resource: '../../src/AppBundle/Service/DeckSearch'
         arguments: [ '@doctrine.orm.entity_manager' ]
-        public: false
+        tags: [ 'app.deck_search' ]
 
-    paypal:
-        class: AppBundle\Service\PaypalService
+    AppBundle\EventSubscriber\:
+        public: false
+        resource: '../../src/AppBundle/EventSubscriber/*'
+        tags:
+          - "kernel.event_subscriber"
+
+    AppBundle\Doctrine\EventSubscriber\:
+        public: false
+        resource: '../../src/AppBundle/Doctrine/EventSubscriber/*'
+        tags:
+          - name: "doctrine.event_subscriber"
+
+    AppBundle\Validator\Constraints\:
+        public: false
+        resource: '../../src/AppBundle/Validator/Constraints/*Validator'
+        tags:
+          - "validator.constraint_validator"
+
+    AppBundle\Security\Voter\:
+        public: false
+        resource: '../../src/AppBundle/Security/Voter/*'
+        tags:
+          - "security.voter"
+
+    AppBundle\Form\Type\:
+        public: false
+        resource: '../../src/AppBundle/Form/Type/*'
+        tags:
+          - "form.type"
+
+    AppBundle\Serializer\:
+        public: true
+        resource: '../../src/AppBundle/Serializer/*'
+        public: true
+        tags:
+            - { name: jms_serializer.subscribing_handler }
+
+    # configuration by class
+
+    AppBundle\Service\PaypalService:
         arguments:
           - "%paypal_classic_api_username%"
           - "%paypal_classic_api_password%"
           - "%paypal_classic_api_signature%"
 
-    app.api:
-        class: AppBundle\Service\ApiService
+    AppBundle\Service\ApiService:
         arguments:
           - "@request_stack"
           - "@jms_serializer"
           - "%http_cache_max_age%"
 
-    app.deck_validator:
-        class: AppBundle\Service\DeckValidator
-
-    app.deck_search:
-        class: AppBundle\Service\DeckSearchService
-
-    app.deck_manager:
-        class: AppBundle\Service\DeckManager
-        arguments:
-          - "@doctrine.orm.entity_manager"
-          - "@=service('doctrine.orm.entity_manager').getRepository('AppBundle:Deck')"
-          - "@=service('doctrine.orm.entity_manager').getRepository('AppBundle:Strain')"
-          - "@serializer"
-          - '@app.deck_validator'
-
-    app.deck_like_manager:
-        class: AppBundle\Service\DeckLikeManager
-        arguments:
-          - "@doctrine.orm.entity_manager"
-
-    app.cardslotcollection_serialization_subscriber:
-        class: AppBundle\EventSubscriber\Serializer\CardSlotCollectionSerializationHandler
-        arguments:
-            - "@app.data_transformer.card_slots"
-        tags:
-            - { name: jms_serializer.subscribing_handler }
-
-    app.canonical_fields_updater:
-        class: AppBundle\Util\CanonicalFieldsUpdater
-
-    app.doctrine_card_listener:
-        class: AppBundle\Doctrine\CardListener
-        arguments:
-          - "@app.canonical_fields_updater"
-        tags:
-          - name: "doctrine.event_subscriber"
-
-    app.data_transformer.card_slots:
-        class: AppBundle\Form\DataTransformer\CardSlotsTransformer
-        arguments:
-          - "@doctrine.orm.entity_manager"
-
-    app.form_type.deck:
-        class: AppBundle\Form\Type\DeckType
-        arguments:
-          - "@app.data_transformer.card_slots"
-        tags:
-          - "form.type"
-
-    app.form_type.deck_search:
-        class: AppBundle\Form\Type\DeckSearchType
-        arguments:
-          - "@app.deck_search"
-        tags:
-          - "form.type"
-
-    app.security_voter.comment_visibility:
-        class: AppBundle\Security\CommentVisibilityVoter
-        tags:
-          - "security.voter"
-
-    app.security.oauth_authenticator:
-        class: AppBundle\Security\OauthAuthenticator
-        arguments:
-          - "@app.security.token_manager"
-          - "@logger"
-
-    app.security.user_manager:
-        class: AppBundle\Service\UserManager
-        arguments:
-          - "@doctrine.orm.entity_manager"
-
-    app.security.token_manager:
-        class: AppBundle\Service\TokenManager
+    AppBundle\Service\TokenManager:
         arguments:
           - "@doctrine.orm.entity_manager"
           - "%access_token_ttl%"
 
-    app.feature_manager:
-        class: AppBundle\Service\FeatureManager
+    AppBundle\Service\FeatureManager:
         arguments:
           - "@doctrine.orm.entity_manager"
-          - "@=service('doctrine.orm.entity_manager').getRepository('AppBundle:Feature')"
-          - "@=service('doctrine.orm.entity_manager').getRepository('AppBundle:Deck')"
           - "%features_period%"
 
-    metagame:
-        class: AppBundle\Service\Metagame
+    AppBundle\Service\Metagame:
         arguments:
           - "%metagame_base_uri%"
           - "%kernel.logs_dir%"
           - "%kernel.environment%"
           - "%kernel.debug%"
-
-    app.validator.has_correct_slug:
-        class: AppBundle\Validator\Constraints\HasCorrectSlugValidator
-        arguments:
-          - "@cocur_slugify"
-        tags:
-          - "validator.constraint_validator"
-
-    app.activity_recorder:
-        public: false
-        class: AppBundle\EventSubscriber\ActivityRecorder
-        arguments:
-          - "@doctrine.orm.entity_manager"
-          - "@=service('doctrine.orm.entity_manager').getRepository('AppBundle:Deck')"
-        tags:
-          - "kernel.event_subscriber"
-
-    app.activity_manager:
-        public: true
-        class: AppBundle\Service\ActivityManager
-        arguments:
-          - "@doctrine.orm.entity_manager"

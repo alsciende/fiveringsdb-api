@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Service\FeatureManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +22,7 @@ class FeatureController extends AbstractController
     {
         $this->setPublic($request);
 
-        $features = $this->get('app.feature_manager')->getCurrentFeatures();
+        $features = $this->get(FeatureManager::class)->getCurrentFeatures();
 
         return $this->success($features, [
             'Default',

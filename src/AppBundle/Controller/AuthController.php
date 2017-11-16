@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Service\Metagame;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -69,7 +70,7 @@ class AuthController extends Controller
         $code = $request->get('code');
 
         // request the access-token to the oauth server
-        $res = $this->get('metagame')->get(
+        $res = $this->get(Metagame::class)->get(
             'oauth/v2/token', [
                 'client_id'     => $this->getParameter('metagame_client_id'),
                 'client_secret' => $this->getParameter('metagame_client_secret'),
@@ -101,7 +102,7 @@ class AuthController extends Controller
             $refreshToken = $form->getData()['refresh_token'];
 
             // request the access-token to the oauth server
-            $res = $this->get('metagame')->get(
+            $res = $this->get(Metagame::class)->get(
                 'oauth/v2/token', [
                     'client_id'     => $this->getParameter('metagame_client_id'),
                     'client_secret' => $this->getParameter('metagame_client_secret'),

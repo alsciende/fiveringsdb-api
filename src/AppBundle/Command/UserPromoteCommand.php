@@ -8,6 +8,7 @@
 
 namespace AppBundle\Command;
 
+use AppBundle\Service\UserManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -33,7 +34,7 @@ class UserPromoteCommand extends ContainerAwareCommand
             throw new \InvalidArgumentException('Role must start with ROLE_');
         }
 
-        $userManager = $this->getContainer()->get('app.security.user_manager');
+        $userManager = $this->getContainer()->get(UserManager::class);
         $user = $userManager->findUserByUsername($input->getArgument('username'));
         if ($user === null) {
             throw new \InvalidArgumentException('No such user.');

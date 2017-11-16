@@ -19,7 +19,7 @@ Feature: search decks
     And  The response should be successful
 
   Scenario: Getting decks from a multiple criterias
-    When I query "/decks?sort=popularity&since=2017-11-01&clan=dragon" by GET
+    When I query "/decks?sort=popularity&since=2017-11-01&primaryClan=dragon&secondaryClan=lion" by GET
     Then I should get a 200 HTTP Response status code
     And  The response should be successful
 

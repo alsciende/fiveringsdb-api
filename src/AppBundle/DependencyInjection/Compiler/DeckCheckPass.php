@@ -2,6 +2,7 @@
 
 namespace AppBundle\DependencyInjection\Compiler;
 
+use AppBundle\Service\DeckValidator;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -15,11 +16,11 @@ class DeckCheckPass implements CompilerPassInterface
 {
     public function process (ContainerBuilder $container)
     {
-        if ($container->has('app.deck_validator') === false) {
+        if ($container->has(DeckValidator::class) === false) {
             return;
         }
 
-        $definition = $container->findDefinition('app.deck_validator');
+        $definition = $container->findDefinition(DeckValidator::class);
 
         $taggedServices = $container->findTaggedServiceIds('app.deck_check');
 
