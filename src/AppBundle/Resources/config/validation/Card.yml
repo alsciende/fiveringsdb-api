@@ -37,7 +37,7 @@ AppBundle\Entity\Card:
         roleRestriction:
             - Type: string
             - Choice:
-                choices: [keeper, seeker]
+                choices: [keeper, seeker, air, earth, fire, void, water]
                 message: Not a valid role restriction.
         cost:
             - Type: integer

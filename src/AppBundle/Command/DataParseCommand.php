@@ -63,11 +63,16 @@ class DataParseCommand extends ContainerAwareCommand
             $pack = $em->find(Pack::class, $setId);
             /** @var PackCard $packCard */
             $packCard = $em->getRepository(PackCard::class)->findOneBy(['card' => $card, 'pack' => $pack]);
-            if(!isset($packCardItem['flavor'])) {
-                $packCardItem['flavor'] = $packCard->getFlavor();
-            }
-            if(!isset($packCardItem['quantity'])) {
-                $packCardItem['quantity'] = $packCard->getQuantity();
+            if($packCard instanceof PackCard) {
+                if(!isset($packCardItem['flavor'])) {
+                    $packCardItem['flavor'] = $packCard->getFlavor();
+                }
+                if(!isset($packCardItem['quantity'])) {
+                    $packCardItem['quantity'] = $packCard->getQuantity();
+                }
+            } else {
+                $packCardItem['flavor'] = null;
+                $packCardItem['quantity'] = 3;
             }
             ksort($packCardItem);
             $packCards[$setId][] = $packCardItem;
@@ -130,8 +135,13 @@ class DataParseCommand extends ContainerAwareCommand
 
         $element = null;
         if ($type === 'province') {
-            $element = array_shift($traits);
-            $normalizedItem['element'] = $element;
+            foreach ($traits as $i => $trait) {
+                if(in_array($trait, ['air','earth','fire','void','water'])) {
+                    unset($traits[$i]);
+                    $normalizedItem['element'] = $trait;
+                }
+            }
+            $traits = array_values($traits);
         }
 
         foreach ($item as $key => $value) {
@@ -263,6 +273,7 @@ class DataParseCommand extends ContainerAwareCommand
             '<em class=\'bbc\'>',
             '</em>',
             '</strong></i>',
+            ' </em>',
             '[Military]',
             '[Politics]',
             '[Air]',
@@ -295,6 +306,7 @@ class DataParseCommand extends ContainerAwareCommand
             '<i>',
             '</i>',
             '</em>',
+            '</em> ',
             '[conflict-military]',
             '[conflict-political]',
             '[element-air]',

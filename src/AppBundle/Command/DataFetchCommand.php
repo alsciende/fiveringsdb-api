@@ -22,10 +22,8 @@ class DataFetchCommand extends ContainerAwareCommand
 
     protected function execute (InputInterface $input, OutputInterface $output)
     {
-        $format = 'http://www.cardgamedb.com/deckbuilders/legendofthefiverings/database/l5r-db-%s.jgz';
+        $url = 'http://www.cardgamedb.com/deckbuilders/legendofthefiverings/database/L5C03-db.jgz';
 
-        $version = '1.0';
-
-        exec(sprintf('curl -o l5r-db.js ' . $format, $version));
+        exec(sprintf('curl -o l5r-db.js ' . $url));
     }
 }
