@@ -6,6 +6,7 @@ use AppBundle\Entity\Deck;
 use AppBundle\Entity\Strain;
 
 use AppBundle\Form\Type\PublicDeckType;
+use AppBundle\Service\DeckManager;
 use AppBundle\Service\DeckValidator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -46,7 +47,7 @@ class DeckPublishController extends AbstractController
         $form->submit(json_decode($request->getContent(), true), false);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->get('app.deck_manager')->publish($strain->getHead());
+            $this->get(DeckManager::class)->publish($strain->getHead());
             $this->getDoctrine()->getManager()->flush();
 
             return $this->success($deck, [

@@ -36,7 +36,13 @@ class DataImportCommand extends ContainerAwareCommand
         $validator = $this->getContainer()->get('validator');
 
         foreach ($sources as $source) {
-            $result = $serializer->importSource($source);
+            try {
+                $result = $serializer->importSource($source);
+            } catch (\Exception $e) {
+                $output->writeln("<error>Error while importing source</error>");
+                dump($source);
+                throw $e;
+            }
             foreach ($result as $imported) {
                 $entity = $imported['entity'];
                 $errors = $validator->validate($entity);

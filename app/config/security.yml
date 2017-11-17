@@ -33,5 +33,5 @@ security:
                 provider:
                     my_user_provider
                 authenticators:
-                    - app.security.oauth_authenticator
+                    - AppBundle\Security\OauthAuthenticator
 

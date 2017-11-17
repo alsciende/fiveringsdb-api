@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AppBundle\Doctrine;
+namespace AppBundle\Doctrine\EventSubscriber;
 
 use AppBundle\Entity\Card;
 use AppBundle\Util\CanonicalFieldsUpdater;

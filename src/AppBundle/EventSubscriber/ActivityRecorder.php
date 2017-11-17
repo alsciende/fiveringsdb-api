@@ -2,6 +2,7 @@
 
 namespace AppBundle\EventSubscriber;
 
+use AppBundle\Behavior\Service\GetRepositoryTrait;
 use AppBundle\Entity\Activity;
 use AppBundle\Entity\Deck;
 use AppBundle\Entity\Notification;
@@ -19,6 +20,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class ActivityRecorder implements EventSubscriberInterface
 {
+    use GetRepositoryTrait;
+
     /** @var EntityManagerInterface */
     private $entityManager;
 
@@ -26,12 +29,11 @@ class ActivityRecorder implements EventSubscriberInterface
     private $deckRepository;
 
     public function __construct (
-        EntityManagerInterface $entityManager,
-        DeckRepository $deckRepository
+        EntityManagerInterface $entityManager
     )
     {
         $this->entityManager = $entityManager;
-        $this->deckRepository = $deckRepository;
+        $this->deckRepository = $this->getRepository($entityManager, Deck::class);
     }
 
     public static function getSubscribedEvents ()

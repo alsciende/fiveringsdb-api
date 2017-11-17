@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AppBundle\Form\Type;
 
 use AppBundle\Entity\Deck;
+use AppBundle\Form\DataTransformer\CardSlotsTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -16,7 +17,7 @@ class DeckType extends AbstractType
     /** @var DataTransformerInterface */
     private $transformer;
 
-    public function __construct (DataTransformerInterface $transformer)
+    public function __construct (CardSlotsTransformer $transformer)
     {
         $this->transformer = $transformer;
     }

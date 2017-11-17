@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\EventSubscriber\Serializer;
+namespace AppBundle\Serializer;
 
 use AppBundle\Form\DataTransformer\CardSlotsTransformer;
 use AppBundle\Model\CardSlotCollectionDecorator;

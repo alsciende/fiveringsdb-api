@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Behavior\Service\GetRepositoryTrait;
 use AppBundle\Entity\Deck;
 use AppBundle\Entity\Feature;
 use AppBundle\Repository\DeckRepository;
@@ -15,6 +16,8 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class FeatureManager
 {
+    use GetRepositoryTrait;
+
     /** @var EntityManagerInterface */
     private $entityManager;
 
@@ -29,14 +32,12 @@ class FeatureManager
 
     public function __construct (
         EntityManagerInterface $entityManager,
-        FeatureRepository $featureRepository,
-        DeckRepository $deckRepository,
         int $period
     )
     {
         $this->entityManager = $entityManager;
-        $this->featureRepository = $featureRepository;
-        $this->deckRepository = $deckRepository;
+        $this->featureRepository = $this->getRepository($entityManager, Feature::class);
+        $this->deckRepository = $this->getRepository($entityManager, Deck::class);
         $this->period = $period;
     }
 

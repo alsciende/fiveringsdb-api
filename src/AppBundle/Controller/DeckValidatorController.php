@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Model\CardSlotCollectionDecorator;
 
+use AppBundle\Service\DeckValidator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -31,7 +32,7 @@ class DeckValidatorController extends AbstractController
         return new JsonResponse(
             [
                 'success' => true,
-                'status'  => $this->get('app.deck_validator')->check($cardSlotCollection, $format),
+                'status'  => $this->get(DeckValidator::class)->check($cardSlotCollection, $format),
             ]
         );
     }

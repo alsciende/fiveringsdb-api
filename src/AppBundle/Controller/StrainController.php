@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Deck;
 use AppBundle\Entity\Strain;
 use AppBundle\Form\Type\StrainType;
+use AppBundle\Service\DeckManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -26,7 +27,7 @@ class StrainController extends AbstractController
      */
     public function postAction (Request $request)
     {
-        $count = $this->get('app.deck_manager')->countStrains($this->getUser());
+        $count = $this->get(DeckManager::class)->countStrains($this->getUser());
         if ($count >= 100) {
             return $this->failure('quota_error', "Quota reached");
         }
@@ -42,7 +43,7 @@ class StrainController extends AbstractController
                 if ($origin instanceof Deck) {
                     $copy = new Deck();
                     $copy->setUser($this->getUser())->setStrain($strain);
-                    $this->get('app.deck_manager')->copy($copy, $origin)->persist($copy);
+                    $this->get(DeckManager::class)->copy($copy, $origin)->persist($copy);
                 }
             }
             $this->getDoctrine()->getManager()->flush();

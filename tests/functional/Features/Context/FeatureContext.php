@@ -4,12 +4,14 @@ namespace Tests\Functional\Features\Context;
 
 use AppBundle\Entity\Token;
 use AppBundle\Entity\User;
+use AppBundle\Service\TokenManager;
 use Behat\Symfony2Extension\Context\KernelAwareContext;
 use Doctrine\ORM\EntityManagerInterface;
 use JsonSchema\Constraints\Factory;
 use JsonSchema\SchemaStorage;
 use JsonSchema\Validator;
 use Nelmio\Alice\Loader\NativeLoader;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -100,12 +102,13 @@ class FeatureContext implements KernelAwareContext
 
         $user = $entityManager->getRepository(User::class)->findOneBy(['username' => $username]);
         if ($user instanceof User) {
-            $token = $entityManager->getRepository(Token::class)->findOneBy(['user' => $user]);
-            if ($token instanceof Token) {
-                $this->token = $token->getId();
+            $tokenManager = $this->kernel->getContainer()->get(TokenManager::class);
+            $token = $tokenManager->createToken(Uuid::uuid4(), $user);
+            $tokenManager->updateToken($token);
 
-                return;
-            }
+            $this->token = $token->getId();
+
+            return;
         }
 
         throw new \Exception('Cannot find a valid token for user ' . $username);

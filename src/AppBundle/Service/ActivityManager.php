@@ -2,9 +2,11 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Behavior\Service\GetRepositoryTrait;
 use AppBundle\Entity\Activity;
 use AppBundle\Entity\Deck;
 use AppBundle\Entity\User;
+use AppBundle\Repository\ActivityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -14,12 +16,18 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class ActivityManager
 {
+    use GetRepositoryTrait;
+
     /** @var EntityManagerInterface */
     protected $entityManager;
+
+    /** @var ActivityRepository */
+    protected $activityRepository;
 
     public function __construct (EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
+        $this->activityRepository = $this->getRepository($entityManager, Activity::class);
     }
 
     public function getActivity (User $user = null)
@@ -41,8 +49,7 @@ class ActivityManager
         return array_map(function (Activity $activity) {
             return $activity->setPersonal(true);
         }, $this
-            ->entityManager
-            ->getRepository(Activity::class)
+            ->activityRepository
             ->findForUser($user, 10));
     }
 

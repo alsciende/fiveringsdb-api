@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Security;
+namespace AppBundle\Security\Voter;
 
 use AppBundle\Entity\Comment;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;

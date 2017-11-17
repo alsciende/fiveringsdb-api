@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Service\ApiService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormErrorIterator;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -16,7 +17,7 @@ abstract class AbstractController extends Controller
 {
     public function success ($data = null, $groups = ['Default'])
     {
-        return $this->get('app.api')->buildResponse($data, $groups);
+        return $this->get(ApiService::class)->buildResponse($data, $groups);
     }
 
     public function failure ($message = "unknown_error", $description = "An unknown error has occurred.")
@@ -48,6 +49,6 @@ abstract class AbstractController extends Controller
 
     public function setPublic (Request $request, bool $public = true)
     {
-        $this->get('app.api')->setPublic($request, $public);
+        $this->get(ApiService::class)->setPublic($request, $public);
     }
 }

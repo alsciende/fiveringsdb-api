@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Behavior\Service\GetRepositoryTrait;
 use AppBundle\Entity\Deck;
 
 use AppBundle\Entity\Strain;
@@ -10,7 +11,6 @@ use AppBundle\Repository\DeckRepository;
 use AppBundle\Repository\StrainRepository;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Serializer\Serializer;
 
 /**
  * Description of DeckManager
@@ -19,6 +19,8 @@ use Symfony\Component\Serializer\Serializer;
  */
 class DeckManager
 {
+    use GetRepositoryTrait;
+
     /** @var EntityManagerInterface */
     private $entityManager;
 
@@ -28,24 +30,17 @@ class DeckManager
     /** @var StrainRepository */
     private $strainRepository;
 
-    /** @var Serializer */
-    private $serializer;
-
     /** @var DeckValidator */
     private $deckValidator;
 
     public function __construct (
         EntityManagerInterface $entityManager,
-        DeckRepository $deckRepository,
-        StrainRepository $strainRepository,
-        Serializer $serializer,
         DeckValidator $deckValidator
     )
     {
         $this->entityManager = $entityManager;
-        $this->deckRepository = $deckRepository;
-        $this->strainRepository = $strainRepository;
-        $this->serializer = $serializer;
+        $this->deckRepository = $this->getRepository($entityManager, Deck::class);
+        $this->strainRepository = $this->getRepository($entityManager, Strain::class);
         $this->deckValidator = $deckValidator;
     }
 

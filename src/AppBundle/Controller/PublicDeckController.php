@@ -8,6 +8,8 @@ use AppBundle\Entity\Strain;
 use AppBundle\Form\Type\DeckSearchType;
 use AppBundle\Form\Type\PublicDeckType;
 use AppBundle\Search\DeckSearch;
+use AppBundle\Service\DeckManager;
+use AppBundle\Service\DeckSearchService;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -36,7 +38,7 @@ class PublicDeckController extends AbstractController
         $form->submit($request->query->all(), false);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->get('app.deck_search')->search($search);
+            $this->get(DeckSearchService::class)->search($search);
 
             return $this->success($search, [
                 'Public',
@@ -133,7 +135,7 @@ class PublicDeckController extends AbstractController
                 $deck->setPublished(false);
                 $deck->setPublishedAt(null);
             } else {
-                $this->get('app.deck_manager')->deleteDeck($deck);
+                $this->get(DeckManager::class)->deleteDeck($deck);
             }
             $this->getDoctrine()->getManager()->flush();
         } catch (Exception $ex) {
