@@ -16,10 +16,8 @@ database:
   override:
     - bin/console doctrine:schema:update --no-interaction  --force
     - bin/console doctrine:fixtures:load --no-interaction
-    - bin/console app:data:import --no-interaction
 
 test:
   override:
-    - bin/console server:start localhost:8080
-    - phpunit -d memory_limit=128M --verbose --debug
-
+    - vendor/bin/phpunit -d memory_limit=128M --verbose --debug
+    - vendor/bin/behat
