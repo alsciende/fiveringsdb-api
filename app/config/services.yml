@@ -7,7 +7,7 @@ services:
     # configuration by directory
 
     AppBundle\:
-        resource: '../../src/AppBundle/{Security,Service,Util,Validator,Form}'
+        resource: '../../src/AppBundle/{Security,Service,Util,Validator,Form,Controller}'
 
     AppBundle\Service\DeckCheck\:
         public: false

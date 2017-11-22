@@ -30,7 +30,7 @@ class DeckLike
      * @var \AppBundle\Entity\User
      *
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\ManyToOne(targetEntity="User", fetch="EAGER")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
