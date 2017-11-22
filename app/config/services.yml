@@ -2,7 +2,7 @@ services:
     _defaults:
         autowire: true
         autoconfigure: true
-        public: true
+        public: false
 
     # configuration by directory
 
@@ -16,49 +16,41 @@ services:
                 - [setApiService, ['@AppBundle\Service\ApiService']]
 
     AppBundle\Service\DeckCheck\:
-        public: false
         resource: '../../src/AppBundle/Service/DeckCheck'
         tags: [ 'app.deck_check' ]
 
     AppBundle\Service\DeckSearch\:
-        public: false
         resource: '../../src/AppBundle/Service/DeckSearch'
         arguments: [ '@doctrine.orm.entity_manager' ]
         tags:
           - 'app.deck_search'
 
     AppBundle\EventSubscriber\:
-        public: false
         resource: '../../src/AppBundle/EventSubscriber/*'
         tags:
           - 'kernel.event_subscriber'
 
     AppBundle\Doctrine\EventSubscriber\:
-        public: false
         resource: '../../src/AppBundle/Doctrine/EventSubscriber/*'
         tags:
           - 'doctrine.event_subscriber'
 
     AppBundle\Validator\Constraints\:
-        public: false
         resource: '../../src/AppBundle/Validator/Constraints/*Validator'
         tags:
           - 'validator.constraint_validator'
 
     AppBundle\Security\Voter\:
-        public: false
         resource: '../../src/AppBundle/Security/Voter/*'
         tags:
           - 'security.voter'
 
     AppBundle\Form\Type\:
-        public: false
         resource: '../../src/AppBundle/Form/Type/*'
         tags:
           - 'form.type'
 
     AppBundle\Serializer\:
-        public: true
         resource: '../../src/AppBundle/Serializer/*'
         public: true
         tags:
