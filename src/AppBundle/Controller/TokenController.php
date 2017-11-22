@@ -24,7 +24,7 @@ class TokenController extends AbstractController
      * @Route("/tokens")
      * @Method("POST")
      */
-    public function postAction (Request $request)
+    public function postAction (Request $request, Metagame $metagame, UserManager $userManager, TokenManager $tokenManager)
     {
         $form = $this->createFormBuilder([])->add('id', TextType::class)->getForm();
         $form->submit(json_decode($request->getContent(), true), true);
@@ -37,20 +37,18 @@ class TokenController extends AbstractController
                 return $this->success($token);
             }
 
-            $res = $this->get(Metagame::class)->get('api/users/me', [], $tokenId);
+            $res = $metagame->get('api/users/me', [], $tokenId);
             if ($res->getStatusCode() !== 200) {
                 return $this->failure('token_error', (string) $res->getBody());
             }
             $userData = json_decode((string) $res->getBody(), true);
 
-            $userManager = $this->get(UserManager::class);
             $user = $userManager->findUserById($userData['id']);
             if ($user === null) {
                 $user = $userManager->createUser($userData['id'], $userData['username']);
                 $userManager->updateUser($user);
             }
 
-            $tokenManager = $this->get(TokenManager::class);
             $token = $tokenManager->createToken($tokenId, $user);
             $tokenManager->updateToken($token);
 

@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Card;
 use AppBundle\Entity\Review;
 use AppBundle\Form\Type\ReviewType;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -45,10 +46,9 @@ class CardReviewController extends AbstractController
      * @Route("/cards/{id}/reviews", name="listCardReviews")
      * @Method("GET")
      */
-    public function listAction (Card $card)
+    public function listAction (Card $card, EntityManagerInterface $entityManager)
     {
-        $reviews = $this
-            ->get('doctrine')
+        $reviews = $entityManager
             ->getRepository(Review::class)
             ->findBy(['card' => $card]);
 

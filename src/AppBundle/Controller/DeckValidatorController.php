@@ -6,6 +6,7 @@ namespace AppBundle\Controller;
 use AppBundle\Model\CardSlotCollectionDecorator;
 
 use AppBundle\Service\DeckValidator;
+use JMS\Serializer\Serializer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,9 +23,9 @@ class DeckValidatorController extends AbstractController
      * @Route("/deck-validation/{format}")
      * @Method("POST")
      */
-    public function validateAction (Request $request, string $format)
+    public function validateAction (Request $request, string $format, Serializer $serializer, DeckValidator $deckValidator)
     {
-        $cardSlotCollection = $this->get('jms_serializer')->fromArray(
+        $cardSlotCollection = $serializer->fromArray(
             json_decode($request->getContent(), true)
             , CardSlotCollectionDecorator::class
         );
@@ -32,7 +33,7 @@ class DeckValidatorController extends AbstractController
         return new JsonResponse(
             [
                 'success' => true,
-                'status'  => $this->get(DeckValidator::class)->check($cardSlotCollection, $format),
+                'status'  => $deckValidator->check($cardSlotCollection, $format),
             ]
         );
     }

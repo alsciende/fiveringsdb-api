@@ -22,7 +22,7 @@ class StrainDeckController extends AbstractController
      * @Method("POST")
      * @Security("has_role('ROLE_USER')")
      */
-    public function postAction (Request $request, Strain $strain)
+    public function postAction (Request $request, Strain $strain, DeckManager $deckManager)
     {
         if ($strain->getUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException();
@@ -34,7 +34,7 @@ class StrainDeckController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $deck->setUser($this->getUser())->setStrain($strain);
-            $this->get(DeckManager::class)->persist($deck);
+            $deckManager->persist($deck);
             $this->getDoctrine()->getManager()->flush();
 
             return $this->success($deck, [
@@ -92,7 +92,7 @@ class StrainDeckController extends AbstractController
      * @Method("DELETE")
      * @Security("has_role('ROLE_USER')")
      */
-    public function deleteAction (Deck $deck)
+    public function deleteAction (Deck $deck, DeckManager $deckManager)
     {
         if ($deck->isPublished()) {
             throw $this->createNotFoundException();
@@ -102,7 +102,7 @@ class StrainDeckController extends AbstractController
         }
 
         try {
-            $this->get(DeckManager::class)->deleteDeck($deck);
+            $deckManager->deleteDeck($deck);
         } catch (\Exception $ex) {
             return $this->failure($ex->getMessage());
         }

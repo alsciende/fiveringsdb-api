@@ -25,9 +25,9 @@ class StrainController extends AbstractController
      * @Method("POST")
      * @Security("has_role('ROLE_USER')")
      */
-    public function postAction (Request $request)
+    public function postAction (Request $request, DeckManager $deckManager)
     {
-        $count = $this->get(DeckManager::class)->countStrains($this->getUser());
+        $count = $deckManager->countStrains($this->getUser());
         if ($count >= 100) {
             return $this->failure('quota_error', "Quota reached");
         }
@@ -43,7 +43,7 @@ class StrainController extends AbstractController
                 if ($origin instanceof Deck) {
                     $copy = new Deck();
                     $copy->setUser($this->getUser())->setStrain($strain);
-                    $this->get(DeckManager::class)->copy($copy, $origin)->persist($copy);
+                    $deckManager->copy($copy, $origin)->persist($copy);
                 }
             }
             $this->getDoctrine()->getManager()->flush();

@@ -53,7 +53,7 @@ class AuthController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function codeAction (Request $request)
+    public function codeAction (Request $request, Metagame $metagame)
     {
         if (!$request->getSession() instanceof SessionInterface) {
             throw $this->createAccessDeniedException();
@@ -70,7 +70,7 @@ class AuthController extends Controller
         $code = $request->get('code');
 
         // request the access-token to the oauth server
-        $res = $this->get(Metagame::class)->get(
+        $res = $metagame->get(
             'oauth/v2/token', [
                 'client_id'     => $this->getParameter('metagame_client_id'),
                 'client_secret' => $this->getParameter('metagame_client_secret'),
@@ -93,7 +93,7 @@ class AuthController extends Controller
      * @Route("/refresh")
      * @Method("POST")
      */
-    public function refreshAction (Request $request)
+    public function refreshAction (Request $request, Metagame $metagame)
     {
         $form = $this->createFormBuilder([])->add('refresh_token', TextType::class)->getForm();
         $form->submit(json_decode($request->getContent(), true), true);
@@ -102,7 +102,7 @@ class AuthController extends Controller
             $refreshToken = $form->getData()['refresh_token'];
 
             // request the access-token to the oauth server
-            $res = $this->get(Metagame::class)->get(
+            $res = $metagame->get(
                 'oauth/v2/token', [
                     'client_id'     => $this->getParameter('metagame_client_id'),
                     'client_secret' => $this->getParameter('metagame_client_secret'),

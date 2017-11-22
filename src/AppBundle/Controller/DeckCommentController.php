@@ -9,10 +9,12 @@ use AppBundle\Entity\Deck;
 use AppBundle\Event\CommentAddedEvent;
 use AppBundle\Form\Type\CommentType;
 use AppBundle\Form\Type\CommentVisibilityType;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -27,7 +29,7 @@ class DeckCommentController extends AbstractController
      * @Security("has_role('ROLE_USER')")
      * @ParamConverter("deck", class="AppBundle:Deck", options={"id" = "deckId"})
      */
-    public function postAction (Request $request, Deck $deck)
+    public function postAction (Request $request, Deck $deck, EventDispatcher $eventDispatcher)
     {
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
@@ -38,7 +40,7 @@ class DeckCommentController extends AbstractController
             $this->getDoctrine()->getManager()->persist($comment);
             $this->getDoctrine()->getManager()->flush();
 
-            $this->get('event_dispatcher')->dispatch(CommentAddedEvent::NAME, new CommentAddedEvent($comment));
+            $eventDispatcher->dispatch(CommentAddedEvent::NAME, new CommentAddedEvent($comment));
 
             return $this->success($comment);
         }
@@ -52,10 +54,9 @@ class DeckCommentController extends AbstractController
      * @Method("GET")
      * @ParamConverter("deck", class="AppBundle:Deck", options={"id" = "deckId"})
      */
-    public function listAction (Deck $deck)
+    public function listAction (Deck $deck, EntityManagerInterface $entityManager)
     {
-        $comments = $this
-            ->get('doctrine')
+        $comments = $entityManager
             ->getRepository(Comment::class)
             ->findBy(['deck' => $deck]);
 

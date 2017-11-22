@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Card;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,13 +20,12 @@ class CardController extends AbstractController
      * @Route("/cards", name="listCards")
      * @Method("GET")
      */
-    public function listAction (Request $request)
+    public function listAction (Request $request, EntityManagerInterface $entityManager)
     {
         $this->setPublic($request);
 
         return $this->success(
-            $this
-                ->getDoctrine()
+            $entityManager
                 ->getRepository(Card::class)
                 ->findAll(),
             [

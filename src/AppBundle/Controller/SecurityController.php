@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 /**
  * Description of SecurityController
@@ -16,16 +17,14 @@ class SecurityController extends Controller
     /**
      * @Route("/login", name="security_login")
      */
-    public function loginAction ()
+    public function loginAction (AuthenticationUtils $authenticationUtils)
     {
-        $helper = $this->get('security.authentication_utils');
-
         return $this->render(
             'security/login.html.twig', [
                 // last username entered by the user (if any)
-                'last_username' => $helper->getLastUsername(),
+                'last_username' => $authenticationUtils->getLastUsername(),
                 // last authentication error (if any)
-                'error'         => $helper->getLastAuthenticationError(),
+                'error'         => $authenticationUtils->getLastAuthenticationError(),
             ]
         );
     }

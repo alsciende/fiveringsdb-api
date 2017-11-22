@@ -26,7 +26,7 @@ class DeckPublishController extends AbstractController
      * @Method("PATCH")
      * @Security("has_role('ROLE_USER')")
      */
-    public function postAction (Request $request, Strain $strain)
+    public function postAction (Request $request, Strain $strain, DeckManager $deckManager)
     {
         if ($strain->getUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException();
@@ -47,7 +47,7 @@ class DeckPublishController extends AbstractController
         $form->submit(json_decode($request->getContent(), true), false);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->get(DeckManager::class)->publish($strain->getHead());
+            $deckManager->publish($strain->getHead());
             $this->getDoctrine()->getManager()->flush();
 
             return $this->success($deck, [

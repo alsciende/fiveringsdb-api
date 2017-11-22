@@ -18,11 +18,11 @@ class FeatureController extends AbstractController
      * @Route("/features")
      * @Method("GET")
      */
-    public function listAction (Request $request)
+    public function listAction (Request $request, FeatureManager $featureManager)
     {
         $this->setPublic($request);
 
-        $features = $this->get(FeatureManager::class)->getCurrentFeatures();
+        $features = $featureManager->getCurrentFeatures();
 
         return $this->success($features, [
             'Default',

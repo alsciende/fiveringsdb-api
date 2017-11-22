@@ -29,7 +29,7 @@ class PublicDeckController extends AbstractController
      * @Route("/decks")
      * @Method("GET")
      */
-    public function listAction (Request $request)
+    public function listAction (Request $request, DeckSearchService $deckSearchService)
     {
         $this->setPublic($request);
 
@@ -38,7 +38,7 @@ class PublicDeckController extends AbstractController
         $form->submit($request->query->all(), false);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->get(DeckSearchService::class)->search($search);
+            $deckSearchService->search($search);
 
             return $this->success($search, [
                 'Public',
@@ -118,7 +118,7 @@ class PublicDeckController extends AbstractController
      * @Method("DELETE")
      * @Security("has_role('ROLE_USER')")
      */
-    public function deleteAction (Deck $deck)
+    public function deleteAction (Deck $deck, DeckManager $deckManager)
     {
         if ($deck->isPublished() === false) {
             throw $this->createNotFoundException();
@@ -135,7 +135,7 @@ class PublicDeckController extends AbstractController
                 $deck->setPublished(false);
                 $deck->setPublishedAt(null);
             } else {
-                $this->get(DeckManager::class)->deleteDeck($deck);
+                $deckManager->deleteDeck($deck);
             }
             $this->getDoctrine()->getManager()->flush();
         } catch (Exception $ex) {

@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Card;
 use AppBundle\Entity\Ruling;
 use AppBundle\Form\Type\RulingType;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -46,10 +47,9 @@ class CardRulingController extends AbstractController
      * @Route("/cards/{id}/rulings", name="listCardRulings")
      * @Method("GET")
      */
-    public function listAction (Card $card)
+    public function listAction (Card $card, EntityManagerInterface $entityManager)
     {
-        $rulings = $this
-            ->get('doctrine')
+        $rulings = $entityManager
             ->getRepository(Ruling::class)
             ->findBy(['card' => $card]);
 
