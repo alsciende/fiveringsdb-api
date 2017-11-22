@@ -259,7 +259,7 @@ class Deck
         return $this;
     }
 
-    /** @return CardSlotCollectionDecorator */
+    /** @return CardSlotCollectionDecorator|DeckCard[] */
     public function getDeckCards (): CardSlotCollectionDecorator
     {
         if ($this->deckCards === null) {

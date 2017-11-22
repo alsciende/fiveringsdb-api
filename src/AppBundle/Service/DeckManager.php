@@ -5,6 +5,7 @@ namespace AppBundle\Service;
 use AppBundle\Behavior\Service\GetRepositoryTrait;
 use AppBundle\Entity\Deck;
 
+use AppBundle\Entity\DeckCard;
 use AppBundle\Entity\Strain;
 use AppBundle\Entity\User;
 use AppBundle\Repository\DeckRepository;
@@ -88,7 +89,7 @@ class DeckManager
         $deck->setDescription($parent->getDescription());
         $deck->setFormat($parent->getFormat());
         foreach ($parent->getDeckCards() as $deckCard) {
-            $deck->addDeckCard($deckCard);
+            $deck->addDeckCard(new DeckCard($deckCard->getCard(), $deckCard->getQuantity()));
         }
 
         return $this;
