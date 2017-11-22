@@ -70,7 +70,6 @@ class DeckCopyControllerTest extends BaseApiControllerTest
     }
 
     /**
-     * @covers  DeckCopyController::postAction()
      * @depends testStrainDeckControllerPostAction
      */
     public function testDeckCopyControllerPostAction ($deck)
