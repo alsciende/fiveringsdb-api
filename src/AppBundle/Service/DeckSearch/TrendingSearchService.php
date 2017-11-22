@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: cedric
- * Date: 27/10/17
- * Time: 13:16
- */
 
 namespace AppBundle\Service\DeckSearch;
 

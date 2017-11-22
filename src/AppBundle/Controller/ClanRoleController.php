@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+
 use AppBundle\Entity\ClanRole;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;

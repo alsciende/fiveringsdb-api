@@ -8,6 +8,12 @@ services:
 
     AppBundle\:
         resource: '../../src/AppBundle/{Security,Service,Util,Validator,Form,Controller}'
+        autoconfigure: true
+
+    _instanceof:
+        AppBundle\Behavior\Controller\ApiControllerInterface:
+            calls:
+                - [setApiService, ['@AppBundle\Service\ApiService']]
 
     AppBundle\Service\DeckCheck\:
         public: false
@@ -18,44 +24,45 @@ services:
         public: false
         resource: '../../src/AppBundle/Service/DeckSearch'
         arguments: [ '@doctrine.orm.entity_manager' ]
-        tags: [ 'app.deck_search' ]
+        tags:
+          - 'app.deck_search'
 
     AppBundle\EventSubscriber\:
         public: false
         resource: '../../src/AppBundle/EventSubscriber/*'
         tags:
-          - "kernel.event_subscriber"
+          - 'kernel.event_subscriber'
 
     AppBundle\Doctrine\EventSubscriber\:
         public: false
         resource: '../../src/AppBundle/Doctrine/EventSubscriber/*'
         tags:
-          - name: "doctrine.event_subscriber"
+          - 'doctrine.event_subscriber'
 
     AppBundle\Validator\Constraints\:
         public: false
         resource: '../../src/AppBundle/Validator/Constraints/*Validator'
         tags:
-          - "validator.constraint_validator"
+          - 'validator.constraint_validator'
 
     AppBundle\Security\Voter\:
         public: false
         resource: '../../src/AppBundle/Security/Voter/*'
         tags:
-          - "security.voter"
+          - 'security.voter'
 
     AppBundle\Form\Type\:
         public: false
         resource: '../../src/AppBundle/Form/Type/*'
         tags:
-          - "form.type"
+          - 'form.type'
 
     AppBundle\Serializer\:
         public: true
         resource: '../../src/AppBundle/Serializer/*'
         public: true
         tags:
-            - { name: jms_serializer.subscribing_handler }
+          - 'jms_serializer.subscribing_handler'
 
     # configuration by class
 

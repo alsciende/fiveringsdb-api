@@ -2,7 +2,6 @@
 
 namespace AppBundle\Controller;
 
-
 use AppBundle\Model\CardSlotCollectionDecorator;
 
 use AppBundle\Service\DeckValidator;

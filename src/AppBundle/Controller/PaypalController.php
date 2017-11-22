@@ -17,7 +17,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class PaypalController extends Controller
 {
-
     /**
      * @Route("/create", name="paypal_create")
      */
@@ -74,5 +73,4 @@ class PaypalController extends Controller
 
         return new Response("Done!");
     }
-
 }

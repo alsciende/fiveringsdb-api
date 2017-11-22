@@ -41,5 +41,4 @@ class PackCardController extends AbstractController
             ]
         );
     }
-
 }

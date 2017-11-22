@@ -23,7 +23,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class PublicDeckController extends AbstractController
 {
-
     /**
      * Get all public decks
      * @Route("/decks")
@@ -44,8 +43,8 @@ class PublicDeckController extends AbstractController
                 'Public',
                 'User',
                 'user' => [
-                    'Default'
-                ]
+                    'Default',
+                ],
             ]);
         }
 
@@ -70,13 +69,13 @@ class PublicDeckController extends AbstractController
             'Description',
             'Cards',
             'User',
-            'user' => [
+            'user'     => [
                 'Default',
             ],
             'Comments',
             'comments' => [
                 'Default',
-                'User'
+                'User',
             ],
         ]);
     }

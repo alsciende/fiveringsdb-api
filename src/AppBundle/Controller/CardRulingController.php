@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+
 use AppBundle\Entity\Card;
 use AppBundle\Entity\Ruling;
 use AppBundle\Form\Type\RulingType;

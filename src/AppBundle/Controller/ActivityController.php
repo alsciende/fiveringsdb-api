@@ -30,7 +30,7 @@ class ActivityController extends AbstractController
             [
                 'Default',
                 'deck' => [
-                    'Public'
+                    'Public',
                 ],
             ]
         );
