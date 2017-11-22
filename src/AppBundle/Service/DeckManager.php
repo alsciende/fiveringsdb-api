@@ -84,7 +84,7 @@ class DeckManager
 
     public function copy (Deck $deck, Deck $parent): self
     {
-        $deck->setName($parent->getName());
+        $deck->setName("Copy of " . $parent->getName());
         $deck->setDescription($parent->getDescription());
         $deck->setFormat($parent->getFormat());
         foreach ($parent->getDeckCards() as $deckCard) {

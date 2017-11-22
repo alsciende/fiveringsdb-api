@@ -60,4 +60,10 @@ class DeckLikeManager
     {
         return $this->entityManager->getRepository(DeckLike::class)->findOneBy(['deck' => $deck, 'user' => $user]);
     }
+
+    /** @return DeckLike[] */
+    public function listLikes (Deck $deck): array
+    {
+        return $this->entityManager->getRepository(DeckLike::class)->findBy(['deck' => $deck]);
+    }
 }

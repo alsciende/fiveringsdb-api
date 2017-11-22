@@ -2,9 +2,11 @@
 
 namespace AppBundle\Controller;
 
+
 use AppBundle\Entity\Card;
 use AppBundle\Entity\Review;
 use AppBundle\Form\Type\ReviewType;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -23,7 +25,7 @@ class CardReviewController extends AbstractController
      * @Method("POST")
      * @Security("has_role('ROLE_USER')")
      */
-    public function postAction (Request $request, Card $card)
+    public function postAction (Request $request, Card $card, EntityManagerInterface $entityManager)
     {
         $review = new Review();
         $form = $this->createForm(ReviewType::class, $review);
@@ -31,8 +33,8 @@ class CardReviewController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $review->setUser($this->getUser())->setCard($card);
-            $this->getDoctrine()->getManager()->persist($review);
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->persist($review);
+            $entityManager->flush();
 
             return $this->success($review);
         }
@@ -45,10 +47,9 @@ class CardReviewController extends AbstractController
      * @Route("/cards/{id}/reviews", name="listCardReviews")
      * @Method("GET")
      */
-    public function listAction (Card $card)
+    public function listAction (Card $card, EntityManagerInterface $entityManager)
     {
-        $reviews = $this
-            ->get('doctrine')
+        $reviews = $entityManager
             ->getRepository(Review::class)
             ->findBy(['card' => $card]);
 
@@ -71,7 +72,7 @@ class CardReviewController extends AbstractController
      * @Method("PATCH")
      * @Security("has_role('ROLE_USER')")
      */
-    public function patchAction (Request $request, Review $review)
+    public function patchAction (Request $request, Review $review, EntityManagerInterface $entityManager)
     {
         if ($this->getUser() !== $review->getUser()) {
             throw $this->createAccessDeniedException();
@@ -81,7 +82,7 @@ class CardReviewController extends AbstractController
         $form->submit(json_decode($request->getContent(), true), false);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->flush();
 
             return $this->success($review);
         }

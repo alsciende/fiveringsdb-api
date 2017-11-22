@@ -13,7 +13,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class DataExportCommand extends ContainerAwareCommand
 {
-
     protected function configure ()
     {
         $this
@@ -23,7 +22,5 @@ class DataExportCommand extends ContainerAwareCommand
 
     protected function execute (InputInterface $input, OutputInterface $output)
     {
-
     }
-
 }

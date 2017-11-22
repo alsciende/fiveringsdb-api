@@ -2,9 +2,10 @@
 
 namespace AppBundle\Controller;
 
+
 use AppBundle\Entity\Deck;
 use AppBundle\Service\DeckLikeManager;
-use Exception;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -24,16 +25,16 @@ class DeckLikeController extends AbstractController
      * @Security("has_role('ROLE_USER')")
      * @ParamConverter("deck", class="AppBundle:Deck", options={"id" = "deckId"})
      */
-    public function postAction (Deck $deck)
+    public function postAction (Deck $deck, DeckLikeManager $deckLikeManager, EntityManagerInterface $entityManager)
     {
         if ($deck->isPublished() === false) {
             throw $this->createNotFoundException();
         }
 
         try {
-            $nbLikes = $this->get(DeckLikeManager::class)->addLike($deck, $this->getUser());
-            $this->getDoctrine()->getManager()->flush();
-        } catch (Exception $ex) {
+            $nbLikes = $deckLikeManager->addLike($deck, $this->getUser());
+            $entityManager->flush();
+        } catch (\Exception $ex) {
             return $this->failure($ex->getMessage());
         }
 
@@ -47,16 +48,16 @@ class DeckLikeController extends AbstractController
      * @Security("has_role('ROLE_USER')")
      * @ParamConverter("deck", class="AppBundle:Deck", options={"id" = "deckId"})
      */
-    public function deleteAction (Deck $deck)
+    public function deleteAction (Deck $deck, DeckLikeManager $deckLikeManager, EntityManagerInterface $entityManager)
     {
         if ($deck->isPublished() === false) {
             throw $this->createNotFoundException();
         }
 
         try {
-            $nbLikes = $this->get(DeckLikeManager::class)->removeLike($deck, $this->getUser());
-            $this->getDoctrine()->getManager()->flush();
-        } catch (Exception $ex) {
+            $nbLikes = $deckLikeManager->removeLike($deck, $this->getUser());
+            $entityManager->flush();
+        } catch (\Exception $ex) {
             return $this->failure($ex->getMessage());
         }
 
@@ -69,18 +70,43 @@ class DeckLikeController extends AbstractController
      * @Security("has_role('ROLE_USER')")
      * @ParamConverter("deck", class="AppBundle:Deck", options={"id" = "deckId"})
      */
-    public function getAction (Deck $deck)
+    public function getAction (Deck $deck, DeckLikeManager $deckLikeManager)
     {
         if ($deck->isPublished() === false) {
             throw $this->createNotFoundException();
         }
 
         try {
-            $like = $this->get(DeckLikeManager::class)->getLike($deck, $this->getUser());
-        } catch (Exception $ex) {
+            $like = $deckLikeManager->getLike($deck, $this->getUser());
+        } catch (\Exception $ex) {
             return $this->failure($ex->getMessage());
         }
 
         return $this->success($like);
+    }
+
+    /**
+     * @Route("/decks/{deckId}/likes")
+     * @Method("GET")
+     * @ParamConverter("deck", class="AppBundle:Deck", options={"id" = "deckId"})
+     */
+    public function listAction (Deck $deck, DeckLikeManager $deckLikeManager)
+    {
+        if ($deck->isPublished() === false) {
+            throw $this->createNotFoundException();
+        }
+
+        try {
+            $likes = $deckLikeManager->listLikes($deck);
+        } catch (\Exception $ex) {
+            return $this->failure($ex->getMessage());
+        }
+
+        return $this->success($likes, [
+            'User',
+            'user' => [
+                'Default'
+            ]
+        ]);
     }
 }

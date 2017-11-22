@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace AppBundle\Controller;
 
+
 use AppBundle\Entity\Comment;
 use AppBundle\Entity\Deck;
 use AppBundle\Event\CommentAddedEvent;
 use AppBundle\Form\Type\CommentType;
 use AppBundle\Form\Type\CommentVisibilityType;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -27,7 +30,7 @@ class DeckCommentController extends AbstractController
      * @Security("has_role('ROLE_USER')")
      * @ParamConverter("deck", class="AppBundle:Deck", options={"id" = "deckId"})
      */
-    public function postAction (Request $request, Deck $deck)
+    public function postAction (Request $request, Deck $deck, EventDispatcher $eventDispatcher, EntityManagerInterface $entityManager)
     {
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
@@ -35,10 +38,10 @@ class DeckCommentController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $comment->setUser($this->getUser())->setDeck($deck);
-            $this->getDoctrine()->getManager()->persist($comment);
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->persist($comment);
+            $entityManager->flush();
 
-            $this->get('event_dispatcher')->dispatch(CommentAddedEvent::NAME, new CommentAddedEvent($comment));
+            $eventDispatcher->dispatch(CommentAddedEvent::NAME, new CommentAddedEvent($comment));
 
             return $this->success($comment);
         }
@@ -52,10 +55,9 @@ class DeckCommentController extends AbstractController
      * @Method("GET")
      * @ParamConverter("deck", class="AppBundle:Deck", options={"id" = "deckId"})
      */
-    public function listAction (Deck $deck)
+    public function listAction (Deck $deck, EntityManagerInterface $entityManager)
     {
-        $comments = $this
-            ->get('doctrine')
+        $comments = $entityManager
             ->getRepository(Comment::class)
             ->findBy(['deck' => $deck]);
 
@@ -84,7 +86,7 @@ class DeckCommentController extends AbstractController
      * @Method("PATCH")
      * @Security("has_role('ROLE_USER')")
      */
-    public function patchAction (Request $request, Comment $comment)
+    public function patchAction (Request $request, Comment $comment, EntityManagerInterface $entityManager)
     {
         if ($this->getUser() !== $comment->getUser()) {
             throw $this->createAccessDeniedException();
@@ -94,7 +96,7 @@ class DeckCommentController extends AbstractController
         $form->submit(json_decode($request->getContent(), true), false);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->flush();
 
             return $this->success($comment);
         }
@@ -108,7 +110,7 @@ class DeckCommentController extends AbstractController
      * @Method("PATCH")
      * @Security("has_role('ROLE_USER')")
      */
-    public function visibilityPatchAction (Request $request, Comment $comment)
+    public function visibilityPatchAction (Request $request, Comment $comment, EntityManagerInterface $entityManager)
     {
         if ($this->isGranted('COMMENT_VISIBILITY', $comment) === false) {
             throw $this->createAccessDeniedException();
@@ -119,7 +121,7 @@ class DeckCommentController extends AbstractController
         $form->submit(json_decode($request->getContent(), true), false);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->flush();
 
             return $this->success($comment);
         }

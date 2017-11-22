@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: cedric
- * Date: 31/10/17
- * Time: 16:53
- */
 
 namespace AppBundle\Controller;
 
@@ -21,10 +15,10 @@ class FeedController extends AbstractController
      * @Route("/feed")
      * @Method("GET")
      */
-    public function listAction ()
+    public function listAction (ActivityManager $activityManager)
     {
         return $this->success(
-            $this->get(ActivityManager::class)->getActivity($this->getUser()),
+            $activityManager->getActivity($this->getUser()),
             [
                 'Default',
                 'deck' => [

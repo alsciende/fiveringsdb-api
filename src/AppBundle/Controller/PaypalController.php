@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Service\PaypalService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,14 +17,11 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class PaypalController extends Controller
 {
-
     /**
      * @Route("/create", name="paypal_create")
      */
-    public function createAction ()
+    public function createAction (PaypalService $paypalService)
     {
-        $paypalService = $this->get('paypal');
-
         $result = $paypalService->setExpressCheckout(10, 'EUR', 'SALE');
 
         if (isset($result['TOKEN']) === false) {
@@ -47,12 +45,10 @@ class PaypalController extends Controller
     /**
      * @Route("/success")
      */
-    public function successAction (Request $request)
+    public function successAction (Request $request, PaypalService $paypalService)
     {
         $token = $request->query->get('token');
         $payerID = $request->query->get('PayerID');
-
-        $paypalService = $this->get('paypal');
 
         $result_get = $paypalService->getExpressCheckoutDetails($token);
 //        dump($result_get);
@@ -69,15 +65,12 @@ class PaypalController extends Controller
      *
      * @Route("/transaction/{transactionId}")
      */
-    public function transactionAction ($transactionId)
+    public function transactionAction ($transactionId, PaypalService $paypalService)
     {
-        $paypalService = $this->get('paypal');
-
         $result = $paypalService->getTransactionDetails($transactionId);
 
 //        dump($result);
 
         return new Response("Done!");
     }
-
 }

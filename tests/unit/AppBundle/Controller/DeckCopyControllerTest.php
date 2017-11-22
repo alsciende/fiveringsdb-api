@@ -70,7 +70,6 @@ class DeckCopyControllerTest extends BaseApiControllerTest
     }
 
     /**
-     * @covers  DeckCopyController::postAction()
      * @depends testStrainDeckControllerPostAction
      */
     public function testDeckCopyControllerPostAction ($deck)
@@ -97,7 +96,7 @@ class DeckCopyControllerTest extends BaseApiControllerTest
         );
         $head = $record['head'];
         $this->assertEquals(
-            'PHPUnit Test Deck',
+            'Copy of PHPUnit Test Deck',
             $head['name']
         );
         $this->assertEquals(

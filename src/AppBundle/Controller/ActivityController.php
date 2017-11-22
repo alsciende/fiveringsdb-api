@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Activity;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -20,17 +21,16 @@ class ActivityController extends AbstractController
      * @Method("GET")
      * @Security("has_role('ROLE_USER')")
      */
-    public function listAction ()
+    public function listAction (EntityManagerInterface $entityManager)
     {
         return $this->success(
-            $this
-                ->getDoctrine()
+            $entityManager
                 ->getRepository(Activity::class)
                 ->findForUser($this->getUser(), 10),
             [
                 'Default',
                 'deck' => [
-                    'Public'
+                    'Public',
                 ],
             ]
         );

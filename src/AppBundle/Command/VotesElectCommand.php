@@ -14,6 +14,15 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class VotesElectCommand extends ContainerAwareCommand
 {
+    /** @var FeatureManager $featureManager */
+    private $featureManager;
+
+    public function __construct ($name = null, FeatureManager $featureManager)
+    {
+        parent::__construct($name);
+        $this->featureManager = $featureManager;
+    }
+
     protected function configure ()
     {
         $this
@@ -23,6 +32,6 @@ class VotesElectCommand extends ContainerAwareCommand
 
     protected function execute (InputInterface $input, OutputInterface $output)
     {
-        $this->getContainer()->get(FeatureManager::class)->electFeatures();
+        $this->featureManager->electFeatures();
     }
 }

@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Behavior\Controller\ApiControllerInterface;
 use AppBundle\Service\ApiService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormErrorIterator;
@@ -13,17 +14,23 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-abstract class AbstractController extends Controller
+abstract class AbstractController extends Controller implements ApiControllerInterface
 {
+    /** @var ApiService $apiService */
+    private $apiService;
+
+    public function setApiService (ApiService $apiService)
+    {
+        $this->apiService = $apiService;
+    }
+
     public function success ($data = null, $groups = ['Default'])
     {
-        return $this->get(ApiService::class)->buildResponse($data, $groups);
+        return $this->apiService->buildResponse($data, $groups);
     }
 
     public function failure ($message = "unknown_error", $description = "An unknown error has occurred.")
     {
-        $this->get('logger')->info($message);
-
         return new JsonResponse(
             [
                 "success"     => false,
@@ -49,6 +56,6 @@ abstract class AbstractController extends Controller
 
     public function setPublic (Request $request, bool $public = true)
     {
-        $this->get(ApiService::class)->setPublic($request, $public);
+        $this->apiService->setPublic($request, $public);
     }
 }

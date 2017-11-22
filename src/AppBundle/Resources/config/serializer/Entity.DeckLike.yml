@@ -1,0 +1,10 @@
+AppBundle\Entity\DeckLike:
+    exclusion_policy: ALL
+    accessor_order: alphabetical
+    properties:
+        user:
+            expose: true
+            groups: ['User']
+        deck:
+            expose: true
+            groups: ['Deck']

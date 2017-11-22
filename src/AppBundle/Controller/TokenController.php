@@ -7,6 +7,7 @@ use AppBundle\Form\Type\TokenType;
 use AppBundle\Service\Metagame;
 use AppBundle\Service\TokenManager;
 use AppBundle\Service\UserManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -24,7 +25,7 @@ class TokenController extends AbstractController
      * @Route("/tokens")
      * @Method("POST")
      */
-    public function postAction (Request $request)
+    public function postAction (Request $request, Metagame $metagame, UserManager $userManager, TokenManager $tokenManager, EntityManagerInterface $entityManager)
     {
         $form = $this->createFormBuilder([])->add('id', TextType::class)->getForm();
         $form->submit(json_decode($request->getContent(), true), true);
@@ -32,25 +33,23 @@ class TokenController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $tokenId = $form->getData()['id'];
 
-            $token = $this->getDoctrine()->getRepository(Token::class)->find($tokenId);
+            $token = $entityManager->getRepository(Token::class)->find($tokenId);
             if ($token instanceof Token) {
                 return $this->success($token);
             }
 
-            $res = $this->get(Metagame::class)->get('api/users/me', [], $tokenId);
+            $res = $metagame->get('api/users/me', [], $tokenId);
             if ($res->getStatusCode() !== 200) {
                 return $this->failure('token_error', (string) $res->getBody());
             }
             $userData = json_decode((string) $res->getBody(), true);
 
-            $userManager = $this->get(UserManager::class);
             $user = $userManager->findUserById($userData['id']);
             if ($user === null) {
                 $user = $userManager->createUser($userData['id'], $userData['username']);
                 $userManager->updateUser($user);
             }
 
-            $tokenManager = $this->get(TokenManager::class);
             $token = $tokenManager->createToken($tokenId, $user);
             $tokenManager->updateToken($token);
 

@@ -15,6 +15,14 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class PaypalTransactionCommand extends ContainerAwareCommand
 {
+    /** @var PaypalService $paypalService */
+    private $paypalService;
+
+    public function __construct ($name = null, PaypalService $paypalService)
+    {
+        parent::__construct($name);
+        $this->paypalService = $paypalService;
+    }
 
     protected function configure ()
     {
@@ -28,11 +36,7 @@ class PaypalTransactionCommand extends ContainerAwareCommand
     {
         $transactionId = $input->getArgument('transaction_id');
 
-        $service = $this->getContainer()->get(PaypalService::class);
-
-        $result = $service->getTransactionDetails($transactionId);
-
+        $result = $this->paypalService->getTransactionDetails($transactionId);
 //        dump($result);
     }
-
 }

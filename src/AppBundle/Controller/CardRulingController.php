@@ -2,9 +2,11 @@
 
 namespace AppBundle\Controller;
 
+
 use AppBundle\Entity\Card;
 use AppBundle\Entity\Ruling;
 use AppBundle\Form\Type\RulingType;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -24,7 +26,7 @@ class CardRulingController extends AbstractController
      * @Method("POST")
      * @Security("has_role('ROLE_GURU')")
      */
-    public function postAction (Request $request, Card $card)
+    public function postAction (Request $request, Card $card, EntityManagerInterface $entityManager)
     {
         $ruling = new Ruling();
         $form = $this->createForm(RulingType::class, $ruling);
@@ -32,8 +34,8 @@ class CardRulingController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $ruling->setUser($this->getUser())->setCard($card);
-            $this->getDoctrine()->getManager()->persist($ruling);
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->persist($ruling);
+            $entityManager->flush();
 
             return $this->success($ruling);
         }
@@ -46,10 +48,9 @@ class CardRulingController extends AbstractController
      * @Route("/cards/{id}/rulings", name="listCardRulings")
      * @Method("GET")
      */
-    public function listAction (Card $card)
+    public function listAction (Card $card, EntityManagerInterface $entityManager)
     {
-        $rulings = $this
-            ->get('doctrine')
+        $rulings = $entityManager
             ->getRepository(Ruling::class)
             ->findBy(['card' => $card]);
 
@@ -72,10 +73,10 @@ class CardRulingController extends AbstractController
      * @Method("DELETE")
      * @Security("has_role('ROLE_GURU')")
      */
-    public function deleteAction (Ruling $ruling)
+    public function deleteAction (Ruling $ruling, EntityManagerInterface $entityManager)
     {
-        $this->getDoctrine()->getManager()->remove($ruling);
-        $this->getDoctrine()->getManager()->flush();
+        $entityManager->remove($ruling);
+        $entityManager->flush();
 
         return $this->success();
     }
@@ -86,13 +87,13 @@ class CardRulingController extends AbstractController
      * @Method("PATCH")
      * @Security("has_role('ROLE_GURU')")
      */
-    public function patchAction (Request $request, Ruling $ruling)
+    public function patchAction (Request $request, Ruling $ruling, EntityManagerInterface $entityManager)
     {
         $form = $this->createForm(RulingType::class, $ruling);
         $form->submit(json_decode($request->getContent(), true), false);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->flush();
 
             return $this->success($ruling);
         }

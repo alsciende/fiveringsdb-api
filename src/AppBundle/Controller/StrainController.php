@@ -6,6 +6,7 @@ use AppBundle\Entity\Deck;
 use AppBundle\Entity\Strain;
 use AppBundle\Form\Type\StrainType;
 use AppBundle\Service\DeckManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -25,9 +26,9 @@ class StrainController extends AbstractController
      * @Method("POST")
      * @Security("has_role('ROLE_USER')")
      */
-    public function postAction (Request $request)
+    public function postAction (Request $request, DeckManager $deckManager, EntityManagerInterface $entityManager)
     {
-        $count = $this->get(DeckManager::class)->countStrains($this->getUser());
+        $count = $deckManager->countStrains($this->getUser());
         if ($count >= 100) {
             return $this->failure('quota_error', "Quota reached");
         }
@@ -37,16 +38,16 @@ class StrainController extends AbstractController
         $form->submit(json_decode($request->getContent(), true), true);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->persist($strain);
+            $entityManager->persist($strain);
             if ($strain->getOrigin() !== null) {
-                $origin = $this->getDoctrine()->getManager()->getRepository(Deck::class)->find($strain->getOrigin());
+                $origin = $entityManager->getRepository(Deck::class)->find($strain->getOrigin());
                 if ($origin instanceof Deck) {
                     $copy = new Deck();
                     $copy->setUser($this->getUser())->setStrain($strain);
-                    $this->get(DeckManager::class)->copy($copy, $origin)->persist($copy);
+                    $deckManager->copy($copy, $origin)->persist($copy);
                 }
             }
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->flush();
 
             return $this->success(
                 $strain, [
@@ -69,10 +70,9 @@ class StrainController extends AbstractController
      * @Method("GET")
      * @Security("has_role('ROLE_USER')")
      */
-    public function listAction ()
+    public function listAction (EntityManagerInterface $entityManager)
     {
-        $strains = $this
-            ->getDoctrine()
+        $strains = $entityManager
             ->getRepository(Strain::class)
             ->findBy(['user' => $this->getUser()], ['updatedAt' => 'DESC']);
 
@@ -116,7 +116,7 @@ class StrainController extends AbstractController
      * @Method("DELETE")
      * @Security("has_role('ROLE_USER')")
      */
-    public function deleteAction (Strain $strain)
+    public function deleteAction (Strain $strain, EntityManagerInterface $entityManager)
     {
         if ($strain->getUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException();
@@ -129,9 +129,9 @@ class StrainController extends AbstractController
         }
 
         $strain->clearHead();
-        $this->getDoctrine()->getManager()->flush();
-        $this->getDoctrine()->getManager()->remove($strain);
-        $this->getDoctrine()->getManager()->flush();
+        $entityManager->flush();
+        $entityManager->remove($strain);
+        $entityManager->flush();
 
         return $this->success();
     }
