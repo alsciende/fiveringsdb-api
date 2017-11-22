@@ -96,7 +96,7 @@ class DeckCopyControllerTest extends BaseApiControllerTest
         );
         $head = $record['head'];
         $this->assertEquals(
-            'PHPUnit Test Deck',
+            'Copy of PHPUnit Test Deck',
             $head['name']
         );
         $this->assertEquals(
