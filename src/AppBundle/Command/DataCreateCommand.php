@@ -2,9 +2,11 @@
 
 namespace AppBundle\Command;
 
+use Alsciende\SerializerBundle\Serializer\Deserializer;
 use AppBundle\Entity\Card;
 use AppBundle\Entity\Pack;
 use Cocur\Slugify\Slugify;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -15,6 +17,18 @@ use Symfony\Component\Console\Question\Question;
  */
 class DataCreateCommand extends ContainerAwareCommand
 {
+    /** @var EntityManagerInterface $entityManager */
+    private $entityManager;
+
+    /** @var Deserializer $deserializer */
+    private $deserializer;
+
+    public function __construct ($name = null, EntityManagerInterface $entityManager, Deserializer $deserializer)
+    {
+        parent::__construct($name);
+        $this->entityManager = $entityManager;
+        $this->deserializer = $deserializer;
+    }
 
     protected function configure ()
     {
@@ -78,10 +92,8 @@ class DataCreateCommand extends ContainerAwareCommand
 
     protected function getPack (InputInterface $input, OutputInterface $output): Pack
     {
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-
         $helper = $this->getHelper('question');
-        $packs = $em->getRepository(Pack::class)->findAll();
+        $packs = $this->entityManager->getRepository(Pack::class)->findAll();
         $packName = $helper->ask(
             $input, $output, new ChoiceQuestion(
                 'Pack: ',
@@ -92,7 +104,7 @@ class DataCreateCommand extends ContainerAwareCommand
                 )
             )
         );
-        $pack = $em->getRepository(Pack::class)->findOneBy(['name' => $packName]) or die('Cannot find Pack');
+        $pack = $this->entityManager->getRepository(Pack::class)->findOneBy(['name' => $packName]) or die('Cannot find Pack');
 
         return $pack;
     }
@@ -101,7 +113,6 @@ class DataCreateCommand extends ContainerAwareCommand
     {
         $helper = $this->getHelper('question');
         $slugify = new Slugify();
-        $normalizer = $this->getContainer()->get('alsciende_serializer.deserializer');
 
         $clan = $helper->ask(
             $input, $output, new ChoiceQuestion(
@@ -184,7 +195,7 @@ class DataCreateCommand extends ContainerAwareCommand
         $card->setType($type);
         $card->setClan($clan);
 
-        $data = $normalizer->deserialize($card);
+        $data = $this->deserializer->deserialize($card);
         ksort($data);
 
         return $data;

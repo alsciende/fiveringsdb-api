@@ -2,6 +2,7 @@
 
 namespace AppBundle\Command;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -13,6 +14,15 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class TokenPurgeCommand extends ContainerAwareCommand
 {
+    /** @var EntityManagerInterface $entityManager */
+    private $entityManager;
+
+    public function __construct ($name = null, EntityManagerInterface $entityManager)
+    {
+        parent::__construct($name);
+        $this->entityManager = $entityManager;
+    }
+
     protected function configure ()
     {
         $this
@@ -23,8 +33,7 @@ class TokenPurgeCommand extends ContainerAwareCommand
     protected function execute (InputInterface $input, OutputInterface $output)
     {
         $this
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
+            ->entityManager
             ->createQuery('DELETE FROM AppBundle:Token t WHERE t.expiresAt < NOW()')
             ->execute();
     }

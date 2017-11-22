@@ -7,7 +7,7 @@ services:
     # configuration by directory
 
     AppBundle\:
-        resource: '../../src/AppBundle/{Security,Service,Util,Validator,Form,Controller}'
+        resource: '../../src/AppBundle/{Security,Service,Util,Validator,Form,Controller,Command}'
         autoconfigure: true
 
     _instanceof:
@@ -68,29 +68,36 @@ services:
 
     AppBundle\Service\PaypalService:
         arguments:
-          - "%paypal_classic_api_username%"
-          - "%paypal_classic_api_password%"
-          - "%paypal_classic_api_signature%"
+          - '%paypal_classic_api_username%'
+          - '%paypal_classic_api_password%'
+          - '%paypal_classic_api_signature%'
 
     AppBundle\Service\ApiService:
         arguments:
-          - "@request_stack"
-          - "@jms_serializer"
-          - "%http_cache_max_age%"
+          - '@request_stack'
+          - '@jms_serializer'
+          - '%http_cache_max_age%'
 
     AppBundle\Service\TokenManager:
         arguments:
-          - "@doctrine.orm.entity_manager"
-          - "%access_token_ttl%"
+          - '@doctrine.orm.entity_manager'
+          - '%access_token_ttl%'
 
     AppBundle\Service\FeatureManager:
         arguments:
-          - "@doctrine.orm.entity_manager"
-          - "%features_period%"
+          - '@doctrine.orm.entity_manager'
+          - '%features_period%'
 
     AppBundle\Service\Metagame:
         arguments:
-          - "%metagame_base_uri%"
-          - "%kernel.logs_dir%"
-          - "%kernel.environment%"
-          - "%kernel.debug%"
+          - '%metagame_base_uri%'
+          - '%kernel.logs_dir%'
+          - '%kernel.environment%'
+          - '%kernel.debug%'
+
+    AppBundle\Command\DataParseCommand:
+        arguments:
+          - ~
+          - '@jms_serializer'
+          - '%path_to_json_data%'
+          - '@doctrine.orm.entity_manager'

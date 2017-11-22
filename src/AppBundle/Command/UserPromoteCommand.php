@@ -12,6 +12,15 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class UserPromoteCommand extends ContainerAwareCommand
 {
+    /** @var UserManager $userManager */
+    private $userManager;
+
+    public function __construct ($name = null, UserManager $userManager)
+    {
+        parent::__construct($name);
+        $this->userManager = $userManager;
+    }
+
     protected function configure ()
     {
         $this
@@ -28,14 +37,13 @@ class UserPromoteCommand extends ContainerAwareCommand
             throw new \InvalidArgumentException('Role must start with ROLE_');
         }
 
-        $userManager = $this->getContainer()->get(UserManager::class);
-        $user = $userManager->findUserByUsername($input->getArgument('username'));
+        $user = $this->userManager->findUserByUsername($input->getArgument('username'));
         if ($user === null) {
             throw new \InvalidArgumentException('No such user.');
         }
 
         $user->addRole($role);
-        $userManager->updateUser($user);
+        $this->userManager->updateUser($user);
 
         $output->writeln('User roles: ' . implode(', ', $user->getRoles()));
     }

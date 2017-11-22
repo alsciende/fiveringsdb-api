@@ -6,8 +6,9 @@ use AppBundle\Entity\Card;
 use AppBundle\Entity\Pack;
 use AppBundle\Entity\PackCard;
 use Cocur\Slugify\Slugify;
-use function GuzzleHttp\Psr7\str;
+use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializationContext;
+use JMS\Serializer\Serializer;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -21,7 +22,25 @@ use Symfony\Component\Console\Output\OutputInterface;
 class DataParseCommand extends ContainerAwareCommand
 {
     /** @var Slugify */
-    protected $slugify;
+    private $slugify;
+
+    /** @var Serializer $serializer */
+    private $serializer;
+
+    /** @var string $jsonDataPath */
+    private $jsonDataPath;
+
+    /** @var EntityManagerInterface $entityManager */
+    private $entityManager;
+
+    public function __construct ($name = null, Serializer $serializer, string $jsonDataPath, EntityManagerInterface $entityManager)
+    {
+        parent::__construct($name);
+        $this->serializer = $serializer;
+        $this->jsonDataPath = $jsonDataPath;
+        $this->entityManager = $entityManager;
+        $this->slugify = new Slugify();
+    }
 
     protected function configure ()
     {
@@ -33,11 +52,6 @@ class DataParseCommand extends ContainerAwareCommand
 
     protected function execute (InputInterface $input, OutputInterface $output)
     {
-        $this->slugify = new Slugify();
-        $serializer = $this->getContainer()->get('jms_serializer');
-        $jsonDirectory = $this->getContainer()->getParameter('path_to_json_data');
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-
         $packCards = [];
 
         foreach ($this->getItemsFromFile($input->getArgument('filename')) as $item) {
@@ -45,29 +59,29 @@ class DataParseCommand extends ContainerAwareCommand
             $packCardItem = $normalizedItem['pack_card'];
             unset($normalizedItem['pack_card']);
 
-            $newCard = $serializer->fromArray($normalizedItem, Card::class);
+            $newCard = $this->serializer->fromArray($normalizedItem, Card::class);
             $serializationContext = new SerializationContext();
             $serializationContext->setGroups(['Source']);
             $serializationContext->setSerializeNull(true);
-            $json = $serializer->serialize([$newCard], 'json', $serializationContext);
+            $json = $this->serializer->serialize([$newCard], 'json', $serializationContext);
 
-            $jsonfilename = sprintf('%s/Card/%s.json', $jsonDirectory, $normalizedItem['id']);
+            $jsonfilename = sprintf('%s/Card/%s.json', $this->jsonDataPath, $normalizedItem['id']);
             file_put_contents($jsonfilename, $json);
 
-            $card = $em->find(Card::class, $normalizedItem['id']);
+            $card = $this->entityManager->find(Card::class, $normalizedItem['id']);
             $setId = $packCardItem['set_id'];
             unset($packCardItem['set_id']);
             if (!isset($packCards[$setId])) {
                 $packCards[$setId] = [];
             }
-            $pack = $em->find(Pack::class, $setId);
+            $pack = $this->entityManager->find(Pack::class, $setId);
             /** @var PackCard $packCard */
-            $packCard = $em->getRepository(PackCard::class)->findOneBy(['card' => $card, 'pack' => $pack]);
-            if($packCard instanceof PackCard) {
-                if(!isset($packCardItem['flavor'])) {
+            $packCard = $this->entityManager->getRepository(PackCard::class)->findOneBy(['card' => $card, 'pack' => $pack]);
+            if ($packCard instanceof PackCard) {
+                if (!isset($packCardItem['flavor'])) {
                     $packCardItem['flavor'] = $packCard->getFlavor();
                 }
-                if(!isset($packCardItem['quantity'])) {
+                if (!isset($packCardItem['quantity'])) {
                     $packCardItem['quantity'] = $packCard->getQuantity();
                 }
             } else {
@@ -85,12 +99,11 @@ class DataParseCommand extends ContainerAwareCommand
             $serializationContext = new SerializationContext();
             $serializationContext->setGroups(['Source']);
             $serializationContext->setSerializeNull(true);
-            $json = $serializer->serialize($packCardList, 'json', $serializationContext);
+            $json = $this->serializer->serialize($packCardList, 'json', $serializationContext);
 
-            $jsonfilename = sprintf('%s/PackCard/%s.json', $jsonDirectory, $setId);
+            $jsonfilename = sprintf('%s/PackCard/%s.json', $this->jsonDataPath, $setId);
             file_put_contents($jsonfilename, $json);
         }
-
     }
 
     protected function getItemsFromFile (string $filename): array
@@ -136,7 +149,7 @@ class DataParseCommand extends ContainerAwareCommand
         $element = null;
         if ($type === 'province') {
             foreach ($traits as $i => $trait) {
-                if(in_array($trait, ['air','earth','fire','void','water'])) {
+                if (in_array($trait, ['air', 'earth', 'fire', 'void', 'water'])) {
                     unset($traits[$i]);
                     $normalizedItem['element'] = $trait;
                 }

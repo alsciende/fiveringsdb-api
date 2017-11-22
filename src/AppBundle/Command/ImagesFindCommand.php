@@ -4,14 +4,24 @@ namespace AppBundle\Command;
 
 use AppBundle\Entity\PackCard;
 use Curl\Curl;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  */
-class ImageFetchCommand extends ContainerAwareCommand
+class ImagesFindCommand extends ContainerAwareCommand
 {
+    /** @var EntityManagerInterface $entityManager */
+    private $entityManager;
+
+    public function __construct ($name = null, EntityManagerInterface $entityManager)
+    {
+        parent::__construct($name);
+        $this->entityManager = $entityManager;
+    }
+
     protected function configure ()
     {
         $this
@@ -27,9 +37,7 @@ class ImageFetchCommand extends ContainerAwareCommand
         $curl = new Curl();
         $curl->setOpt(CURLOPT_NOBODY, true);
 
-        $entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
-
-        $packCards = $entityManager->getRepository(PackCard::class)->findBy(['imageUrl' => null]);
+        $packCards = $this->entityManager->getRepository(PackCard::class)->findBy(['imageUrl' => null]);
 
         /** @var PackCard $packCard */
         foreach ($packCards as $packCard) {
@@ -50,6 +58,6 @@ class ImageFetchCommand extends ContainerAwareCommand
             }
         }
 
-        $entityManager->flush();
+        $this->entityManager->flush();
     }
 }

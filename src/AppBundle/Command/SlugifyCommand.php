@@ -16,7 +16,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class SlugifyCommand extends ContainerAwareCommand
 {
-
     protected function configure ()
     {
         $this
@@ -37,5 +36,4 @@ class SlugifyCommand extends ContainerAwareCommand
         }
         $output->writeln($slugify->slugify($string));
     }
-
 }
