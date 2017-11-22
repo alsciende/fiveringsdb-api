@@ -6,6 +6,7 @@ use AppBundle\Entity\Deck;
 use AppBundle\Entity\Strain;
 use AppBundle\Form\Type\DeckType;
 use AppBundle\Service\DeckManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -22,7 +23,7 @@ class StrainDeckController extends AbstractController
      * @Method("POST")
      * @Security("has_role('ROLE_USER')")
      */
-    public function postAction (Request $request, Strain $strain, DeckManager $deckManager)
+    public function postAction (Request $request, Strain $strain, DeckManager $deckManager, EntityManagerInterface $entityManager)
     {
         if ($strain->getUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException();
@@ -35,7 +36,7 @@ class StrainDeckController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $deck->setUser($this->getUser())->setStrain($strain);
             $deckManager->persist($deck);
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->flush();
 
             return $this->success($deck, [
                 'Default',
@@ -53,14 +54,13 @@ class StrainDeckController extends AbstractController
      * @Method("GET")
      * @Security("has_role('ROLE_USER')")
      */
-    public function listAction (Strain $strain)
+    public function listAction (Strain $strain, EntityManagerInterface $entityManager)
     {
         if ($strain->getUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException();
         }
 
-        $decks = $this
-            ->getDoctrine()
+        $decks = $entityManager
             ->getRepository(Deck::class)
             ->findBy(['strain' => $strain], ['createdAt' => 'ASC']);
 

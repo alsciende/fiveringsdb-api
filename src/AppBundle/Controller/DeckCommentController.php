@@ -30,7 +30,7 @@ class DeckCommentController extends AbstractController
      * @Security("has_role('ROLE_USER')")
      * @ParamConverter("deck", class="AppBundle:Deck", options={"id" = "deckId"})
      */
-    public function postAction (Request $request, Deck $deck, EventDispatcher $eventDispatcher)
+    public function postAction (Request $request, Deck $deck, EventDispatcher $eventDispatcher, EntityManagerInterface $entityManager)
     {
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
@@ -38,8 +38,8 @@ class DeckCommentController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $comment->setUser($this->getUser())->setDeck($deck);
-            $this->getDoctrine()->getManager()->persist($comment);
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->persist($comment);
+            $entityManager->flush();
 
             $eventDispatcher->dispatch(CommentAddedEvent::NAME, new CommentAddedEvent($comment));
 
@@ -86,7 +86,7 @@ class DeckCommentController extends AbstractController
      * @Method("PATCH")
      * @Security("has_role('ROLE_USER')")
      */
-    public function patchAction (Request $request, Comment $comment)
+    public function patchAction (Request $request, Comment $comment, EntityManagerInterface $entityManager)
     {
         if ($this->getUser() !== $comment->getUser()) {
             throw $this->createAccessDeniedException();
@@ -96,7 +96,7 @@ class DeckCommentController extends AbstractController
         $form->submit(json_decode($request->getContent(), true), false);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->flush();
 
             return $this->success($comment);
         }
@@ -110,7 +110,7 @@ class DeckCommentController extends AbstractController
      * @Method("PATCH")
      * @Security("has_role('ROLE_USER')")
      */
-    public function visibilityPatchAction (Request $request, Comment $comment)
+    public function visibilityPatchAction (Request $request, Comment $comment, EntityManagerInterface $entityManager)
     {
         if ($this->isGranted('COMMENT_VISIBILITY', $comment) === false) {
             throw $this->createAccessDeniedException();
@@ -121,7 +121,7 @@ class DeckCommentController extends AbstractController
         $form->submit(json_decode($request->getContent(), true), false);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->flush();
 
             return $this->success($comment);
         }

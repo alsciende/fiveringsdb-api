@@ -10,6 +10,7 @@ use AppBundle\Form\Type\PublicDeckType;
 use AppBundle\Search\DeckSearch;
 use AppBundle\Service\DeckManager;
 use AppBundle\Service\DeckSearchService;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -86,7 +87,7 @@ class PublicDeckController extends AbstractController
      * @Method("PATCH")
      * @Security("has_role('ROLE_USER')")
      */
-    public function patchAction (Request $request, Deck $deck)
+    public function patchAction (Request $request, Deck $deck, EntityManagerInterface $entityManager)
     {
         if ($deck->isPublished() === false) {
             throw $this->createNotFoundException();
@@ -99,7 +100,7 @@ class PublicDeckController extends AbstractController
         $form->submit(json_decode($request->getContent(), true), false);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->flush();
 
             return $this->success($deck, [
                 'Public',
@@ -117,7 +118,7 @@ class PublicDeckController extends AbstractController
      * @Method("DELETE")
      * @Security("has_role('ROLE_USER')")
      */
-    public function deleteAction (Deck $deck, DeckManager $deckManager)
+    public function deleteAction (Deck $deck, DeckManager $deckManager, EntityManagerInterface $entityManager)
     {
         if ($deck->isPublished() === false) {
             throw $this->createNotFoundException();
@@ -136,7 +137,7 @@ class PublicDeckController extends AbstractController
             } else {
                 $deckManager->deleteDeck($deck);
             }
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->flush();
         } catch (Exception $ex) {
             return $this->failure($ex->getMessage());
         }

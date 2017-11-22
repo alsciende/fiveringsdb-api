@@ -8,6 +8,7 @@ use AppBundle\Entity\Strain;
 use AppBundle\Form\Type\PublicDeckType;
 use AppBundle\Service\DeckManager;
 use AppBundle\Service\DeckValidator;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -26,7 +27,7 @@ class DeckPublishController extends AbstractController
      * @Method("PATCH")
      * @Security("has_role('ROLE_USER')")
      */
-    public function postAction (Request $request, Strain $strain, DeckManager $deckManager)
+    public function postAction (Request $request, Strain $strain, DeckManager $deckManager, EntityManagerInterface $entityManager)
     {
         if ($strain->getUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException();
@@ -48,7 +49,7 @@ class DeckPublishController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $deckManager->publish($strain->getHead());
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->flush();
 
             return $this->success($deck, [
                 'Default',

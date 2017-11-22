@@ -31,8 +31,6 @@ abstract class AbstractController extends Controller implements ApiControllerInt
 
     public function failure ($message = "unknown_error", $description = "An unknown error has occurred.")
     {
-        $this->get('logger')->info($message);
-
         return new JsonResponse(
             [
                 "success"     => false,

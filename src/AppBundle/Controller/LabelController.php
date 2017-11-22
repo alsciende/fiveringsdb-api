@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Label;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,13 +17,12 @@ class LabelController extends AbstractController
      * @Route("/labels")
      * @Method("GET")
      */
-    public function listAction (Request $request)
+    public function listAction (Request $request, EntityManagerInterface $entityManager)
     {
         $this->setPublic($request);
 
         return $this->success(
-            $this
-                ->getDoctrine()
+            $entityManager
                 ->getRepository(Label::class)
                 ->findBy(['lang' => $request->getLocale()]),
             [

@@ -25,7 +25,7 @@ class CardReviewController extends AbstractController
      * @Method("POST")
      * @Security("has_role('ROLE_USER')")
      */
-    public function postAction (Request $request, Card $card)
+    public function postAction (Request $request, Card $card, EntityManagerInterface $entityManager)
     {
         $review = new Review();
         $form = $this->createForm(ReviewType::class, $review);
@@ -33,8 +33,8 @@ class CardReviewController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $review->setUser($this->getUser())->setCard($card);
-            $this->getDoctrine()->getManager()->persist($review);
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->persist($review);
+            $entityManager->flush();
 
             return $this->success($review);
         }
@@ -72,7 +72,7 @@ class CardReviewController extends AbstractController
      * @Method("PATCH")
      * @Security("has_role('ROLE_USER')")
      */
-    public function patchAction (Request $request, Review $review)
+    public function patchAction (Request $request, Review $review, EntityManagerInterface $entityManager)
     {
         if ($this->getUser() !== $review->getUser()) {
             throw $this->createAccessDeniedException();
@@ -82,7 +82,7 @@ class CardReviewController extends AbstractController
         $form->submit(json_decode($request->getContent(), true), false);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->flush();
 
             return $this->success($review);
         }

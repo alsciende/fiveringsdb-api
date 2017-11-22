@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\PackCard;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,13 +20,12 @@ class PackCardController extends AbstractController
      * @Route("/pack-cards")
      * @Method("GET")
      */
-    public function listAction (Request $request)
+    public function listAction (Request $request, EntityManagerInterface $entityManager)
     {
         $this->setPublic($request);
 
         return $this->success(
-            $this
-                ->getDoctrine()
+            $entityManager
                 ->getRepository(PackCard::class)
                 ->findAll(),
             [

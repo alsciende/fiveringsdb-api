@@ -7,6 +7,7 @@ use AppBundle\Form\Type\TokenType;
 use AppBundle\Service\Metagame;
 use AppBundle\Service\TokenManager;
 use AppBundle\Service\UserManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -24,7 +25,7 @@ class TokenController extends AbstractController
      * @Route("/tokens")
      * @Method("POST")
      */
-    public function postAction (Request $request, Metagame $metagame, UserManager $userManager, TokenManager $tokenManager)
+    public function postAction (Request $request, Metagame $metagame, UserManager $userManager, TokenManager $tokenManager, EntityManagerInterface $entityManager)
     {
         $form = $this->createFormBuilder([])->add('id', TextType::class)->getForm();
         $form->submit(json_decode($request->getContent(), true), true);
@@ -32,7 +33,7 @@ class TokenController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $tokenId = $form->getData()['id'];
 
-            $token = $this->getDoctrine()->getRepository(Token::class)->find($tokenId);
+            $token = $entityManager->getRepository(Token::class)->find($tokenId);
             if ($token instanceof Token) {
                 return $this->success($token);
             }
