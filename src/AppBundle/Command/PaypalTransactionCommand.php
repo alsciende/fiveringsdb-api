@@ -3,7 +3,7 @@
 namespace AppBundle\Command;
 
 use AppBundle\Service\PaypalService;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -13,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class PaypalTransactionCommand extends ContainerAwareCommand
+class PaypalTransactionCommand extends Command
 {
     /** @var PaypalService $paypalService */
     private $paypalService;

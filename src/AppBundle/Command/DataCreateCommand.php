@@ -7,7 +7,7 @@ use AppBundle\Entity\Card;
 use AppBundle\Entity\Pack;
 use Cocur\Slugify\Slugify;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
@@ -15,7 +15,7 @@ use Symfony\Component\Console\Question\Question;
 
 /**
  */
-class DataCreateCommand extends ContainerAwareCommand
+class DataCreateCommand extends Command
 {
     /** @var EntityManagerInterface $entityManager */
     private $entityManager;
