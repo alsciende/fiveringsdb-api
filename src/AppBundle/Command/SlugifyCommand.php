@@ -3,7 +3,7 @@
 namespace AppBundle\Command;
 
 use Cocur\Slugify\Slugify;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -14,7 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class SlugifyCommand extends ContainerAwareCommand
+class SlugifyCommand extends Command
 {
     protected function configure ()
     {

@@ -3,7 +3,7 @@
 namespace AppBundle\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class TokenPurgeCommand extends ContainerAwareCommand
+class TokenPurgeCommand extends Command
 {
     /** @var EntityManagerInterface $entityManager */
     private $entityManager;
