@@ -37,6 +37,16 @@ Get the data of one card. Don't use this action unless you really can't use the 
 
 Resources related to cards rulings. Write access is protected by the ROLE_RULINGS permission.
 
+## Card Rulings [/rulings]
+
+### View all Rulings [GET]
+
+Anonymous access.
+
+Text is Markdown.
+
++ Response 200 (application/json)
+
 ## Card Ruling Collection [/cards/{card_code}/rulings]
 
 + Parameters
@@ -66,7 +76,7 @@ Text may be raw Markdown.
 
 ### Edit a Ruling [PATCH]
 
-Requires ROLE_RULINGS, and user must be the ruling's creator.
+Requires ROLE_GURU, and user must be the ruling's creator.
 
 Text may be Markdown, but is not parsed.
 
@@ -76,7 +86,7 @@ Text may be Markdown, but is not parsed.
 
 Anonymous access.
 
-Text may be raw Markdown.
+Text is Markdown.
 
 + Response 200 (application/json)
 
