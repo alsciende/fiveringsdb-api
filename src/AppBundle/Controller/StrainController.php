@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * @author Alsciende <alsciende@icloud.com>
  */
-class StrainController extends AbstractController
+class StrainController extends AbstractApiController
 {
     /**
      * Create a strain

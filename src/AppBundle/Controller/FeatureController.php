@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class FeatureController extends AbstractController
+class FeatureController extends AbstractApiController
 {
     /**
      * @Route("/features")

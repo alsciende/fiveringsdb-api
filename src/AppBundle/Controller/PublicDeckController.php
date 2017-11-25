@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class PublicDeckController extends AbstractController
+class PublicDeckController extends AbstractApiController
 {
     /**
      * Get all public decks

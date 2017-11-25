@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class CardReviewController extends AbstractController
+class CardReviewController extends AbstractApiController
 {
     /**
      * Create a review on a card

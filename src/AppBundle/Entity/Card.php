@@ -611,7 +611,7 @@ class Card
         return $this->roleRestriction;
     }
 
-    public function setRoleRestriction (string $roleRestriction): self
+    public function setRoleRestriction (string $roleRestriction = null): self
     {
         $this->roleRestriction = $roleRestriction;
 

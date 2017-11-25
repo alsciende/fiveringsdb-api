@@ -13,7 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class ActivityController extends AbstractController
+class ActivityController extends AbstractApiController
 {
     /**
      * Get activity

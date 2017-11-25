@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  */
-class LabelController extends AbstractController
+class LabelController extends AbstractApiController
 {
     /**
      * Get all Labels

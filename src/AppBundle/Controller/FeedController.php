@@ -8,7 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
  */
-class FeedController extends AbstractController
+class FeedController extends AbstractApiController
 {
     /**
      * Get Feed
