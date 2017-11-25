@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-abstract class AbstractController extends Controller implements ApiControllerInterface
+abstract class AbstractApiController extends Controller implements ApiControllerInterface
 {
     /** @var ApiService $apiService */
     private $apiService;

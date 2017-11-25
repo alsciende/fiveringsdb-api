@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  */
-class UserController extends AbstractController
+class UserController extends AbstractApiController
 {
     /**
      * Get details about the current user

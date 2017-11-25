@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class DeckPublishController extends AbstractController
+class DeckPublishController extends AbstractApiController
 {
     /**
      * Publish the head of the strain

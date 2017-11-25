@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class PackCardController extends AbstractController
+class PackCardController extends AbstractApiController
 {
     /**
      * Get all pairs Pack-Card

@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class TokenController extends AbstractController
+class TokenController extends AbstractApiController
 {
     /**
      * Uses the token to get the user data with Metagame, then saves it
