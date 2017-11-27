@@ -23,7 +23,6 @@ class ClanRole
     /**
      * @var Card
      *
-     * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Card")
      * @ORM\JoinColumn(name="card_id", referencedColumnName="id")
      *
@@ -34,7 +33,9 @@ class ClanRole
     /**
      * @var string
      *
-     * @ORM\Column(name="clan", type="string", nullable=false)
+     * @ORM\Column(name="clan", type="string", nullable=false, unique=true)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
      *
      * @Source(type="string")
      */
