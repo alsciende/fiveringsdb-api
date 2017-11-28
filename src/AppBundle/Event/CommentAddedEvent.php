@@ -3,7 +3,7 @@
 namespace AppBundle\Event;
 
 use AppBundle\Entity\Comment;
-use AppBundle\Entity\Deck;
+
 use Symfony\Component\EventDispatcher\Event;
 
 /**

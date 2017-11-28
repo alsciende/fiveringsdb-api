@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace AppBundle\Controller;
 
-
 use AppBundle\Entity\Comment;
 use AppBundle\Entity\Deck;
 use AppBundle\Event\CommentAddedEvent;
@@ -115,7 +114,6 @@ class DeckCommentController extends AbstractApiController
         if ($this->isGranted('COMMENT_VISIBILITY', $comment) === false) {
             throw $this->createAccessDeniedException();
         }
-
 
         $form = $this->createForm(CommentVisibilityType::class, $comment);
         $form->submit(json_decode($request->getContent(), true), false);

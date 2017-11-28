@@ -62,7 +62,7 @@ class ApiService
         return $response;
     }
 
-    public function buildContent ($data = null, $groups = [])
+    public function buildContent ($data = null)
     {
         $content = [];
         if ($data instanceof SearchInterface) {

@@ -85,7 +85,7 @@ class AuthController extends Controller
 
         return [
             'message' => json_decode($res->getBody(), true),
-            'origin' => $this->getParameter('front_url')
+            'origin'  => $this->getParameter('front_url'),
         ];
     }
 

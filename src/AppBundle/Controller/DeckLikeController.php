@@ -2,7 +2,6 @@
 
 namespace AppBundle\Controller;
 
-
 use AppBundle\Entity\Deck;
 use AppBundle\Service\DeckLikeManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -105,8 +104,8 @@ class DeckLikeController extends AbstractApiController
         return $this->success($likes, [
             'User',
             'user' => [
-                'Default'
-            ]
+                'Default',
+            ],
         ]);
     }
 }

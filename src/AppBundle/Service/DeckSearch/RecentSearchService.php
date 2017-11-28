@@ -2,11 +2,8 @@
 
 namespace AppBundle\Service\DeckSearch;
 
-use AppBundle\Entity\Deck;
-use AppBundle\Search\DeckSearch;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-
 
 /**
  * Description of RecentSearch

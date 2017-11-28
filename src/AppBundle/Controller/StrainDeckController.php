@@ -64,7 +64,10 @@ class StrainDeckController extends AbstractApiController
             ->getRepository(Deck::class)
             ->findBy(['strain' => $strain], ['createdAt' => 'ASC']);
 
-        return $this->success($decks);
+        return $this->success($decks, [
+            'Default',
+            'Cards',
+        ]);
     }
 
     /**

@@ -18,7 +18,7 @@ class UserController extends AbstractApiController
      * @Method("GET")
      * @Security("has_role('ROLE_USER')")
      */
-    public function getAction (Request $request)
+    public function getAction ()
     {
         $user = $this->getUser();
 

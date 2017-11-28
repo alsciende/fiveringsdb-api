@@ -58,6 +58,6 @@ class GenerateJsonPackCommand extends Command
             ];
         }
 
-        file_put_contents($pack->getId().".json", json_encode($packCards, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+        file_put_contents($pack->getId() . ".json", json_encode($packCards, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
     }
 }

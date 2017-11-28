@@ -29,6 +29,7 @@ AppBundle\Entity\Deck:
             groups: ['Public']
         published:
             expose: true
+            groups: ['Default','Public']
         problem:
             expose: true
         primaryClan:
@@ -56,3 +57,4 @@ AppBundle\Entity\Deck:
         getVersion:
             serialized_name: version
             type: string
+            groups: ['Default','Public']

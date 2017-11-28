@@ -76,7 +76,7 @@ class Activity
         return $this->type;
     }
 
-    public function getDeck(): Deck
+    public function getDeck (): Deck
     {
         return $this->deck;
     }
