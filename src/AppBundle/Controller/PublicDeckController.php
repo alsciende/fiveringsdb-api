@@ -82,6 +82,25 @@ class PublicDeckController extends AbstractApiController
     }
 
     /**
+     * Get a public deck
+     * @Route("/decks/{id}/versions")
+     * @Method("GET")
+     */
+    public function getVersionsAction (Request $request, Deck $deck, EntityManagerInterface $entityManager)
+    {
+        $this->setPublic($request);
+
+        if (!$deck->isPublished()) {
+            throw $this->createNotFoundException();
+        }
+
+        return $this->success($entityManager->getRepository(Deck::class)->findAllPublicVersions($deck), [
+            'Public',
+            'Cards',
+        ]);
+    }
+
+    /**
      * Update a public deck - only name and description can be updated
      * @Route("/decks/{id}")
      * @Method("PATCH")

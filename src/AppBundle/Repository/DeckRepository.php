@@ -71,7 +71,7 @@ class DeckRepository extends EntityRepository
      * @param Deck $deck
      * @return User[]
      */
-    public function findCommenters(Deck $deck): array
+    public function findCommenters (Deck $deck): array
     {
         $dql = "SELECT DISTINCT u
         FROM AppBundle:User u
@@ -81,5 +81,14 @@ class DeckRepository extends EntityRepository
                       ->setParameter('deck', $deck);
 
         return $query->getResult();
+    }
+
+    /**
+     * @param Deck $deck
+     * @return Deck[]
+     */
+    public function findAllPublicVersions (Deck $deck): array
+    {
+        return $this->findBy(['published' => true, 'strain' => $deck->getStrain()], ['publishedAt' => 'ASC']);
     }
 }
