@@ -7,10 +7,8 @@ use AppBundle\Entity\Activity;
 use AppBundle\Entity\Deck;
 use AppBundle\Entity\Notification;
 use AppBundle\Event\CommentAddedEvent;
-use AppBundle\Repository\ActivityRepository;
 use AppBundle\Repository\DeckRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**

@@ -30,6 +30,7 @@ class DeckSearch extends AbstractPaginatedSearch
      * @var string|null
      */
     private $secondaryClan;
+
     /**
      * @var bool
      */

@@ -66,7 +66,7 @@ class StrainDeckController extends AbstractApiController
 
         return $this->success($decks, [
             'Default',
-            'Cards'
+            'Cards',
         ]);
     }
 

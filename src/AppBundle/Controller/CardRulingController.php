@@ -2,7 +2,6 @@
 
 namespace AppBundle\Controller;
 
-
 use AppBundle\Entity\Card;
 use AppBundle\Entity\Ruling;
 use AppBundle\Form\Type\RulingType;
@@ -19,7 +18,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class CardRulingController extends AbstractApiController
 {
-
     /**
      * Create a ruling on a card
      * @Route("/cards/{id}/rulings", name="createCardRuling")
@@ -100,5 +98,4 @@ class CardRulingController extends AbstractApiController
 
         return $this->failure('validation_error', $this->formatValidationErrors($form->getErrors(true)));
     }
-
 }

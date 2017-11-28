@@ -6,7 +6,6 @@ use AppBundle\Entity\Token;
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 
-
 /**
  * @author Alsciende <alsciende@icloud.com>
  */

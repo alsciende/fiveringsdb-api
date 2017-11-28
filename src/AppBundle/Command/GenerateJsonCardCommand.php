@@ -53,14 +53,14 @@ class GenerateJsonCardCommand extends Command
         $slugify = new Slugify();
 
         $card = new Card();
-        $card->setClan($helper->ask($input, $output, new ChoiceQuestion('Clan: ', ['crab','crane','dragon','lion','phoenix','scorpion','unicorn','neutral'])));
-        $card->setType($helper->ask($input, $output, new ChoiceQuestion('Type: ', ['attachment','character','event','holding','province','role','stronghold'])));
+        $card->setClan($helper->ask($input, $output, new ChoiceQuestion('Clan: ', ['crab', 'crane', 'dragon', 'lion', 'phoenix', 'scorpion', 'unicorn', 'neutral'])));
+        $card->setType($helper->ask($input, $output, new ChoiceQuestion('Type: ', ['attachment', 'character', 'event', 'holding', 'province', 'role', 'stronghold'])));
         $card->setName($helper->ask($input, $output, new Question('Name: ')));
         $card->setId($slugify->slugify($card->getName()));
         $card->setTraits($this->askArray($input, $output, $helper, new Question('Traits: ')));
         $card->setText($helper->ask($input, $output, new Question('Text: ')));
 
-        switch($card->getType()) {
+        switch ($card->getType()) {
             case 'attachment':
                 $card->setSide('conflict');
                 $card->setRoleRestriction($helper->ask($input, $output, new Question('Role Restriction: ')));
@@ -71,7 +71,7 @@ class GenerateJsonCardCommand extends Command
                 $card->setDeckLimit($helper->ask($input, $output, new Question('Deck Limit (3): ', 3)));
                 break;
             case 'character':
-                $card->setSide($helper->ask($input, $output, new ChoiceQuestion('Side: ', ['conflict','dynasty'])));
+                $card->setSide($helper->ask($input, $output, new ChoiceQuestion('Side: ', ['conflict', 'dynasty'])));
                 $card->setRoleRestriction($helper->ask($input, $output, new Question('Role Restriction: ')));
                 $card->setCost($helper->ask($input, $output, new Question('Cost: ')));
                 $card->setUnicity($this->askBoolean($input, $output, $helper, new Question('Unique: (y/N)', 'n')));
@@ -94,7 +94,7 @@ class GenerateJsonCardCommand extends Command
                 $card->setDeckLimit($helper->ask($input, $output, new Question('Deck Limit (3): ', 3)));
                 break;
             case 'province':
-                $card->setElement($helper->ask($input, $output, new ChoiceQuestion('Element: ', ['air','earth','fire','void','water'])));
+                $card->setElement($helper->ask($input, $output, new ChoiceQuestion('Element: ', ['air', 'earth', 'fire', 'void', 'water'])));
                 $card->setSide('province');
                 $card->setRoleRestriction($helper->ask($input, $output, new Question('Role Restriction: ')));
                 $card->setStrength($helper->ask($input, $output, new Question('Strength: ')));
@@ -112,13 +112,13 @@ class GenerateJsonCardCommand extends Command
                 break;
         }
 
-        if($card->getSide() === 'conflict' && $card->getClan() !== 'neutral') {
+        if ($card->getSide() === 'conflict' && $card->getClan() !== 'neutral') {
             $card->setInfluenceCost($helper->ask($input, $output, new Question('Influence Cost: ')));
         }
 
         $constraintViolationList = $this->validator->validate($card);
-        if(count($constraintViolationList) > 0) {
-            foreach($constraintViolationList as $constraintViolation) {
+        if (count($constraintViolationList) > 0) {
+            foreach ($constraintViolationList as $constraintViolation) {
                 /** @var ConstraintViolationInterface $constraintViolation */
                 $output->writeln($constraintViolation->getMessage());
             }
@@ -130,24 +130,24 @@ class GenerateJsonCardCommand extends Command
         $data = $this->serializer->toArray($card, $context);
 
         file_put_contents($card->getId() . '.json', json_encode([$data], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
-   }
+    }
 
-   private function askArray(InputInterface $input, OutputInterface $output, QuestionHelper $helper, Question $question): array
-   {
-       $answers = [];
-       while($answer = $helper->ask($input, $output, $question)) {
-           $answers[] = $answer;
-       }
+    private function askArray (InputInterface $input, OutputInterface $output, QuestionHelper $helper, Question $question): array
+    {
+        $answers = [];
+        while ($answer = $helper->ask($input, $output, $question)) {
+            $answers[] = $answer;
+        }
 
-       return $answers;
-   }
+        return $answers;
+    }
 
-   private function askBoolean(InputInterface $input, OutputInterface $output, QuestionHelper $helper, Question $question): bool
-   {
-       $question->setNormalizer(function ($value) {
-           return strtolower($value) === 'y';
-       });
+    private function askBoolean (InputInterface $input, OutputInterface $output, QuestionHelper $helper, Question $question): bool
+    {
+        $question->setNormalizer(function ($value) {
+            return strtolower($value) === 'y';
+        });
 
-       return $helper->ask($input, $output, $question);
-   }
+        return $helper->ask($input, $output, $question);
+    }
 }

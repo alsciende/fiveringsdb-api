@@ -33,7 +33,7 @@ class ActivityManager
     public function getActivity (User $user = null)
     {
         $list = $this->getPublicActivity();
-        if($user instanceof User) {
+        if ($user instanceof User) {
             $list = array_merge($list, $this->getPersonalActivity($user));
         }
         usort($list, function (Activity $a, Activity $b) {
@@ -54,7 +54,7 @@ class ActivityManager
     }
 
     /** @return Activity[] */
-    private function getPublicActivity(): array
+    private function getPublicActivity (): array
     {
         $decks = $this
             ->entityManager
@@ -72,6 +72,7 @@ class ActivityManager
                 $deck->getUser(),
                 $deck->getPublishedAt()
             );
+
             return $activity->setPersonal(false);
         }, $decks);
     }

@@ -3,7 +3,6 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Deck;
-use AppBundle\Entity\Feature;
 use AppBundle\Entity\Strain;
 use AppBundle\Form\Type\DeckSearchType;
 use AppBundle\Form\Type\PublicDeckType;
@@ -11,7 +10,6 @@ use AppBundle\Search\DeckSearch;
 use AppBundle\Service\DeckManager;
 use AppBundle\Service\DeckSearchService;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -157,7 +155,7 @@ class PublicDeckController extends AbstractApiController
                 $deckManager->deleteDeck($deck);
             }
             $entityManager->flush();
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             return $this->failure($ex->getMessage());
         }
 

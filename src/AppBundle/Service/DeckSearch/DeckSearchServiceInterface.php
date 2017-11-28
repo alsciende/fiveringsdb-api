@@ -2,9 +2,7 @@
 
 namespace AppBundle\Service\DeckSearch;
 
-
 use AppBundle\Search\DeckSearch;
-
 
 /**
  * Description of DeckSearchInterface

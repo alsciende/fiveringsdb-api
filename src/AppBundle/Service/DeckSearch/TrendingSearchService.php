@@ -6,7 +6,6 @@ use AppBundle\Entity\Deck;
 use AppBundle\Search\DeckSearch;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 
-
 /**
  */
 class TrendingSearchService extends AbstractDeckSearchService

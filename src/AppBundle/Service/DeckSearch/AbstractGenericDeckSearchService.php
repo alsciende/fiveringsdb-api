@@ -2,7 +2,6 @@
 
 namespace AppBundle\Service\DeckSearch;
 
-use AppBundle\Entity\Card;
 use AppBundle\Entity\Deck;
 use AppBundle\Search\DeckSearch;
 use Doctrine\ORM\Query;
