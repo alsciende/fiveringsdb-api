@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-set -xv
-
-bin/console doctrine:database:drop --force --env=$1
-bin/console doctrine:database:create --env=$1
-bin/console doctrine:schema:update --force --env=$1
-bin/console doctrine:fixtures:load --append --env=$1
-bin/console cache:clear --no-warmup --env=$1

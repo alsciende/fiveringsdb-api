@@ -2,10 +2,12 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Behavior\Service\GetRepositoryTrait;
 use AppBundle\Entity\Deck;
 use AppBundle\Entity\Strain;
 use AppBundle\Form\Type\DeckSearchType;
 use AppBundle\Form\Type\PublicDeckType;
+use AppBundle\Repository\DeckRepository;
 use AppBundle\Search\DeckSearch;
 use AppBundle\Service\DeckManager;
 use AppBundle\Service\DeckSearchService;
@@ -18,13 +20,18 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Description of PublicDeckController
  *
+ * @Route("/decks", name="decks_")
+ *
  * @author Alsciende <alsciende@icloud.com>
  */
 class PublicDeckController extends AbstractApiController
 {
+    use GetRepositoryTrait;
+
     /**
      * Get all public decks
-     * @Route("/decks")
+     *
+     * @Route("", name="list")
      * @Method("GET")
      */
     public function listAction (Request $request, DeckSearchService $deckSearchService)
@@ -52,7 +59,8 @@ class PublicDeckController extends AbstractApiController
 
     /**
      * Get a public deck
-     * @Route("/decks/{id}")
+     *
+     * @Route("/{id}", name="get")
      * @Method("GET")
      */
     public function getAction (Request $request, Deck $deck)
@@ -80,8 +88,9 @@ class PublicDeckController extends AbstractApiController
     }
 
     /**
-     * Get a public deck
-     * @Route("/decks/{id}/versions")
+     * Get all versions of a public deck
+     *
+     * @Route("/{id}/versions", name="versions")
      * @Method("GET")
      */
     public function getVersionsAction (Request $request, Deck $deck, EntityManagerInterface $entityManager)
@@ -92,7 +101,10 @@ class PublicDeckController extends AbstractApiController
             throw $this->createNotFoundException();
         }
 
-        return $this->success($entityManager->getRepository(Deck::class)->findAllPublicVersions($deck), [
+        /** @var DeckRepository $repository */
+        $repository = $this->getRepository($entityManager, Deck::class);
+
+        return $this->success($repository->findAllPublicVersions($deck), [
             'Public',
             'Cards',
         ]);
@@ -100,8 +112,10 @@ class PublicDeckController extends AbstractApiController
 
     /**
      * Update a public deck - only name and description can be updated
-     * @Route("/decks/{id}")
+     *
+     * @Route("/{id}", name="patch")
      * @Method("PATCH")
+     *
      * @Security("has_role('ROLE_USER')")
      */
     public function patchAction (Request $request, Deck $deck, EntityManagerInterface $entityManager)
@@ -131,8 +145,10 @@ class PublicDeckController extends AbstractApiController
 
     /**
      * Delete a public deck
-     * @Route("/decks/{id}")
+     *
+     * @Route("/{id}", name="delete")
      * @Method("DELETE")
+     *
      * @Security("has_role('ROLE_USER')")
      */
     public function deleteAction (Deck $deck, DeckManager $deckManager, EntityManagerInterface $entityManager)

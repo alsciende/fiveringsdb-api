@@ -53,8 +53,25 @@ class GenerateJsonCardCommand extends Command
         $slugify = new Slugify();
 
         $card = new Card();
-        $card->setClan($helper->ask($input, $output, new ChoiceQuestion('Clan: ', ['crab', 'crane', 'dragon', 'lion', 'phoenix', 'scorpion', 'unicorn', 'neutral'])));
-        $card->setType($helper->ask($input, $output, new ChoiceQuestion('Type: ', ['attachment', 'character', 'event', 'holding', 'province', 'role', 'stronghold'])));
+        $card->setClan($helper->ask($input, $output, new ChoiceQuestion('Clan: ', [
+            Card::CLAN_CRAB,
+            Card::CLAN_CRANE,
+            Card::CLAN_DRAGON,
+            Card::CLAN_LION,
+            Card::CLAN_NEUTRAL,
+            Card::CLAN_PHOENIX,
+            Card::CLAN_SCORPION,
+            Card::CLAN_UNICORN,
+        ])));
+        $card->setType($helper->ask($input, $output, new ChoiceQuestion('Type: ', [
+            Card::TYPE_ATTACHMENT,
+            Card::TYPE_CHARACTER,
+            Card::TYPE_EVENT,
+            Card::TYPE_HOLDING,
+            Card::TYPE_PROVINCE,
+            Card::TYPE_ROLE,
+            Card::TYPE_STRONGHOLD,
+        ])));
         $card->setName($helper->ask($input, $output, new Question('Name: ')));
         $card->setId($slugify->slugify($card->getName()));
         $card->setTraits($this->askArray($input, $output, $helper, new Question('Traits: ')));
@@ -71,7 +88,10 @@ class GenerateJsonCardCommand extends Command
                 $card->setDeckLimit($helper->ask($input, $output, new Question('Deck Limit (3): ', 3)));
                 break;
             case 'character':
-                $card->setSide($helper->ask($input, $output, new ChoiceQuestion('Side: ', ['conflict', 'dynasty'])));
+                $card->setSide($helper->ask($input, $output, new ChoiceQuestion('Side: ', [
+                    Card::SIDE_CONFLICT,
+                    Card::SIDE_DYNASTY,
+                ])));
                 $card->setRoleRestriction($helper->ask($input, $output, new Question('Role Restriction: ')));
                 $card->setCost($helper->ask($input, $output, new Question('Cost: ')));
                 $card->setUnicity($this->askBoolean($input, $output, $helper, new Question('Unique: (y/N)', 'n')));
@@ -94,7 +114,13 @@ class GenerateJsonCardCommand extends Command
                 $card->setDeckLimit($helper->ask($input, $output, new Question('Deck Limit (3): ', 3)));
                 break;
             case 'province':
-                $card->setElement($helper->ask($input, $output, new ChoiceQuestion('Element: ', ['air', 'earth', 'fire', 'void', 'water'])));
+                $card->setElement($helper->ask($input, $output, new ChoiceQuestion('Element: ', [
+                    Card::ELEMENT_AIR,
+                    Card::ELEMENT_EARTH,
+                    Card::ELEMENT_FIRE,
+                    Card::ELEMENT_VOID,
+                    Card::ELEMENT_WATER,
+                ])));
                 $card->setSide('province');
                 $card->setRoleRestriction($helper->ask($input, $output, new Question('Role Restriction: ')));
                 $card->setStrength($helper->ask($input, $output, new Question('Strength: ')));
@@ -129,7 +155,20 @@ class GenerateJsonCardCommand extends Command
         $context->setSerializeNull(true);
         $data = $this->serializer->toArray($card, $context);
 
-        file_put_contents($card->getId() . '.json', json_encode([$data], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+        file_put_contents($card->getId() . '.json', $this->encode($data));
+    }
+
+    private function encode(array $data): string
+    {
+        return str_replace([
+            '—',
+            '--',
+            '\\n',
+        ], [
+            '–',
+            '–',
+            '\n',
+        ], json_encode([$data], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
     }
 
     private function askArray (InputInterface $input, OutputInterface $output, QuestionHelper $helper, Question $question): array

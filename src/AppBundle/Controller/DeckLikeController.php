@@ -13,16 +13,20 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 /**
  * Description of DeckLikeController
  *
+ * @Route("/decks/{deckId}/likes", name="deck_likes_")
+ *
  * @author Alsciende <alsciende@icloud.com>
  */
 class DeckLikeController extends AbstractApiController
 {
     /**
      * Create a like from a public deck
-     * @Route("/decks/{deckId}/likes")
+     *
+     * @Route("", name="create")
      * @Method("POST")
+     * @ParamConverter("deck", options={"id" = "deckId"})
+     *
      * @Security("has_role('ROLE_USER')")
-     * @ParamConverter("deck", class="AppBundle:Deck", options={"id" = "deckId"})
      */
     public function postAction (Deck $deck, DeckLikeManager $deckLikeManager, EntityManagerInterface $entityManager)
     {
@@ -42,10 +46,12 @@ class DeckLikeController extends AbstractApiController
 
     /**
      * Delete a like from a public deck
-     * @Route("/decks/{deckId}/likes")
+     *
+     * @Route("", name="delete")
      * @Method("DELETE")
+     * @ParamConverter("deck", options={"id" = "deckId"})
+     *
      * @Security("has_role('ROLE_USER')")
-     * @ParamConverter("deck", class="AppBundle:Deck", options={"id" = "deckId"})
      */
     public function deleteAction (Deck $deck, DeckLikeManager $deckLikeManager, EntityManagerInterface $entityManager)
     {
@@ -64,10 +70,11 @@ class DeckLikeController extends AbstractApiController
     }
 
     /**
-     * @Route("/decks/{deckId}/likes/me")
+     * @Route("/me", name="me")
      * @Method("GET")
+     * @ParamConverter("deck", options={"id" = "deckId"})
+     *
      * @Security("has_role('ROLE_USER')")
-     * @ParamConverter("deck", class="AppBundle:Deck", options={"id" = "deckId"})
      */
     public function getAction (Deck $deck, DeckLikeManager $deckLikeManager)
     {
@@ -85,9 +92,9 @@ class DeckLikeController extends AbstractApiController
     }
 
     /**
-     * @Route("/decks/{deckId}/likes")
+     * @Route("", name="list")
      * @Method("GET")
-     * @ParamConverter("deck", class="AppBundle:Deck", options={"id" = "deckId"})
+     * @ParamConverter("deck", options={"id" = "deckId"})
      */
     public function listAction (Deck $deck, DeckLikeManager $deckLikeManager)
     {

@@ -8,19 +8,25 @@ use AppBundle\Form\Type\DeckType;
 use AppBundle\Service\DeckManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
+ * @Route("/strains/{strainId}/decks", name="strain_decks")
+ *
  * @author Alsciende <alsciende@icloud.com>
  */
 class StrainDeckController extends AbstractApiController
 {
     /**
      * Create a minor version
-     * @Route("/strains/{id}/decks")
+     *
+     * @Route("", name="create")
      * @Method("POST")
+     * @ParamConverter("strain", options={"id" = "strainId"})
+     *
      * @Security("has_role('ROLE_USER')")
      */
     public function postAction (Request $request, Strain $strain, DeckManager $deckManager, EntityManagerInterface $entityManager)
@@ -50,8 +56,11 @@ class StrainDeckController extends AbstractApiController
 
     /**
      * Get all private versions of a deck
-     * @Route("/strains/{id}/decks")
+     *
+     * @Route("", name="list")
      * @Method("GET")
+     * @ParamConverter("strain", options={"id" = "strainId"})
+     *
      * @Security("has_role('ROLE_USER')")
      */
     public function listAction (Strain $strain, EntityManagerInterface $entityManager)
@@ -72,8 +81,10 @@ class StrainDeckController extends AbstractApiController
 
     /**
      * Get a private deck
-     * @Route("/strains/{strainId}/decks/{id}")
+     *
+     * @Route("/{id}", name="get")
      * @Method("GET")
+     *
      * @Security("has_role('ROLE_USER')")
      */
     public function getAction (Deck $deck)
@@ -91,7 +102,8 @@ class StrainDeckController extends AbstractApiController
 
     /**
      * Delete a private deck. Other versions are untouched.
-     * @Route("/strains/{strainId}/decks/{id}")
+     *
+     * @Route("/{id}", name="delete")
      * @Method("DELETE")
      * @Security("has_role('ROLE_USER')")
      */

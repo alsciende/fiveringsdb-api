@@ -18,16 +18,20 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
+ * @Route("/decks/{deckId}/comments", name="deck_comments_")
+ *
  * @author Alsciende <alsciende@icloud.com>
  */
 class DeckCommentController extends AbstractApiController
 {
     /**
      * Create a comment on a deck
-     * @Route("/decks/{deckId}/comments")
+     *
+     * @Route("", name="create")
      * @Method("POST")
+     * @ParamConverter("deck", options={"id" = "deckId"})
+     *
      * @Security("has_role('ROLE_USER')")
-     * @ParamConverter("deck", class="AppBundle:Deck", options={"id" = "deckId"})
      */
     public function postAction (Request $request, Deck $deck, EventDispatcher $eventDispatcher, EntityManagerInterface $entityManager)
     {
@@ -50,9 +54,9 @@ class DeckCommentController extends AbstractApiController
 
     /**
      * List all comments on a deck
-     * @Route("/decks/{deckId}/comments")
+     * @Route("", name="list")
      * @Method("GET")
-     * @ParamConverter("deck", class="AppBundle:Deck", options={"id" = "deckId"})
+     * @ParamConverter("deck", options={"id" = "deckId"})
      */
     public function listAction (Deck $deck, EntityManagerInterface $entityManager)
     {
@@ -68,7 +72,7 @@ class DeckCommentController extends AbstractApiController
 
     /**
      * Get a comment on a deck
-     * @Route("/decks/{deckId}/comments/{id}")
+     * @Route("", name="get")
      * @Method("GET")
      */
     public function getAction (Comment $comment)
@@ -81,8 +85,10 @@ class DeckCommentController extends AbstractApiController
 
     /**
      * Edit a comment on a deck
-     * @Route("/decks/{deckId}/comments/{id}")
+     *
+     * @Route("/{id}", name="patch")
      * @Method("PATCH")
+     *
      * @Security("has_role('ROLE_USER')")
      */
     public function patchAction (Request $request, Comment $comment, EntityManagerInterface $entityManager)
@@ -105,8 +111,10 @@ class DeckCommentController extends AbstractApiController
 
     /**
      * Show/Hide a comment on a deck
-     * @Route("/decks/{deckId}/comments/{id}/visibility")
+     *
+     * @Route("/{id}/visibility", name="toggle")
      * @Method("PATCH")
+     *
      * @Security("has_role('ROLE_USER')")
      */
     public function visibilityPatchAction (Request $request, Comment $comment, EntityManagerInterface $entityManager)

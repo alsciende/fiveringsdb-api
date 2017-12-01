@@ -3,12 +3,13 @@ services:
         autowire: true
         autoconfigure: true
         public: false
+        bind:
+            $jsonDataPath: '%path_to_json_data%'
 
     # configuration by directory
 
     AppBundle\:
         resource: '../../src/AppBundle/{Security,Service,Util,Validator,Form,Controller,Command}'
-        autoconfigure: true
 
     _instanceof:
         AppBundle\Behavior\Controller\ApiControllerInterface:
@@ -87,9 +88,10 @@ services:
           - '%kernel.environment%'
           - '%kernel.debug%'
 
-    AppBundle\Command\DataParseCommand:
-        arguments:
-          - ~
-          - '@jms_serializer'
-          - '%path_to_json_data%'
-          - '@doctrine.orm.entity_manager'
+    # tagged service injection
+
+    AppBundle\Service\DeckValidator:
+        arguments: [!tagged app.deck_check]
+
+    AppBundle\Service\DeckSearchService:
+        arguments: [!tagged app.deck_search]

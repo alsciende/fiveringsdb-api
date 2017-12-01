@@ -52,7 +52,7 @@ class ApiService
             $response->setMaxAge($this->httpCacheMaxAge);
         }
 
-        $content = $this->buildContent($data, $groups);
+        $content = $this->buildContent($data);
         $content['success'] = true;
 
         $serialized = $this->serializer->serialize($content, 'json', SerializationContext::create()->setGroups($groups));

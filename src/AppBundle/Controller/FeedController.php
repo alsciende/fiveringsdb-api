@@ -12,7 +12,7 @@ class FeedController extends AbstractApiController
 {
     /**
      * Get Feed
-     * @Route("/feed")
+     * @Route("/feed", name="feed")
      * @Method("GET")
      */
     public function listAction (ActivityManager $activityManager)

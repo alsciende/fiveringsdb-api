@@ -12,21 +12,16 @@ use AppBundle\Service\DeckSearch\DeckSearchServiceInterface;
  */
 class DeckSearchService
 {
-
     /** @var DeckSearchServiceInterface[] */
     private $services;
 
-    public function __construct ()
+    public function __construct (iterable $services)
     {
-        $this->services = [];
-    }
-
-    /**
-     * Called by the CompilerPass to get all the DeckChecks in services.yml
-     */
-    public function addService (DeckSearchServiceInterface $service)
-    {
-        $this->services[$service::supports()] = $service;
+        foreach ($services as $service) {
+            if ($service instanceof DeckSearchServiceInterface) {
+                $this->services[$service::supports()] = $service;
+            }
+        }
     }
 
     /**

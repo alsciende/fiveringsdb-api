@@ -16,7 +16,7 @@ class RulingController extends AbstractApiController
 {
     /**
      * Get all rulings
-     * @Route("/rulings", name="listRulings")
+     * @Route("/rulings", name="rulings_list")
      * @Method("GET")
      */
     public function listAction (EntityManagerInterface $entityManager)

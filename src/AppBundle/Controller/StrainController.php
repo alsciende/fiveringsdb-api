@@ -13,6 +13,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
+ * @Route("/strains", name="strains_")
+ *
  * @author Alsciende <alsciende@icloud.com>
  */
 class StrainController extends AbstractApiController
@@ -22,8 +24,10 @@ class StrainController extends AbstractApiController
      * If 'origin' is set in the request body,
      * find the deck whose id 'origin' is
      * and create a first deck in the strain as a copy of that deck
-     * @Route("/strains")
+     *
+     * @Route("", name="create")
      * @Method("POST")
+     *
      * @Security("has_role('ROLE_USER')")
      */
     public function postAction (Request $request, DeckManager $deckManager, EntityManagerInterface $entityManager)
@@ -66,8 +70,10 @@ class StrainController extends AbstractApiController
 
     /**
      * Get all strains
-     * @Route("/strains")
+     *
+     * @Route("", name="list")
      * @Method("GET")
+     *
      * @Security("has_role('ROLE_USER')")
      */
     public function listAction (EntityManagerInterface $entityManager)
@@ -90,7 +96,8 @@ class StrainController extends AbstractApiController
 
     /**
      * Get a strain.
-     * @Route("/strains/{id}")
+     *
+     * @Route("/{id}", name="get")
      * @Method("GET")
      */
     public function getAction (Strain $strain)
@@ -112,8 +119,10 @@ class StrainController extends AbstractApiController
      * Delete a strain.
      * All its decks are deleted as well.
      * Published (major) decks won't have a strain.
-     * @Route("/strains/{id}")
+     *
+     * @Route("/{id}", name="delete")
      * @Method("DELETE")
+     *
      * @Security("has_role('ROLE_USER')")
      */
     public function deleteAction (Strain $strain, EntityManagerInterface $entityManager)

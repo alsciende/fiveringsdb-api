@@ -14,7 +14,7 @@ class LabelController extends AbstractApiController
 {
     /**
      * Get all Labels
-     * @Route("/labels")
+     * @Route("/labels", name="labels_list")
      * @Method("GET")
      */
     public function listAction (Request $request, EntityManagerInterface $entityManager)

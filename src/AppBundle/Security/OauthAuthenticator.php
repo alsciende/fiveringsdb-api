@@ -29,15 +29,19 @@ class OauthAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
+     * Does the authenticator support the given Request?
+     */
+    public function supports(Request $request)
+    {
+        return $request->headers->has('Authorization');
+    }
+
+    /**
      * Called on every request. Return whatever credentials you want,
      * or null to stop authentication.
      */
     public function getCredentials (Request $request)
     {
-        if ($request->headers->has('Authorization') === false) {
-            return null;
-        }
-
         list($type, $token) = explode(' ', $request->headers->get('Authorization'), 2);
 
         if ($type !== 'Bearer') {

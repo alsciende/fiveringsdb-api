@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 class FeatureController extends AbstractApiController
 {
     /**
-     * @Route("/features")
+     * @Route("/features", name="features_list")
      * @Method("GET")
      */
     public function listAction (Request $request, FeatureManager $featureManager)

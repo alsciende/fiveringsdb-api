@@ -11,13 +11,15 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Description of CardsController
  *
+ * @Route("/cards", name="cards_")
+ *
  * @author Alsciende <alsciende@icloud.com>
  */
 class CardController extends AbstractApiController
 {
     /**
      * Get all Cards
-     * @Route("/cards", name="listCards")
+     * @Route("", name="list")
      * @Method("GET")
      */
     public function listAction (Request $request, EntityManagerInterface $entityManager)
@@ -44,7 +46,7 @@ class CardController extends AbstractApiController
 
     /**
      * Get a Card
-     * @Route("/cards/{id}", name="getCard")
+     * @Route("/{id}", name="get")
      * @Method("GET")
      */
     public function getAction (Request $request, Card $card)

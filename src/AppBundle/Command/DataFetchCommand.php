@@ -2,9 +2,12 @@
 
 namespace AppBundle\Command;
 
+use AppBundle\Entity\Pack;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ChoiceQuestion;
 
 /**
  * Description of DataFetchCommand
@@ -13,17 +16,44 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class DataFetchCommand extends Command
 {
+    /** @var EntityManagerInterface $entityManager */
+    private $entityManager;
+
+    public function __construct ($name = null, EntityManagerInterface $entityManager)
+    {
+        parent::__construct($name);
+        $this->entityManager = $entityManager;
+    }
+
     protected function configure ()
     {
         $this
             ->setName('app:data:fetch')
-            ->setDescription("Fetch the latest javascript data file from cardgamedb.com");
+            ->setDescription("Fetch a data file for a pack from cardgamedb.com");
     }
 
     protected function execute (InputInterface $input, OutputInterface $output)
     {
-        $url = 'http://www.cardgamedb.com/deckbuilders/legendofthefiverings/database/L5C03-db.jgz';
+        $packRepository = $this->entityManager->getRepository(Pack::class);
 
-        exec(sprintf('curl -o l5r-db.js ' . $url));
+        $packs = $packRepository->findBy([], ['ffgId' => 'ASC']);
+        $arrayMap = array_map(
+            function (Pack $pack) {
+                return $pack->getId();
+            },
+            $packs
+        );
+        $choiceQuestion = new ChoiceQuestion(
+            'Pack: ',
+            $arrayMap
+        );
+        $id = $this->getHelper('question')->ask($input, $output, $choiceQuestion);
+        $pack = $packRepository->find($id);
+
+        $command = sprintf(
+            'curl -o l5r-db.js http://www.cardgamedb.com/deckbuilders/legendofthefiverings/database/%s-db.jgz',
+            $pack->getFfgId()
+        );
+        exec($command);
     }
 }

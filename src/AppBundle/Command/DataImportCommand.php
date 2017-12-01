@@ -55,7 +55,7 @@ class DataImportCommand extends Command
                 $result = $this->serializer->importSource($source);
             } catch (\Exception $e) {
                 $output->writeln("<error>Error while importing source</error>");
-                dump($source);
+                echo $source->getPath();
                 throw $e;
             }
             foreach ($result as $imported) {
