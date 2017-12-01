@@ -87,3 +87,11 @@ services:
           - '%kernel.logs_dir%'
           - '%kernel.environment%'
           - '%kernel.debug%'
+
+    # tagged service injection
+
+    AppBundle\Service\DeckValidator:
+        arguments: [!tagged app.deck_check]
+
+    AppBundle\Service\DeckSearchService:
+        arguments: [!tagged app.deck_search]

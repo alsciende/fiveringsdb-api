@@ -3,7 +3,6 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Token;
-use AppBundle\Form\Type\TokenType;
 use AppBundle\Service\Metagame;
 use AppBundle\Service\TokenManager;
 use AppBundle\Service\UserManager;

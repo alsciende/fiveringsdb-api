@@ -32,24 +32,20 @@ class DeckValidator
     const FORBIDDEN_SPLASH = 17;
 
     /** @var DeckCheckInterface[] */
-    private $DeckChecks;
+    private $checks;
 
-    public function __construct ()
+    public function __construct (iterable $checks)
     {
-        $this->DeckChecks = [];
-    }
-
-    /**
-     * Called by the CompilerPass to get all the DeckChecks in services.yml
-     */
-    public function addDeckCheck (DeckCheckInterface $DeckCheck)
-    {
-        $this->DeckChecks[] = $DeckCheck;
+        foreach ($checks as $check) {
+            if ($check instanceof DeckCheckInterface) {
+                $this->checks[] = $check;
+            }
+        }
     }
 
     public function getDeckCheckCount ()
     {
-        return count($this->DeckChecks);
+        return count($this->checks);
     }
 
     /**
@@ -57,7 +53,7 @@ class DeckValidator
      */
     public function check (CardSlotCollectionDecorator $deckCards, string $format)
     {
-        foreach ($this->DeckChecks as $DeckCheck) {
+        foreach ($this->checks as $DeckCheck) {
             $result = $DeckCheck->check($deckCards, $format);
             if ($result !== self::VALID_DECK) {
                 return $result;
