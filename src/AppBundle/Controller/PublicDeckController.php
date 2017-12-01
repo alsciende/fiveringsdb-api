@@ -2,10 +2,12 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Behavior\Service\GetRepositoryTrait;
 use AppBundle\Entity\Deck;
 use AppBundle\Entity\Strain;
 use AppBundle\Form\Type\DeckSearchType;
 use AppBundle\Form\Type\PublicDeckType;
+use AppBundle\Repository\DeckRepository;
 use AppBundle\Search\DeckSearch;
 use AppBundle\Service\DeckManager;
 use AppBundle\Service\DeckSearchService;
@@ -22,6 +24,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class PublicDeckController extends AbstractApiController
 {
+    use GetRepositoryTrait;
+
     /**
      * Get all public decks
      * @Route("/decks")
@@ -92,7 +96,10 @@ class PublicDeckController extends AbstractApiController
             throw $this->createNotFoundException();
         }
 
-        return $this->success($entityManager->getRepository(Deck::class)->findAllPublicVersions($deck), [
+        /** @var DeckRepository $repository */
+        $repository = $this->getRepository($entityManager, Deck::class);
+
+        return $this->success($repository->findAllPublicVersions($deck), [
             'Public',
             'Cards',
         ]);

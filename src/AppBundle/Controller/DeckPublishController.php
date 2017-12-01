@@ -48,7 +48,7 @@ class DeckPublishController extends AbstractApiController
         $form->submit(json_decode($request->getContent(), true), false);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $deckManager->publish($strain->getHead());
+            $deckManager->publish($deck);
             $entityManager->flush();
 
             return $this->success($deck, [
