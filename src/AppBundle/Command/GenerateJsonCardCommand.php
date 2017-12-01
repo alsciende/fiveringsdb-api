@@ -155,7 +155,20 @@ class GenerateJsonCardCommand extends Command
         $context->setSerializeNull(true);
         $data = $this->serializer->toArray($card, $context);
 
-        file_put_contents($card->getId() . '.json', json_encode([$data], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+        file_put_contents($card->getId() . '.json', $this->encode($data));
+    }
+
+    private function encode(array $data): string
+    {
+        return str_replace([
+            '—',
+            '--',
+            '\\n',
+        ], [
+            '–',
+            '–',
+            '\n',
+        ], json_encode([$data], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
     }
 
     private function askArray (InputInterface $input, OutputInterface $output, QuestionHelper $helper, Question $question): array
