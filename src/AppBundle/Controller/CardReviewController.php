@@ -7,6 +7,7 @@ use AppBundle\Entity\Review;
 use AppBundle\Form\Type\ReviewType;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,14 +15,19 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Description of ReviewController
  *
+ * @Route("/cards/{cardId}/reviews", name="card_reviews_")
+ *
  * @author Alsciende <alsciende@icloud.com>
  */
 class CardReviewController extends AbstractApiController
 {
     /**
      * Create a review on a card
-     * @Route("/cards/{id}/reviews", name="createCardReview")
+     *
+     * @Route("", name="create")
      * @Method("POST")
+     * @ParamConverter("card", options={"id" = "cardId"})
+     *
      * @Security("has_role('ROLE_USER')")
      */
     public function postAction (Request $request, Card $card, EntityManagerInterface $entityManager)
@@ -43,8 +49,9 @@ class CardReviewController extends AbstractApiController
 
     /**
      * List all reviews on a card
-     * @Route("/cards/{id}/reviews", name="listCardReviews")
+     * @Route("", name="list")
      * @Method("GET")
+     * @ParamConverter("card", options={"id" = "cardId"})
      */
     public function listAction (Card $card, EntityManagerInterface $entityManager)
     {
@@ -57,7 +64,7 @@ class CardReviewController extends AbstractApiController
 
     /**
      * Get a review on a card
-     * @Route("/cards/{cardId}/reviews/{id}", name="getCardReview")
+     * @Route("/{id}", name="get")
      * @Method("GET")
      */
     public function getAction (Review $review)
@@ -67,8 +74,10 @@ class CardReviewController extends AbstractApiController
 
     /**
      * Edit a review on a card
-     * @Route("/cards/{cardId}/reviews/{id}", name="patchCardReview")
+     *
+     * @Route("/{id}", name="patch")
      * @Method("PATCH")
+     *
      * @Security("has_role('ROLE_USER')")
      */
     public function patchAction (Request $request, Review $review, EntityManagerInterface $entityManager)

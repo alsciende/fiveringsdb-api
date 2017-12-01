@@ -13,8 +13,9 @@ class UserController extends AbstractApiController
     /**
      * Get details about the current user
      *
-     * @Route("/users/me")
+     * @Route("/users/me", name="users_me")
      * @Method("GET")
+     *
      * @Security("has_role('ROLE_USER')")
      */
     public function getAction ()

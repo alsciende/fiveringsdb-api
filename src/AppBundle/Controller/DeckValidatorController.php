@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 class DeckValidatorController extends AbstractApiController
 {
     /**
-     * @Route("/deck-validation/{format}")
+     * @Route("/deck-validation/{format}", name="deck_validation")
      * @Method("POST")
      */
     public function validateAction (Request $request, string $format, Serializer $serializer, DeckValidator $deckValidator)

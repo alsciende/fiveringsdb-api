@@ -17,7 +17,7 @@ class PackCardController extends AbstractApiController
 {
     /**
      * Get all pairs Pack-Card
-     * @Route("/pack-cards")
+     * @Route("/pack-cards", name="pack_cards_list")
      * @Method("GET")
      */
     public function listAction (Request $request, EntityManagerInterface $entityManager)

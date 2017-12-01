@@ -12,13 +12,15 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Description of ClanRoleController
  *
+ * @Route("/clan-roles", name="clan_roles_")
+ *
  * @author Alsciende <alsciende@icloud.com>
  */
 class ClanRoleController extends AbstractApiController
 {
     /**
      * Get all pairs Clan-Role
-     * @Route("/clan-roles")
+     * @Route("", name="list")
      * @Method("GET")
      */
     public function listAction (Request $request, EntityManagerInterface $entityManager)

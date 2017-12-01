@@ -23,8 +23,10 @@ class DeckPublishController extends AbstractApiController
 {
     /**
      * Publish the head of the strain
-     * @Route("/strains/{id}/publish")
+     *
+     * @Route("/strains/{id}/publish", name="strain_publish")
      * @Method("PATCH")
+     *
      * @Security("has_role('ROLE_USER')")
      */
     public function postAction (Request $request, Strain $strain, DeckManager $deckManager, EntityManagerInterface $entityManager)

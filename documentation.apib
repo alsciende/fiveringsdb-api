@@ -47,10 +47,10 @@ Text is Markdown.
 
 + Response 200 (application/json)
 
-## Card Ruling Collection [/cards/{card_code}/rulings]
+## Card Ruling Collection [/cards/{card_id}/rulings]
 
 + Parameters
-    + card_code (string) - ID of the Card in the form of a string slug ("example-card-code")
+    + card_id (string) - ID of the Card in the form of a string slug ("example-card-code")
 
 ### Create a Ruling [POST]
 
@@ -68,10 +68,10 @@ Text may be raw Markdown.
 
 + Response 200 (application/json)
 
-## Card Ruling [/cards/{card_code}/rulings/{id}]
+## Card Ruling [/cards/{card_id}/rulings/{id}]
 
 + Parameters
-    + card_code (string) - ID of the Card in the form of a string slug ("example-card-code")
+    + card_id (string) - ID of the Card in the form of a string slug ("example-card-code")
     + id (integer) - ID of the Ruling in the form of an integer
 
 ### Edit a Ruling [PATCH]
@@ -94,10 +94,10 @@ Text is Markdown.
 
 Resources related to cards reviews. Write access is protected by the ROLE_REVIEWS permission.
 
-## Card Review Collection [/cards/{card_code}/reviews]
+## Card Review Collection [/cards/{card_id}/reviews]
 
 + Parameters
-    + card_code (string) - ID of the Card in the form of a string slug ("example-card-code")
+    + card_id (string) - ID of the Card in the form of a string slug ("example-card-code")
 
 ### Create a Review [POST]
 
@@ -115,10 +115,10 @@ Text may be raw Markdown.
 
 + Response 200 (application/json)
 
-## Card Review [/cards/{card_code}/reviews/{id}]
+## Card Review [/cards/{card_id}/reviews/{id}]
 
 + Parameters
-    + card_code (string) - ID of the Card in the form of a string slug ("example-card-code")
+    + card_id (string) - ID of the Card in the form of a string slug ("example-card-code")
     + id (integer) - ID of the Review in the form of an integer
 
 ### Edit a Review [PATCH]

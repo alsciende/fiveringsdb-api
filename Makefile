@@ -13,13 +13,14 @@ ifeq ($(SYMFONY_ENV),prod)
 endif
 
 .DEFAULT_GOAL := help
-.PHONY: clean db phpstan rm start stop reset run test tf tu vendor fixtures
+.PHONY: clean db phpstan rm start stop reset run test tf tu vendor fixtures docs
 
 help:
 	@echo
 	@echo 'Main available targets are:'
 	@echo '  reset   : Restart local server'
 	@echo '  test    : Install vendors, configure project and run various tests'
+	@echo '  docs    : Generate the documentation'
 	@echo
 	@echo 'Secondary targets are:'
 	@echo '  clean     : Make your working dir virgin again'
@@ -71,6 +72,7 @@ rm:
 	@echo
 	rm -rf var/cache/* var/logs/*
 
+test: export SYMFONY_ENV = test
 test: schema phpstan tu tf
 
 tf: export SYMFONY_ENV = test
@@ -82,3 +84,7 @@ tu: export SYMFONY_ENV = test
 tu: vendor db fixtures
 	@echo
 	vendor/bin/phpunit
+
+docs: documentation.apib
+	@echo
+	aglio -i documentation.apib -o docs/index.html --theme-variables slate

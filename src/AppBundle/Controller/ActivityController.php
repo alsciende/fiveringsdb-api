@@ -13,6 +13,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 /**
  * Description of ActivityController
  *
+ * @Route("/activity", name="activity_")
+ *
  * @author Alsciende <alsciende@icloud.com>
  */
 class ActivityController extends AbstractApiController
@@ -21,8 +23,10 @@ class ActivityController extends AbstractApiController
 
     /**
      * Get activity
-     * @Route("/activity")
+     *
+     * @Route("", name="list")
      * @Method("GET")
+     *
      * @Security("has_role('ROLE_USER')")
      */
     public function listAction (EntityManagerInterface $entityManager)

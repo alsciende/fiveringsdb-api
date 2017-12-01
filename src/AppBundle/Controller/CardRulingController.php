@@ -7,6 +7,7 @@ use AppBundle\Entity\Ruling;
 use AppBundle\Form\Type\RulingType;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,14 +15,19 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Description of RulingController
  *
+ * @Route("/cards/{cardId}/rulings", name="card_rulings_")
+ *
  * @author Alsciende <alsciende@icloud.com>
  */
 class CardRulingController extends AbstractApiController
 {
     /**
      * Create a ruling on a card
-     * @Route("/cards/{id}/rulings", name="createCardRuling")
+     *
+     * @Route("", name="create")
      * @Method("POST")
+     * @ParamConverter("card", options={"id" = "cardId"})
+     *
      * @Security("has_role('ROLE_GURU')")
      */
     public function postAction (Request $request, Card $card, EntityManagerInterface $entityManager)
@@ -43,8 +49,9 @@ class CardRulingController extends AbstractApiController
 
     /**
      * Get all rulings on a card
-     * @Route("/cards/{id}/rulings", name="listCardRulings")
+     * @Route("", name="list")
      * @Method("GET")
+     * @ParamConverter("card", options={"id" = "cardId"})
      */
     public function listAction (Card $card, EntityManagerInterface $entityManager)
     {
@@ -57,7 +64,7 @@ class CardRulingController extends AbstractApiController
 
     /**
      * Get a ruling on a card
-     * @Route("/cards/{cardId}/rulings/{id}", name="getCardRuling")
+     * @Route("/{id}", name="get")
      * @Method("GET")
      */
     public function getAction (Ruling $ruling)
@@ -67,8 +74,10 @@ class CardRulingController extends AbstractApiController
 
     /**
      * Delete a ruling on a card
-     * @Route("/cards/{cardId}/rulings/{id}", name="deleteCardRuling")
+     *
+     * @Route("/{id}", name="delete")
      * @Method("DELETE")
+     *
      * @Security("has_role('ROLE_GURU')")
      */
     public function deleteAction (Ruling $ruling, EntityManagerInterface $entityManager)
@@ -81,8 +90,10 @@ class CardRulingController extends AbstractApiController
 
     /**
      * Edit a ruling on a card
-     * @Route("/cards/{cardId}/rulings/{id}", name="patchCardRuling")
+     *
+     * @Route("/{id}", name="patch")
      * @Method("PATCH")
+     *
      * @Security("has_role('ROLE_GURU')")
      */
     public function patchAction (Request $request, Ruling $ruling, EntityManagerInterface $entityManager)

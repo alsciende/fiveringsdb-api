@@ -12,13 +12,15 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Description of CyclesController
  *
+ * @Route("/cycles", name="cycles_")
+ *
  * @author Alsciende <alsciende@icloud.com>
  */
 class CycleController extends AbstractApiController
 {
     /**
      * Get all Cycles
-     * @Route("/cycles")
+     * @Route("", name="list")
      * @Method("GET")
      */
     public function listAction (Request $request, EntityManagerInterface $entityManager)

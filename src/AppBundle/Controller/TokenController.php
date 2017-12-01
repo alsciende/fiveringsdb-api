@@ -21,7 +21,8 @@ class TokenController extends AbstractApiController
 {
     /**
      * Uses the token to get the user data with Metagame, then saves it
-     * @Route("/tokens")
+     *
+     * @Route("/tokens", name="tokens_create")
      * @Method("POST")
      */
     public function postAction (Request $request, Metagame $metagame, UserManager $userManager, TokenManager $tokenManager, EntityManagerInterface $entityManager)

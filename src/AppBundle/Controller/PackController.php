@@ -21,7 +21,7 @@ class PackController extends AbstractApiController
 
     /**
      * Get all Packs
-     * @Route("/packs")
+     * @Route("/packs", name="packs_list")
      * @Method("GET")
      */
     public function listAction (Request $request, EntityManagerInterface $entityManager)
