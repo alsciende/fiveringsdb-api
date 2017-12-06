@@ -186,7 +186,7 @@ class Pack
     }
 
     /**
-     * @return PackCard[]
+     * @return Collection|PackCard[]
      */
     function getCards (): Collection
     {

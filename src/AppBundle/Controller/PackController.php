@@ -32,8 +32,7 @@ class PackController extends AbstractApiController
         $repository = $this->getRepository($entityManager, Pack::class);
 
         return $this->success(
-            $repository
-                ->findAllSorted(),
+            $repository->findAllSorted(),
             [
                 'Default',
                 'Cycle',

@@ -17,7 +17,8 @@ interface DeckSearchServiceInterface
     static public function supports (): string;
 
     /**
-     * @param array $arguments
+     * @param DeckSearch $search
+     * @return void
      */
     public function search (DeckSearch $search);
 }

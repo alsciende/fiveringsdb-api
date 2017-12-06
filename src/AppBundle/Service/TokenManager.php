@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Behavior\Service\GetRepositoryTrait;
 use AppBundle\Entity\Token;
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -11,21 +12,23 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class TokenManager
 {
+    use GetRepositoryTrait;
+
     /** @var EntityManagerInterface */
-    private $em;
+    private $entityManager;
 
     /** @var int */
     private $ttl;
 
     public function __construct (EntityManagerInterface $entityManager, int $ttl)
     {
-        $this->em = $entityManager;
+        $this->entityManager = $entityManager;
         $this->ttl = $ttl;
     }
 
     public function findToken (string $token): ?Token
     {
-        return $this->em->getRepository(Token::class)->find($token);
+        return $this->entityManager->find(Token::class, $token);
     }
 
     public function createToken (string $value, User $user): Token
@@ -43,7 +46,7 @@ class TokenManager
 
     public function updateToken (Token $token)
     {
-        $this->em->persist($token);
-        $this->em->flush();
+        $this->entityManager->persist($token);
+        $this->entityManager->flush();
     }
 }

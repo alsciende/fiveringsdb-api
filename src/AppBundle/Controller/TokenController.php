@@ -33,7 +33,7 @@ class TokenController extends AbstractApiController
         if ($form->isSubmitted() && $form->isValid()) {
             $tokenId = $form->getData()['id'];
 
-            $token = $entityManager->getRepository(Token::class)->find($tokenId);
+            $token = $entityManager->find(Token::class, $tokenId);
             if ($token instanceof Token) {
                 return $this->success($token);
             }

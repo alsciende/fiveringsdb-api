@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Behavior\Service\GetRepositoryTrait;
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -10,22 +11,26 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class UserManager
 {
+    use GetRepositoryTrait;
+
     /** @var EntityManagerInterface */
-    private $em;
+    private $entityManager;
 
     public function __construct (EntityManagerInterface $entityManager)
     {
-        $this->em = $entityManager;
+        $this->entityManager = $entityManager;
     }
 
     public function findUserByUsername (string $username): ?User
     {
-        return $this->em->getRepository(User::class)->findOneBy(['username' => $username]);
+        $repository = $this->getRepository($this->entityManager, User::class);
+
+        return $repository->findOneBy(['username' => $username]);
     }
 
     public function findUserById (string $id): ?User
     {
-        return $this->em->getRepository(User::class)->find($id);
+        return $this->entityManager->find(User::class, $id);
     }
 
     public function createUser (string $id, string $username): User
@@ -41,7 +46,7 @@ class UserManager
 
     public function updateUser (User $user)
     {
-        $this->em->persist($user);
-        $this->em->flush();
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
     }
 }

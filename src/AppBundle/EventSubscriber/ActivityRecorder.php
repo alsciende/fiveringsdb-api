@@ -26,9 +26,7 @@ class ActivityRecorder implements EventSubscriberInterface
     /** @var DeckRepository */
     private $deckRepository;
 
-    public function __construct (
-        EntityManagerInterface $entityManager
-    )
+    public function __construct (EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
         $this->deckRepository = $this->getRepository($entityManager, Deck::class);

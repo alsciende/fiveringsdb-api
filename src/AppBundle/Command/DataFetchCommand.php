@@ -48,12 +48,14 @@ class DataFetchCommand extends Command
             $arrayMap
         );
         $id = $this->getHelper('question')->ask($input, $output, $choiceQuestion);
-        $pack = $packRepository->find($id);
+        $pack = $this->entityManager->find(Pack::class, $id);
 
-        $command = sprintf(
-            'curl -o l5r-db.js http://www.cardgamedb.com/deckbuilders/legendofthefiverings/database/%s-db.jgz',
-            $pack->getFfgId()
-        );
-        exec($command);
+        if ($pack instanceof Pack) {
+            $command = sprintf(
+                'curl -o l5r-db.js http://www.cardgamedb.com/deckbuilders/legendofthefiverings/database/%s-db.jgz',
+                $pack->getFfgId()
+            );
+            exec($command);
+        }
     }
 }
