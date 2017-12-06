@@ -104,10 +104,13 @@ class PublicDeckController extends AbstractApiController
         /** @var DeckRepository $repository */
         $repository = $this->getRepository($entityManager, Deck::class);
 
-        return $this->success($repository->findAllPublicVersions($deck), [
-            'Public',
-            'Cards',
-        ]);
+        return $this->success(
+            $repository->findAllPublicVersions($deck),
+            [
+                'Public',
+                'Cards',
+            ]
+        );
     }
 
     /**

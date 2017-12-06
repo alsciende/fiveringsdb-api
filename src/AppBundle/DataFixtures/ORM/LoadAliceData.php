@@ -2,7 +2,7 @@
 
 namespace AppBundle\DataFixtures\ORM;
 
-use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Nelmio\Alice\Loader\NativeLoader;
@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class LoadAliceData extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
+class LoadAliceData extends Fixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
     use ContainerAwareTrait;
 

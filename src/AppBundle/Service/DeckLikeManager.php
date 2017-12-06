@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Behavior\Service\GetRepositoryTrait;
 use AppBundle\Entity\Deck;
 use AppBundle\Entity\DeckLike;
 use AppBundle\Entity\User;
@@ -14,6 +15,8 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class DeckLikeManager
 {
+    use GetRepositoryTrait;
+
     /** @var EntityManagerInterface */
     protected $entityManager;
 
@@ -58,7 +61,7 @@ class DeckLikeManager
 
     public function getLike (Deck $deck, User $user): ?DeckLike
     {
-        return $this->entityManager->getRepository(DeckLike::class)->findOneBy(['deck' => $deck, 'user' => $user]);
+        return $this->entityManager->find(DeckLike::class, ['deck' => $deck, 'user' => $user]);
     }
 
     /** @return DeckLike[] */

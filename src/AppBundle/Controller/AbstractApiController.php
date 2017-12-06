@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Behavior\Controller\ApiControllerInterface;
 use AppBundle\Service\ApiService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormErrorIterator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,11 +45,13 @@ abstract class AbstractApiController extends Controller implements ApiController
     {
         $messages = [];
         foreach ($errors as $error) {
-            $messages[] = [
-                "property_path" => $error->getCause() ? $error->getCause()->getPropertyPath() : null,
-                "invalid_value" => $error->getCause() ? $error->getCause()->getInvalidValue() : null,
-                "error_message" => $error->getMessage(),
-            ];
+            if ($error instanceof FormError) {
+                $messages[] = [
+                    "property_path" => $error->getCause() ? $error->getCause()->getPropertyPath() : null,
+                    "invalid_value" => $error->getCause() ? $error->getCause()->getInvalidValue() : null,
+                    "error_message" => $error->getMessage(),
+                ];
+            }
         }
 
         return $messages;

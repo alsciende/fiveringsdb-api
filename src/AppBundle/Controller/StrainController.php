@@ -44,7 +44,7 @@ class StrainController extends AbstractApiController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($strain);
             if ($strain->getOrigin() !== null) {
-                $origin = $entityManager->getRepository(Deck::class)->find($strain->getOrigin());
+                $origin = $entityManager->find(Deck::class, $strain->getOrigin());
                 if ($origin instanceof Deck) {
                     $copy = new Deck();
                     $copy->setUser($this->getUser())->setStrain($strain);

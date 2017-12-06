@@ -2,7 +2,7 @@
 
 namespace AppBundle\DataFixtures\ORM;
 
-use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class LoadSourceData extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
+class LoadSourceData extends Fixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
 
     use  ContainerAwareTrait;

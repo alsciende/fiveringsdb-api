@@ -35,8 +35,7 @@ class ActivityController extends AbstractApiController
         $repository = $this->getRepository($entityManager, Activity::class);
 
         return $this->success(
-            $repository
-                ->findForUser($this->getUser(), 10),
+            $repository->findForUser($this->getUser(), 10),
             [
                 'Default',
                 'deck' => [

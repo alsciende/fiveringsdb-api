@@ -15,9 +15,6 @@ class CardSlotCollectionDecorator extends ArrayCollection
         parent::__construct($cards);
     }
 
-    /**
-     * @return CardSlotInterface[]
-     */
     public function toArray (): array
     {
         return parent::toArray();
