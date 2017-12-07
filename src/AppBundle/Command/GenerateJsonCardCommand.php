@@ -163,7 +163,7 @@ class GenerateJsonCardCommand extends Command
         return str_replace([
             '—',
             '--',
-            '\\n',
+            '\\\\n',
         ], [
             '–',
             '–',
