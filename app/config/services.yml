@@ -9,7 +9,7 @@ services:
     # configuration by directory
 
     AppBundle\:
-        resource: '../../src/AppBundle/{Security,Service,Util,Validator,Form,Controller,Command,DataFixtures}'
+        resource: '../../src/AppBundle/{Security,Service,Util,Validator,Form,Controller,Command}'
 
     _instanceof:
         AppBundle\Behavior\Controller\ApiControllerInterface:
