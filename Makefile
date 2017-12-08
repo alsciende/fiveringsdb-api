@@ -9,7 +9,7 @@ PHP_BIN        ?= php
 HOST           ?= localhost:8642
 
 ifeq ($(SYMFONY_ENV),prod)
-	COMPOSER_FLAGS := -o --no-dev
+	COMPOSER_FLAGS := --optimize-autoloader --classmap-authoritative --no-dev --no-interaction
 endif
 
 .DEFAULT_GOAL := help
@@ -45,7 +45,7 @@ clean: rm
 
 vendor: composer.lock
 	@echo
-	-$(COMPOSER_BIN) install -n --prefer-dist --no-ansi $(COMPOSER_FLAGS)
+	-$(COMPOSER_BIN) install $(COMPOSER_FLAGS)
 
 schema: vendor
 	@echo
