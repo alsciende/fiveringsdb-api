@@ -81,8 +81,8 @@ class GenerateJsonCardCommand extends Command
             case 'attachment':
                 $card->setSide('conflict');
                 $card->setRoleRestriction($helper->ask($input, $output, new Question('Role Restriction: ')));
-                $card->setCost($helper->ask($input, $output, new Question('Cost: ')));
                 $card->setUnicity($this->askBoolean($input, $output, $helper, new Question('Unique: (y/N)', 'n')));
+                $card->setCost($helper->ask($input, $output, new Question('Cost: ')));
                 $card->setMilitaryBonus($helper->ask($input, $output, new Question('Military Bonus: ')));
                 $card->setPoliticalBonus($helper->ask($input, $output, new Question('Political Bonus: ')));
                 $card->setDeckLimit($helper->ask($input, $output, new Question('Deck Limit (3): ', 3)));
@@ -93,8 +93,8 @@ class GenerateJsonCardCommand extends Command
                     Card::SIDE_DYNASTY,
                 ])));
                 $card->setRoleRestriction($helper->ask($input, $output, new Question('Role Restriction: ')));
-                $card->setCost($helper->ask($input, $output, new Question('Cost: ')));
                 $card->setUnicity($this->askBoolean($input, $output, $helper, new Question('Unique: (y/N)', 'n')));
+                $card->setCost($helper->ask($input, $output, new Question('Cost: ')));
                 $card->setMilitary($helper->ask($input, $output, new Question('Military Skill: ')));
                 $card->setPolitical($helper->ask($input, $output, new Question('Political Skill: ')));
                 $card->setGlory($helper->ask($input, $output, new Question('Glory: ')));
@@ -163,7 +163,7 @@ class GenerateJsonCardCommand extends Command
         return str_replace([
             '—',
             '--',
-            '\\n',
+            '\\\\n',
         ], [
             '–',
             '–',
