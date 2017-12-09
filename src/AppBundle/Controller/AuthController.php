@@ -23,7 +23,7 @@ class AuthController extends Controller
     /**
      * @Route("/init")
      * @Method("GET")
-     * @Template()
+     * @Template("AppBundle:Auth:init.html.twig")
      */
     public function initAction (Request $request)
     {
@@ -51,7 +51,7 @@ class AuthController extends Controller
     /**
      * @Route("/code")
      * @Method("GET")
-     * @Template()
+     * @Template("AppBundle:Auth:code.html.twig")
      */
     public function codeAction (Request $request, Metagame $metagame)
     {
