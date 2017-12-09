@@ -27,12 +27,6 @@ class AuthController extends Controller
      */
     public function initAction (Request $request)
     {
-        if (!$request->getSession() instanceof SessionInterface) {
-            throw $this->createAccessDeniedException();
-        }
-
-        $request->getSession()->start();
-
         $metagameBaseUri = $this->getParameter('metagame_base_uri');
 
         return [
@@ -42,7 +36,7 @@ class AuthController extends Controller
                     'client_id'     => $this->getParameter('metagame_client_id'),
                     'redirect_uri'  => $this->getParameter('metagame_redirect_uri'),
                     'response_type' => 'code',
-                    'state'         => $request->getSession()->getId(),
+                    'state'         => $request->cookies->get('PHPSESSID'),
                 ]
             ),
         ];
@@ -55,14 +49,8 @@ class AuthController extends Controller
      */
     public function codeAction (Request $request, Metagame $metagame)
     {
-        if (!$request->getSession() instanceof SessionInterface) {
-            throw $this->createAccessDeniedException();
-        }
-
-        $request->getSession()->start();
-
         // check the state
-        if ($request->get('state') !== $request->getSession()->getId()) {
+        if ($request->get('state') !== $request->cookies->get('PHPSESSID')) {
             throw new \Exception("State does not match.");
         }
 
