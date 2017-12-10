@@ -42,7 +42,7 @@ class TrendingSearchService extends AbstractDeckSearchService
         $sql = "SELECT 
             $selectClause, 
             COUNT(DISTINCT l.user_id) nbLikes, 
-            COUNT(DISTINCT c.user_id) nbComments, 
+            COUNT(DISTINCT c.id) nbComments, 
             SUM(s.score) 
         FROM (
 	        SELECT deck_id, (86400 - UNIX_TIMESTAMP() + UNIX_TIMESTAMP(created_at)) score
