@@ -138,8 +138,12 @@ class GenerateJsonCardCommand extends Command
                 break;
         }
 
-        if ($card->getSide() === 'conflict' && $card->getClan() !== 'neutral') {
-            $card->setInfluenceCost($helper->ask($input, $output, new Question('Influence Cost: ')));
+        if ($card->getSide() === 'conflict') {
+            if ($card->getClan() !== 'neutral') {
+                $card->setInfluenceCost($helper->ask($input, $output, new Question('Influence Cost: ')));
+            } else {
+                $card->setInfluenceCost(0);
+            }
         }
 
         $constraintViolationList = $this->validator->validate($card);
@@ -158,7 +162,7 @@ class GenerateJsonCardCommand extends Command
         file_put_contents($card->getId() . '.json', $this->encode($data));
     }
 
-    private function encode(array $data): string
+    private function encode (array $data): string
     {
         return str_replace([
             '—',
