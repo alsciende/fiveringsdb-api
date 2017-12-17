@@ -124,9 +124,11 @@ class GenerateJsonCardCommand extends Command
                 $card->setSide('province');
                 $card->setRoleRestriction($helper->ask($input, $output, new Question('Role Restriction: ')));
                 $card->setStrength($helper->ask($input, $output, new Question('Strength: ')));
+                $card->setDeckLimit(1);
                 break;
             case 'role':
                 $card->setSide('role');
+                $card->setDeckLimit(1);
                 break;
             case 'stronghold':
                 $card->setSide('province');
@@ -135,11 +137,16 @@ class GenerateJsonCardCommand extends Command
                 $card->setHonor($helper->ask($input, $output, new Question('Honor: ')));
                 $card->setFate($helper->ask($input, $output, new Question('Fate: ')));
                 $card->setInfluencePool($helper->ask($input, $output, new Question('Influence Pool: ')));
+                $card->setDeckLimit(1);
                 break;
         }
 
-        if ($card->getSide() === 'conflict' && $card->getClan() !== 'neutral') {
-            $card->setInfluenceCost($helper->ask($input, $output, new Question('Influence Cost: ')));
+        if ($card->getSide() === 'conflict') {
+            if ($card->getClan() !== 'neutral') {
+                $card->setInfluenceCost($helper->ask($input, $output, new Question('Influence Cost: ')));
+            } else {
+                $card->setInfluenceCost(0);
+            }
         }
 
         $constraintViolationList = $this->validator->validate($card);
@@ -158,7 +165,7 @@ class GenerateJsonCardCommand extends Command
         file_put_contents($card->getId() . '.json', $this->encode($data));
     }
 
-    private function encode(array $data): string
+    private function encode (array $data): string
     {
         return str_replace([
             '—',
