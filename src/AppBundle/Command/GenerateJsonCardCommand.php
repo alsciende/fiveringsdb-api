@@ -124,9 +124,11 @@ class GenerateJsonCardCommand extends Command
                 $card->setSide('province');
                 $card->setRoleRestriction($helper->ask($input, $output, new Question('Role Restriction: ')));
                 $card->setStrength($helper->ask($input, $output, new Question('Strength: ')));
+                $card->setDeckLimit(1);
                 break;
             case 'role':
                 $card->setSide('role');
+                $card->setDeckLimit(1);
                 break;
             case 'stronghold':
                 $card->setSide('province');
@@ -135,6 +137,7 @@ class GenerateJsonCardCommand extends Command
                 $card->setHonor($helper->ask($input, $output, new Question('Honor: ')));
                 $card->setFate($helper->ask($input, $output, new Question('Fate: ')));
                 $card->setInfluencePool($helper->ask($input, $output, new Question('Influence Pool: ')));
+                $card->setDeckLimit(1);
                 break;
         }
 

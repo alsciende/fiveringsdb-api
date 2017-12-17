@@ -96,8 +96,7 @@ jms_serializer:
         auto_detection: true
 
 cocur_slugify:
-    rulesets:
-      - default
+    rulesets: {}
 
 nelmio_cors:
     defaults:
