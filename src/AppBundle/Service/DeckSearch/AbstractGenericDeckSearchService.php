@@ -74,7 +74,7 @@ abstract class AbstractGenericDeckSearchService extends AbstractDeckSearchServic
         }
 
         if ($search->isFeatured()) {
-            $qb->innerJoin('AppBundle:Feature', 'f', Query\Expr\Join::INNER_JOIN, 'f.deck = d');
+            $qb->innerJoin('AppBundle:Feature', 'f', Query\Expr\Join::WITH, 'f.deck = d');
         }
 
         if (count($search->getCards()) > 0) {
