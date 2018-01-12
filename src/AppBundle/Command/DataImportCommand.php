@@ -2,8 +2,8 @@
 
 namespace AppBundle\Command;
 
-use Alsciende\SerializerBundle\Serializer\Serializer;
-use Alsciende\SerializerBundle\Service\ScanningService;
+use Alsciende\SerializerBundle\Serializer;
+use Alsciende\SerializerBundle\Scan\ScanningService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -30,18 +30,23 @@ class DataImportCommand extends Command
     /** @var ValidatorInterface $validator */
     private $validator;
 
+    /** @var string $jsonDataPath */
+    private $jsonDataPath;
+
     public function __construct (
         $name = null,
         ScanningService $scanningService,
         Serializer $serializer,
         EntityManagerInterface $entityManager,
-        ValidatorInterface $validator
+        ValidatorInterface $validator,
+        $jsonDataPath
     ) {
         parent::__construct($name);
         $this->scanningService = $scanningService;
         $this->serializer = $serializer;
         $this->entityManager = $entityManager;
         $this->validator = $validator;
+        $this->jsonDataPath = $jsonDataPath;
     }
 
     protected function configure ()
@@ -53,7 +58,7 @@ class DataImportCommand extends Command
 
     protected function execute (InputInterface $input, OutputInterface $output)
     {
-        $sources = $this->scanningService->findSources();
+        $sources = $this->scanningService->findSources($this->jsonDataPath);
 
         foreach ($sources as $source) {
             try {
