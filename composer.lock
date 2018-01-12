@@ -12,19 +12,21 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Alsciende/serializer-bundle.git",
-                "reference": "958c3aeb2b1f92f90243904d68b05314c9a7e492"
+                "reference": "e1a71e710139f1f8944aef643846349c7c083f80"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Alsciende/serializer-bundle/zipball/958c3aeb2b1f92f90243904d68b05314c9a7e492",
-                "reference": "958c3aeb2b1f92f90243904d68b05314c9a7e492",
+                "url": "https://api.github.com/repos/Alsciende/serializer-bundle/zipball/e1a71e710139f1f8944aef643846349c7c083f80",
+                "reference": "e1a71e710139f1f8944aef643846349c7c083f80",
                 "shasum": ""
             },
             "require": {
                 "doctrine/orm": "^2.6",
-                "php": ">=5.6.0"
+                "php": ">=5.6.0",
+                "symfony/framework-bundle": "~3.0|~4.0"
             },
             "require-dev": {
+                "phpstan/phpstan": "^0.9.1",
                 "phpunit/phpunit": "^6.5"
             },
             "type": "symfony/bundle",
@@ -47,7 +49,7 @@
                 "source": "https://github.com/Alsciende/serializer-bundle/tree/master",
                 "issues": "https://github.com/Alsciende/serializer-bundle/issues"
             },
-            "time": "2018-01-11T15:50:23+00:00"
+            "time": "2018-01-11 19:38:10"
         },
         {
             "name": "beberlei/DoctrineExtensions",

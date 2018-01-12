@@ -30,8 +30,13 @@ class DataImportCommand extends Command
     /** @var ValidatorInterface $validator */
     private $validator;
 
-    public function __construct ($name = null, ScanningService $scanningService, Serializer $serializer, EntityManagerInterface $entityManager, ValidatorInterface $validator)
-    {
+    public function __construct (
+        $name = null,
+        ScanningService $scanningService,
+        Serializer $serializer,
+        EntityManagerInterface $entityManager,
+        ValidatorInterface $validator
+    ) {
         parent::__construct($name);
         $this->scanningService = $scanningService;
         $this->serializer = $serializer;

@@ -7,6 +7,9 @@ use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Alsciende\SerializerBundle\Serializer\Serializer;
+use Alsciende\SerializerBundle\Service\ScanningService;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Description of LoadSourceData
@@ -15,24 +18,37 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
  */
 class LoadSourceData extends Fixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
+    use ContainerAwareTrait;
 
-    use  ContainerAwareTrait;
+    /** @var ScanningService $scanningService */
+    private $scanningService;
+
+    /** @var Serializer $serializer */
+    private $serializer;
+
+    /** @var ValidatorInterface $validator */
+    private $validator;
+
+    public function __construct (
+        $name = null,
+        ScanningService $scanningService,
+        Serializer $serializer,
+        ValidatorInterface $validator
+    ) {
+        $this->scanningService = $scanningService;
+        $this->serializer = $serializer;
+        $this->validator = $validator;
+    }
 
     public function load (ObjectManager $manager)
     {
-        $scanningService = $this->container->get('alsciende_serializer.scanning_service');
-
-        $sources = $scanningService->findSources();
-
-        $serializer = $this->container->get('alsciende_serializer.serializer');
-
-        $validator = $this->container->get('validator');
+        $sources = $this->scanningService->findSources();
 
         foreach ($sources as $source) {
-            $result = $serializer->importSource($source);
+            $result = $this->serializer->importSource($source);
             foreach ($result as $imported) {
                 $entity = $imported['entity'];
-                $errors = $validator->validate($entity);
+                $errors = $this->validator->validate($entity);
                 if (count($errors) > 0) {
                     $errorsString = (string) $errors;
                     throw new \Exception($errorsString);
