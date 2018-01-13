@@ -81,11 +81,6 @@ swiftmailer:
     password:  "%mailer_password%"
     spool:     { type: memory }
 
-# AlsciendeDoctrineSerializerBundle Configuration
-alsciende_serializer:
-    path: "%path_to_json_data%"
-    group: alsciende_serializer
-
 # JMSSerializerBundle Configuration
 jms_serializer:
     visitors:
