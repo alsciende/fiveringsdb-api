@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity;
 
-use Alsciende\SerializerBundle\Annotation\Source;
+use Alsciende\SerializerBundle\Annotation\Skizzle;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
@@ -12,7 +12,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
  * @ORM\Entity()
  * @ORM\Table(name="clan_roles")
  *
- * @Source()
+ * @Skizzle()
  *
  * @author Alsciende <alsciende@icloud.com>
  */
@@ -26,7 +26,7 @@ class ClanRole
      * @ORM\ManyToOne(targetEntity="Card")
      * @ORM\JoinColumn(name="card_id", referencedColumnName="id")
      *
-     * @Source(type="association")
+     * @Skizzle(type="association")
      */
     private $card;
 
@@ -37,7 +37,7 @@ class ClanRole
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      *
-     * @Source(type="string")
+     * @Skizzle(type="string")
      */
     private $clan;
 

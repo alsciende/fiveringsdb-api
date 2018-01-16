@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity;
 
-use Alsciende\SerializerBundle\Annotation\Source;
+use Alsciende\SerializerBundle\Annotation\Skizzle;
 use AppBundle\Behavior\Entity\ToStringNameTrait;
 use AppBundle\Model\PackCardSlotCollectionDecorator;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -16,7 +16,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
  * @ORM\Entity()
  * @ORM\Table(name="cards")
  *
- * @Source(break="id")
+ * @Skizzle(break="id")
  *
  * @author Alsciende <alsciende@icloud.com>
  */
@@ -60,7 +60,7 @@ class Card
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      *
-     * @Source(type="string")
+     * @Skizzle(type="string")
      */
     private $id;
 
@@ -69,7 +69,7 @@ class Card
      *
      * @ORM\Column(name="name", type="string", length=255)
      *
-     * @Source(type="string")
+     * @Skizzle(type="string")
      */
     private $name;
 
@@ -85,7 +85,7 @@ class Card
      *
      * @ORM\Column(name="cost", type="integer", nullable=true)
      *
-     * @Source(type="integer")
+     * @Skizzle(type="integer")
      */
     private $cost;
 
@@ -94,7 +94,7 @@ class Card
      *
      * @ORM\Column(name="text", type="text", nullable=true)
      *
-     * @Source(type="string")
+     * @Skizzle(type="string")
      */
     private $text;
 
@@ -110,7 +110,7 @@ class Card
      *
      * @ORM\Column(name="type", type="text", nullable=false)
      *
-     * @Source(type="string")
+     * @Skizzle(type="string")
      */
     private $type;
 
@@ -119,7 +119,7 @@ class Card
      *
      * @ORM\Column(name="clan", type="text", nullable=false)
      *
-     * @Source(type="string")
+     * @Skizzle(type="string")
      */
     private $clan;
 
@@ -128,7 +128,7 @@ class Card
      *
      * @ORM\Column(name="element", type="text", nullable=true)
      *
-     * @Source(type="string")
+     * @Skizzle(type="string")
      */
     private $element;
 
@@ -137,7 +137,7 @@ class Card
      *
      * @ORM\Column(name="unicity", type="boolean", nullable=false)
      *
-     * @Source(type="boolean")
+     * @Skizzle(type="boolean")
      */
     private $unicity;
 
@@ -146,7 +146,7 @@ class Card
      *
      * @ORM\Column(name="side", type="string", nullable=false)
      *
-     * @Source(type="string")
+     * @Skizzle(type="string")
      */
     private $side;
 
@@ -155,7 +155,7 @@ class Card
      *
      * @ORM\Column(name="traits", type="simple_array", nullable=true)
      *
-     * @Source(type="array")
+     * @Skizzle(type="array")
      */
     private $traits;
 
@@ -164,7 +164,7 @@ class Card
      *
      * @ORM\Column(name="military", type="smallint", nullable=true)
      *
-     * @Source(type="integer")
+     * @Skizzle(type="integer")
      */
     private $military;
 
@@ -173,7 +173,7 @@ class Card
      *
      * @ORM\Column(name="political", type="smallint", nullable=true)
      *
-     * @Source(type="integer")
+     * @Skizzle(type="integer")
      */
     private $political;
 
@@ -182,7 +182,7 @@ class Card
      *
      * @ORM\Column(name="strength", type="smallint", nullable=true)
      *
-     * @Source(type="integer")
+     * @Skizzle(type="integer")
      */
     private $strength;
 
@@ -191,7 +191,7 @@ class Card
      *
      * @ORM\Column(name="military_bonus", type="string", nullable=true)
      *
-     * @Source(type="string")
+     * @Skizzle(type="string")
      */
     private $militaryBonus;
 
@@ -200,7 +200,7 @@ class Card
      *
      * @ORM\Column(name="political_bonus", type="string", nullable=true)
      *
-     * @Source(type="string")
+     * @Skizzle(type="string")
      */
     private $politicalBonus;
 
@@ -209,7 +209,7 @@ class Card
      *
      * @ORM\Column(name="strength_bonus", type="string", nullable=true)
      *
-     * @Source(type="string")
+     * @Skizzle(type="string")
      */
     private $strengthBonus;
 
@@ -218,7 +218,7 @@ class Card
      *
      * @ORM\Column(name="glory", type="smallint", nullable=true)
      *
-     * @Source(type="integer")
+     * @Skizzle(type="integer")
      */
     private $glory;
 
@@ -227,7 +227,7 @@ class Card
      *
      * @ORM\Column(name="honor", type="smallint", nullable=true)
      *
-     * @Source(type="integer")
+     * @Skizzle(type="integer")
      */
     private $honor;
 
@@ -236,7 +236,7 @@ class Card
      *
      * @ORM\Column(name="fate", type="smallint", nullable=true)
      *
-     * @Source(type="integer")
+     * @Skizzle(type="integer")
      */
     private $fate;
 
@@ -245,7 +245,7 @@ class Card
      *
      * @ORM\Column(name="influence_pool", type="smallint", nullable=true)
      *
-     * @Source(type="integer")
+     * @Skizzle(type="integer")
      */
     private $influencePool;
 
@@ -254,7 +254,7 @@ class Card
      *
      * @ORM\Column(name="influence_cost", type="smallint", nullable=true)
      *
-     * @Source(type="integer")
+     * @Skizzle(type="integer")
      */
     private $influenceCost;
 
@@ -263,7 +263,7 @@ class Card
      *
      * @ORM\Column(name="deck_limit", type="smallint", nullable=false)
      *
-     * @Source(type="integer")
+     * @Skizzle(type="integer")
      */
     private $deckLimit;
 
@@ -272,7 +272,7 @@ class Card
      *
      * @ORM\Column(name="role_restriction", type="string", nullable=true)
      *
-     * @Source(type="string")
+     * @Skizzle(type="string")
      */
     private $roleRestriction;
 

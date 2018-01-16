@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity;
 
-use Alsciende\SerializerBundle\Annotation\Source;
+use Alsciende\SerializerBundle\Annotation\Skizzle;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -13,7 +13,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
  * @ORM\Entity()
  * @ORM\Table(name="cycles")
  *
- * @Source()
+ * @Skizzle()
  *
  * @author Alsciende <alsciende@icloud.com>
  */
@@ -28,7 +28,7 @@ class Cycle
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      *
-     * @Source(type="string")
+     * @Skizzle(type="string")
      */
     private $id;
 
@@ -37,7 +37,7 @@ class Cycle
      *
      * @ORM\Column(name="name", type="string", length=255, unique=true)
      *
-     * @Source(type="string")
+     * @Skizzle(type="string")
      */
     private $name;
 
@@ -46,7 +46,7 @@ class Cycle
      *
      * @ORM\Column(name="position", type="integer")
      *
-     * @Source(type="integer")
+     * @Skizzle(type="integer")
      */
     private $position;
 
@@ -55,7 +55,7 @@ class Cycle
      *
      * @ORM\Column(name="size", type="integer", nullable=true)
      *
-     * @Source(type="integer")
+     * @Skizzle(type="integer")
      */
     private $size;
 

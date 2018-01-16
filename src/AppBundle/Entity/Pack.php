@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity;
 
-use Alsciende\SerializerBundle\Annotation\Source;
+use Alsciende\SerializerBundle\Annotation\Skizzle;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -15,7 +15,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
  * @ORM\Entity(repositoryClass="AppBundle\Repository\PackRepository")
  * @ORM\Table(name="packs")
  *
- * @Source()
+ * @Skizzle()
  *
  * @author Alsciende <alsciende@icloud.com>
  */
@@ -30,7 +30,7 @@ class Pack
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      *
-     * @Source(type="string")
+     * @Skizzle(type="string")
      */
     private $id;
 
@@ -39,7 +39,7 @@ class Pack
      *
      * @ORM\Column(name="name", type="string", length=255, unique=true)
      *
-     * @Source(type="string")
+     * @Skizzle(type="string")
      */
     private $name;
 
@@ -48,7 +48,7 @@ class Pack
      *
      * @ORM\Column(name="position", type="integer")
      *
-     * @Source(type="integer")
+     * @Skizzle(type="integer")
      */
     private $position;
 
@@ -57,7 +57,7 @@ class Pack
      *
      * @ORM\Column(name="size", type="integer", nullable=true)
      *
-     * @Source(type="integer")
+     * @Skizzle(type="integer")
      */
     private $size;
 
@@ -66,7 +66,7 @@ class Pack
      *
      * @ORM\Column(name="released_at", type="date", nullable=true)
      *
-     * @Source(type="date")
+     * @Skizzle(type="date")
      */
     private $releasedAt;
 
@@ -75,7 +75,7 @@ class Pack
      *
      * @ORM\Column(name="ffg_id", type="string", nullable=true)
      *
-     * @Source(type="string")
+     * @Skizzle(type="string")
      */
     private $ffgId;
 
@@ -85,7 +85,7 @@ class Pack
      * @ORM\ManyToOne(targetEntity="Cycle", inversedBy="packs", fetch="EAGER")
      * @ORM\JoinColumn(name="cycle_id", referencedColumnName="id", nullable=false)
      *
-     * @Source(type="association")
+     * @Skizzle(type="association")
      */
     private $cycle;
 

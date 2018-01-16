@@ -2,8 +2,8 @@
 
 namespace AppBundle\Command;
 
-use Alsciende\SerializerBundle\Serializer;
-use Alsciende\SerializerBundle\Scan\ScanningService;
+use Alsciende\SerializerBundle\Service\SerializerService;
+use Alsciende\SerializerBundle\Service\ScanningService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -21,7 +21,7 @@ class DataImportCommand extends Command
     /** @var ScanningService $scanningService */
     private $scanningService;
 
-    /** @var Serializer $serializer */
+    /** @var SerializerService $serializer */
     private $serializer;
 
     /** @var EntityManagerInterface $entityManager */
@@ -36,7 +36,7 @@ class DataImportCommand extends Command
     public function __construct (
         $name = null,
         ScanningService $scanningService,
-        Serializer $serializer,
+        SerializerService $serializer,
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator,
         $jsonDataPath
@@ -58,11 +58,11 @@ class DataImportCommand extends Command
 
     protected function execute (InputInterface $input, OutputInterface $output)
     {
-        $sources = $this->scanningService->findSources($this->jsonDataPath);
+        $sources = $this->scanningService->findSources();
 
         foreach ($sources as $source) {
             try {
-                $result = $this->serializer->importSource($source);
+                $result = $this->serializer->importSource($source, $this->jsonDataPath);
             } catch (\Exception $e) {
                 $output->writeln("<error>Error while importing source</error>");
                 echo $source->getPath();
