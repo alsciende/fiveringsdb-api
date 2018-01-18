@@ -26,7 +26,7 @@ class ClanRole
      * @ORM\ManyToOne(targetEntity="Card")
      * @ORM\JoinColumn(name="card_id", referencedColumnName="id")
      *
-     * @Skizzle(type="association")
+     * @Skizzle\Field(type="association")
      */
     private $card;
 
@@ -37,7 +37,7 @@ class ClanRole
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      *
-     * @Skizzle(type="string")
+     * @Skizzle\Field(type="string")
      */
     private $clan;
 

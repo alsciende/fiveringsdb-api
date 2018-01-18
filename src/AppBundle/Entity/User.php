@@ -27,7 +27,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", unique=true)
      *
-     * @Skizzle(type="string")
+     * @Skizzle\Field(type="string")
      */
     private $username;
 

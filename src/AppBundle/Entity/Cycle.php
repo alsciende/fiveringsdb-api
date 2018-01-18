@@ -28,7 +28,7 @@ class Cycle
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      *
-     * @Skizzle(type="string")
+     * @Skizzle\Field(type="string")
      */
     private $id;
 
@@ -37,7 +37,7 @@ class Cycle
      *
      * @ORM\Column(name="name", type="string", length=255, unique=true)
      *
-     * @Skizzle(type="string")
+     * @Skizzle\Field(type="string")
      */
     private $name;
 
@@ -46,7 +46,7 @@ class Cycle
      *
      * @ORM\Column(name="position", type="integer")
      *
-     * @Skizzle(type="integer")
+     * @Skizzle\Field(type="integer")
      */
     private $position;
 
@@ -55,7 +55,7 @@ class Cycle
      *
      * @ORM\Column(name="size", type="integer", nullable=true)
      *
-     * @Skizzle(type="integer")
+     * @Skizzle\Field(type="integer")
      */
     private $size;
 

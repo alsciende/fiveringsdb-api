@@ -30,7 +30,7 @@ class Pack
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      *
-     * @Skizzle(type="string")
+     * @Skizzle\Field(type="string")
      */
     private $id;
 
@@ -39,7 +39,7 @@ class Pack
      *
      * @ORM\Column(name="name", type="string", length=255, unique=true)
      *
-     * @Skizzle(type="string")
+     * @Skizzle\Field(type="string")
      */
     private $name;
 
@@ -48,7 +48,7 @@ class Pack
      *
      * @ORM\Column(name="position", type="integer")
      *
-     * @Skizzle(type="integer")
+     * @Skizzle\Field(type="integer")
      */
     private $position;
 
@@ -57,7 +57,7 @@ class Pack
      *
      * @ORM\Column(name="size", type="integer", nullable=true)
      *
-     * @Skizzle(type="integer")
+     * @Skizzle\Field(type="integer")
      */
     private $size;
 
@@ -66,7 +66,7 @@ class Pack
      *
      * @ORM\Column(name="released_at", type="date", nullable=true)
      *
-     * @Skizzle(type="date")
+     * @Skizzle\Field(type="date")
      */
     private $releasedAt;
 
@@ -75,7 +75,7 @@ class Pack
      *
      * @ORM\Column(name="ffg_id", type="string", nullable=true)
      *
-     * @Skizzle(type="string")
+     * @Skizzle\Field(type="string")
      */
     private $ffgId;
 
@@ -85,7 +85,7 @@ class Pack
      * @ORM\ManyToOne(targetEntity="Cycle", inversedBy="packs", fetch="EAGER")
      * @ORM\JoinColumn(name="cycle_id", referencedColumnName="id", nullable=false)
      *
-     * @Skizzle(type="association")
+     * @Skizzle\Field(type="association")
      */
     private $cycle;
 

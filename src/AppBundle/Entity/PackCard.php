@@ -26,7 +26,7 @@ class PackCard implements CardSlotInterface
      *
      * @ORM\Column(name="quantity", type="integer", nullable=false)
      *
-     * @Skizzle(type="integer")
+     * @Skizzle\Field(type="integer")
      */
     private $quantity;
 
@@ -35,7 +35,7 @@ class PackCard implements CardSlotInterface
      *
      * @ORM\Column(name="position", type="string", nullable=false)
      *
-     * @Skizzle(type="string")
+     * @Skizzle\Field(type="string")
      */
     private $position;
 
@@ -44,7 +44,7 @@ class PackCard implements CardSlotInterface
      *
      * @ORM\Column(name="illustrator", type="string", nullable=true)
      *
-     * @Skizzle(type="string")
+     * @Skizzle\Field(type="string")
      */
     private $illustrator;
 
@@ -53,7 +53,7 @@ class PackCard implements CardSlotInterface
      *
      * @ORM\Column(name="flavor", type="string", nullable=true)
      *
-     * @Skizzle(type="string")
+     * @Skizzle\Field(type="string")
      */
     private $flavor;
 
@@ -62,7 +62,7 @@ class PackCard implements CardSlotInterface
      *
      * @ORM\Column(name="image_url", type="string", nullable=true)
      *
-     * @Skizzle(type="string")
+     * @Skizzle\Field(type="string")
      */
     private $imageUrl;
 
@@ -73,7 +73,7 @@ class PackCard implements CardSlotInterface
      * @ORM\ManyToOne(targetEntity="Card", inversedBy="packCards", fetch="EAGER")
      * @ORM\JoinColumn(name="card_id", referencedColumnName="id")
      *
-     * @Skizzle(type="association")
+     * @Skizzle\Field(type="association")
      */
     private $card;
 
@@ -84,7 +84,7 @@ class PackCard implements CardSlotInterface
      * @ORM\ManyToOne(targetEntity="Pack", inversedBy="cards", fetch="EAGER")
      * @ORM\JoinColumn(name="pack_id", referencedColumnName="id")
      *
-     * @Skizzle(type="association")
+     * @Skizzle\Field(type="association")
      */
     private $pack;
 

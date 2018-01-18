@@ -25,7 +25,7 @@ class Review
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      *
-     * @Skizzle(type="integer")
+     * @Skizzle\Field(type="integer")
      */
     private $id;
 
@@ -34,7 +34,7 @@ class Review
      *
      * @ORM\Column(name="text", type="text", nullable=false)
      *
-     * @Skizzle(type="string")
+     * @Skizzle\Field(type="string")
      */
     private $text;
 
@@ -44,7 +44,7 @@ class Review
      * @ORM\ManyToOne(targetEntity="Card", inversedBy="reviews")
      * @ORM\JoinColumn(name="card_id", referencedColumnName="id")
      *
-     * @Skizzle(type="association")
+     * @Skizzle\Field(type="association")
      */
     private $card;
 
@@ -54,7 +54,7 @@ class Review
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      *
-     * @Skizzle(type="association")
+     * @Skizzle\Field(type="association")
      */
     private $user;
 

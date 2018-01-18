@@ -24,7 +24,7 @@ class Label
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      *
-     * @Skizzle(type="string")
+     * @Skizzle\Field(type="string")
      */
     private $id;
 
@@ -33,7 +33,7 @@ class Label
      *
      * @ORM\Column(name="value", type="string", length=255, unique=false)
      *
-     * @Skizzle(type="string")
+     * @Skizzle\Field(type="string")
      */
     private $value;
 
@@ -42,7 +42,7 @@ class Label
      *
      * @ORM\Column(name="lang", type="string", length=10, unique=false)
      *
-     * @Skizzle(type="string")
+     * @Skizzle\Field(type="string")
      */
     private $lang;
 
