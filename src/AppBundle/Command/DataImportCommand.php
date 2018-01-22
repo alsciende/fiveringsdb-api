@@ -3,7 +3,7 @@
 namespace AppBundle\Command;
 
 use Alsciende\SerializerBundle\Model\Source;
-use Alsciende\SerializerBundle\Service\Importer;
+use Alsciende\SerializerBundle\Service\ImportingService;
 use Alsciende\SerializerBundle\Service\MergingService;
 use Alsciende\SerializerBundle\Service\ScanningService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,7 +24,7 @@ class DataImportCommand extends Command
     /** @var ScanningService $scanningService */
     private $scanningService;
 
-    /** @var Importer $importer */
+    /** @var ImportingService $importer */
     private $importer;
 
     /** @var MergingService $merging */
@@ -45,7 +45,7 @@ class DataImportCommand extends Command
     public function __construct (
         $name = null,
         ScanningService $scanningService,
-        Importer $importer,
+        ImportingService $importer,
         MergingService $merging,
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator,
