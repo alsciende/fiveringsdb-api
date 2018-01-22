@@ -55,8 +55,8 @@
   },
   "repositories": [
     {
-      "type": "vcs",
-      "url": "git://github.com/alsciende/serializer-bundle.git"
+      "type": "path",
+      "url": "../serializer-bundle"
     }
   ],
   "scripts": {

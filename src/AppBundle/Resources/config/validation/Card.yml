@@ -15,16 +15,19 @@ AppBundle\Entity\Card:
             - Type: string
             - Choice:
                 choices: [crab, crane, dragon, lion, neutral, phoenix, scorpion, unicorn]
+                strict: true
                 message: Not a valid clan.
         type:
             - Type: string
             - Choice:
                 choices: [attachment, character, event, holding, province, role, stronghold]
+                strict: true
                 message: Not a valid type.
         element:
             - Type: string
             - Choice:
                 choices: [air, earth, fire, void, water]
+                strict: true
                 message: Not a valid element.
             - Expression:
                 expression: "this.getType() in ['province'] or value === null"
@@ -33,11 +36,13 @@ AppBundle\Entity\Card:
             - Type: string
             - Choice:
                 choices: [conflict, dynasty, province, role]
+                strict: true
                 message: Not a valid side.
         roleRestriction:
             - Type: string
             - Choice:
                 choices: [keeper, seeker, air, earth, fire, void, water]
+                strict: true
                 message: Not a valid role restriction.
         cost:
             - Type: integer

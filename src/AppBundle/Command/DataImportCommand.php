@@ -2,9 +2,12 @@
 
 namespace AppBundle\Command;
 
-use Alsciende\SerializerBundle\Service\SerializerService;
+use Alsciende\SerializerBundle\Model\Source;
+use Alsciende\SerializerBundle\Service\Importer;
+use Alsciende\SerializerBundle\Service\MergingService;
 use Alsciende\SerializerBundle\Service\ScanningService;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -21,8 +24,11 @@ class DataImportCommand extends Command
     /** @var ScanningService $scanningService */
     private $scanningService;
 
-    /** @var SerializerService $serializer */
-    private $serializer;
+    /** @var Importer $importer */
+    private $importer;
+
+    /** @var MergingService $merging */
+    private $merging;
 
     /** @var EntityManagerInterface $entityManager */
     private $entityManager;
@@ -30,23 +36,33 @@ class DataImportCommand extends Command
     /** @var ValidatorInterface $validator */
     private $validator;
 
+    /** @var LoggerInterface $logger */
+    private $logger;
+
     /** @var string $jsonDataPath */
     private $jsonDataPath;
 
     public function __construct (
         $name = null,
         ScanningService $scanningService,
-        SerializerService $serializer,
+        Importer $importer,
+        MergingService $merging,
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator,
+        LoggerInterface $logger,
         $jsonDataPath
     ) {
         parent::__construct($name);
         $this->scanningService = $scanningService;
-        $this->serializer = $serializer;
+        $this->importer = $importer;
+        $this->merging = $merging;
         $this->entityManager = $entityManager;
         $this->validator = $validator;
+        $this->logger = $logger;
         $this->jsonDataPath = $jsonDataPath;
+
+        $this->importer->setLogger($logger);
+        $this->merging->setLogger($logger);
     }
 
     protected function configure ()
@@ -60,27 +76,34 @@ class DataImportCommand extends Command
     {
         $sources = $this->scanningService->findSources();
 
-        foreach ($sources as $source) {
-            try {
-                $result = $this->serializer->importSource($source, $this->jsonDataPath);
-            } catch (\Exception $e) {
-                $output->writeln("<error>Error while importing source</error>");
-                echo $source->getPath();
-                throw $e;
-            }
-            foreach ($result as $imported) {
-                $entity = $imported['entity'];
-                $errors = $this->validator->validate($entity);
-                if (count($errors) > 0) {
-                    /** @var ConstraintViolationInterface $error */
-                    foreach ($errors as $error) {
-                        $output->writeln(sprintf('<error>Error while importing %s.</error>', $error->getRoot()));
-                    }
-                    throw new \Exception((string) $errors);
+        foreach($sources as $source) {
+            $this->import($source);
+        }
+    }
+
+    private function import(Source $source)
+    {
+        $this->entityManager->getRepository($source->getClassName())->findAll();
+
+        $fragments = $this->importer->importSource($source, $this->jsonDataPath);
+
+        foreach ($fragments as $fragment) {
+            $errors = $this->validator->validate($fragment->getEntity());
+            if (count($errors) > 0) {
+                /** @var ConstraintViolationInterface $error */
+                foreach ($errors as $error) {
+                    $this->logger->error('Validation error', [
+                        "path" => $fragment->getBlock()->getPath(),
+                        "data" => $fragment->getData(),
+                        "error" => $error->getMessage(),
+                    ]);
                 }
+                throw new \Exception((string) $errors);
             }
 
-            $this->entityManager->flush();
+            $this->merging->merge($fragment);
         }
+
+        $this->entityManager->flush();
     }
 }
