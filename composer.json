@@ -40,7 +40,7 @@
     "nelmio/cors-bundle": "^1.5",
     "curl/curl": "^1.8",
     "beberlei/DoctrineExtensions": "^1.0",
-    "alsciende/serializer-bundle": "dev-master"
+    "alsciende/serializer-bundle": "^1.0"
   },
   "require-dev": {
     "symfony/var-dumper": "^4.0",
