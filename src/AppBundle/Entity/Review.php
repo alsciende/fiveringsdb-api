@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity;
 
-use Alsciende\SerializerBundle\Annotation\Source;
+use Alsciende\SerializerBundle\Annotation\Skizzle;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
@@ -25,7 +25,7 @@ class Review
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      *
-     * @Source(type="integer")
+     * @Skizzle\Field(type="integer")
      */
     private $id;
 
@@ -34,7 +34,7 @@ class Review
      *
      * @ORM\Column(name="text", type="text", nullable=false)
      *
-     * @Source(type="string")
+     * @Skizzle\Field(type="string")
      */
     private $text;
 
@@ -44,7 +44,7 @@ class Review
      * @ORM\ManyToOne(targetEntity="Card", inversedBy="reviews")
      * @ORM\JoinColumn(name="card_id", referencedColumnName="id")
      *
-     * @Source(type="association")
+     * @Skizzle\Field(type="association")
      */
     private $card;
 
@@ -54,7 +54,7 @@ class Review
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      *
-     * @Source(type="association")
+     * @Skizzle\Field(type="association")
      */
     private $user;
 

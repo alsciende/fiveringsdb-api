@@ -131,14 +131,18 @@ class StrainController extends AbstractApiController
             throw $this->createAccessDeniedException();
         }
 
+        $strain->clearHead();
+
         foreach ($strain->getDecks() as $deck) {
             if ($deck->isPublished()) {
                 $deck->setStrain(null);
+            } else {
+                $entityManager->remove($deck);
             }
         }
 
-        $strain->clearHead();
         $entityManager->flush();
+
         $entityManager->remove($strain);
         $entityManager->flush();
 

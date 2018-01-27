@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity;
 
-use Alsciende\SerializerBundle\Annotation\Source;
+use Alsciende\SerializerBundle\Annotation\Skizzle;
 use AppBundle\Model\CardSlotInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -13,7 +13,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
  * @ORM\Entity()
  * @ORM\Table(name="pack_cards")
  *
- * @Source(break="pack_id")
+ * @Skizzle(break="pack_id")
  *
  * @author Alsciende <alsciende@icloud.com>
  */
@@ -26,7 +26,7 @@ class PackCard implements CardSlotInterface
      *
      * @ORM\Column(name="quantity", type="integer", nullable=false)
      *
-     * @Source(type="integer")
+     * @Skizzle\Field(type="integer")
      */
     private $quantity;
 
@@ -35,7 +35,7 @@ class PackCard implements CardSlotInterface
      *
      * @ORM\Column(name="position", type="string", nullable=false)
      *
-     * @Source(type="string")
+     * @Skizzle\Field(type="string")
      */
     private $position;
 
@@ -44,7 +44,7 @@ class PackCard implements CardSlotInterface
      *
      * @ORM\Column(name="illustrator", type="string", nullable=true)
      *
-     * @Source(type="string")
+     * @Skizzle\Field(type="string")
      */
     private $illustrator;
 
@@ -53,7 +53,7 @@ class PackCard implements CardSlotInterface
      *
      * @ORM\Column(name="flavor", type="string", nullable=true)
      *
-     * @Source(type="string")
+     * @Skizzle\Field(type="string")
      */
     private $flavor;
 
@@ -62,7 +62,7 @@ class PackCard implements CardSlotInterface
      *
      * @ORM\Column(name="image_url", type="string", nullable=true)
      *
-     * @Source(type="string")
+     * @Skizzle\Field(type="string")
      */
     private $imageUrl;
 
@@ -73,7 +73,7 @@ class PackCard implements CardSlotInterface
      * @ORM\ManyToOne(targetEntity="Card", inversedBy="packCards", fetch="EAGER")
      * @ORM\JoinColumn(name="card_id", referencedColumnName="id")
      *
-     * @Source(type="association")
+     * @Skizzle\Field(type="association")
      */
     private $card;
 
@@ -84,7 +84,7 @@ class PackCard implements CardSlotInterface
      * @ORM\ManyToOne(targetEntity="Pack", inversedBy="cards", fetch="EAGER")
      * @ORM\JoinColumn(name="pack_id", referencedColumnName="id")
      *
-     * @Source(type="association")
+     * @Skizzle\Field(type="association")
      */
     private $pack;
 

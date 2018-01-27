@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity;
 
-use Alsciende\SerializerBundle\Annotation\Source;
+use Alsciende\SerializerBundle\Annotation\Skizzle;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  *          @ORM\Index(columns={"lang"})
  *     })
  *
- * @Source(break="lang")
+ * @Skizzle(break="lang")
  *
  * @author Alsciende <alsciende@icloud.com>
  */
@@ -24,7 +24,7 @@ class Label
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      *
-     * @Source(type="string")
+     * @Skizzle\Field(type="string")
      */
     private $id;
 
@@ -33,7 +33,7 @@ class Label
      *
      * @ORM\Column(name="value", type="string", length=255, unique=false)
      *
-     * @Source(type="string")
+     * @Skizzle\Field(type="string")
      */
     private $value;
 
@@ -42,7 +42,7 @@ class Label
      *
      * @ORM\Column(name="lang", type="string", length=10, unique=false)
      *
-     * @Source(type="string")
+     * @Skizzle\Field(type="string")
      */
     private $lang;
 

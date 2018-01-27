@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity;
 
-use Alsciende\SerializerBundle\Annotation\Source;
+use Alsciende\SerializerBundle\Annotation\Skizzle;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -27,7 +27,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", unique=true)
      *
-     * @Source(type="string")
+     * @Skizzle\Field(type="string")
      */
     private $username;
 
