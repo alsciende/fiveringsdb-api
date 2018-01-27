@@ -88,6 +88,9 @@
     "branch-alias": null
   },
   "config": {
+    "platform": {
+      "php": "7.1.8."
+    },
     "sort-packages": true
   }
 }
