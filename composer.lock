@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "308337ce4c1a2452177b0209c27e2705",
+    "content-hash": "44453a8c75ae8a7951466b8ca8726619",
     "packages": [
         {
             "name": "alsciende/serializer-bundle",
-            "version": "v1.1.0",
+            "version": "V1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Alsciende/serializer-bundle.git",
-                "reference": "95503ce8694fd608cbe05b6bce6ef756b7da1baf"
+                "reference": "19cf979d5535dbce360088a3534eeecf35446d55"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Alsciende/serializer-bundle/zipball/95503ce8694fd608cbe05b6bce6ef756b7da1baf",
-                "reference": "95503ce8694fd608cbe05b6bce6ef756b7da1baf",
+                "url": "https://api.github.com/repos/Alsciende/serializer-bundle/zipball/19cf979d5535dbce360088a3534eeecf35446d55",
+                "reference": "19cf979d5535dbce360088a3534eeecf35446d55",
                 "shasum": ""
             },
             "require": {
@@ -53,10 +53,10 @@
             ],
             "description": "Alsciende SerializerBundle",
             "support": {
-                "source": "https://github.com/Alsciende/serializer-bundle/tree/v1.1.0",
+                "source": "https://github.com/Alsciende/serializer-bundle/tree/V1.1.1",
                 "issues": "https://github.com/Alsciende/serializer-bundle/issues"
             },
-            "time": "2018-01-27T22:14:48+00:00"
+            "time": "2018-01-27T22:52:30+00:00"
         },
         {
             "name": "beberlei/DoctrineExtensions",
