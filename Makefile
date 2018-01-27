@@ -60,6 +60,7 @@ db: vendor
 fixtures: db
 	@echo
 	$(CONSOLE_BIN) doctrine:fixtures:load --append
+	$(CONSOLE_BIN) app:data:import
 
 phpstan: export SYMFONY_ENV = test
 phpstan: vendor
