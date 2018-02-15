@@ -22,18 +22,18 @@ class Token
     private $accessToken;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="expires_in", nullable=false)
-     */
-    private $expiresIn;
-
-    /**
      * @var string
      *
      * @ORM\Column(type="string", name="token_type", nullable=false)
      */
     private $tokenType;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", nullable=false)
+     */
+    private $expiresAt;
 
     /**
      * @var string|null
@@ -57,29 +57,20 @@ class Token
     private $createdAt;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", nullable=false)
-     */
-    private $expiresAt;
-
-    /**
      * @var User
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      */
     private $user;
 
-    public function __construct(string $accessToken, int $expiresIn, string $tokenType, string $scope = null, string $refreshToken = null)
+    public function __construct(string $accessToken, string $tokenType, \DateTime $expiresAt, string $scope = null, string $refreshToken = null)
     {
         $this->accessToken = $accessToken;
-        $this->expiresIn = $expiresIn;
         $this->tokenType = $tokenType;
+        $this->expiresAt = $expiresAt;
         $this->scope = $scope;
         $this->refreshToken = $refreshToken;
         $this->createdAt = new \DateTime();
-        $this->expiresAt = new \DateTime();
-        $this->expiresAt->add(\DateInterval::createFromDateString($expiresIn . ' seconds'));
     }
 
     /**
@@ -88,14 +79,6 @@ class Token
     public function getAccessToken(): string
     {
         return $this->accessToken;
-    }
-
-    /**
-     * @return int
-     */
-    public function getExpiresIn(): int
-    {
-        return $this->expiresIn;
     }
 
     /**

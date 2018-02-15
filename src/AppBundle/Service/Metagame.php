@@ -74,21 +74,11 @@ class Metagame
     }
 
     /**
-     * @param string $code
+     * @param Response $response
      * @return array
      */
-    public function getTokenData(string $code): array
+    private function getDecodedJsonData(Response $response)
     {
-        $response = $this->get(
-            'oauth/v2/token', [
-                'client_id'     => $this->parameters['client_id'],
-                'client_secret' => $this->parameters['client_secret'],
-                'redirect_uri'  => $this->parameters['redirect_uri'],
-                'grant_type'    => 'authorization_code',
-                'code'          => $code,
-            ]
-        );
-
         if ($response->getStatusCode() !== 200) {
             throw new AccessDeniedException($response->getReasonPhrase());
         }
@@ -99,7 +89,33 @@ class Metagame
             return $jsonDecode;
         }
 
-        throw new \LogicException('Token data response did not decode to an array: ' . $response->getBody());
+        throw new \LogicException('Data response did not decode to an array: ' . $response->getBody());
+    }
+
+    /**
+     * @param string $code
+     * @return array
+     */
+    public function exchangeAuthorizationCode(string $code): array
+    {
+        return $this->getDecodedJsonData($this->get(
+            'oauth/v2/token', [
+                'client_id'     => $this->parameters['client_id'],
+                'client_secret' => $this->parameters['client_secret'],
+                'redirect_uri'  => $this->parameters['redirect_uri'],
+                'grant_type'    => 'authorization_code',
+                'code'          => $code,
+            ]
+        ));
+    }
+
+    /**
+     * @param Token $token
+     * @return array
+     */
+    public function getTokenData(Token $token): array
+    {
+        return $this->getDecodedJsonData($this->get('api/tokens/me', [], $token));
     }
 
     /**
@@ -108,19 +124,7 @@ class Metagame
      */
     public function getUserData(Token $token): array
     {
-        $response = $this->get('api/users/me', [], $token);
-
-        if ($response->getStatusCode() !== 200) {
-            throw new AccessDeniedException((string) $response->getBody());
-        }
-
-        $jsonDecode = json_decode((string) $response->getBody(), true);
-
-        if (is_array($jsonDecode)) {
-            return $jsonDecode;
-        }
-
-        throw new \LogicException('User data response did not decode to an array: ' . $response->getBody());
+        return $this->getDecodedJsonData($this->get('api/users/me', [], $token));
     }
 
     public function get(string $url, array $parameters = [], Token $token = null): Response

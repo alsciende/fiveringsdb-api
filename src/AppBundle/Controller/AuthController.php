@@ -58,7 +58,7 @@ class AuthController extends Controller
             throw new \Exception("State does not match.");
         }
 
-        $tokenData = $metagame->getTokenData($request->get('code'));
+        $tokenData = $metagame->exchangeAuthorizationCode($request->get('code'));
         $logger->debug('tokenData', $tokenData);
         $token = $tokenManager->createToken($tokenData);
 
