@@ -51,12 +51,22 @@ class TokenManager
      */
     public function createToken (array $data): ?Token
     {
+        if (!isset($data['expires_at'])) {
+            $expiresAt = new \DateTime();
+
+            if (isset($data['expires_in'])) {
+                $expiresAt->add(\DateInterval::createFromDateString($data['expires_in'] . ' seconds'));
+            }
+
+            $data['expires_at'] = $expiresAt;
+        }
+
         return new Token(
             $data['access_token'],
-            $data['expires_in'],
             $data['token_type'],
-            $data['scope'],
-            $data['refresh_token']
+            $data['expires_at'],
+            $data['scope'] ?? null,
+            $data['refresh_token'] ?? null
         );
     }
 

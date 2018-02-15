@@ -3,7 +3,9 @@
 namespace AppBundle\Security;
 
 use AppBundle\Entity\Token;
+use AppBundle\Service\Metagame;
 use AppBundle\Service\TokenManager;
+use AppBundle\Service\UserManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,9 +27,17 @@ class OauthAuthenticator extends AbstractGuardAuthenticator
     /** @var TokenManager $tokenManager */
     private $tokenManager;
 
-    function __construct(TokenManager $tokenManager)
+    /** @var UserManager $userManager */
+    private $userManager;
+
+    /** @var Metagame $metagame */
+    private $metagame;
+
+    function __construct(TokenManager $tokenManager, UserManager $userManager, Metagame $metagame)
     {
         $this->tokenManager = $tokenManager;
+        $this->userManager = $userManager;
+        $this->metagame = $metagame;
     }
 
     /**
@@ -53,11 +63,17 @@ class OauthAuthenticator extends AbstractGuardAuthenticator
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
         $token = $this->tokenManager->findTokenBy($credentials);
-        if ($token instanceof Token && $token->getExpiresAt() > new \DateTime()) {
-            return $token->getUser();
+
+        if (!$token instanceof Token || $token->getExpiresAt() < new \DateTime()) {
+            $tokenData = $this->metagame->getTokenData(new Token($credentials['accessToken'], $credentials['tokenType'], new \DateTime()));
+            $tokenData['token_type'] = $credentials['tokenType'];
+            $token = new Token($tokenData['token'], $credentials['tokenType'], new \DateTime('@'.$tokenData['expires_at']));
+            $user = $this->userManager->findOrCreateUser($tokenData['user']);
+            $token->setUser($user);
+            $this->tokenManager->updateToken($token);
         }
 
-        return null;
+        return $token->getUser();
     }
 
     public function checkCredentials($credentials, UserInterface $user)
