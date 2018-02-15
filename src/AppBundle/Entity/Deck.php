@@ -465,7 +465,7 @@ class Deck
     /**
      * @param \DateTime $publishedAt
      *
-     * @return self
+     * @return $this
      */
     public function setPublishedAt (\DateTime $publishedAt = null): self
     {

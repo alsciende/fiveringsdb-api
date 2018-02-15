@@ -5,7 +5,12 @@ namespace AppBundle\Service;
 use AppBundle\Behavior\Service\GetRepositoryTrait;
 use AppBundle\Entity\Token;
 use AppBundle\Entity\User;
+use AppBundle\Form\Type\TokenType;
 use Doctrine\ORM\EntityManagerInterface;
+use JMS\Serializer\ArrayTransformerInterface;
+use JMS\Serializer\SerializerInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Form\FormFactory;
 
 /**
  * @author Alsciende <alsciende@icloud.com>
@@ -14,36 +19,50 @@ class TokenManager
 {
     use GetRepositoryTrait;
 
-    /** @var EntityManagerInterface */
+    /** @var EntityManagerInterface $entityManager */
     private $entityManager;
 
-    /** @var int */
-    private $ttl;
-
-    public function __construct (EntityManagerInterface $entityManager, int $ttl)
+    public function __construct (EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
-        $this->ttl = $ttl;
     }
 
+    /**
+     * @param string $token
+     * @return Token|null
+     */
     public function findToken (string $token): ?Token
     {
         return $this->entityManager->find(Token::class, $token);
     }
 
-    public function createToken (string $value, User $user): Token
+    /**
+     * @param array $criteria
+     * @return Token|null
+     */
+    public function findTokenBy(array $criteria): ?Token
     {
-        $token = new Token();
-        $token->setId($value);
-        $token->setUser($user);
-        $token->setCreatedAt(new \DateTime());
-        $expiresAt = clone($token->getCreatedAt());
-        $expiresAt->add(\DateInterval::createFromDateString($this->ttl . ' seconds'));
-        $token->setExpiresAt($expiresAt);
-
-        return $token;
+        return $this->entityManager->getRepository(Token::class)->findOneBy($criteria);
     }
 
+    /**
+     * @param array $data
+     * @return Token|null
+     */
+    public function createToken (array $data): ?Token
+    {
+        return new Token(
+            $data['access_token'],
+            $data['expires_in'],
+            $data['token_type'],
+            $data['scope'],
+            $data['refresh_token']
+        );
+    }
+
+    /**
+     * @param Token $token
+     */
     public function updateToken (Token $token)
     {
         $this->entityManager->persist($token);

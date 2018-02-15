@@ -57,7 +57,7 @@ class Label
     /**
      * @param string $id
      *
-     * @return self
+     * @return $this
      */
     public function setId (string $id): self
     {
@@ -77,7 +77,7 @@ class Label
     /**
      * @param string $value
      *
-     * @return self
+     * @return $this
      */
     public function setValue (string $value): self
     {
@@ -97,7 +97,7 @@ class Label
     /**
      * @param string $lang
      *
-     * @return self
+     * @return $this
      */
     public function setLang (string $lang): self
     {
