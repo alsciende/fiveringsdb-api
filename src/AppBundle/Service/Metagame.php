@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Entity\Token;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\MessageFormatter;
@@ -9,6 +10,7 @@ use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Service to communicate with the Metagame server
@@ -17,8 +19,8 @@ use Monolog\Logger;
  */
 class Metagame
 {
-    /** @var string */
-    private $baseUri;
+    /** @var array */
+    private $parameters;
 
     /** @var string */
     private $logsDir;
@@ -29,15 +31,15 @@ class Metagame
     /** @var boolean */
     private $debug;
 
-    public function __construct ($baseUri, $logsDir, $environment, $debug)
+    public function __construct($parameters, $logsDir, $environment, $debug)
     {
+        $this->parameters = $parameters;
         $this->logsDir = $logsDir;
-        $this->baseUri = $baseUri;
         $this->environment = $environment;
         $this->debug = $debug;
     }
 
-    private function getDebugStack (): HandlerStack
+    private function getDebugStack(): HandlerStack
     {
         $logger = new Logger('guzzle');
         $logger->pushHandler(
@@ -54,24 +56,74 @@ class Metagame
         return $stack;
     }
 
-    private function getClient (string $token = null): Client
+    private function getClient(Token $token = null): Client
     {
         $options = [
-            'base_uri' => $this->baseUri,
+            'base_uri' => $this->parameters['base_uri'],
         ];
 
         if ($this->debug) {
             $options['handler'] = $this->getDebugStack();
         }
 
-        if ($token !== null) {
-            $options['headers']['Authorization'] = "Bearer $token";
+        if ($token instanceof Token) {
+            $options['headers']['Authorization'] = $token->toHeader();
         }
 
         return new Client($options);
     }
 
-    public function get ($url, $parameters = [], $token = null): Response
+    /**
+     * @param string $code
+     * @return array
+     */
+    public function getTokenData(string $code): array
+    {
+        $response = $this->get(
+            'oauth/v2/token', [
+                'client_id'     => $this->parameters['client_id'],
+                'client_secret' => $this->parameters['client_secret'],
+                'redirect_uri'  => $this->parameters['redirect_uri'],
+                'grant_type'    => 'authorization_code',
+                'code'          => $code,
+            ]
+        );
+
+        if ($response->getStatusCode() !== 200) {
+            throw new AccessDeniedException($response->getReasonPhrase());
+        }
+
+        $jsonDecode = json_decode((string) $response->getBody(), true);
+
+        if (is_array($jsonDecode)) {
+            return $jsonDecode;
+        }
+
+        throw new \LogicException('Token data response did not decode to an array: ' . $response->getBody());
+    }
+
+    /**
+     * @param Token $token
+     * @return array
+     */
+    public function getUserData(Token $token): array
+    {
+        $response = $this->get('api/users/me', [], $token);
+
+        if ($response->getStatusCode() !== 200) {
+            throw new AccessDeniedException((string) $response->getBody());
+        }
+
+        $jsonDecode = json_decode((string) $response->getBody(), true);
+
+        if (is_array($jsonDecode)) {
+            return $jsonDecode;
+        }
+
+        throw new \LogicException('User data response did not decode to an array: ' . $response->getBody());
+    }
+
+    public function get(string $url, array $parameters = [], Token $token = null): Response
     {
         return $this->getClient($token)->request(
             'GET', $url, [
@@ -80,7 +132,7 @@ class Metagame
         );
     }
 
-    public function post ($url, $parameters = [], $token = null): Response
+    public function post(string $url, array $parameters = [], Token $token = null): Response
     {
         return $this->getClient($token)->request(
             'POST', $url, [

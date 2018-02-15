@@ -1,5 +1,5 @@
 AppBundle\Entity\Token:
     properties:
-        id:
+        accessToken:
             - Type: string
             - NotBlank: ~

@@ -2,7 +2,12 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Token;
 use AppBundle\Service\Metagame;
+use AppBundle\Service\TokenManager;
+use AppBundle\Service\UserManager;
+use JMS\Serializer\ArrayTransformerInterface;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -10,7 +15,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * This controller is not part of the API. Responses are HTML pages.
@@ -23,18 +27,18 @@ class AuthController extends Controller
     /**
      * @Route("/init")
      * @Method("GET")
-     * @Template("AppBundle:Auth:init.html.twig")
+     * @Template("Auth/init.html.twig")
      */
-    public function initAction (Request $request)
+    public function initAction(Request $request)
     {
-        $metagameBaseUri = $this->getParameter('metagame_base_uri');
+        $parameters = $this->getParameter('metagame');
 
         return [
-            'uri'   => $metagameBaseUri . 'oauth/v2/auth',
+            'uri'   => $parameters['base_uri'] . 'oauth/v2/auth',
             'query' => http_build_query(
                 [
-                    'client_id'     => $this->getParameter('metagame_client_id'),
-                    'redirect_uri'  => $this->getParameter('metagame_redirect_uri'),
+                    'client_id'     => $parameters['client_id'],
+                    'redirect_uri'  => $parameters['redirect_uri'],
                     'response_type' => 'code',
                     'state'         => $request->cookies->get('PHPSESSID'),
                 ]
@@ -45,43 +49,44 @@ class AuthController extends Controller
     /**
      * @Route("/code")
      * @Method("GET")
-     * @Template("AppBundle:Auth:code.html.twig")
+     * @Template("Auth/code.html.twig")
      */
-    public function codeAction (Request $request, Metagame $metagame)
+    public function codeAction(Request $request, Metagame $metagame, LoggerInterface $logger, TokenManager $tokenManager, UserManager $userManager, ArrayTransformerInterface $arrayTransformer)
     {
         // check the state
         if ($request->get('state') !== $request->cookies->get('PHPSESSID')) {
             throw new \Exception("State does not match.");
         }
 
-        // receive the authorization code
-        $code = $request->get('code');
+        $tokenData = $metagame->getTokenData($request->get('code'));
+        $logger->debug('tokenData', $tokenData);
+        $token = $tokenManager->createToken($tokenData);
 
-        // request the access-token to the oauth server
-        $res = $metagame->get(
-            'oauth/v2/token', [
-                'client_id'     => $this->getParameter('metagame_client_id'),
-                'client_secret' => $this->getParameter('metagame_client_secret'),
-                'redirect_uri'  => $this->getParameter('metagame_redirect_uri'),
-                'grant_type'    => 'authorization_code',
-                'code'          => $code,
-            ]
-        );
-        if ($res->getStatusCode() !== 200) {
-            throw new \Exception($res->getReasonPhrase());
+        if ($token instanceof Token) {
+            $logger->debug('access_token: ' . $token->getAccessToken());
+            $user = $userManager->findOrCreateUser($metagame->getUserData($token));
+            $token->setUser($user);
+
+            $userManager->updateUser($user);
+            $tokenManager->updateToken($token);
+
+            return [
+                'message' => [
+                    'token' => $arrayTransformer->toArray($token),
+                    'user'  => $arrayTransformer->toArray($token->getUser()),
+                ],
+                'origin'  => $this->getParameter('front_url'),
+            ];
         }
 
-        return [
-            'message' => json_decode($res->getBody(), true),
-            'origin'  => $this->getParameter('front_url'),
-        ];
+        throw $this->createAccessDeniedException();
     }
 
     /**
      * @Route("/refresh")
      * @Method("POST")
      */
-    public function refreshAction (Request $request, Metagame $metagame)
+    public function refreshAction(Request $request, Metagame $metagame)
     {
         $form = $this->createFormBuilder([])->add('refresh_token', TextType::class)->getForm();
         $form->submit(json_decode($request->getContent(), true), true);

@@ -20,10 +20,12 @@ use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
  */
 class OauthAuthenticator extends AbstractGuardAuthenticator
 {
+    const HEADER = 'Authorization';
+
     /** @var TokenManager $tokenManager */
     private $tokenManager;
 
-    function __construct (TokenManager $tokenManager)
+    function __construct(TokenManager $tokenManager)
     {
         $this->tokenManager = $tokenManager;
     }
@@ -33,30 +35,24 @@ class OauthAuthenticator extends AbstractGuardAuthenticator
      */
     public function supports(Request $request)
     {
-        return $request->headers->has('Authorization');
+        return $request->headers->has(self::HEADER);
     }
 
     /**
      * Called on every request. Return whatever credentials you want,
      * or null to stop authentication.
      */
-    public function getCredentials (Request $request)
+    public function getCredentials(Request $request)
     {
-        list($type, $token) = explode(' ', $request->headers->get('Authorization'), 2);
-
-        if ($type !== 'Bearer') {
-            return null;
-        }
-
-        // What you return here will be passed to getUser() as $credentials
-        return [
-            'token' => $token,
-        ];
+        return array_combine(
+            ['tokenType', 'accessToken'],
+            explode(' ', $request->headers->get(self::HEADER), 2)
+        );
     }
 
-    public function getUser ($credentials, UserProviderInterface $userProvider)
+    public function getUser($credentials, UserProviderInterface $userProvider)
     {
-        $token = $this->tokenManager->findToken($credentials['token']);
+        $token = $this->tokenManager->findTokenBy($credentials);
         if ($token instanceof Token && $token->getExpiresAt() > new \DateTime()) {
             return $token->getUser();
         }
@@ -64,7 +60,7 @@ class OauthAuthenticator extends AbstractGuardAuthenticator
         return null;
     }
 
-    public function checkCredentials ($credentials, UserInterface $user)
+    public function checkCredentials($credentials, UserInterface $user)
     {
         // check credentials - e.g. make sure the password is valid
         // no credential check is needed in this case
@@ -72,13 +68,13 @@ class OauthAuthenticator extends AbstractGuardAuthenticator
         return true;
     }
 
-    public function onAuthenticationSuccess (Request $request, TokenInterface $token, $providerKey)
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
         // on success, let the request continue
         return null;
     }
 
-    public function onAuthenticationFailure (Request $request, AuthenticationException $exception)
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
         $data = [
             'message' => strtr($exception->getMessageKey(), $exception->getMessageData())
@@ -93,7 +89,7 @@ class OauthAuthenticator extends AbstractGuardAuthenticator
     /**
      * Called when authentication is needed, but it's not sent
      */
-    public function start (Request $request, AuthenticationException $authException = null)
+    public function start(Request $request, AuthenticationException $authException = null)
     {
         $data = [
             // you might translate this message
@@ -103,7 +99,7 @@ class OauthAuthenticator extends AbstractGuardAuthenticator
         return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
     }
 
-    public function supportsRememberMe ()
+    public function supportsRememberMe()
     {
         return false;
     }

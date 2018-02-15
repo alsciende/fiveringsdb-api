@@ -2,10 +2,11 @@ AppBundle\Entity\Token:
     exclusion_policy: ALL
     accessor_order: alphabetical
     properties:
-        id:
+        accessToken:
+            expose: true
+        tokenType:
+            expose: true
+        refreshToken:
             expose: true
         expiresAt:
             expose: true
-        user:
-            expose: true
-            groups: ['User']
