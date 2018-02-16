@@ -22,16 +22,20 @@ class TokenManager
     /** @var EntityManagerInterface $entityManager */
     private $entityManager;
 
-    public function __construct (EntityManagerInterface $entityManager)
+    /** @var Metagame $metagame */
+    private $metagame;
+
+    public function __construct(EntityManagerInterface $entityManager, Metagame $metagame)
     {
         $this->entityManager = $entityManager;
+        $this->metagame = $metagame;
     }
 
     /**
      * @param string $token
      * @return Token|null
      */
-    public function findToken (string $token): ?Token
+    public function findToken(string $token): ?Token
     {
         return $this->entityManager->find(Token::class, $token);
     }
@@ -49,7 +53,7 @@ class TokenManager
      * @param array $data
      * @return Token|null
      */
-    public function createToken (array $data): ?Token
+    public function createToken(array $data): ?Token
     {
         if (!isset($data['expires_at'])) {
             $expiresAt = new \DateTime();
@@ -71,9 +75,33 @@ class TokenManager
     }
 
     /**
+     * @param array $credentials
+     * @return Token
+     */
+    public function createTemporaryToken(array $credentials)
+    {
+        return new Token(
+            $credentials['accessToken'],
+            $credentials['tokenType'],
+            new \DateTime()
+        );
+    }
+
+    /**
+     * @param $credentials
+     * @return Token
+     */
+    public function getTokenFromProvider($credentials)
+    {
+        $tokenData = $this->metagame->getTokenData($this->createTemporaryToken($credentials));
+
+        return new Token($tokenData['token'], $credentials['tokenType'], new \DateTime('@' . $tokenData['expires_at']));
+    }
+
+    /**
      * @param Token $token
      */
-    public function updateToken (Token $token)
+    public function updateToken(Token $token)
     {
         $this->entityManager->persist($token);
         $this->entityManager->flush();

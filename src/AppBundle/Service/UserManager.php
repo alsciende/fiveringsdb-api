@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Behavior\Service\GetRepositoryTrait;
+use AppBundle\Entity\Token;
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -16,16 +17,20 @@ class UserManager
     /** @var EntityManagerInterface */
     private $entityManager;
 
-    public function __construct (EntityManagerInterface $entityManager)
+    /** @var Metagame $metagame */
+    private $metagame;
+
+    public function __construct(EntityManagerInterface $entityManager, Metagame $metagame)
     {
         $this->entityManager = $entityManager;
+        $this->metagame = $metagame;
     }
 
     /**
      * @param string $username
      * @return User|null
      */
-    public function findUserByUsername (string $username): ?User
+    public function findUserByUsername(string $username): ?User
     {
         $repository = $this->getRepository($this->entityManager, User::class);
 
@@ -36,7 +41,7 @@ class UserManager
      * @param string $id
      * @return User|null
      */
-    public function findUserById (string $id): ?User
+    public function findUserById(string $id): ?User
     {
         return $this->entityManager->find(User::class, $id);
     }
@@ -46,7 +51,7 @@ class UserManager
      * @param string $username
      * @return User
      */
-    public function createUser (string $id, string $username): User
+    public function createUser(string $id, string $username): User
     {
         $user = new User();
         $user->setId($id)
@@ -60,7 +65,7 @@ class UserManager
     /**
      * @param User $user
      */
-    public function updateUser (User $user)
+    public function updateUser(User $user)
     {
         $this->entityManager->persist($user);
         $this->entityManager->flush();
@@ -78,5 +83,17 @@ class UserManager
         }
 
         return $this->createUser($userData['id'], $userData['username']);
+    }
+
+    /**
+     * @param Token $token
+     */
+    public function findTokenUser(Token $token)
+    {
+        $userData = $this->metagame->getUserData($token);
+        $user = $this->findOrCreateUser($userData);
+        $this->updateUser($user);
+
+        return $user;
     }
 }

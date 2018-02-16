@@ -30,28 +30,17 @@ class OauthAuthenticator extends AbstractGuardAuthenticator
     /** @var UserManager $userManager */
     private $userManager;
 
-    /** @var Metagame $metagame */
-    private $metagame;
-
-    function __construct(TokenManager $tokenManager, UserManager $userManager, Metagame $metagame)
+    function __construct(TokenManager $tokenManager, UserManager $userManager)
     {
         $this->tokenManager = $tokenManager;
         $this->userManager = $userManager;
-        $this->metagame = $metagame;
     }
 
-    /**
-     * Does the authenticator support the given Request?
-     */
     public function supports(Request $request)
     {
         return $request->headers->has(self::HEADER);
     }
 
-    /**
-     * Called on every request. Return whatever credentials you want,
-     * or null to stop authentication.
-     */
     public function getCredentials(Request $request)
     {
         return array_combine(
@@ -65,11 +54,8 @@ class OauthAuthenticator extends AbstractGuardAuthenticator
         $token = $this->tokenManager->findTokenBy($credentials);
 
         if (!$token instanceof Token || $token->getExpiresAt() < new \DateTime()) {
-            $tokenData = $this->metagame->getTokenData(new Token($credentials['accessToken'], $credentials['tokenType'], new \DateTime()));
-            $tokenData['token_type'] = $credentials['tokenType'];
-            $token = new Token($tokenData['token'], $credentials['tokenType'], new \DateTime('@'.$tokenData['expires_at']));
-            $user = $this->userManager->findOrCreateUser($tokenData['user']);
-            $token->setUser($user);
+            $token = $this->tokenManager->getTokenFromProvider($credentials);
+            $token->setUser($this->userManager->findTokenUser($token));
             $this->tokenManager->updateToken($token);
         }
 
@@ -78,15 +64,11 @@ class OauthAuthenticator extends AbstractGuardAuthenticator
 
     public function checkCredentials($credentials, UserInterface $user)
     {
-        // check credentials - e.g. make sure the password is valid
-        // no credential check is needed in this case
-        // return true to cause authentication success
         return true;
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
-        // on success, let the request continue
         return null;
     }
 
@@ -94,21 +76,14 @@ class OauthAuthenticator extends AbstractGuardAuthenticator
     {
         $data = [
             'message' => strtr($exception->getMessageKey(), $exception->getMessageData())
-
-            // or to translate this message
-            // $this->translator->trans($exception->getMessageKey(), $exception->getMessageData())
         ];
 
         return new JsonResponse($data, Response::HTTP_FORBIDDEN);
     }
 
-    /**
-     * Called when authentication is needed, but it's not sent
-     */
     public function start(Request $request, AuthenticationException $authException = null)
     {
         $data = [
-            // you might translate this message
             'message' => 'Authentication Required',
         ];
 
