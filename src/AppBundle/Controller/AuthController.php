@@ -51,23 +51,23 @@ class AuthController extends Controller
      * @Method("GET")
      * @Template("Auth/code.html.twig")
      */
-    public function codeAction(Request $request, Metagame $metagame, LoggerInterface $logger, TokenManager $tokenManager, UserManager $userManager, ArrayTransformerInterface $arrayTransformer)
-    {
+    public function codeAction(
+        Request $request,
+        Metagame $metagame,
+        TokenManager $tokenManager,
+        UserManager $userManager,
+        ArrayTransformerInterface $arrayTransformer
+    ) {
         // check the state
         if ($request->get('state') !== $request->cookies->get('PHPSESSID')) {
             throw new \Exception("State does not match.");
         }
 
         $tokenData = $metagame->exchangeAuthorizationCode($request->get('code'));
-        $logger->debug('tokenData', $tokenData);
         $token = $tokenManager->createToken($tokenData);
 
         if ($token instanceof Token) {
-            $logger->debug('access_token: ' . $token->getAccessToken());
-            $user = $userManager->findOrCreateUser($metagame->getUserData($token));
-            $token->setUser($user);
-
-            $userManager->updateUser($user);
+            $token->setUser($userManager->findTokenUser($token));
             $tokenManager->updateToken($token);
 
             return [

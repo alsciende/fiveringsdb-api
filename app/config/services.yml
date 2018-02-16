@@ -71,11 +71,6 @@ services:
           - '@jms_serializer'
           - '%http_cache_max_age%'
 
-    AppBundle\Service\TokenManager:
-        arguments:
-          - '@doctrine.orm.entity_manager'
-          - '@jms_serializer.serializer'
-
     AppBundle\Service\FeatureManager:
         arguments:
           - '@doctrine.orm.entity_manager'
