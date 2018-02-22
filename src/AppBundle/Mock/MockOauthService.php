@@ -26,24 +26,24 @@ class MockOauthService implements OauthServiceInterface
         $this->entityManager = $entityManager;
     }
 
-    public function getUserData(string $credentials): ?array
+    public function getUserData(string $credentials): ?string
     {
         list($type, $username) = explode(' ', $credentials, 2);
 
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $username]);
 
         if($user instanceof User) {
-            return [
+            return json_encode([
                 'id' => $user->getId(),
                 'username' => $user->getUsername(),
-            ];
+            ]);
         }
 
-        if(strpos('user', $username) === 0) {
-            return [
+        if(strpos($username, 'user') === 0) {
+            return json_encode([
                 'id' => Uuid::uuid4(),
                 'username' => $username,
-            ];
+            ]);
         }
 
         return null;

@@ -2,12 +2,14 @@
 
 namespace AppBundle\Security;
 
+use AppBundle\Service\UserManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
@@ -21,15 +23,19 @@ class OauthAuthenticator extends AbstractGuardAuthenticator
 {
     const HEADER = 'Authorization';
 
-    /** @var OauthCredentialsManager $manager */
-    private $manager;
+    /** @var OauthCredentialsManager $credentialsManager */
+    private $credentialsManager;
+
+    /** @var UserManager $userManager */
+    private $userManager;
 
     /** @var LoggerInterface $logger */
     private $logger;
 
-    function __construct(OauthCredentialsManager $manager, LoggerInterface $securityLogger)
+    function __construct(OauthCredentialsManager $credentialsManager, UserManager $userManager, LoggerInterface $securityLogger)
     {
-        $this->manager = $manager;
+        $this->credentialsManager = $credentialsManager;
+        $this->userManager = $userManager;
         $this->logger = $securityLogger;
     }
 
@@ -45,15 +51,28 @@ class OauthAuthenticator extends AbstractGuardAuthenticator
 
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
-        $userId = $this->manager->getUserId($credentials);
+        $userId = $this->credentialsManager->getUserId($credentials);
 
-        if($userId === null) {
-            $this->logger->notice('User not found.', ['credentials' => $credentials]);
+        if ($userId === null) {
+            $this->logger->info('Invalid token.', ['credentials' => $credentials]);
 
             return null;
         }
 
-        return $userProvider->loadUserByUsername($userId);
+        try {
+            $user = $userProvider->loadUserByUsername($userId);
+        } catch (UsernameNotFoundException $exception) {
+            $data = $this->credentialsManager->getUserData($credentials);
+            if ($data === null) {
+                return null;
+            }
+
+            $user = $this->userManager->createUser($data['id'], $data['username']);
+            $this->userManager->updateUser($user);
+            $this->logger->info('User created from data.', $data);
+        }
+
+        return $user;
     }
 
     public function checkCredentials($credentials, UserInterface $user)
@@ -69,7 +88,7 @@ class OauthAuthenticator extends AbstractGuardAuthenticator
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
         $data = [
-            'message' => strtr($exception->getMessageKey(), $exception->getMessageData())
+            'message' => strtr($exception->getMessageKey(), $exception->getMessageData()),
         ];
 
         return new JsonResponse($data, Response::HTTP_FORBIDDEN);

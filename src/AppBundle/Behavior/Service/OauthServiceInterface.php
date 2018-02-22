@@ -10,5 +10,5 @@ namespace AppBundle\Behavior\Service;
 
 interface OauthServiceInterface
 {
-    public function getUserData(string $credentials): ?array;
+    public function getUserData(string $credentials): ?string;
 }

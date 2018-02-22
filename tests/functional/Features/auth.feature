@@ -20,9 +20,9 @@ Feature: authenticating with access tokens
     Then I should get a 200 HTTP Response status code
     And my token should be cached
 
-#  Scenario: Accessing private data with an uncached valid token for an unknown user
-#    Given I have a valid uncached token for unknown user "new"
-#    When I query "/users/me" by GET
-#    Then I should get a 200 HTTP Response status code
-#    And my token should be cached
+  Scenario: Accessing private data with an uncached valid token for an unknown user
+    Given I have a valid uncached token for unknown user "new"
+    When I query "/users/me" by GET
+    Then I should get a 200 HTTP Response status code
+    And my token should be cached
 

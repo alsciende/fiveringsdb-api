@@ -41,21 +41,6 @@ class Metagame implements OauthServiceInterface
         $this->debug = $debug;
     }
 
-    /**
-     * @param Response $response
-     * @return array
-     */
-    private function getDecodedJsonData(Response $response)
-    {
-        $jsonDecode = json_decode((string) $response->getBody(), true);
-
-        if (is_array($jsonDecode)) {
-            return $jsonDecode;
-        }
-
-        throw new \LogicException('Data response did not decode to an array: ' . $response->getBody());
-    }
-
     private function get(string $url, array $parameters = [], string $credentials = null): Response
     {
         return $this->getClient($credentials)->request(
@@ -101,9 +86,9 @@ class Metagame implements OauthServiceInterface
 
     /**
      * @param string $credentials
-     * @return array
+     * @return null|string
      */
-    public function getUserData(string $credentials): ?array
+    public function getUserData(string $credentials): ?string
     {
         try {
             $response = $this->get('api/users/me', [], $credentials);
@@ -111,7 +96,7 @@ class Metagame implements OauthServiceInterface
             return null;
         }
 
-        return $this->getDecodedJsonData($response);
+        return (string) $response->getBody();
     }
 
     private function post(string $url, array $parameters = [], string $credentials = null): Response
