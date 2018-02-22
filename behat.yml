@@ -4,6 +4,7 @@ default:
     suites:
         default:
             contexts:
-                - Tests\Functional\Features\Context\FeatureContext: ~
+                - Tests\Functional\Features\Context\FeatureContext:
+                    cache: '@AppBundle\Security\CredentialsCacheService'
             paths:
                 - %paths.base%/tests/functional/Features

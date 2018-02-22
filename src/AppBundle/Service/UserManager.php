@@ -3,8 +3,8 @@
 namespace AppBundle\Service;
 
 use AppBundle\Behavior\Service\GetRepositoryTrait;
-use AppBundle\Entity\Token;
 use AppBundle\Entity\User;
+use AppBundle\Security\Token;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -83,17 +83,5 @@ class UserManager
         }
 
         return $this->createUser($userData['id'], $userData['username']);
-    }
-
-    /**
-     * @param Token $token
-     */
-    public function findTokenUser(Token $token)
-    {
-        $userData = $this->metagame->getUserData($token);
-        $user = $this->findOrCreateUser($userData);
-        $this->updateUser($user);
-
-        return $user;
     }
 }

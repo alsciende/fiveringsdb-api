@@ -1,0 +1,2 @@
+services:
+    AppBundle\Behavior\Service\OauthServiceInterface: '@AppBundle\Mock\MockOauthService'

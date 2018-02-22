@@ -5,11 +5,12 @@ services:
         public: false
         bind:
             $jsonDataPath: '%path_to_json_data%'
+            $securityLogger: '@monolog.logger.security'
 
     # configuration by directory
 
     AppBundle\:
-        resource: '../../src/AppBundle/{Security,Service,Util,Validator,Form,Controller,Command}'
+        resource: '../../src/AppBundle/{Security,Service,Util,Validator,Form,Controller,Command,Mock}'
 
     _instanceof:
         AppBundle\Behavior\Controller\ApiControllerInterface:
@@ -57,6 +58,9 @@ services:
         tags:
           - 'jms_serializer.subscribing_handler'
 
+    # interface aliases
+    AppBundle\Behavior\Service\OauthServiceInterface: '@AppBundle\Service\Metagame'
+
     # configuration by class
 
     AppBundle\Service\PaypalService:
@@ -82,6 +86,12 @@ services:
           - '%kernel.logs_dir%'
           - '%kernel.environment%'
           - '%kernel.debug%'
+
+    AppBundle\Security\CredentialsCacheService:
+        public: true
+        arguments:
+          - '%redis%'
+          - '%access_token_ttl%'
 
     # tagged service injection
 
