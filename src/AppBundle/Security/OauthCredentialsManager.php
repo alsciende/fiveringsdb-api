@@ -28,26 +28,40 @@ class OauthCredentialsManager
 
     public function getUserId(string $credentials): ?string
     {
-        if($this->cache->has($credentials)) {
-            return $this->cache->get($credentials);
-        }
-
-        $data = $this->oauth->getUserData($credentials);
+        $data = $this->getUserData($credentials);
 
         if($data === null) {
             return null;
         }
 
-        $userId = $data['id'];
+        return $data['id'];
+    }
 
-        $this->cache->set($credentials, $userId);
+    public function getUserData(string $credentials): ?array
+    {
+        $json = $this->getJsonData($credentials);
 
-        return $userId;
-//        $user = $this->userManager->findUserById($data['id']);
-//
-//        if(!$user instanceof UserManager) {
-//            $user = $this->userManager->createUser($data['id'], $data['username']);
-//            $this->userManager->updateUser($user);
-//        }
+        $data = json_decode($json, true);
+
+        if(!is_array($data)) {
+            return null;
+        }
+
+        return $data;
+    }
+
+    public function getJsonData(string $credentials): ?string
+    {
+        if($this->cache->has($credentials)) {
+            return $this->cache->get($credentials);
+        }
+
+        $json = $this->oauth->getUserData($credentials);
+
+        if($json !== null) {
+            $this->cache->set($credentials, $json);
+        }
+
+        return $json;
     }
 }
