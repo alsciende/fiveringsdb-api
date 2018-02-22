@@ -2,10 +2,7 @@
 
 namespace AppBundle\Security;
 
-use AppBundle\Entity\Token;
-use AppBundle\Service\Metagame;
-use AppBundle\Service\TokenManager;
-use AppBundle\Service\UserManager;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,16 +21,16 @@ class OauthAuthenticator extends AbstractGuardAuthenticator
 {
     const HEADER = 'Authorization';
 
-    /** @var TokenManager $tokenManager */
-    private $tokenManager;
+    /** @var OauthCredentialsManager $manager */
+    private $manager;
 
-    /** @var UserManager $userManager */
-    private $userManager;
+    /** @var LoggerInterface $logger */
+    private $logger;
 
-    function __construct(TokenManager $tokenManager, UserManager $userManager)
+    function __construct(OauthCredentialsManager $manager, LoggerInterface $securityLogger)
     {
-        $this->tokenManager = $tokenManager;
-        $this->userManager = $userManager;
+        $this->manager = $manager;
+        $this->logger = $securityLogger;
     }
 
     public function supports(Request $request)
@@ -43,23 +40,20 @@ class OauthAuthenticator extends AbstractGuardAuthenticator
 
     public function getCredentials(Request $request)
     {
-        return array_combine(
-            ['tokenType', 'accessToken'],
-            explode(' ', $request->headers->get(self::HEADER), 2)
-        );
+        return $request->headers->get(self::HEADER);
     }
 
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
-        $token = $this->tokenManager->findTokenBy($credentials);
+        $userId = $this->manager->getUserId($credentials);
 
-        if (!$token instanceof Token || $token->getExpiresAt() < new \DateTime()) {
-            $token = $this->tokenManager->getTokenFromProvider($credentials);
-            $token->setUser($this->userManager->findTokenUser($token));
-            $this->tokenManager->updateToken($token);
+        if($userId === null) {
+            $this->logger->notice('User not found.', ['credentials' => $credentials]);
+
+            return null;
         }
 
-        return $token->getUser();
+        return $userProvider->loadUserByUsername($userId);
     }
 
     public function checkCredentials($credentials, UserInterface $user)

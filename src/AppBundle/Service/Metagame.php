@@ -2,22 +2,24 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Entity\Token;
+use AppBundle\Behavior\Service\OauthServiceInterface;
+use AppBundle\Security\Token;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
+
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\MessageFormatter;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Service to communicate with the Metagame server
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class Metagame
+class Metagame implements OauthServiceInterface
 {
     /** @var array */
     private $parameters;
@@ -39,6 +41,47 @@ class Metagame
         $this->debug = $debug;
     }
 
+    /**
+     * @param Response $response
+     * @return array
+     */
+    private function getDecodedJsonData(Response $response)
+    {
+        $jsonDecode = json_decode((string) $response->getBody(), true);
+
+        if (is_array($jsonDecode)) {
+            return $jsonDecode;
+        }
+
+        throw new \LogicException('Data response did not decode to an array: ' . $response->getBody());
+    }
+
+    private function get(string $url, array $parameters = [], string $credentials = null): Response
+    {
+        return $this->getClient($credentials)->request(
+            'GET', $url, [
+                'query' => $parameters,
+            ]
+        );
+    }
+
+    private function getClient(string $credentials = null): Client
+    {
+        $options = [
+            'base_uri' => $this->parameters['base_uri'],
+        ];
+
+        if ($this->debug) {
+            $options['handler'] = $this->getDebugStack();
+        }
+
+        if ($credentials !== null) {
+            $options['headers']['Authorization'] = $credentials;
+        }
+
+        return new Client($options);
+    }
+
     private function getDebugStack(): HandlerStack
     {
         $logger = new Logger('guzzle');
@@ -56,89 +99,24 @@ class Metagame
         return $stack;
     }
 
-    private function getClient(Token $token = null): Client
-    {
-        $options = [
-            'base_uri' => $this->parameters['base_uri'],
-        ];
-
-        if ($this->debug) {
-            $options['handler'] = $this->getDebugStack();
-        }
-
-        if ($token instanceof Token) {
-            $options['headers']['Authorization'] = $token->toHeader();
-        }
-
-        return new Client($options);
-    }
-
     /**
-     * @param Response $response
+     * @param string $credentials
      * @return array
      */
-    private function getDecodedJsonData(Response $response)
+    public function getUserData(string $credentials): ?array
     {
-        if ($response->getStatusCode() !== 200) {
-            throw new AccessDeniedException($response->getReasonPhrase());
+        try {
+            $response = $this->get('api/users/me', [], $credentials);
+        } catch(ClientException $e) {
+            return null;
         }
 
-        $jsonDecode = json_decode((string) $response->getBody(), true);
-
-        if (is_array($jsonDecode)) {
-            return $jsonDecode;
-        }
-
-        throw new \LogicException('Data response did not decode to an array: ' . $response->getBody());
+        return $this->getDecodedJsonData($response);
     }
 
-    /**
-     * @param string $code
-     * @return array
-     */
-    public function exchangeAuthorizationCode(string $code): array
+    private function post(string $url, array $parameters = [], string $credentials = null): Response
     {
-        return $this->getDecodedJsonData($this->get(
-            'oauth/v2/token', [
-                'client_id'     => $this->parameters['client_id'],
-                'client_secret' => $this->parameters['client_secret'],
-                'redirect_uri'  => $this->parameters['redirect_uri'],
-                'grant_type'    => 'authorization_code',
-                'code'          => $code,
-            ]
-        ));
-    }
-
-    /**
-     * @param Token $token
-     * @return array
-     */
-    public function getTokenData(Token $token): array
-    {
-        return $this->getDecodedJsonData($this->get('api/tokens/me', [], $token));
-    }
-
-    /**
-     * @param Token $token
-     * @return array
-     */
-    public function getUserData(Token $token): array
-    {
-        return $this->getDecodedJsonData($this->get('api/users/me', [], $token));
-    }
-
-    public function get(string $url, array $parameters = [], Token $token = null): Response
-    {
-        return $this->getClient($token)->request(
-            'GET', $url, [
-                'query' => $parameters,
-            ]
-        );
-    }
-
-    public function post(string $url, array $parameters = [], Token $token = null): Response
-    {
-        return $this->getClient($token)->request(
+        return $this->getClient($credentials)->request(
             'POST', $url, [
                 'json' => $parameters,
             ]

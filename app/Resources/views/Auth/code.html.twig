@@ -1,6 +1,0 @@
-{% autoescape false %}
-<script type="text/javascript">
-    window.opener.postMessage({{ message|json_encode }}, '{{ origin }}');
-    window.close();
-</script>
-{% endautoescape %}
