@@ -80,7 +80,7 @@ rm:
 	rm -rf var/cache/* var/logs/*
 
 test: export SYMFONY_ENV = test
-test: cache schema phpstan tu tf
+test: schema cache phpstan tu tf
 
 tf: export SYMFONY_ENV = test
 tf: vendor db

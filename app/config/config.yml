@@ -7,6 +7,11 @@ imports:
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
+    metagame:
+        base_uri: '%metagame_base_uri%'
+        user_id: '%metagame_user_id%'
+        admin_id: '%metagame_admin_id%'
+        guru_id: '%metagame_guru_id%'
 
 framework:
     #esi:             ~
