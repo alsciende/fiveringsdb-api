@@ -27,15 +27,11 @@ parameters:
     path_to_json_data: "%kernel.root_dir%/../../data"
 
     # Communication with Metagame server
-    metagame:
-        # Base URI, with trailing slash
-        base_uri: 'https://metagame.cards/'
-        client_id: ~
-        client_secret: ~
-        redirect_uri: ~
-        user_id: ~
-        admin_id: ~
-        guru_id: ~
+    metagame_base_uri: 'https://metagame.cards/'
+    # For dev and test
+    metagame_user_id: ~
+    metagame_admin_id: ~
+    metagame_guru_id: ~
 
     # URL of the UI
     front_url: ~
