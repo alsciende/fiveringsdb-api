@@ -28,18 +28,21 @@ class DeckRepository extends EntityRepository
      */
     public function findBestDeckForClan (string $clan, int $period): ?Deck
     {
+        $earliest = new \DateTime();
+        $earliest->sub(new \DateInterval("P${period}D"));
+
         $dql = "SELECT d, COUNT(DISTINCT l.user) nbLikes
         FROM AppBundle:Deck d 
         LEFT JOIN d.deckLikes l
         WHERE d.published=:published 
-        AND DATEDIFF(NOW(), d.createdAt) <= :days
+        AND d.createdAt >= :earliest
         AND d.primaryClan=:clan
         GROUP BY d
         ORDER BY nbLikes DESC, d.createdAt DESC";
         $query = $this->getEntityManager()
                       ->createQuery($dql)
                       ->setParameter('published', true)
-                      ->setParameter('days', $period)
+                      ->setParameter('earliest', $earliest)
                       ->setParameter('clan', $clan)
                       ->setFirstResult(0)
                       ->setMaxResults(1);

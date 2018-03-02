@@ -127,7 +127,7 @@ class FeatureContext implements KernelAwareContext
      */
     public function myTokenShouldBeCached()
     {
-        if($this->cache->has('Bearer ' . $this->token) === false) {
+        if($this->cache->get('Bearer ' . $this->token) === null) {
             throw new \Exception('Token is not cached');
         }
     }

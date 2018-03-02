@@ -28,10 +28,6 @@ parameters:
 
     # Communication with Metagame server
     metagame_base_uri: 'https://metagame.cards/'
-    # For dev and test
-    metagame_user_id: ~
-    metagame_admin_id: ~
-    metagame_guru_id: ~
 
     # URL of the UI
     front_url: ~
@@ -44,4 +40,4 @@ parameters:
     access_token_ttl: 3600
 
     # Redis Server
-    redis: redis://localhost:6379
+    redis_url: redis://localhost:6379
