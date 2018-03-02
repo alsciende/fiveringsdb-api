@@ -8,48 +8,53 @@
 
 namespace AppBundle\Security;
 
-use Predis\Client;
 use Psr\SimpleCache\CacheInterface;
-
-use Symfony\Component\Cache\Simple\RedisCache;
 
 /**
  */
 class CredentialsCacheService
 {
+
     /** @var CacheInterface $cache */
     private $cache;
 
-    /** @var int $ttl */
+    /** @var int */
     private $ttl;
 
-    public function __construct(string $url, int $ttl)
+    /**
+     * CredentialsCacheService constructor.
+     * @param CacheInterface $cache
+     * @param int            $ttl
+     */
+    public function __construct(CacheInterface $cache, int $ttl)
     {
-        $this->cache = new RedisCache(new Client(
-            $url,
-            [
-                'timeout' => 1,
-            ]
-        ));
-
+        $this->cache = $cache;
         $this->ttl = $ttl;
     }
 
-    public function has(string $credentials): bool
-    {
-        return $this->cache->has($credentials);
-    }
-
-    public function get(string $credentials): string
+    /**
+     * @param string $credentials
+     * @return null|string
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     */
+    public function get(string $credentials): ?string
     {
         return $this->cache->get($credentials);
     }
 
-    public function set(string $credentials, string $userId)
+    /**
+     * @param string $credentials
+     * @param string $json
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     */
+    public function set(string $credentials, string $json)
     {
-        $this->cache->set($credentials, $userId, $this->ttl);
+        $this->cache->set($credentials, $json, $this->ttl);
     }
 
+    /**
+     *
+     */
     public function clear()
     {
         $this->cache->clear();

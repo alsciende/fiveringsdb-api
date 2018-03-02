@@ -10,19 +10,19 @@ parameters:
 
 AppBundle\Entity\User:
     user:
-        id: '<{user_id}>'
+        id: '<uuid()>'
         username: 'user'
         password: '<password()>'
         enabled: true
         roles: '[ROLE_USER]'
     admin:
-        id: '<{admin_id}>'
+        id: '<uuid()>'
         username: 'admin'
         password: '<password()>'
         enabled: true
         roles: '[ROLE_USER,ROLE_ADMIN]'
     guru:
-        id: '<{guru_id}>'
+        id: '<uuid()>'
         username: 'guru'
         password: '<password()>'
         enabled: true

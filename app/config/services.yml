@@ -7,15 +7,20 @@ services:
             $jsonDataPath: '%path_to_json_data%'
             $securityLogger: '@monolog.logger.security'
 
-    # configuration by directory
-
-    AppBundle\:
-        resource: '../../src/AppBundle/{Security,Service,Util,Validator,Form,Controller,Command,Mock}'
+    # configuration by interface
 
     _instanceof:
         AppBundle\Behavior\Controller\ApiControllerInterface:
             calls:
                 - [setApiService, ['@AppBundle\Service\ApiService']]
+        Psr\Log\LoggerAwareInterface:
+            calls:
+                - [setLogger, ['@logger']]
+
+    # configuration by directory
+
+    AppBundle\:
+        resource: '../../src/AppBundle/{Security,Service,Util,Validator,Form,Controller,Command,Mock}'
 
     AppBundle\Service\DeckCheck\:
         resource: '../../src/AppBundle/Service/DeckCheck'
@@ -59,6 +64,7 @@ services:
           - 'jms_serializer.subscribing_handler'
 
     # interface aliases
+
     AppBundle\Behavior\Service\OauthServiceInterface: '@AppBundle\Service\Metagame'
 
     # configuration by class
@@ -82,7 +88,7 @@ services:
 
     AppBundle\Service\Metagame:
         arguments:
-          - '%metagame%'
+          - '%metagame_base_uri%'
           - '%kernel.logs_dir%'
           - '%kernel.environment%'
           - '%kernel.debug%'
@@ -90,8 +96,18 @@ services:
     AppBundle\Security\CredentialsCacheService:
         public: true
         arguments:
-          - '%redis%'
+          - '@cache'
           - '%access_token_ttl%'
+
+    cache:
+        public: false
+        class: Symfony\Component\Cache\Simple\RedisCache
+        arguments: ['@redis']
+
+    redis:
+        public: false
+        class: Predis\Client
+        arguments: ['%redis_url%']
 
     # tagged service injection
 

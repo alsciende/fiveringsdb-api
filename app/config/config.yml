@@ -7,11 +7,6 @@ imports:
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
-    metagame:
-        base_uri: '%metagame_base_uri%'
-        user_id: '%metagame_user_id%'
-        admin_id: '%metagame_admin_id%'
-        guru_id: '%metagame_guru_id%'
 
 framework:
     #esi:             ~
@@ -73,10 +68,6 @@ doctrine:
         auto_generate_proxy_classes: "%kernel.debug%"
         naming_strategy: doctrine.orm.naming_strategy.underscore
         auto_mapping: true
-        dql:
-            datetime_functions:
-                datediff: DoctrineExtensions\Query\Mysql\DateDiff
-                now: DoctrineExtensions\Query\Mysql\Now
 
 # Swiftmailer Configuration
 swiftmailer:

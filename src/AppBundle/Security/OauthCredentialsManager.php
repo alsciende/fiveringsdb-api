@@ -52,8 +52,10 @@ class OauthCredentialsManager
 
     public function getJsonData(string $credentials): ?string
     {
-        if($this->cache->has($credentials)) {
-            return $this->cache->get($credentials);
+        $cacheHit = $this->cache->get($credentials);
+
+        if($cacheHit !== null) {
+            return $cacheHit;
         }
 
         $json = $this->oauth->getUserData($credentials);

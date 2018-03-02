@@ -21,8 +21,8 @@ use Monolog\Logger;
  */
 class Metagame implements OauthServiceInterface
 {
-    /** @var array */
-    private $parameters;
+    /** @var string $baseUri */
+    private $baseUri;
 
     /** @var string */
     private $logsDir;
@@ -33,9 +33,9 @@ class Metagame implements OauthServiceInterface
     /** @var boolean */
     private $debug;
 
-    public function __construct($parameters, $logsDir, $environment, $debug)
+    public function __construct(string $baseUri, string $logsDir, string $environment, bool $debug)
     {
-        $this->parameters = $parameters;
+        $this->baseUri = $baseUri;
         $this->logsDir = $logsDir;
         $this->environment = $environment;
         $this->debug = $debug;
@@ -53,7 +53,7 @@ class Metagame implements OauthServiceInterface
     private function getClient(string $credentials = null): Client
     {
         $options = [
-            'base_uri' => $this->parameters['base_uri'],
+            'base_uri' => $this->baseUri,
         ];
 
         if ($this->debug) {
