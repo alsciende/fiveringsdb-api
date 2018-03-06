@@ -28,3 +28,7 @@ monolog:
             path: "%kernel.logs_dir%/%kernel.environment%.log"
             level: debug
             channels: [!event]
+
+doctrine:
+    dbal:
+        dbname:   "%database_name%_test"
