@@ -149,7 +149,7 @@ class DataParseCommand extends Command
         $element = null;
         if ($type === 'province') {
             foreach ($traits as $i => $trait) {
-                if (in_array($trait, ['air', 'earth', 'fire', 'void', 'water'])) {
+                if (in_array($trait, Card::ELEMENTS)) {
                     unset($traits[$i]);
                     $normalizedItem['element'] = $trait;
                 }
