@@ -28,6 +28,10 @@ abstract class AbstractDeckCheckTest extends WebTestCase
 
     protected function getCard($attributes)
     {
+        if (!isset($attributes['id'])) {
+            $attributes['id'] = '';
+        }
+
         $serializer = static::$kernel->getContainer()->get('jms_serializer');
         return $serializer->fromArray($attributes, Card::class);
     }

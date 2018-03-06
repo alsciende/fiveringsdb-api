@@ -44,13 +44,9 @@ class ConflictDeckCheck implements DeckCheckInterface
             if ($role instanceof Card) {
                 if ($role->hasTrait('keeper')) {
                     $influencePool += 3;
-                } else {
-                    foreach (Card::CLANS as $otherClan) {
-                        if ($role->hasTrait($otherClan)) {
-                            $supportingClan = $otherClan;
-                            $influencePool += 8;
-                        }
-                    }
+                } elseif (strpos($role->getId(), 'support-of-the-') === 0) {
+                    $supportingClan = $role->getTraits()[0];
+                    $influencePool += 8;
                 }
             }
 
@@ -64,7 +60,7 @@ class ConflictDeckCheck implements DeckCheckInterface
             foreach ($offClanSlots as $slot) {
                 /** @var CardSlotInterface $slot */
                 if ($slot->getCard()->getInfluenceCost() === null) {
-                    return DeckValidator::FORBIDDEN_SPLASH;
+                    return DeckValidator::IMPOSSIBLE_SPLASH;
                 }
                 if ($supportingClan !== null && $slot->getCard()->getClan() !== $supportingClan) {
                     return DeckValidator::FORBIDDEN_SPLASH;

@@ -210,6 +210,7 @@ class ConflictDeckCheckTest extends AbstractDeckCheckTest
                 ),
                 new DeckCard(
                     $this->getCard([
+                        'id'     => 'support-of-the-',
                         'side'   => Card::SIDE_ROLE,
                         'type'   => Card::TYPE_ROLE,
                         'clan'   => Card::CLAN_NEUTRAL,
@@ -255,6 +256,7 @@ class ConflictDeckCheckTest extends AbstractDeckCheckTest
                 ),
                 new DeckCard(
                     $this->getCard([
+                        'id'     => 'support-of-the-',
                         'side'   => Card::SIDE_ROLE,
                         'type'   => Card::TYPE_ROLE,
                         'clan'   => Card::CLAN_NEUTRAL,
