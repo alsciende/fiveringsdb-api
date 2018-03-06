@@ -27,14 +27,7 @@ parameters:
     path_to_json_data: "%kernel.root_dir%/../../data"
 
     # Communication with Metagame server
-    # Base URI, with trailing slash
     metagame_base_uri: 'https://metagame.cards/'
-    metagame_client_id: ~
-    metagame_client_secret: ~
-    metagame_redirect_uri: ~
-    metagame_user_id: ~
-    metagame_admin_id: ~
-    metagame_guru_id: ~
 
     # URL of the UI
     front_url: ~
@@ -45,3 +38,6 @@ parameters:
     # Security
     # Access Token TTL (seconds)
     access_token_ttl: 3600
+
+    # Redis Server
+    redis_url: redis://localhost:6379

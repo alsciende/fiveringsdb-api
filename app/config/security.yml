@@ -7,7 +7,7 @@ security:
         my_user_provider:
             entity:
                 class: AppBundle:User
-                property: username
+                property: id
             
     firewalls:
         dev:

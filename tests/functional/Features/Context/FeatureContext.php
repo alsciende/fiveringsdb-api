@@ -4,6 +4,7 @@ namespace Tests\Functional\Features\Context;
 
 use AppBundle\Entity\Token;
 use AppBundle\Entity\User;
+use AppBundle\Security\CredentialsCacheService;
 use AppBundle\Service\TokenManager;
 use Behat\Symfony2Extension\Context\KernelAwareContext;
 use Doctrine\ORM\EntityManagerInterface;
@@ -37,6 +38,9 @@ class FeatureContext implements KernelAwareContext
     /** @var mixed */
     private $json;
 
+    /** @var CredentialsCacheService $cache */
+    private $cache;
+
     /**
      * Initializes context.
      *
@@ -44,8 +48,9 @@ class FeatureContext implements KernelAwareContext
      * You can also pass arbitrary arguments to the
      * context constructor through behat.yml.
      */
-    public function __construct ()
+    public function __construct (CredentialsCacheService $cache)
     {
+        $this->cache = $cache;
     }
 
     /**
@@ -93,25 +98,54 @@ class FeatureContext implements KernelAwareContext
     }
 
     /**
-     * @Given I am authenticated as user :username
+     * @Given the cache is cleared
      */
-    public function iAmAuthenticatedAsUser ($username)
+    public function theCacheIsCleared()
     {
-        /** @var EntityManagerInterface $entityManager */
-        $entityManager = $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
+        $this->cache->clear();
+    }
 
-        $user = $entityManager->getRepository(User::class)->findOneBy(['username' => $username]);
-        if ($user instanceof User) {
-            $tokenManager = $this->kernel->getContainer()->get(TokenManager::class);
-            $token = $tokenManager->createToken(Uuid::uuid4(), $user);
-            $tokenManager->updateToken($token);
+    /**
+     * @Given I have a valid cached token for known user :username
+     */
+    public function iHaveAValidCachedToken ($username)
+    {
+        $this->token = $username;
+        $this->cache->set($this->token, $username);
+    }
 
-            $this->token = $token->getId();
+    /**
+     * @Given I have a valid uncached token for user :username
+     */
+    public function iHaveAValidUncachedToken ($username)
+    {
+        $this->token = $username;
+    }
 
-            return;
+    /**
+     * @Then my token should be cached
+     */
+    public function myTokenShouldBeCached()
+    {
+        if($this->cache->get('Bearer ' . $this->token) === null) {
+            throw new \Exception('Token is not cached');
         }
+    }
 
-        throw new \Exception('Cannot find a valid token for user ' . $username);
+    /**
+     * @Given I have an invalid token
+     */
+    public function iHaveAnInvalidToken ()
+    {
+        $this->token = Uuid::uuid4();
+    }
+
+    /**
+     * @Given I have a valid uncached token for unknown user :username
+     */
+    public function iHaveAValidUncachedTokenForUnknownUser($username)
+    {
+        $this->token = 'user' . $username;
     }
 
     /**

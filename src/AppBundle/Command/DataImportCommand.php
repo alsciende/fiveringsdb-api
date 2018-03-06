@@ -2,17 +2,13 @@
 
 namespace AppBundle\Command;
 
-use Alsciende\SerializerBundle\Model\Source;
+
 use Alsciende\SerializerBundle\Service\ImportingService;
-use Alsciende\SerializerBundle\Service\MergingService;
-use Alsciende\SerializerBundle\Service\ScanningService;
-use Doctrine\ORM\EntityManagerInterface;
+
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Validator\ConstraintViolationInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Description of DataImportCommand

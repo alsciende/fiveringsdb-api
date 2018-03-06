@@ -4,6 +4,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Behavior\Service\GetRepositoryTrait;
 use AppBundle\Entity\User;
+use AppBundle\Security\Token;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -16,24 +17,41 @@ class UserManager
     /** @var EntityManagerInterface */
     private $entityManager;
 
-    public function __construct (EntityManagerInterface $entityManager)
+    /** @var Metagame $metagame */
+    private $metagame;
+
+    public function __construct(EntityManagerInterface $entityManager, Metagame $metagame)
     {
         $this->entityManager = $entityManager;
+        $this->metagame = $metagame;
     }
 
-    public function findUserByUsername (string $username): ?User
+    /**
+     * @param string $username
+     * @return User|null
+     */
+    public function findUserByUsername(string $username): ?User
     {
         $repository = $this->getRepository($this->entityManager, User::class);
 
         return $repository->findOneBy(['username' => $username]);
     }
 
-    public function findUserById (string $id): ?User
+    /**
+     * @param string $id
+     * @return User|null
+     */
+    public function findUserById(string $id): ?User
     {
         return $this->entityManager->find(User::class, $id);
     }
 
-    public function createUser (string $id, string $username): User
+    /**
+     * @param string $id
+     * @param string $username
+     * @return User
+     */
+    public function createUser(string $id, string $username): User
     {
         $user = new User();
         $user->setId($id)
@@ -44,9 +62,26 @@ class UserManager
         return $user;
     }
 
-    public function updateUser (User $user)
+    /**
+     * @param User $user
+     */
+    public function updateUser(User $user)
     {
         $this->entityManager->persist($user);
         $this->entityManager->flush();
+    }
+
+    /**
+     * @param array $userData
+     * @return User
+     */
+    public function findOrCreateUser(array $userData)
+    {
+        $user = $this->findUserById($userData['id']);
+        if ($user instanceof User) {
+            return $user;
+        }
+
+        return $this->createUser($userData['id'], $userData['username']);
     }
 }

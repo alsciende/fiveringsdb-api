@@ -2,7 +2,11 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Behavior\Service\OauthServiceInterface;
+use AppBundle\Security\Token;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
+
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\MessageFormatter;
 use GuzzleHttp\Middleware;
@@ -15,9 +19,9 @@ use Monolog\Logger;
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class Metagame
+class Metagame implements OauthServiceInterface
 {
-    /** @var string */
+    /** @var string $baseUri */
     private $baseUri;
 
     /** @var string */
@@ -29,15 +33,41 @@ class Metagame
     /** @var boolean */
     private $debug;
 
-    public function __construct ($baseUri, $logsDir, $environment, $debug)
+    public function __construct(string $baseUri, string $logsDir, string $environment, bool $debug)
     {
-        $this->logsDir = $logsDir;
         $this->baseUri = $baseUri;
+        $this->logsDir = $logsDir;
         $this->environment = $environment;
         $this->debug = $debug;
     }
 
-    private function getDebugStack (): HandlerStack
+    private function get(string $url, array $parameters = [], string $credentials = null): Response
+    {
+        return $this->getClient($credentials)->request(
+            'GET', $url, [
+                'query' => $parameters,
+            ]
+        );
+    }
+
+    private function getClient(string $credentials = null): Client
+    {
+        $options = [
+            'base_uri' => $this->baseUri,
+        ];
+
+        if ($this->debug) {
+            $options['handler'] = $this->getDebugStack();
+        }
+
+        if ($credentials !== null) {
+            $options['headers']['Authorization'] = $credentials;
+        }
+
+        return new Client($options);
+    }
+
+    private function getDebugStack(): HandlerStack
     {
         $logger = new Logger('guzzle');
         $logger->pushHandler(
@@ -54,35 +84,24 @@ class Metagame
         return $stack;
     }
 
-    private function getClient (string $token = null): Client
+    /**
+     * @param string $credentials
+     * @return null|string
+     */
+    public function getUserData(string $credentials): ?string
     {
-        $options = [
-            'base_uri' => $this->baseUri,
-        ];
-
-        if ($this->debug) {
-            $options['handler'] = $this->getDebugStack();
+        try {
+            $response = $this->get('api/users/me', [], $credentials);
+        } catch(ClientException $e) {
+            return null;
         }
 
-        if ($token !== null) {
-            $options['headers']['Authorization'] = "Bearer $token";
-        }
-
-        return new Client($options);
+        return (string) $response->getBody();
     }
 
-    public function get ($url, $parameters = [], $token = null): Response
+    private function post(string $url, array $parameters = [], string $credentials = null): Response
     {
-        return $this->getClient($token)->request(
-            'GET', $url, [
-                'query' => $parameters,
-            ]
-        );
-    }
-
-    public function post ($url, $parameters = [], $token = null): Response
-    {
-        return $this->getClient($token)->request(
+        return $this->getClient($credentials)->request(
             'POST', $url, [
                 'json' => $parameters,
             ]

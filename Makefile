@@ -24,6 +24,7 @@ help:
 	@echo
 	@echo 'Secondary targets are:'
 	@echo '  clean     : Make your working dir virgin again'
+	@echo '  cache     : Clear your caches'
 	@echo '  db        : Recreate schema'
 	@echo '  help      : This help message'
 	@echo '  vendor    : Install vendors and configure project'
@@ -42,6 +43,11 @@ stop:
 clean: rm
 	@echo
 	rm -rf var/sessions/* vendor
+
+cache:
+	@echo
+	$(CONSOLE_BIN) cache:clear
+	$(CONSOLE_BIN) app:cache:clear
 
 vendor: composer.lock
 	@echo
@@ -74,7 +80,7 @@ rm:
 	rm -rf var/cache/* var/logs/*
 
 test: export SYMFONY_ENV = test
-test: schema phpstan tu tf
+test: schema cache phpstan tu tf
 
 tf: export SYMFONY_ENV = test
 tf: vendor db

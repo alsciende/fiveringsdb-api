@@ -6,27 +6,18 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Nelmio\Alice\Loader\NativeLoader;
-use Ramsey\Uuid\Uuid;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
  * Description of LoadAliceData
  *
  * @author Alsciende <alsciende@icloud.com>
  */
-class LoadAliceData extends Fixture implements OrderedFixtureInterface, ContainerAwareInterface
+class LoadAliceData extends Fixture implements OrderedFixtureInterface
 {
-    use ContainerAwareTrait;
-
     public function load (ObjectManager $manager)
     {
         $loader = new NativeLoader();
-        $objectSet = $loader->loadFile(__DIR__.'/fixtures.yml', [
-            'user_id' => $this->container->getParameter('metagame_user_id') ?? Uuid::uuid4(),
-            'admin_id' => $this->container->getParameter('metagame_admin_id') ?? Uuid::uuid4(),
-            'guru_id' => $this->container->getParameter('metagame_guru_id') ?? Uuid::uuid4(),
-        ]);
+        $objectSet = $loader->loadFile(__DIR__.'/fixtures.yml');
 
         foreach($objectSet->getObjects() as $reference => $object) {
             $manager->persist($object);

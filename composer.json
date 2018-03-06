@@ -23,7 +23,6 @@
     "ext-xml": "*",
     "ext-zip": "*",
     "alsciende/serializer-bundle": "1.1.1",
-    "beberlei/DoctrineExtensions": "^1.0",
     "cocur/slugify": "^3.0",
     "curl/curl": "^1.8",
     "doctrine/doctrine-bundle": "^1.8",
@@ -33,6 +32,7 @@
     "incenteev/composer-parameter-handler": "^2.1",
     "jms/serializer-bundle": "^2.3",
     "nelmio/cors-bundle": "^1.5",
+    "predis/predis": "^1.1",
     "ramsey/uuid": "^3.7",
     "sensio/distribution-bundle": "^5.0",
     "sensio/framework-extra-bundle": "^5.1",
@@ -88,6 +88,9 @@
     "branch-alias": null
   },
   "config": {
+    "platform": {
+      "php": "7.1.8."
+    },
     "sort-packages": true
   }
 }

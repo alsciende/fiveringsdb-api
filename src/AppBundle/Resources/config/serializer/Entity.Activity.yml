@@ -2,6 +2,8 @@ AppBundle\Entity\Activity:
     exclusion_policy: ALL
     accessor_order: alphabetical
     properties:
+        id:
+            expose: true
         type:
             expose: true
         personal:

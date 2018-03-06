@@ -10,26 +10,26 @@ parameters:
 
 AppBundle\Entity\User:
     user:
-        id: '<{user_id}>'
+        id: '<uuid()>'
         username: 'user'
         password: '<password()>'
         enabled: true
         roles: '[ROLE_USER]'
     admin:
-        id: '<{admin_id}>'
+        id: '<uuid()>'
         username: 'admin'
         password: '<password()>'
         enabled: true
         roles: '[ROLE_USER,ROLE_ADMIN]'
     guru:
-        id: '<{guru_id}>'
+        id: '<uuid()>'
         username: 'guru'
         password: '<password()>'
         enabled: true
         roles: '[ROLE_USER,ROLE_GURU]'
     user{1..100}:
         id: '<uuid()>'
-        username: '<firstname()><current()>'
+        username: 'user<current()>'
         password: '<password()>'
         enabled: true
         roles: '[ROLE_USER]'
@@ -39,33 +39,6 @@ AppBundle\Entity\User:
         password: '<password()>'
         enabled: true
         roles: '[ROLE_USER]'
-
-AppBundle\Entity\Token:
-    token-admin:
-        id: 'admin'
-        user: '@admin'
-        createdAt: '<dateTimeThisMonth()>'
-        expiresAt: '<dateTimeBetween("now","tomorrow")>'
-    token-guru:
-        id: 'guru'
-        user: '@guru'
-        createdAt: '<dateTimeThisMonth()>'
-        expiresAt: '<dateTimeBetween("now","tomorrow")>'
-    token-user:
-        id: 'user'
-        user: '@user'
-        createdAt: '<dateTimeThisMonth()>'
-        expiresAt: '<dateTimeBetween("now","tomorrow")>'
-    token-user{1..100}:
-        id: 'user<current()>'
-        user: '@user<current()>'
-        createdAt: '<dateTimeThisMonth()>'
-        expiresAt: '<dateTimeBetween("now","tomorrow")>'
-    token-pirate:
-        id: 'pirate'
-        user: '@pirate'
-        createdAt: '<dateTimeThisMonth()>'
-        expiresAt: '<dateTimeBetween("now","tomorrow")>'
 
 AppBundle\Entity\Strain:
     strain{1..100}:

@@ -1,5 +1,6 @@
 imports:
     - { resource: config_dev.yml }
+    - { resource: services_test.yml }
 
 framework:
     test: ~
@@ -19,6 +20,14 @@ security:
     firewalls:
         main:
             http_basic: ~
+
+monolog:
+    handlers:
+        main:
+            type: stream
+            path: "%kernel.logs_dir%/%kernel.environment%.log"
+            level: debug
+            channels: [!event]
 
 doctrine:
     dbal:
