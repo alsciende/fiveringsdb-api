@@ -34,14 +34,24 @@ class ConflictDeckCheck implements DeckCheckInterface
             return DeckValidator::TOO_MANY_CHARACTER_IN_CONFLICT;
         }
 
+        $supportingClan = null;
         $stronghold = $deckCards->findStronghold();
         if ($stronghold instanceof Card) {
             $clan = $stronghold->getClan();
             $influencePool = $stronghold->getInfluencePool();
 
             $role = $deckCards->findRole();
-            if ($role instanceof Card && $role->hasTrait('keeper')) {
-                $influencePool += 3;
+            if ($role instanceof Card) {
+                if ($role->hasTrait('keeper')) {
+                    $influencePool += 3;
+                } else {
+                    foreach (Card::CLANS as $otherClan) {
+                        if ($role->hasTrait($otherClan)) {
+                            $supportingClan = $otherClan;
+                            $influencePool += 8;
+                        }
+                    }
+                }
             }
 
             $offClanSlots = $conflictDeck->filter(
@@ -54,6 +64,9 @@ class ConflictDeckCheck implements DeckCheckInterface
             foreach ($offClanSlots as $slot) {
                 /** @var CardSlotInterface $slot */
                 if ($slot->getCard()->getInfluenceCost() === null) {
+                    return DeckValidator::FORBIDDEN_SPLASH;
+                }
+                if ($supportingClan !== null && $slot->getCard()->getClan() !== $supportingClan) {
                     return DeckValidator::FORBIDDEN_SPLASH;
                 }
 

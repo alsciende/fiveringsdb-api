@@ -18,7 +18,9 @@ class ConflictDeckCheckTest extends AbstractDeckCheckTest
             DeckValidator::TOO_FEW_CONFLICT,
             [
                 new DeckCard(
-                    $this->getCard(['side' => Card::SIDE_CONFLICT]),
+                    $this->getCard([
+                        'side' => Card::SIDE_CONFLICT,
+                    ]),
                     39
                 ),
             ]
@@ -32,7 +34,9 @@ class ConflictDeckCheckTest extends AbstractDeckCheckTest
             DeckValidator::TOO_MANY_CONFLICT,
             [
                 new DeckCard(
-                    $this->getCard(['side' => Card::SIDE_CONFLICT]),
+                    $this->getCard([
+                        'side' => Card::SIDE_CONFLICT,
+                    ]),
                     46
                 ),
             ]
@@ -46,11 +50,17 @@ class ConflictDeckCheckTest extends AbstractDeckCheckTest
             DeckValidator::TOO_MANY_CHARACTER_IN_CONFLICT,
             [
                 new DeckCard(
-                    $this->getCard(['side' => Card::SIDE_CONFLICT, 'type' => Card::TYPE_ATTACHMENT]),
+                    $this->getCard([
+                        'side' => Card::SIDE_CONFLICT,
+                        'type' => Card::TYPE_ATTACHMENT,
+                    ]),
                     29
                 ),
                 new DeckCard(
-                    $this->getCard(['side' => Card::SIDE_CONFLICT, 'type' => Card::TYPE_CHARACTER]),
+                    $this->getCard([
+                        'side' => Card::SIDE_CONFLICT,
+                        'type' => Card::TYPE_CHARACTER,
+                    ]),
                     11
                 ),
             ]
@@ -64,11 +74,21 @@ class ConflictDeckCheckTest extends AbstractDeckCheckTest
             DeckValidator::NOT_ENOUGH_INFLUENCE,
             [
                 new DeckCard(
-                    $this->getCard(['side' => Card::SIDE_PROVINCE, 'type' => Card::TYPE_STRONGHOLD, 'clan' => Card::CLAN_CRAB, 'influence_pool' => 10]),
+                    $this->getCard([
+                        'side'           => Card::SIDE_PROVINCE,
+                        'type'           => Card::TYPE_STRONGHOLD,
+                        'clan'           => Card::CLAN_CRAB,
+                        'influence_pool' => 10,
+                    ]),
                     1
                 ),
                 new DeckCard(
-                    $this->getCard(['side' => Card::SIDE_CONFLICT, 'type' => Card::TYPE_ATTACHMENT, 'clan' => Card::CLAN_CRANE, 'influence_cost' => 1]),
+                    $this->getCard([
+                        'side'           => Card::SIDE_CONFLICT,
+                        'type'           => Card::TYPE_ATTACHMENT,
+                        'clan'           => Card::CLAN_CRANE,
+                        'influence_cost' => 1,
+                    ]),
                     40
                 ),
             ]
@@ -82,19 +102,182 @@ class ConflictDeckCheckTest extends AbstractDeckCheckTest
             DeckValidator::TOO_MANY_OFF_CLANS,
             [
                 new DeckCard(
-                    $this->getCard(['side' => Card::SIDE_PROVINCE, 'type' => Card::TYPE_STRONGHOLD, 'clan' => Card::CLAN_CRAB, 'influence_pool' => 10]),
+                    $this->getCard([
+                        'side'           => Card::SIDE_PROVINCE,
+                        'type'           => Card::TYPE_STRONGHOLD,
+                        'clan'           => Card::CLAN_CRAB,
+                        'influence_pool' => 10,
+                    ]),
                     1
                 ),
                 new DeckCard(
-                    $this->getCard(['side' => Card::SIDE_CONFLICT, 'type' => Card::TYPE_ATTACHMENT, 'clan' => Card::CLAN_CRAB]),
+                    $this->getCard([
+                        'side' => Card::SIDE_CONFLICT,
+                        'type' => Card::TYPE_ATTACHMENT,
+                        'clan' => Card::CLAN_CRAB,
+                    ]),
                     40
                 ),
                 new DeckCard(
-                    $this->getCard(['side' => Card::SIDE_CONFLICT, 'type' => Card::TYPE_ATTACHMENT, 'clan' => Card::CLAN_CRANE, 'influence_cost' => 1]),
+                    $this->getCard([
+                        'side'           => Card::SIDE_CONFLICT,
+                        'type'           => Card::TYPE_ATTACHMENT,
+                        'clan'           => Card::CLAN_CRANE,
+                        'influence_cost' => 1,
+                    ]),
                     1
                 ),
                 new DeckCard(
-                    $this->getCard(['side' => Card::SIDE_CONFLICT, 'type' => Card::TYPE_ATTACHMENT, 'clan' => Card::CLAN_DRAGON, 'influence_cost' => 1]),
+                    $this->getCard([
+                        'side'           => Card::SIDE_CONFLICT,
+                        'type'           => Card::TYPE_ATTACHMENT,
+                        'clan'           => Card::CLAN_DRAGON,
+                        'influence_cost' => 1,
+                    ]),
+                    1
+                ),
+            ]
+        );
+    }
+
+    function testKeeperRole()
+    {
+        $this->assertCheck(
+            new ConflictDeckCheck(),
+            DeckValidator::VALID_DECK,
+            [
+                new DeckCard(
+                    $this->getCard([
+                        'side'           => Card::SIDE_PROVINCE,
+                        'type'           => Card::TYPE_STRONGHOLD,
+                        'clan'           => Card::CLAN_CRAB,
+                        'influence_pool' => 10,
+                    ]),
+                    1
+                ),
+                new DeckCard(
+                    $this->getCard([
+                        'side' => Card::SIDE_CONFLICT,
+                        'type' => Card::TYPE_ATTACHMENT,
+                        'clan' => Card::CLAN_CRAB,
+                    ]),
+                    27
+                ),
+                new DeckCard(
+                    $this->getCard([
+                        'side'   => Card::SIDE_ROLE,
+                        'type'   => Card::TYPE_ROLE,
+                        'clan'   => Card::CLAN_NEUTRAL,
+                        'traits' => ['keeper'],
+                    ]),
+                    1
+                ),
+                new DeckCard(
+                    $this->getCard([
+                        'side'           => Card::SIDE_CONFLICT,
+                        'type'           => Card::TYPE_ATTACHMENT,
+                        'clan'           => Card::CLAN_DRAGON,
+                        'influence_cost' => 1,
+                    ]),
+                    13
+                ),
+            ]
+        );
+    }
+
+    function testSupportRole()
+    {
+        $this->assertCheck(
+            new ConflictDeckCheck(),
+            DeckValidator::VALID_DECK,
+            [
+                new DeckCard(
+                    $this->getCard([
+                        'side'           => Card::SIDE_PROVINCE,
+                        'type'           => Card::TYPE_STRONGHOLD,
+                        'clan'           => Card::CLAN_CRAB,
+                        'influence_pool' => 10,
+                    ]),
+                    1
+                ),
+                new DeckCard(
+                    $this->getCard([
+                        'side' => Card::SIDE_CONFLICT,
+                        'type' => Card::TYPE_ATTACHMENT,
+                        'clan' => Card::CLAN_CRAB,
+                    ]),
+                    22
+                ),
+                new DeckCard(
+                    $this->getCard([
+                        'side'   => Card::SIDE_ROLE,
+                        'type'   => Card::TYPE_ROLE,
+                        'clan'   => Card::CLAN_NEUTRAL,
+                        'traits' => [Card::CLAN_PHOENIX],
+                    ]),
+                    1
+                ),
+                new DeckCard(
+                    $this->getCard([
+                        'side'           => Card::SIDE_CONFLICT,
+                        'type'           => Card::TYPE_ATTACHMENT,
+                        'clan'           => Card::CLAN_PHOENIX,
+                        'influence_cost' => 1,
+                    ]),
+                    18
+                ),
+            ]
+        );
+    }
+
+    function testSupportRoleSplashClan()
+    {
+        $this->assertCheck(
+            new ConflictDeckCheck(),
+            DeckValidator::FORBIDDEN_SPLASH,
+            [
+                new DeckCard(
+                    $this->getCard([
+                        'side'           => Card::SIDE_PROVINCE,
+                        'type'           => Card::TYPE_STRONGHOLD,
+                        'clan'           => Card::CLAN_CRAB,
+                        'influence_pool' => 10,
+                    ]),
+                    1
+                ),
+                new DeckCard(
+                    $this->getCard([
+                        'side' => Card::SIDE_CONFLICT,
+                        'type' => Card::TYPE_ATTACHMENT,
+                        'clan' => Card::CLAN_CRAB,
+                    ]),
+                    22
+                ),
+                new DeckCard(
+                    $this->getCard([
+                        'side'   => Card::SIDE_ROLE,
+                        'type'   => Card::TYPE_ROLE,
+                        'clan'   => Card::CLAN_NEUTRAL,
+                        'traits' => [Card::CLAN_PHOENIX],
+                    ]),
+                    1
+                ),
+                new DeckCard(
+                    $this->getCard([
+                        'side'           => Card::SIDE_CONFLICT,
+                        'type'           => Card::TYPE_ATTACHMENT,
+                        'clan'           => Card::CLAN_PHOENIX,
+                        'influence_cost' => 1,
+                    ]),
+                    17
+                ),
+                new DeckCard(
+                    $this->getCard([
+                        'side'           => Card::SIDE_CONFLICT,
+                        'type'           => Card::TYPE_ATTACHMENT,
+                        'clan'           => Card::CLAN_CRANE,
+                        'influence_cost' => 1,
+                    ]),
                     1
                 ),
             ]
