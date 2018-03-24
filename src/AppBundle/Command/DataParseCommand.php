@@ -6,6 +6,7 @@ use AppBundle\Entity\Card;
 use AppBundle\Entity\Pack;
 use AppBundle\Entity\PackCard;
 use Cocur\Slugify\Slugify;
+use Cocur\Slugify\SlugifyInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
@@ -21,7 +22,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class DataParseCommand extends Command
 {
-    /** @var Slugify */
+    /** @var SlugifyInterface */
     private $slugify;
 
     /** @var Serializer $serializer */
@@ -33,13 +34,19 @@ class DataParseCommand extends Command
     /** @var EntityManagerInterface $entityManager */
     private $entityManager;
 
-    public function __construct ($name = null, Serializer $serializer, string $jsonDataPath, EntityManagerInterface $entityManager)
+    public function __construct (
+        $name = null,
+        Serializer $serializer,
+        string $jsonDataPath,
+        EntityManagerInterface $entityManager,
+        SlugifyInterface $slugify
+    )
     {
         parent::__construct($name);
         $this->serializer = $serializer;
         $this->jsonDataPath = $jsonDataPath;
         $this->entityManager = $entityManager;
-        $this->slugify = new Slugify();
+        $this->slugify = $slugify;
     }
 
     protected function configure ()

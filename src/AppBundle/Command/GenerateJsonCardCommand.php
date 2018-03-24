@@ -4,6 +4,7 @@ namespace AppBundle\Command;
 
 use AppBundle\Entity\Card;
 use Cocur\Slugify\Slugify;
+use Cocur\Slugify\SlugifyInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
@@ -23,21 +24,39 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 class GenerateJsonCardCommand extends Command
 {
-    /** @var EntityManagerInterface $entityManager */
+    /**
+     * @var EntityManagerInterface $entityManager
+     */
     private $entityManager;
 
-    /** @var Serializer $serializer */
+    /**
+     * @var Serializer $serializer
+     */
     private $serializer;
 
-    /** @var ValidatorInterface $validator */
+    /**
+     * @var ValidatorInterface $validator
+     */
     private $validator;
 
-    public function __construct ($name = null, EntityManagerInterface $entityManager, Serializer $serializer, ValidatorInterface $validator)
+    /**
+     * @var SlugifyInterface $slugify
+     */
+    private $slugify;
+
+    public function __construct (
+        $name = null,
+        EntityManagerInterface $entityManager,
+        Serializer $serializer,
+        ValidatorInterface $validator,
+        SlugifyInterface $slugify
+    )
     {
         parent::__construct($name);
         $this->entityManager = $entityManager;
         $this->serializer = $serializer;
         $this->validator = $validator;
+        $this->slugify = $slugify;
     }
 
     protected function configure ()
@@ -50,7 +69,6 @@ class GenerateJsonCardCommand extends Command
     protected function execute (InputInterface $input, OutputInterface $output)
     {
         $helper = $this->getHelper('question');
-        $slugify = new Slugify();
 
         $card = new Card();
         $card->setClan($helper->ask($input, $output, new ChoiceQuestion('Clan: ', [
@@ -73,7 +91,7 @@ class GenerateJsonCardCommand extends Command
             Card::TYPE_STRONGHOLD,
         ])));
         $card->setName($helper->ask($input, $output, new Question('Name: ')));
-        $card->setId($slugify->slugify($card->getName()));
+        $card->setId($this->slugify->slugify($card->getName()));
         $card->setTraits($this->askArray($input, $output, $helper, new Question('Traits: ')));
         $card->setText($helper->ask($input, $output, new Question('Text: ')));
 
