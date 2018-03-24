@@ -2,7 +2,7 @@
 
 namespace AppBundle\Command;
 
-use Cocur\Slugify\Slugify;
+use Cocur\Slugify\SlugifyInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -16,6 +16,17 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class SlugifyCommand extends Command
 {
+    /**
+     * @var SlugifyInterface
+     */
+    private $slugify;
+
+    public function __construct(SlugifyInterface $slugify)
+    {
+        $this->slugify = $slugify;
+        parent::__construct();
+    }
+
     protected function configure ()
     {
         $this
@@ -28,12 +39,7 @@ class SlugifyCommand extends Command
     protected function execute (InputInterface $input, OutputInterface $output)
     {
         $string = $input->getArgument('string');
-        $ruleset = $input->getOption('ruleset');
 
-        $slugify = new Slugify();
-        if ($ruleset) {
-            $slugify->activateRuleSet($ruleset);
-        }
-        $output->writeln($slugify->slugify($string));
+        $output->writeln($this->slugify->slugify($string));
     }
 }

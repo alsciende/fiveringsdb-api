@@ -96,15 +96,15 @@ services:
     AppBundle\Security\CredentialsCacheService:
         public: true
         arguments:
-          - '@cache'
+          - '@app.cache'
           - '%access_token_ttl%'
 
-    cache:
+    app.cache:
         public: false
         class: Symfony\Component\Cache\Simple\RedisCache
-        arguments: ['@redis']
+        arguments: ['@app.redis']
 
-    redis:
+    app.redis:
         public: false
         class: Predis\Client
         arguments: ['%redis_url%']

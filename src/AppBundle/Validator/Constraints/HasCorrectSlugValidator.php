@@ -3,7 +3,7 @@
 namespace AppBundle\Validator\Constraints;
 
 use AppBundle\Entity\Card;
-use Cocur\Slugify\Slugify;
+use Cocur\Slugify\SlugifyInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -11,10 +11,12 @@ use Symfony\Component\Validator\ConstraintValidator;
  */
 class HasCorrectSlugValidator extends ConstraintValidator
 {
-    /** @var Slugify $slugify */
+    /**
+     * @var SlugifyInterface
+     */
     private $slugify;
 
-    public function __construct (Slugify $slugify)
+    public function __construct (SlugifyInterface $slugify)
     {
         $this->slugify = $slugify;
     }

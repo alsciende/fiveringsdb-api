@@ -87,8 +87,10 @@ jms_serializer:
         auto_detection: true
 
 cocur_slugify:
-    rulesets: {}
-
+    rulesets:
+        - default
+        - lithuanian
+        
 nelmio_cors:
     defaults:
         allow_origin: ['*']
