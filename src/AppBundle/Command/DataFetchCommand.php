@@ -59,7 +59,7 @@ class DataFetchCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $id = $input->hasArgument('pack-id') ? $input->getArgument('pack-id') : $this->askPackId($input, $output);
+        $id = $input->getArgument('pack-id') ? $input->getArgument('pack-id') : $this->askPackId($input, $output);
         $pack = $this->entityManager->find(Pack::class, $id);
         if (!$pack instanceof Pack) {
             throw new \RuntimeException('Unknown pack id');
