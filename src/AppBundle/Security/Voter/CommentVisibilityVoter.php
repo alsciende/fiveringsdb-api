@@ -3,6 +3,7 @@
 namespace AppBundle\Security\Voter;
 
 use AppBundle\Entity\Comment;
+use AppBundle\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -38,7 +39,7 @@ class CommentVisibilityVoter extends Voter
             return true;
         }
 
-        if ($token->getUser()->hasRole('ROLE_MODERATOR')) {
+        if ($token->getUser() instanceof User && $token->getUser()->hasRole('ROLE_MODERATOR')) {
             return true;
         }
 

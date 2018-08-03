@@ -6,6 +6,7 @@ services:
         bind:
             $jsonDataPath: '%path_to_json_data%'
             $securityLogger: '@monolog.logger.security'
+            $environment: '%kernel.environment%'
 
     # configuration by interface
 

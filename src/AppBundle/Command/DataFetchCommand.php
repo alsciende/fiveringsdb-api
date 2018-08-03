@@ -4,14 +4,13 @@ namespace AppBundle\Command;
 
 use AppBundle\Entity\Card;
 use AppBundle\Entity\Pack;
-use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Logger\ConsoleLogger;
-use Symfony\Component\Console\Output\Output;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 
@@ -28,7 +27,7 @@ class DataFetchCommand extends Command
     private $entityManager;
 
     /**
-     * @var ObjectRepository
+     * @var EntityRepository
      */
     private $cardRepository;
 
@@ -38,7 +37,7 @@ class DataFetchCommand extends Command
     private $imageBaseURL;
 
     /**
-     * @var ObjectRepository
+     * @var EntityRepository
      */
     private $packRepository;
 
