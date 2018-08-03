@@ -71,7 +71,7 @@ class PackCard implements CardSlotInterface
      *
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Card", inversedBy="packCards", fetch="EAGER")
-     * @ORM\JoinColumn(name="card_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="card_id", referencedColumnName="id", nullable=false)
      *
      * @Skizzle\Field(type="association")
      */
@@ -82,7 +82,7 @@ class PackCard implements CardSlotInterface
      *
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Pack", inversedBy="cards", fetch="EAGER")
-     * @ORM\JoinColumn(name="pack_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="pack_id", referencedColumnName="id", nullable=false)
      *
      * @Skizzle\Field(type="association")
      */

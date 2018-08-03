@@ -41,7 +41,7 @@ class Strain
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="User", fetch="EAGER")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      */
     private $user;
 
@@ -51,7 +51,7 @@ class Strain
      * @var Deck|null
      *
      * @ORM\OneToOne(targetEntity="Deck", fetch="EAGER", cascade={"persist"})
-     * @ORM\JoinColumn(name="deck_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="deck_id", referencedColumnName="id", nullable=true)
      */
     private $head;
 

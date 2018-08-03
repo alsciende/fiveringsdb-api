@@ -44,7 +44,7 @@ class Ruling
      * @var Card
      *
      * @ORM\ManyToOne(targetEntity="Card", inversedBy="rulings")
-     * @ORM\JoinColumn(name="card_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="card_id", referencedColumnName="id", nullable=false)
      */
     private $card;
 
@@ -52,7 +52,7 @@ class Ruling
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      */
     private $user;
 

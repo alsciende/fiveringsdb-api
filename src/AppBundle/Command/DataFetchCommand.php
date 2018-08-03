@@ -101,10 +101,10 @@ class DataFetchCommand extends Command
     }
 
     /**
-     * @param $repository
-     * @param $item
+     * @param array $item
+     * @return array
      */
-    protected function getPackCard($item): array
+    protected function getPackCard(array $item): array
     {
         $name = $item['name'];
         $name = str_replace("’", "'", $name);

@@ -24,7 +24,7 @@ class ClanRole
      * @var Card
      *
      * @ORM\ManyToOne(targetEntity="Card")
-     * @ORM\JoinColumn(name="card_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="card_id", referencedColumnName="id", nullable=false)
      *
      * @Skizzle\Field(type="association")
      */

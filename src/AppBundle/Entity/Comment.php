@@ -48,7 +48,7 @@ class Comment
      * @var Deck
      *
      * @ORM\ManyToOne(targetEntity="Deck", inversedBy="comments")
-     * @ORM\JoinColumn(name="deck_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="deck_id", referencedColumnName="id", nullable=false)
      */
     private $deck;
 
@@ -56,7 +56,7 @@ class Comment
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      */
     private $user;
 

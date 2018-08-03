@@ -164,29 +164,29 @@ class Card
     private $traits;
 
     /**
-     * @var integer|null
+     * @var string|null
      *
-     * @ORM\Column(name="military", type="smallint", nullable=true)
+     * @ORM\Column(name="military", type="string", nullable=true)
      *
-     * @Skizzle\Field(type="integer")
+     * @Skizzle\Field(type="string")
      */
     private $military;
 
     /**
-     * @var integer|null
+     * @var string|null
      *
-     * @ORM\Column(name="political", type="smallint", nullable=true)
+     * @ORM\Column(name="political", type="string", nullable=true)
      *
-     * @Skizzle\Field(type="integer")
+     * @Skizzle\Field(type="string")
      */
     private $political;
 
     /**
-     * @var integer|null
+     * @var string|null
      *
-     * @ORM\Column(name="strength", type="smallint", nullable=true)
+     * @ORM\Column(name="strength", type="string", nullable=true)
      *
-     * @Skizzle\Field(type="integer")
+     * @Skizzle\Field(type="string")
      */
     private $strength;
 
@@ -401,21 +401,21 @@ class Card
         return $this;
     }
 
-    public function setMilitary (int $military): self
+    public function setMilitary (string $military): self
     {
         $this->military = $military;
 
         return $this;
     }
 
-    public function setPolitical (int $political): self
+    public function setPolitical (string $political): self
     {
         $this->political = $political;
 
         return $this;
     }
 
-    public function setStrength (int $strength): self
+    public function setStrength (string $strength): self
     {
         $this->strength = $strength;
 
@@ -543,17 +543,17 @@ class Card
         return in_array($trait, $this->traits);
     }
 
-    public function getMilitary (): ?int
+    public function getMilitary (): ?string
     {
         return $this->military;
     }
 
-    public function getPolitical (): ?int
+    public function getPolitical (): ?string
     {
         return $this->political;
     }
 
-    public function getStrength (): ?int
+    public function getStrength (): ?string
     {
         return $this->strength;
     }

@@ -46,7 +46,7 @@ class Feature
      * @var Deck
      *
      * @ORM\OneToOne(targetEntity="Deck")
-     * @ORM\JoinColumn(name="deck_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="deck_id", referencedColumnName="id", nullable=false)
      */
     private $deck;
 

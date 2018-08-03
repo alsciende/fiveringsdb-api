@@ -42,7 +42,7 @@ class Review
      * @var Card
      *
      * @ORM\ManyToOne(targetEntity="Card", inversedBy="reviews")
-     * @ORM\JoinColumn(name="card_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="card_id", referencedColumnName="id", nullable=false)
      *
      * @Skizzle\Field(type="association")
      */
@@ -52,7 +52,7 @@ class Review
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      *
      * @Skizzle\Field(type="association")
      */
