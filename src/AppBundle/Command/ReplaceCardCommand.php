@@ -84,7 +84,9 @@ class ReplaceCardCommand extends Command
         ];
         $this->executeUpdate('clan_roles', $params);
         $this->executeUpdate('deck_cards', $params);
-        $this->executeUpdate('pack_cards', $params);
+        $this->connection->executeQuery('DELETE FROM pack_cards WHERE card_id=:source', [
+            'source' => $sourceId,
+        ]);
         $this->executeUpdate('reviews', $params);
         $this->executeUpdate('rulings', $params);
         $this->connection->executeQuery('DELETE FROM cards WHERE id=:source', [
