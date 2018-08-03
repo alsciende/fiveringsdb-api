@@ -6,9 +6,11 @@ use AppBundle\Entity\Card;
 use AppBundle\Entity\Pack;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\Output;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
@@ -40,6 +42,11 @@ class DataFetchCommand extends Command
      */
     private $packRepository;
 
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     public function __construct($name = null, EntityManagerInterface $entityManager)
     {
         parent::__construct($name);
@@ -59,6 +66,8 @@ class DataFetchCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->logger = new ConsoleLogger($output);
+
         $id = $input->getArgument('pack-id') ? $input->getArgument('pack-id') : $this->askPackId($input, $output);
         $pack = $this->entityManager->find(Pack::class, $id);
         if (!$pack instanceof Pack) {
@@ -101,26 +110,45 @@ class DataFetchCommand extends Command
     }
 
     /**
+     * @param string $name
+     * @return Card
+     */
+    protected function getCard(string $name): Card
+    {
+        $result = $this->cardRepository->findBy(['name' => $name]);
+
+        if (count($result) < 1) {
+            $this->logger->critical(sprintf(
+                'Unknown card with name %s. Aborting.',
+                $name
+            ));
+            die;
+        }
+
+        if (count($result) > 1) {
+            $this->logger->alert(sprintf(
+                'More than one card with name %s, edit the resulting file manually.',
+                $name
+            ));
+        }
+
+        return $result[0];
+    }
+
+    /**
      * @param array $item
      * @return array
      */
     protected function getPackCard(array $item): array
     {
-        $name = $item['name'];
-        $name = str_replace("’", "'", $name);
-        $card = $this->cardRepository->findOneBy(['name' => $name]);
-        if ($card instanceof Card) {
-            return [
-                "card_id"     => $card->getId(),
-                "flavor"      => "",
-                "illustrator" => $item['illus'],
-                "image_url"   => $this->imageBaseURL . $item['img'],
-                "position"    => ltrim($item['num'], 0),
-                "quantity"    => 3,
-            ];
-        }
-
-        throw new \RuntimeException(sprintf('Missing card "%s"', $item['name']));
+        return [
+            "card_id"     => $this->getCard(str_replace("’", "'", $item['name']))->getId(),
+            "flavor"      => "",
+            "illustrator" => $item['illus'],
+            "image_url"   => $this->imageBaseURL . $item['img'],
+            "position"    => ltrim($item['num'], 0),
+            "quantity"    => 3,
+        ];
     }
 
     /**

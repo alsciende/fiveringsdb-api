@@ -8,6 +8,9 @@ AppBundle\Entity\Card:
         name:
             expose: true
             groups: ['Default','Source']
+        nameExtra:
+            expose: true
+            groups: ['Default','Source']
         nameCanonical:
             expose: true
         cost:

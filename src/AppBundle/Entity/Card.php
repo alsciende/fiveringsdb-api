@@ -281,6 +281,15 @@ class Card
     private $roleRestriction;
 
     /**
+     * @var string|null
+     *
+     * @ORM\Column(name="name_extra", type="string", nullable=true)
+     *
+     * @Skizzle\Field(type="string")
+     */
+    private $nameExtra;
+
+    /**
      * @var Collection
      *
      * @ORM\OneToMany(targetEntity="PackCard",
@@ -620,6 +629,23 @@ class Card
         $this->roleRestriction = $roleRestriction;
 
         return $this;
+    }
+
+    public function getNameExtra(): ?string
+    {
+        return $this->nameExtra;
+    }
+
+    public function setNameExtra(string $nameExtra = null): self
+    {
+        $this->nameExtra = $nameExtra;
+
+        return $this;
+    }
+
+    public function getFullName(): string
+    {
+        return $this->name . ($this->nameExtra ? ' ' . $this->nameExtra : '');
     }
 
     /**
