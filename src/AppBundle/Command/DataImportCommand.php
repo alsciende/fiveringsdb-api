@@ -6,6 +6,7 @@ use Alsciende\SerializerBundle\Service\ImportingService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -28,15 +29,12 @@ class DataImportCommand extends Command
     public function __construct (
         $name = null,
         ImportingService $importer,
-        LoggerInterface $logger,
         $jsonDataPath,
         $environment
     ) {
         parent::__construct($name);
         $this->importer = $importer;
         $this->jsonDataPath = $jsonDataPath;
-
-        $this->importer->setLogger($logger);
         $this->environment = $environment;
     }
 
@@ -55,6 +53,7 @@ class DataImportCommand extends Command
             $this->environment
         ));
 
+        $this->importer->setLogger(new ConsoleLogger($output));
         $this->importer->import($this->jsonDataPath, true);
 
         $io->success('Data imported.');
