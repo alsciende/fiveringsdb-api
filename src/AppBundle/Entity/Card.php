@@ -86,9 +86,9 @@ class Card
     private $nameCanonical;
 
     /**
-     * @var int
+     * @var integer|null
      *
-     * @ORM\Column(name="cost", type="integer", nullable=true)
+     * @ORM\Column(name="cost", type="smallint", nullable=true)
      *
      * @Skizzle\Field(type="integer")
      */
@@ -348,7 +348,7 @@ class Card
         return $this;
     }
 
-    public function setCost (int $cost): self
+    public function setCost (?int $cost): self
     {
         $this->cost = $cost;
 
