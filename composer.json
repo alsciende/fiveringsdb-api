@@ -53,12 +53,6 @@
     "behat/symfony2-extension": "^2.1",
     "justinrainbow/json-schema": "^5.2"
   },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "git://github.com/alsciende/serializer-bundle.git"
-    }
-  ],
   "scripts": {
     "symfony-scripts": [
       "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
