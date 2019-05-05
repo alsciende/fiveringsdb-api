@@ -1,5 +1,5 @@
 {
-  "name": "alsciende/fiveringsdb",
+  "name": "FiveRingsDB",
   "license": "MIT",
   "type": "project",
   "autoload": {
@@ -43,7 +43,7 @@
     "symfony/symfony": "^3.4"
   },
   "require-dev": {
-    "symfony/var-dumper": "^3.4",
+    "symfony/var-dumper": "^4.0",
     "doctrine/doctrine-fixtures-bundle": "^3.0",
     "phpunit/phpunit": "^6.5",
     "phpstan/phpstan": "^0.9.1",
