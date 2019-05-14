@@ -291,6 +291,24 @@ class Card
     private $nameExtra;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_restricted", type="boolean", nullable=false)
+     *
+     * @Skizzle\Field(type="boolean")
+     */
+    private $isRestricted;
+
+    /**
+     * @var array
+     *
+     * @ORM\Column(name="allowed_clans", type="simple_array", nullable=true)
+     *
+     * @Skizzle\Field(type="array")
+     */
+    private $allowedClans;
+
+    /**
      * @var Collection
      *
      * @ORM\OneToMany(targetEntity="PackCard",
@@ -397,6 +415,13 @@ class Card
         return $this;
     }
 
+    public function setRestricted (bool $isRestricted): self
+    {
+        $this->isRestricted = $isRestricted;
+
+        return $this;
+    }
+
     public function setSide (string $side): self
     {
         $this->side = $side;
@@ -407,6 +432,13 @@ class Card
     public function setTraits (array $traits): self
     {
         $this->traits = $traits;
+
+        return $this;
+    }
+
+    public function setAllowedClans (array $allowedClans): self
+    {
+        $this->allowedClans = $allowedClans;
 
         return $this;
     }
@@ -538,6 +570,11 @@ class Card
         return $this->unicity;
     }
 
+    public function isRestricted (): bool
+    {
+        return $this->isRestricted;
+    }
+
     public function getSide (): string
     {
         return $this->side;
@@ -551,6 +588,16 @@ class Card
     public function hasTrait ($trait): bool
     {
         return in_array($trait, $this->traits);
+    }
+
+    public function getAllowedClans (): array
+    {
+        return $this->getAllowedClans;
+    }
+
+    public function isAllowedBy ($clan): bool
+    {
+        return in_array($clan, $this->allowedClans);
     }
 
     public function getMilitary (): ?string
