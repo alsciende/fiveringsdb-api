@@ -33,8 +33,10 @@ class ClanRoleController extends AbstractApiController
                 ->findAll(),
             [
                 'Default',
-                'Card',
-                'card' => [
+                'primaryRole' => [
+                    'Id',
+                ],
+                'secondaryRole' => [
                     'Id',
                 ],
             ]
