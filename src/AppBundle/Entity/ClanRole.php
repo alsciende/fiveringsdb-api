@@ -31,7 +31,7 @@ class ClanRole
     private $primaryRole;
 
     /**
-     * @var PrimaryRole
+     * @var SecondaryRole
      *
      * @ORM\ManyToOne(targetEntity="Card")
      * @ORM\JoinColumn(name="secondary_role_id", referencedColumnName="id", nullable=false)
