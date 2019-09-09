@@ -21,19 +21,29 @@ class ClanRole
     use TimestampableEntity;
 
     /**
-     * @var Card
+     * @var PrimaryRole
      *
      * @ORM\ManyToOne(targetEntity="Card")
-     * @ORM\JoinColumn(name="card_id", referencedColumnName="id", nullable=false)
-     *
+     * @ORM\JoinColumn(name="primary_role_id", referencedColumnName="id", nullable=false)
+     * 
      * @Skizzle\Field(type="association")
      */
-    private $card;
+    private $primaryRole;
+
+    /**
+     * @var SecondaryRole
+     *
+     * @ORM\ManyToOne(targetEntity="Card")
+     * @ORM\JoinColumn(name="secondary_role_id", referencedColumnName="id", nullable=false)
+     * 
+     * @Skizzle\Field(type="association")
+     */
+    private $secondaryRole;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="clan", type="string", nullable=false, unique=true)
+     * @ORM\Column(name="clan", type="string", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      *
@@ -41,14 +51,26 @@ class ClanRole
      */
     private $clan;
 
-    function getCard (): Card
+    function getPrimaryRole (): Card
     {
-        return $this->card;
+        return $this->primaryRole;
     }
 
-    function setCard (Card $card): self
+    function setPrimaryRole (Card $card): self
     {
-        $this->card = $card;
+        $this->primaryRole = $card;
+
+        return $this;
+    }
+
+    function getSecondaryRole (): Card
+    {
+        return $this->secondaryRole;
+    }
+
+    function setSecondaryRole (Card $card): self
+    {
+        $this->secondaryRole = $card;
 
         return $this;
     }

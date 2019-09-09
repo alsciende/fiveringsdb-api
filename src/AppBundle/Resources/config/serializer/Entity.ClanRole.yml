@@ -2,8 +2,9 @@ AppBundle\Entity\ClanRole:
     exclusion_policy: ALL
     accessor_order: alphabetical
     properties:
-        card:
+        primaryRole:
             expose: true
-            groups: ['Card']
+        secondaryRole:
+            expose: true
         clan:
             expose: true
